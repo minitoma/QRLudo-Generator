@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <script src="./node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+
+		 <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
+     <link rel="stylesheet" href="./css/styles.css">
+
+  </head>
+
+  <body>
+
+		<div class="container">
+
+			<section class="page-header">
+			</section>
+
+			<section class="row">
+				<div class="row">
+					<div class="col-lg-3 colLeft">
+						<form class="col-md-12">
+						    <div class="row">
+                  <!-- Trigger the modal with a button -->
+                  <div class="col-md-12"><button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal" name="create">Créer</button></div>
+								</div>
+								<div class="row">
+									<div class="col-md-12"><button type="button" class="btn btn-default" name="import">Charger</button></div>
+								</div>
+								<div class="row">
+									<div class="col-md-12"><button type="button" class="btn btn-default" name="export">Exporter</button></div>
+								</div>
+								<div class="row">
+									<div class="col-md-12"><button type="button" class="btn btn-default" name="save">Sauvegarder</button></div>
+								</div>
+						</form>
+					</div>
+
+					<div class="col-lg-6 colMiddle">
+              <!-- Modal -->
+              <div class="modal fade" id="myModal" role="dialog">
+                <div class="modal-dialog modal-sm">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <button type="button" class="close" data-dismiss="modal">&times;</button>
+                      <h4 class="modal-title">Modal Header</h4>
+                    </div>
+                    <div class="modal-body">
+                      <p>This is a small modal.</p>
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+					</div>
+
+					<div class="col-lg-3 colRight">
+
+						<form class="col-md-12">
+						    <div class="row">
+									<div class="col-md-12"><button type="button" class="btn btn-default" name="preview">Prévisualiser</button></div>
+								</div>
+								<div class="row">
+									<div class="col-md-12"><button type="button" class="btn btn-default" name="read">Lire</button></div>
+								</div>
+						</form>
+
+					</div>
+				</div>
+			</section>
+
+		</div>
+
+  </body>
+
+</html>
