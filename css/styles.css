@@ -37,3 +37,11 @@ form.col-md-12 {
   border-radius: 10px;
   padding: 10px 10px 0 10px;
 }
+
+div.row.modal-body {
+  text-align: center;
+}
+
+button.btn.btn-default.btn-popup {
+  width: 100%;
+}
