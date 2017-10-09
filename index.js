@@ -2,6 +2,8 @@ const electron = require('electron');
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
 
+require('electron-debug')({showDevTools: true}); // pour debugger
+
 let mainWindow;
 
 function createWindow () {
