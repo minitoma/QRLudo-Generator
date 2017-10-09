@@ -1,2 +1,2 @@
-# QRLudo-Generator
-Projet de M2/M1
+# QRCode_Generator
+Application pour générer des QR-Codes
