@@ -1,0 +1,13 @@
+{
+  "name": "QR-Codes",
+  "version": "1.0.0",
+  "description": "Une application pour générer des QR-Codes",
+  "main": "index.js",
+  "author": "Alassane DIOP",
+  "dependencies": {
+    "jquery": "^3.2.1"
+  },
+  "devDependencies": {
+    "devtron": "^1.4.0"
+  }
+}
