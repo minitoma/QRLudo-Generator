@@ -3,7 +3,9 @@
   <head>
     <meta charset="UTF-8">
     <script src="./node_modules/jquery/dist/jquery.min.js"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+    <script src="./js/scripts.js"></script>
 
 		 <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
      <link rel="stylesheet" href="./css/styles.css">
@@ -38,23 +40,38 @@
 					</div>
 
 					<div class="col-lg-6 colMiddle">
-              <!-- Modal -->
+
+              <!-- Popup -->
               <div class="modal fade" id="myModal" role="dialog">
                 <div class="modal-dialog modal-sm">
                   <div class="modal-content">
+
+                    <div class="row modal-body">
+                      <div class="col-lg-12">
+                        <h4 class="modal-title">Ajouter un champ</h4>
+                      </div>
+                    </div>
+
                     <div class="modal-header">
-                      <button type="button" class="close" data-dismiss="modal">&times;</button>
-                      <h4 class="modal-title">Modal Header</h4>
+                      <button type="button" class="btn btn-default btn-popup" onclick="createTextBox()">Texte</button>
+                      <button type="button" class="btn btn-default btn-popup" onclick="createMusicBox()">Musique</button>
                     </div>
-                    <div class="modal-body">
-                      <p>This is a small modal.</p>
-                    </div>
+
                     <div class="modal-footer">
-                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                      <button type="button" class="btn btn-default" data-dismiss="modal" id="closeModal">Annuler</button>
                     </div>
+
                   </div>
                 </div>
               </div>
+
+              <!-- Zone de Texte -->
+
+                <form id="myForm">
+                  <!-- Les champs de texte ou de musique seront ajoutés automatiquement par la fonction createTextBox()   -->
+                </form>
+      <!--        </div>    -->
+
 					</div>
 
 					<div class="col-lg-3 colRight">
