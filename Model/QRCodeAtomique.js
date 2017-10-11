@@ -1,6 +1,8 @@
-class QrCodeAtomique extends QRCode{
+class QRCodeAtomique extends QRCode{
 
     constructor() {
+      super();
+      alert("Passage dans le constructeur de QRCodeAtomique");
     }
 
     /*
@@ -60,4 +62,4 @@ class QrCodeAtomique extends QRCode{
     }
 
 
-  }
+}

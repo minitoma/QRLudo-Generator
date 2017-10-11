@@ -1,9 +1,12 @@
+
+
 /*
 * Classe permettant de stocker et d'accéder au données contenues dans un QRCode
 */
-class Qrcode {
+class QRCode {
 
   constructor() {
+    alert("Passage dans le constructeur de QRCode");
   }
 
 

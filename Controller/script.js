@@ -1,0 +1,2 @@
+
+var qrCodeA = new QRCodeAtomique();

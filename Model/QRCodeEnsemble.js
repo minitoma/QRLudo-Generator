@@ -2,10 +2,11 @@
 *Classe permettant de stocker et d'accéder au données contenues dans un QRCode de type Ensemble
 */
 
-  class QrCodeEnsemble extends QRCode{
+class QRCodeEnsemble extends QRCode{
 
     constructor() {
       super();
+      alert("Passage dans le constructeur de QRCodeEnsemble");
     }
 
     /*
@@ -42,5 +43,4 @@
     getDonnees(){
 
     }
-
-  }
+}
