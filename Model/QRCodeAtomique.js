@@ -107,10 +107,8 @@ class QRCodeAtomique extends QRCode{
     inverserOrdreContenu(ind1, ind2){
       var listeContenu = this.donnees.getElementsByTagName("contenu")[0].childNodes;
       var size = listeContenu.length;
-      alert(size);
-      alert(listeContenu[0].nodeName);
-      alert(listeContenu[1].nodeName);
-      alert(listeContenu[2].nodeName);
+
+
       if (ind1<0 || ind2<0 || ind1>=size || ind2>=size){
         throw "Au moins un des deux indices ne correspond pas à un élément";
       }
