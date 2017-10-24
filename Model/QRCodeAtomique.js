@@ -7,6 +7,9 @@ class QRCodeAtomique extends QRCode{
       this.donnees.appendChild(document.createElement("contenu"));
     }
 
+
+
+
     /*
     * Ajoute le nom et l'url du fichier dans le QRCode Atomique
     */
@@ -25,6 +28,94 @@ class QRCodeAtomique extends QRCode{
       noeud.textContent = texte;
       this.donnees.getElementsByTagName("contenu")[0].appendChild(noeud);
     }
+
+    /*
+    * Supprime l'élément (texte ou fichier) contenu à l'indice passé en paramètre
+    */
+    supprimerContenu(indice){
+      this.testIndiceContenuCorrect(indice); //On vérifie que le l'indice correspond à celui d'un élément
+      var listeContenu = this.donnees.getElementsByTagName("contenu")[0];
+      listeContenu.removeChild(listeContenu.childNodes[indice]);
+    }
+
+    /*
+    * Renvoie le nombre d'éléments contenus dans le QRCode
+    */
+    getTailleContenu(){
+      return this.donnees.getElementsByTagName("contenu")[0].childNodes.length;
+    }
+
+    /*
+    * Renvoie le type de l'élément (texte ou fichier) contenu à l'indice passé en paramètre
+    */
+    getTypeContenu(indice){
+      this.testIndiceContenuCorrect(indice); //On vérifie que le l'indice correspond à celui d'une élément
+      return this.donnees.getElementsByTagName("contenu")[0].childNodes[indice].nodeName;
+    }
+
+    /*
+    * Renvoie le texte contenu à l'indice passé en paramètre
+    */
+    getTexte(indice){
+      this.testIndiceContenuCorrect(indice);
+
+
+      if (this.getTypeContenu(indice)=="TEXTE"){
+        return this.donnees.getElementsByTagName("contenu")[0].childNodes[indice].textContent;
+      }
+      else{
+        throw "L'élément demandé n'est pas un texte";
+      }
+    }
+
+    /*
+    * Renvoie le nom du fichier contenu à l'indice passé en paramètre
+    */
+    getNomFichier(indice){
+      this.testIndiceContenuCorrect(indice);
+
+      if (this.getTypeContenu(indice)=="FICHIER"){
+        return this.donnees.getElementsByTagName("contenu")[0].childNodes[indice].getAttribute("nom");
+      }
+      else{
+        throw "L'élément demandé n'est pas un fichier";
+      }
+    }
+
+    /*
+    * Renvoie l'url du fichier contenu à l'indice passé en paramètre
+    */
+    getUrlFichier(indice){
+      this.testIndiceContenuCorrect(indice);
+
+      if (this.getTypeContenu(indice)=="FICHIER"){
+        return this.donnees.getElementsByTagName("contenu")[0].childNodes[indice].getAttribute("url");
+      }
+      else{
+        throw "L'élément demandé n'est pas un fichier";
+      }
+    }
+
+    /*
+    * Inverse l'ordre de deux éléments contenus dans le QRCode à partir de leurs indices
+    */
+    inverserOrdreContenu(ind1, ind2){
+
+      //On vérifie que les indices passés en paramètre correspondent à des éléments
+      this.testIndiceContenuCorrect(ind1);
+      this.testIndiceContenuCorrect(ind2);
+
+      var listeContenu = this.donnees.getElementsByTagName("contenu")[0].childNodes;
+
+
+      var tmp1 = listeContenu[ind1].cloneNode();
+      var tmp2 = listeContenu[ind2].cloneNode();
+
+      this.donnees.getElementsByTagName("contenu")[0].replaceChild(tmp2, listeContenu[ind1]);
+      this.donnees.getElementsByTagName("contenu")[0].replaceChild(tmp1, listeContenu[ind2]);
+
+    }
+
 
     /*
     * Renvoie vrai si le QRCode appartient à une famille
@@ -101,24 +192,12 @@ class QRCodeAtomique extends QRCode{
       return liste;
     }
 
-    /*
-    * Inverse l'ordre de deux éléments contenus dans le QRCode à partir de leurs indices
-    */
-    inverserOrdreContenu(ind1, ind2){
-      var listeContenu = this.donnees.getElementsByTagName("contenu")[0].childNodes;
-      var size = listeContenu.length;
-
-
-      if (ind1<0 || ind2<0 || ind1>=size || ind2>=size){
-        throw "Au moins un des deux indices ne correspond pas à un élément";
-      }
-      else{
-        var tmp1 = listeContenu[ind1].cloneNode();
-        var tmp2 = listeContenu[ind2].cloneNode();
-
-        this.donnees.getElementsByTagName("contenu")[0].replaceChild(tmp2, listeContenu[ind1]);
-        this.donnees.getElementsByTagName("contenu")[0].replaceChild(tmp1, listeContenu[ind2]);
+    testIndiceContenuCorrect(indice){
+      if (indice<0 || indice>=this.donnees.getElementsByTagName("contenu")[0].childNodes.length){
+        throw "L'indice ne correspod pas à celui d'une donnée contenue dans le QRCode";
       }
     }
+
+
 
 }
