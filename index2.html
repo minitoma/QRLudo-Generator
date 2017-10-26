@@ -1,0 +1,37 @@
+
+
+
+<html>
+
+
+<head>
+<script>
+window.nodeRequire = require;
+delete window.require;
+delete window.exports; delete window.module;
+</script>
+<script type="text/javascript" src="node_modules/jquery/dist/jquery.js"></script>
+
+<script type="text/javascript" src="Model/QRCode.js"></script>
+<script type="text/javascript" src="Model/QRCodeEnsemble.js"></script>
+<script type="text/javascript" src="Model/QRCodeAtomique.js"></script>
+<script type="text/javascript" src="node_modules/jquery/jquery-qrcode-0.14.0.min.js"></script>
+<script type="text/javascript" src="node_modules/jquery/jquery-qrcode-0.14.0.js"></script>
+<script type="text/javascript" src="node_modules/lz-string/libs/lz-string.js"></script>
+<script type="text/javascript" src="Controller/QRCodeGenerator.js"></script>
+
+</head>
+<body>
+
+<div id="affichageqr"></div>
+<img style="display:none;" id="img-buffer" src="image.png">
+
+<script type="text/javascript" src="Controller/script.js"></script>
+
+
+
+
+
+
+</body>
+</html>
