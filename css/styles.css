@@ -1,6 +1,6 @@
 
 body {
-
+    background: burlywood;
 }
 
 div.container {
@@ -44,4 +44,26 @@ div.row.modal-body {
 
 button.btn.btn-default.btn-popup {
   width: 100%;
+}
+
+
+ul.nav.nav-tabs {
+  display: ;
+}
+
+div.form-group {
+  margin-top: 20px;
+}
+
+button.btn.btn-default.addChamp {
+  width: initial;
+}
+
+div.modal-header.row {
+  border-bottom: none;
+}
+
+section.page-header {
+  background: brown;
+height: 71px;
 }

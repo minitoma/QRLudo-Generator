@@ -1,8 +1,31 @@
 # QRCode_Generator
 Application pour générer des QR-Codes
 
-#Pour debuggage (https://www.npmjs.com/package/electron-debug)
+# Pour créer un projet
+npm init
+npm install electron --save-dev
+
+# Pour la documentation sur les packages
+https://www.npmjs.com/
+
+# Pour exécuter
+./node_modules/.bin/electron .
+
+# Pour bootstrap
+npm install bootstrap
+
+# Pour debuggage
 npm install electron-debug
 
 # soucis avec jquery
 npm install jquery --save
+
+# api google drive
+https://developers.google.com/drive/v3/web/quickstart/nodejs
+npm install googleapis --save
+npm install google-auth-library --save
+
+npm install google-drive
+
+# api google text to speech
+npm install google-tts-api --save
