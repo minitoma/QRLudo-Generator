@@ -25,7 +25,5 @@ https://developers.google.com/drive/v3/web/quickstart/nodejs
 npm install googleapis --save
 npm install google-auth-library --save
 
-npm install google-drive
-
 # api google text to speech
 npm install google-tts-api --save
