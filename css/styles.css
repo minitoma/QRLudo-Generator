@@ -65,5 +65,9 @@ div.modal-header.row {
 
 section.page-header {
   background: brown;
-height: 71px;
+  height: 71px;
+}
+
+#affichageqr > div > img {
+  width: inherit;
 }
