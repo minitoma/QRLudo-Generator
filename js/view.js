@@ -1,4 +1,5 @@
 var idInputText = 0; // pour identifier les inputs de façon unique
+var idMenu = 1; // pour identifier de facon unique les menus
 
 $(document).ready(function() {
 
@@ -10,6 +11,7 @@ $(document).ready(function() {
     closeModalMusique(event);
   }); // sur clic du bouton closeModalMusique
 
+  document.getElementsByClassName('set-legende')[0].addEventListener('click', createTextBox); // sur clic du bouton creer champ texte
   document.getElementById('read').addEventListener('click', getForm); // sur clic du bouton Lire pour ecouter les textes saisis
 });
 
@@ -36,7 +38,6 @@ function createInput (type, classe, id, value) {
 
 // Générer une zone de texte
 function createTextBox() {
-
   var child = [createLabel('legende', 'Légende'), createInput('text', 'form-control', 'legende', '')];
   var div = createDiv('form-group', '', child);
 
@@ -92,17 +93,66 @@ function createDiv(classe, id, child) {
   for(var i=0; i<child.length; i++) {
     div.appendChild(child[i]);
   }
+
   return div;
 }
 
-// effacer la liste des musiques avant de fermer le popup musique
-function closeModalMusique(event) {
-  if (event) {
-    var element = event.target;
-    childNodes = element.parentNode.parentNode.childNodes[3];
+// créer une élément img
+function createImg(id, src) {
+  var img = document.createElement('img');
+  img.setAttribute('id', id);
+  img.setAttribute('src', src);
+  return img;
+}
 
-    while (childNodes.firstChild) {
-      childNodes.removeChild(childNodes.firstChild);
-    }
+// fonction pour créér des tabs
+function createTabs () {
+  var li = document.createElement('li');
+  li.setAttribute('class', 'menu'+idMenu);
+
+  if (idMenu == 1) {
+    li.setAttribute('class', 'active menuActive menu'+idMenu);
+  }
+
+  var a = document.createElement('a');
+  a.setAttribute('data-toggle', 'tab');
+  a.setAttribute('href', '#menu'+idMenu);
+  var texte = document.createTextNode('Tab ' + idMenu);
+  a.appendChild(texte);
+  li.appendChild(a);
+  document.querySelector('.nav-tabs').appendChild(li);
+
+  createTabContent(a.getAttribute('href'), idMenu);
+  idMenu++;
+}
+
+// créer le contenu des tabs
+function createTabContent (id, idMenu) {
+
+  var div2 = createDiv('row', 'content-form', [createForm('myForm')]);
+
+  var button = createButton('button', 'btn btn-default addChamp', 'modal', '#myModal', document.createTextNode('Ajouter un champ'));
+  var div4 = createDiv('col-md-6', '', [button]);
+
+  var button = createButton('button', 'btn btn-default closeTab', '', '', document.createTextNode('Annuler'));
+  var div5 = createDiv('col-md-6', '', [button]);
+
+  var div3 = createDiv('row', '', [div4, div5]);
+
+  var classe = 'tab-pane fade';
+  if (idMenu == 1) {
+    classe = 'tab-pane fade in active';
+  }
+
+  var div = createDiv(classe, id.substring(1), [div2, div3]);
+  document.getElementsByClassName('tab-content')[0].appendChild(div);
+}
+
+// fonction pour ajouter un champ
+function addChamp(event) {
+  var element = event.target;
+  if(element.tagName == 'BUTTON' && element.classList.contains("addChamp")){
+    // retourne le formulaire contenu dans le tab active
+    var form = document.getElementsByClassName('in active')[0].childNodes[0].childNodes;
   }
 }
