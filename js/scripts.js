@@ -1,73 +1,67 @@
-// When the user clicks on div, open the popup
-function myFunction() {
-    var popup = document.getElementById("myModal");
-    popup.classList.toggle("show");
-}
 
-// fcontion pour créer un label
-function createLabel ($for, $texte) {
-  var label = document.createElement('label');
-  label.setAttribute('for', $for);
-  var texte = document.createTextNode('Légende');
-  label.appendChild(texte);
-  return label;
-}
+$(document).ready(function() {
 
-// fonction pour une zone de texte
-function createInput ($type, $classe, $id) {
-  var input = document.createElement('input');
-  input.setAttribute('type', $type);
-  input.setAttribute('class', $classe);
-  input.setAttribute('id', $id);
-  return input;
-}
-
-// Générer une zone de texte
-function createTextBox() {
-  var div = document.createElement('div');
-  div.setAttribute('class', 'form-group');
-  div.appendChild(createLabel('legende', 'Légende'));
-  div.appendChild(createInput('text', 'form-control', 'legende'));
-
-  var form = document.getElementById('myForm');
-  form.appendChild(div);
-  document.getElementById('closeModal').click(); // fermer le popup
-}
-
-// Générer un champ pour de la musique
-function createMusicBox() {
-  var div = document.createElement('div');
-  div.setAttribute('class', 'form-group');
-
-  div.appendChild(createLabel('lienMusic', 'Lien de la Musique'));
-
-  var input = document.createElement('input');
-  input.setAttribute('type', 'text');
-  input.setAttribute('class', 'form-control');
-  input.setAttribute('id', 'legende');
-  
-  div.appendChild(input);
-
-  var form = document.getElementById('myForm');
-  form.appendChild(div);
-
-  document.getElementById('closeModal').click(); // fermer le popup
-}
-
-/*
-var form = document.getElementById('myForm');
-
-document.getElementById('addText').addEventListener('click', function(e) {
-  form.appendChild(createTextBox());
+  document.addEventListener('click', modalMusic); // affichage du popup de la liste des musiques
 });
-*/
+
+// fermer le premier popup avant que celui de la liste des musiques ne s'affiche
+function modalMusic(event) {
+  var element = event.target;
+  if(element.tagName == 'BUTTON' && element.classList.contains("set-music")){
+    document.getElementById('closeModal').click();
+  }
+}
+
+
+
+
 
 
 /*
-// Générer une zone de texte
-function createTextBox() {
-  var input = document.createElement('input');
-  input.type = 'text';
-  return input;
+var element = document.getElementById('set-music');
+if (element) {
+if (element.addEventListener) {
+  element.addEventListener("click", function(){
+    var div = document.createElement('div');
+    div.setAttribute('class', 'modal fade');
+    div.setAttribute('role', 'dialog');
+  });
+
+    //element.addEventListener("click", myFunction);
+} else if (element.attachEvent) {
+    element.attachEvent("onclick", myFunction);
 }
+}
+
+function myFunction( ){}
+
+  //div.setAttribute('class', 'modal fade');
 */
+/*
+
+  <!-- Popup -->
+  <div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog modal-sm">
+      <div class="modal-content">
+
+        <div class="row modal-body">
+          <div class="col-lg-12">
+            <h4 class="modal-title">Ajouter un champ</h4>
+          </div>
+        </div>
+
+        <div class="modal-header">
+          <button type="button" class="btn btn-default btn-popup set-legende" onclick="createTextBox()">Texte</button>
+          <button type="button" class="btn btn-default btn-popup set-music">Musique</button>
+        </div>
+
+        <div class="modal-footer">
+          <button type="button" class="btn btn-default" data-dismiss="modal" id="closeModal">Annuler</button>
+        </div>
+
+      </div>
+    </div>
+  </div>
+*/
+
+//});
