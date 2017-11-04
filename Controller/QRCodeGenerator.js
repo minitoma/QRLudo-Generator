@@ -38,7 +38,7 @@ class QRCodeGenerator{
         fill: '#000',
 
         // background color or image element, null for transparent background
-        background: null,
+        background: '#fff',
 
         // content
         text: qrcode.getDonnees(),
