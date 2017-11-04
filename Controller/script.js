@@ -21,9 +21,7 @@ alert(qrCodeA.getDonnees());
 qrCodeA.inverserOrdreContenu(1,2);
 
 */
+alert(qrCodeA.getDonnees());
 
-alert(qrCodeA.getTypeContenu(1));
-alert(qrCodeA.getNomFichier(1));
-alert(qrCodeA.getTexte(2));
 
 QRCodeGenerator.generate('#affichageqr', qrCodeA);
