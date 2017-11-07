@@ -13,7 +13,7 @@ $(document).ready(function() {
   });
 
   document.addEventListener('click', modalMusic); // affichage du popup de la liste des musiques
-  document.getElementsByClassName("createTabs")[0].addEventListener('click', createTabs); // récupérer le click derriére bouton create
+  document.getElementById('setFamilyName').addEventListener('click', createTabs); // récupérer le click derriére bouton create
   document.addEventListener('click', closeTab); // sur click du bouton closeTab
   document.addEventListener('click', addChamp); // sur click du bouton addChamp
 
