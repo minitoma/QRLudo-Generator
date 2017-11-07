@@ -202,6 +202,20 @@ class QRCodeAtomique extends QRCode{
       }
     }
 
+    // copier le contenu d'un element input
+    copyInputContent(input) {
+      // tester s'il s'agit d'un input de musique
+      if(input.disabled) {
+        var url = 'https://drive.google.com/open?id=' + input.id;
+        this.ajouterFichier(url, input.value);
+      } else {
+        this.ajouterTexte(input.value);
+      }
+    }
 
+    // copier le contenu d'un element legende
+    copyLegendeContent(legende) {
+      this.ajouterTexte(legende.textContent);
+    }
 
 }
