@@ -27,3 +27,12 @@ npm install google-auth-library --save
 
 # api google text to speech
 npm install google-tts-api --save
+
+# librairie génération QRCodes
+npm install -g bower (si bower pas installé)
+bower install lrsjng/jquery-qrcode
+
+# librairie gestion metadonnées jpg
+npm install piexifjs
+
+

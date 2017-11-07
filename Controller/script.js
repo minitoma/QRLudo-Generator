@@ -25,7 +25,7 @@ $(document).ready(function() {
 
     qrCodeA.inverserOrdreContenu(1,2);
 
-    */
+    
 /*
     alert(qrCodeA.getTypeContenu(1));
     alert(qrCodeA.getNomFichier(1));
