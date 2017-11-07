@@ -5,6 +5,8 @@
   "main": "index.js",
   "author": "Rahmatou WALET, Jules LEGUY, David DEMBELE, Alassane DIOP",
   "dependencies": {
+
+    "exif-js": "^2.3.0",
     "google-auth-library": "^0.11.0",
     "google-tts-api": "0.0.2",
     "googleapis": "^22.2.0",

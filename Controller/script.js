@@ -20,6 +20,9 @@ $(document).ready(function() {
 
     alert(qrCodeA.getDonnees());
 
+*/
+    alert(qrCodeA.getDonnees());
+
     qrCodeA.inverserOrdreContenu(1,2);
 
     */
@@ -31,6 +34,7 @@ $(document).ready(function() {
     var div = document.getElementById('affichageqr').childNodes[1]; // recupérer le div correspondant
     //div.appendChild(createImg('img-buffer','./img/image.png')); // générer un élément img dans le div
     QRCodeGenerator.generate(div, qrCodeA);
+
 
 //    QRCodeGenerator.generate('#affichageqr', qrCodeA);
   });
