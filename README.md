@@ -28,8 +28,5 @@ npm install google-auth-library --save
 # api google text to speech
 npm install google-tts-api --save
 
-# electron-prompt pour remplacer window.prompt
-npm install electron-prompt --save
-
-
+# insérer les métadonnées dans l'image générée
 npm install piexifjs
