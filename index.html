@@ -42,7 +42,7 @@
 								</div> -->
                 <div class="row">
                   <!-- Trigger the modal with a button -->
-                  <div class="col-md-12"><button type="button" class="btn btn-default createTabs" name="create">Créer</button></div>
+                  <div class="col-md-12"><button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalFamilyName">Créer</button></div>
 								</div>
 								<div class="row">
 									<div class="col-md-12"><button type="button" class="btn btn-default" name="import">Charger</button></div>
@@ -57,6 +57,30 @@
 					</div>
 
 					<div class="col-lg-6 colMiddle">
+
+            <!-- Popup saisie de nom de famille-->
+            <div class="modal fade" id="modalFamilyName" role="dialog">
+              <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+
+                  <div class="row modal-body">
+                    <div class="col-lg-12">
+                      <h4 class="modal-title">Famille de QR-Code</h4>
+                    </div>
+                  </div>
+
+                  <div class="modal-header">
+                    <input type="text" class="form-control" id="familyName">
+                  </div>
+
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="setFamilyName">Valider</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="closeModalFamilyName">Annuler</button>
+                  </div>
+
+                </div>
+              </div>
+            </div>
 
               <!-- Popup -->
               <div class="modal fade" id="myModal" role="dialog">

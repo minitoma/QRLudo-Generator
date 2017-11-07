@@ -68,6 +68,10 @@ section.page-header {
   height: 71px;
 }
 
-#affichageqr > div > img {
+#affichageqr > div > canvas {
   width: inherit;
+}
+
+#setFamilyName {
+  margin-bottom: 0;
 }

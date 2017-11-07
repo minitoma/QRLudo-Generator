@@ -45,7 +45,7 @@ function createTextBox() {
   form.appendChild(div);
 
   document.getElementById('closeModal').click(); // fermer le popup
-  //var i = idInputText - ;
+    //var i = idInputText - ;
   //document.getElementById("legende"+idInputText).focus(); // placer le curseur sur le champ de texte crée
   //console.log(i, idInputText);
 }
@@ -117,7 +117,13 @@ function createTabs () {
   var a = document.createElement('a');
   a.setAttribute('data-toggle', 'tab');
   a.setAttribute('href', '#menu'+idMenu);
-  var texte = document.createTextNode('Tab ' + idMenu);
+
+  // recupérer le nom de famille saisi
+  var family = document.getElementById('familyName').value;
+  var texte = document.createTextNode(family);
+  if(family == "" || family == null) {
+    texte = document.createTextNode('Famille ' + idMenu);
+  }
   a.appendChild(texte);
   li.appendChild(a);
   document.querySelector('.nav-tabs').appendChild(li);
