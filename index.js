@@ -22,7 +22,7 @@ function createWindow () {
 
   mainWindow.setResizable(false); // empêcher de redimmensionner la fenêtre
 
-  mainWindow.loadURL(`file://${__dirname}/index2.html`); // on doit charger un chemin absolu
+  mainWindow.loadURL(`file://${__dirname}/index.html`); // on doit charger un chemin absolu
 
   mainWindow.on('closed', () => {
     mainWindow = null;
