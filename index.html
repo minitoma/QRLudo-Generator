@@ -5,10 +5,24 @@
     <script src="./node_modules/jquery/dist/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
-    <script src="./js/scripts.js"></script>
 
-		 <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
-     <link rel="stylesheet" href="./css/styles.css">
+    <script src="./js/api_scripts.js"></script>
+    <script src="./js/scripts.js"></script>
+    <script src="./js/view.js"></script>
+
+    <script src="./Model/QRCode.js"></script>
+    <script src="./Model/QRCodeEnsemble.js"></script>
+    <script src="./Model/QRCodeAtomique.js"></script>
+
+    <script src="./node_modules/jquery/jquery-qrcode-0.14.0.min.js"></script>
+    <script src="./node_modules/jquery/jquery-qrcode-0.14.0.js"></script>
+    <script src="./node_modules/lz-string/libs/lz-string.js"></script>
+
+    <script src="./Controller/QRCodeGenerator.js"></script>
+    <script src="./Controller/script.js"></script>
+
+    <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/styles.css">
 
   </head>
 
@@ -23,9 +37,13 @@
 				<div class="row">
 					<div class="col-lg-3 colLeft">
 						<form class="col-md-12">
-						    <div class="row">
+						<!--    <div class="row"> -->
                   <!-- Trigger the modal with a button -->
-                  <div class="col-md-12"><button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal" name="create">Créer</button></div>
+              <!--    <div class="col-md-12"><button type="button" class="btn btn-default" data-toggle="modal" data-target="#myModal" name="create">Créer</button></div>
+								</div> -->
+                <div class="row">
+                  <!-- Trigger the modal with a button -->
+                  <div class="col-md-12"><button type="button" class="btn btn-default createTabs" name="create">Créer</button></div>
 								</div>
 								<div class="row">
 									<div class="col-md-12"><button type="button" class="btn btn-default" name="import">Charger</button></div>
@@ -33,9 +51,9 @@
 								<div class="row">
 									<div class="col-md-12"><button type="button" class="btn btn-default" name="export">Exporter</button></div>
 								</div>
-								<div class="row">
+<!--								<div class="row">
 									<div class="col-md-12"><button type="button" class="btn btn-default" name="save">Sauvegarder</button></div>
-								</div>
+								</div>    -->
 						</form>
 					</div>
 
@@ -53,8 +71,8 @@
                     </div>
 
                     <div class="modal-header">
-                      <button type="button" class="btn btn-default btn-popup" onclick="createTextBox()">Texte</button>
-                      <button type="button" class="btn btn-default btn-popup" onclick="createMusicBox()">Musique</button>
+                      <button type="button" class="btn btn-default btn-popup set-legende">Texte</button>
+                      <button type="button" class="btn btn-default btn-popup set-music" data-toggle="modal" data-target="#modalMusic">Musique</button>
                     </div>
 
                     <div class="modal-footer">
@@ -65,11 +83,54 @@
                 </div>
               </div>
 
-              <!-- Zone de Texte -->
+              <!-- Popup Liste Musiques -->
+              <div class="modal fade" id="modalMusic" role="dialog">
+                <div class="modal-dialog modal-lg">
+                  <div class="modal-content">
 
-                <form id="myForm">
+                    <div class="row modal-body">
+                      <div class="col-lg-12">
+                        <h4 class="modal-title">Liste des Musiques</h4>
+                      </div>
+                    </div>
+
+                    <div class="modal-header row">
+                        <!-- affichage des musiques -->
+                    </div>
+
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal" id="closeModalMusique">Annuler</button>
+                    </div>
+
+                  </div>
+                </div>
+              </div>
+
+              <!-- Tabs -->
+              <ul class="nav nav-tabs">
+                <!-- Les tabs -->
+              </ul>
+
+              <div class="tab-content">
+            <!-- Contenu des tab -->
+            <!--    <div id="menu1" class="tab-pane fade in active">
+                  <h3>Menu 1</h3>
+                  <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+                </div>
+                <div id="menu2" class="tab-pane fade">
+                  <h3>Menu 2</h3>
+                  <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
+                </div>
+                <div id="menu3" class="tab-pane fade">
+                  <h3>Menu 3</h3>
+                  <p>Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+                </div>
+                -->
+              </div>
+
+            <!--    <form id="myForm">  -->
                   <!-- Les champs de texte ou de musique seront ajoutés automatiquement par la fonction createTextBox()   -->
-                </form>
+          <!--      </form> -->
       <!--        </div>    -->
 
 					</div>
@@ -78,11 +139,18 @@
 
 						<form class="col-md-12">
 						    <div class="row">
-									<div class="col-md-12"><button type="button" class="btn btn-default" name="preview">Prévisualiser</button></div>
+									<div class="col-md-12"><button type="button" class="btn btn-default" id="preview">Prévisualiser</button></div>
 								</div>
 								<div class="row">
-									<div class="col-md-12"><button type="button" class="btn btn-default" name="read">Lire</button></div>
+									<div class="col-md-12"><button type="button" class="btn btn-default" id="read">Lire</button></div>
 								</div>
+
+                <div class="row" id="affichageqr">
+                  <div class="col-md-12">
+                      <!-- affichage du qrcode -->
+                  </div>
+                </div>
+                <img style="display:none;" id="img-buffer" src="./img/image.png">
 						</form>
 
 					</div>
@@ -91,6 +159,60 @@
 
 		</div>
 
+
   </body>
 
 </html>
+
+
+<!--
+    <div class="container">
+      <h2>Dynamic Tabs with jQuery</h2>
+      <p>Click on the Tabs to display the active and previous tab.</p>
+      <ul class="nav nav-tabs">
+        <li class="active"><a href="#home">Home</a></li>
+        <li><a href="#menu1">Menu 1</a></li>
+        <li><a href="#menu2">Menu 2</a></li>
+        <li><a href="#menu3">Menu 3</a></li>
+      </ul>
+
+      <div class="tab-content">
+        <div id="home" class="tab-pane fade in active">
+          <h3>HOME</h3>
+          <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.</p>
+        </div>
+        <div id="menu1" class="tab-pane fade">
+          <h3>Menu 1</h3>
+          <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+        </div>
+        <div id="menu2" class="tab-pane fade">
+          <h3>Menu 2</h3>
+          <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
+        </div>
+        <div id="menu3" class="tab-pane fade">
+          <h3>Menu 3</h3>
+          <p>Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+        </div>
+      </div>
+        <hr>
+        <p class="act"><b>Active Tab</b>: <span></span></p>
+        <p class="prev"><b>Previous Tab</b>: <span></span></p>
+    </div>
+
+    <script>
+    $(document).ready(function(){
+        $(".nav-tabs a").click(function(){
+            $(this).tab('show');
+        });
+        $('.nav-tabs a').on('shown.bs.tab', function(event){
+            var x = $(event.target).text();         // active tab
+            var y = $(event.relatedTarget).text();  // previous tab
+            $(".act span").text(x);
+            $(".prev span").text(y);
+        });
+    });
+    </script>
+
+
+
+-->
