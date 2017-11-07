@@ -11,13 +11,14 @@ class QRCodeGenerator{
   static generate(div, qrcode){
 
      var jq = window.jQuery;
-
      var size = 450;
 
+
+     //On génère le QRCode dans un canvas
      $(div).qrcode( {
 
         // render method: 'canvas', 'image' or 'div'
-        render: 'image',
+        render: 'canvas',
 
         // version range somewhere in 1 .. 40
         minVersion: 4, //On force une certaine taille de QRCode pour que l'image centrale n'empêche pas la lecture des QRCodes contenant peu de données
@@ -37,7 +38,7 @@ class QRCodeGenerator{
         fill: '#000',
 
         // background color or image element, null for transparent background
-        background: null,
+        background: '#fff',
 
         // content
         text: qrcode.getDonnees(),
@@ -68,6 +69,23 @@ class QRCodeGenerator{
 
       });
 
+
+      //On génère une image jpg à partir du canvas et contenant les métadonnées du qrcode dans l'attribut Description exif
+      var zerothIfd = {};
+      zerothIfd[piexif.ImageIFD.ImageDescription] = qrcode.getMetadonnees();
+      var exifObj = {"0th":zerothIfd};
+      var exifBytes = piexif.dump(exifObj);
+      var jpegData = document.getElementsByTagName("canvas")[0].toDataURL("image/jpeg");
+      var exifModified = piexif.insert(exifBytes, jpegData);
+
+      //On crée un élément img contenant l'image générée puis on l'insère dans le div
+      var canvas = document.getElementsByTagName("canvas")[0];
+      var image = new Image();
+	    image.src = exifModified;
+      $(div).prepend(image);
+
+      //On supprime le canvas initial
+      canvas.parentNode.removeChild(canvas);
 
     }
 }

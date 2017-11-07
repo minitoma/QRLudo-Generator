@@ -192,6 +192,10 @@ class QRCodeAtomique extends QRCode{
       return liste;
     }
 
+
+    /*
+    * Vérifie si un indice passé en paramètre correspond à celui d'un élément stocké dans le QRCode
+    */
     testIndiceContenuCorrect(indice){
       if (indice<0 || indice>=this.donnees.getElementsByTagName("contenu")[0].childNodes.length){
         throw "L'indice ne correspod pas à celui d'une donnée contenue dans le QRCode";

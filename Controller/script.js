@@ -48,6 +48,9 @@ $(document).ready(function() {
 
     alert(qrCodeA.getDonnees());
 
+*/
+    alert(qrCodeA.getDonnees());
+
     qrCodeA.inverserOrdreContenu(1,2);
 
     */
