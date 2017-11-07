@@ -1,5 +1,6 @@
 var idInputText = 0; // pour identifier les inputs de façon unique
 var idMenu = 1; // pour identifier de facon unique les menus
+var facade = null; // un objet de FacadeController
 
 $(document).ready(function() {
 
@@ -13,8 +14,20 @@ $(document).ready(function() {
 
   document.getElementsByClassName('set-legende')[0].addEventListener('click', createTextBox); // sur clic du bouton creer champ texte
   document.getElementById('read').addEventListener('click', getForm); // sur clic du bouton Lire pour ecouter les textes saisis
+  document.getElementById('preview').addEventListener('click', preview); // prévisualiser le qr-code
 });
 
+
+function preview() {
+
+  var qrcode = new QRCodeAtomique(); // instancier un objet qrcode
+
+  var form = document.getElementById('myForm'); // recupérer le formulaire
+
+  var div = document.getElementById('affichageqr').childNodes[1]; // recupérer le div correspondant
+  facade = new FacadeController(qrcode, div); // instancier la facade
+  facade.genererQRCode(form); // générer le qrcode
+}
 
 // fcontion pour créer un label
 function createLabel (fore, texte) {

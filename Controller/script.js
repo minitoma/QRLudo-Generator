@@ -1,11 +1,11 @@
-var qrCodeA = null;
+/*var qrCodeA = null;
 
 $(document).ready(function() {
   document.getElementById('preview').addEventListener('click', function() {
 
-    qrCodeA = new QRCodeAtomique();
+    qrCodeA = new QRCodeAtomique(); */
     /* recupérer le formulaire */
-    var form = document.getElementById('myForm');
+/*    var form = document.getElementById('myForm');
 
     if (form != null) {
 
@@ -32,6 +32,7 @@ $(document).ready(function() {
         }
 
 
+<<<<<<< HEAD
   //  qrCodeA.ajouterFichier("http://fichier.drive.google.com", "nomFichier");
   //  qrCodeA.ajouterFichier("http://fichier2.drive.google.com", "nomFichier2");
   //  qrCodeA.ajouterTexte("Ceci est un test");
@@ -59,6 +60,8 @@ $(document).ready(function() {
     alert(qrCodeA.getNomFichier(1));
     alert(qrCodeA.getTexte(2));
 */
+=======
+>>>>>>> alassane
     //if (document.getElementById('affichageqr').childNodes[1])
     var div = document.getElementById('affichageqr').childNodes[1]; // recupérer le div correspondant
     while (div.hasChildNodes()) {
@@ -88,3 +91,4 @@ function copyInputContent(input) {
 function copyLegendeContent(legende) {
   qrCodeA.ajouterTexte(legende.textContent);
 }
+*/
