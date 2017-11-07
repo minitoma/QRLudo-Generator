@@ -30,3 +30,6 @@ npm install google-tts-api --save
 
 # electron-prompt pour remplacer window.prompt
 npm install electron-prompt --save
+
+
+npm install piexifjs
