@@ -71,3 +71,7 @@ section.page-header {
 #affichageqr > div > img {
   width: inherit;
 }
+
+#setFamilyName {
+  margin-bottom: 0;
+}
