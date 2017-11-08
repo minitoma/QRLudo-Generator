@@ -1,5 +1,6 @@
 var idInputText = 0; // pour identifier les inputs de façon unique
 var idMenu = 1; // pour identifier de facon unique les menus
+var facade = null; // un objet de FacadeController
 
 $(document).ready(function() {
 
@@ -13,8 +14,43 @@ $(document).ready(function() {
 
   document.getElementsByClassName('set-legende')[0].addEventListener('click', createTextBox); // sur clic du bouton creer champ texte
   document.getElementById('read').addEventListener('click', getForm); // sur clic du bouton Lire pour ecouter les textes saisis
+  document.getElementById('preview').addEventListener('click', preview); // prévisualiser le qr-code
 });
 
+// fonction pour prévisualiser un qrcode
+function preview() {
+  var qrcode = new QRCodeAtomique(); // instancier un objet qrcode
+
+  var form = document.getElementById('myForm'); // recupérer le formulaire
+
+  /* copier les données du formulaire dans le qrcode */
+  if (form != null) {
+    for(var i=0; i<form.length; i++) {
+
+      var form2 = form.childNodes[i].childNodes;
+      for(var j=0; j<form2.length; j++) {
+        switch (form2[j].tagName) {
+          case 'INPUT':
+            console.log(form2[j].tagName);
+            qrcode.copyInputContent(form2[j]);
+            break;
+
+          case 'LABEL':
+            console.log(form2[j].tagName);
+            qrcode.copyLegendeContent(form2[j]);
+            break;
+
+          default:
+            console.log(form2[j].tagName);
+        }
+      }
+    }
+  }
+
+  var div = document.getElementById('affichageqr').childNodes[1]; // recupérer le div correspondant
+  facade = new FacadeController(qrcode, div); // instancier la facade
+  facade.genererQRCode(form); // générer le qrcode
+}
 
 // fcontion pour créer un label
 function createLabel (fore, texte) {

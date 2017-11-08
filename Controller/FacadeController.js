@@ -4,7 +4,8 @@
 */
 class FacadeController{
 
-  constructor(divImg){
+  constructor(qrcode, divImg){
+    this.qrcode = qrcode;
     this.divImg = divImg; //Stocke l'id du div dans laquelle le controller écrit les QRCodes générés
   }
 
@@ -16,8 +17,15 @@ class FacadeController{
     return new QRCodeEnsemble();
   }
 
-  genererQRCode(qrcode){
-    QRCodeGenerator.generate(this.divImg, qrcode);
+  genererQRCode(form){
+
+    while (this.divImg.hasChildNodes()) {
+        this.divImg.removeChild(this.divImg.firstChild);
+    }
+
+    //div.appendChild(createImg('img-buffer','./img/image.png')); // générer un élément img dans le div
+    QRCodeGenerator.generate(this.divImg, this.qrcode);
+    console.log(this.qrcode.getDonnees());
   }
 
 
