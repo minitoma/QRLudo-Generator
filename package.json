@@ -5,12 +5,16 @@
   "main": "index.js",
   "author": "Rahmatou WALET, Jules LEGUY, David DEMBELE, Alassane DIOP",
   "dependencies": {
+    "bootstrap": "^3.3.7",
+    "electron-debug": "^1.4.0",
     "electron-prompt": "^0.4.0",
     "exif-js": "^2.3.0",
     "google-auth-library": "^0.11.0",
     "google-tts-api": "0.0.2",
     "googleapis": "^22.2.0",
-    "jquery": "^3.2.1"
+    "jquery": "^3.2.1",
+    "jquery-qrcode": "^1.0.0",
+    "piexifjs": "^1.0.3"
   },
   "devDependencies": {
     "devtron": "^1.4.0",
