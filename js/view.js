@@ -21,7 +21,10 @@ $(document).ready(function() {
 function preview() {
   var qrcode = new QRCodeAtomique(); // instancier un objet qrcode
 
-  var form = document.getElementById('myForm'); // recupérer le formulaire
+  // on recupére le contenu du tab active
+  var div = document.getElementsByClassName('tab-pane fade active in')[0];
+  // on recupére le formulaire de ce div active
+  var form = div.childNodes[0].childNodes[0];
 
   /* copier les données du formulaire dans le qrcode */
   if (form != null) {
