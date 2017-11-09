@@ -46,7 +46,7 @@
                   <div class="col-md-12"><button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalFamilyName">Créer</button></div>
 								</div>
 								<div class="row">
-									<div class="col-md-12"><button type="button" class="btn btn-default" name="import">Charger</button></div>
+									<div class="col-md-12"><button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalImport">Charger</button></div>
 								</div>
 								<div class="row">
 									<div class="col-md-12"><button type="button" class="btn btn-default" name="export">Exporter</button></div>
@@ -82,8 +82,34 @@
                 </div>
               </div>
             </div>
+            <!-- Fin  popup de saisie de nom de famille -->
 
-              <!-- Popup -->
+            <!-- Popup pour charger un qrcode -->
+            <div class="modal fade" id="modalImport" role="dialog">
+              <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+
+                  <div class="row modal-body">
+                    <div class="col-lg-12">
+                      <h4 class="modal-title">Choisir un fichier</h4>
+                    </div>
+                  </div>
+
+                  <div class="modal-header">
+                    <input type="file" class="form-control" id="importedFile" accept=".xml">
+                  </div>
+
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="setImportedFile">Valider</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="closeModalImport">Annuler</button>
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            <!-- fin Popup pour charger un qrcode -->
+
+              <!-- Popup ajouter champ-->
               <div class="modal fade" id="myModal" role="dialog">
                 <div class="modal-dialog modal-sm">
                   <div class="modal-content">
@@ -106,6 +132,7 @@
                   </div>
                 </div>
               </div>
+              <!-- fin Popup ajouter champ -->
 
               <!-- Popup Liste Musiques -->
               <div class="modal fade" id="modalMusic" role="dialog">

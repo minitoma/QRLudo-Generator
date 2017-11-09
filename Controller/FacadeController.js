@@ -28,7 +28,8 @@ class FacadeController{
     console.log(this.qrcode.getDonnees());
   }
 
-
-
+  static importQRCode(file) {
+    console.log('file recu');
+  }
 
 }

@@ -76,6 +76,7 @@ section.page-header {
   width: inherit;
 }
 
-#setFamilyName {
+#setFamilyName,
+#setImportedFile {
   margin-bottom: 0;
 }
