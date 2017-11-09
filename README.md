@@ -28,5 +28,16 @@ npm install google-auth-library --save
 # api google text to speech
 npm install google-tts-api --save
 
+<<<<<<< HEAD
+# librairie génération QRCodes
+npm install -g bower (si bower pas installé)
+bower install lrsjng/jquery-qrcode
+
+# librairie gestion metadonnées jpg
+npm install piexifjs
+
+
+=======
 # insérer les métadonnées dans l'image générée
 npm install piexifjs
+>>>>>>> alassane

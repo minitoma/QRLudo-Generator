@@ -17,35 +17,12 @@ $(document).ready(function() {
   document.getElementById('preview').addEventListener('click', preview); // prévisualiser le qr-code
 });
 
-// fonction pour prévisualiser un qrcode
+
 function preview() {
+
   var qrcode = new QRCodeAtomique(); // instancier un objet qrcode
 
   var form = document.getElementById('myForm'); // recupérer le formulaire
-
-  /* copier les données du formulaire dans le qrcode */
-  if (form != null) {
-    for(var i=0; i<form.length; i++) {
-
-      var form2 = form.childNodes[i].childNodes;
-      for(var j=0; j<form2.length; j++) {
-        switch (form2[j].tagName) {
-          case 'INPUT':
-            console.log(form2[j].tagName);
-            qrcode.copyInputContent(form2[j]);
-            break;
-
-          case 'LABEL':
-            console.log(form2[j].tagName);
-            qrcode.copyLegendeContent(form2[j]);
-            break;
-
-          default:
-            console.log(form2[j].tagName);
-        }
-      }
-    }
-  }
 
   var div = document.getElementById('affichageqr').childNodes[1]; // recupérer le div correspondant
   facade = new FacadeController(qrcode, div); // instancier la facade
