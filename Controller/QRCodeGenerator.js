@@ -69,7 +69,7 @@ class QRCodeGenerator{
 
       });
 
-/*
+
       //On génère une image jpg à partir du canvas et contenant les métadonnées du qrcode dans l'attribut Description exif
       var zerothIfd = {};
       zerothIfd[piexif.ImageIFD.ImageDescription] = qrcode.getMetadonnees();
@@ -86,6 +86,6 @@ class QRCodeGenerator{
 
       //On supprime le canvas initial
       canvas.parentNode.removeChild(canvas);
-*/
+
     }
 }
