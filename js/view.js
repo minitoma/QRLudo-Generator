@@ -35,12 +35,12 @@ function preview() {
         switch (form2[j].tagName) {
           case 'INPUT':
             console.log(form2[j].tagName);
-            qrcode.copyInputContent(form2[j]);
+            copyInputContent(qrcode, form2[j]);
             break;
 
           case 'LABEL':
             console.log(form2[j].tagName);
-            qrcode.copyLegendeContent(form2[j]);
+            copyLegendeContent(qrcode,form2[j]);
             break;
 
           default:
@@ -200,4 +200,21 @@ function addChamp(event) {
     // retourne le formulaire contenu dans le tab active
     var form = document.getElementsByClassName('in active')[0].childNodes[0].childNodes;
   }
+}
+
+// copier le contenu d'un element input
+function copyInputContent(qrcode, input) {
+  // tester s'il s'agit d'un input de musique
+  if(input.disabled) {
+    var url = 'https://drive.google.com/open?id=' + input.id;
+    qrcode.ajouterFichier(url, input.value);
+  } else {
+    qrcode.ajouterTexte(input.value);
+  }
+}
+
+
+// copier le contenu d'un element legende
+function copyLegendeContent(qrcode, legende) {
+  qrcode.ajouterTexte(legende.textContent);
 }
