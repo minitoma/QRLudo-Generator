@@ -72,6 +72,11 @@ section.page-header {
   width: inherit;
 }
 
-#setFamilyName {
+#affichageqr > div > img {
+  width: inherit;
+}
+
+#setFamilyName,
+#setImportedFile {
   margin-bottom: 0;
 }

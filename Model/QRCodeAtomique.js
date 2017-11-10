@@ -202,6 +202,5 @@ class QRCodeAtomique extends QRCode{
       }
     }
 
-
-
+    
 }

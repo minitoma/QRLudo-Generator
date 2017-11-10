@@ -17,12 +17,38 @@ $(document).ready(function() {
   document.getElementById('preview').addEventListener('click', preview); // prévisualiser le qr-code
 });
 
-
+// fonction pour prévisualiser un qrcode
 function preview() {
-
   var qrcode = new QRCodeAtomique(); // instancier un objet qrcode
 
-  var form = document.getElementById('myForm'); // recupérer le formulaire
+  // on recupére le contenu du tab active
+  var div = document.getElementsByClassName('tab-pane fade active in')[0];
+  // on recupére le formulaire de ce div active
+  var form = div.childNodes[0].childNodes[0];
+
+  /* copier les données du formulaire dans le qrcode */
+  if (form != null) {
+    for(var i=0; i<form.length; i++) {
+
+      var form2 = form.childNodes[i].childNodes;
+      for(var j=0; j<form2.length; j++) {
+        switch (form2[j].tagName) {
+          case 'INPUT':
+            console.log(form2[j].tagName);
+            copyInputContent(qrcode, form2[j]);
+            break;
+
+          case 'LABEL':
+            console.log(form2[j].tagName);
+            copyLegendeContent(qrcode,form2[j]);
+            break;
+
+          default:
+            console.log(form2[j].tagName);
+        }
+      }
+    }
+  }
 
   var div = document.getElementById('affichageqr').childNodes[1]; // recupérer le div correspondant
   facade = new FacadeController(qrcode, div); // instancier la facade
@@ -174,4 +200,21 @@ function addChamp(event) {
     // retourne le formulaire contenu dans le tab active
     var form = document.getElementsByClassName('in active')[0].childNodes[0].childNodes;
   }
+}
+
+// copier le contenu d'un element input
+function copyInputContent(qrcode, input) {
+  // tester s'il s'agit d'un input de musique
+  if(input.disabled) {
+    var url = 'https://drive.google.com/open?id=' + input.id;
+    qrcode.ajouterFichier(url, input.value);
+  } else {
+    qrcode.ajouterTexte(input.value);
+  }
+}
+
+
+// copier le contenu d'un element legende
+function copyLegendeContent(qrcode, legende) {
+  qrcode.ajouterTexte(legende.textContent);
 }
