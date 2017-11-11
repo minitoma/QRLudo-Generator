@@ -25,11 +25,10 @@ class FacadeController{
 
     //div.appendChild(createImg('img-buffer','./img/image.png')); // générer un élément img dans le div
     QRCodeGenerator.generate(this.divImg, this.qrcode);
-    console.log(this.qrcode.getDonnees());
   }
 
   static importQRCode(file) {
-    console.log('file recu');
+    QRCodeLoader.loadQRCode(file);
   }
 
 }
