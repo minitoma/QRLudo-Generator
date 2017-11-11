@@ -15,12 +15,12 @@ function createWindow () {
   mainWindow = new BrowserWindow({
     width: 1300, // on définit une taille pour notre fenêtre
     height: 700,
-    maximized: false,
+    maximized: true,
     center: true,
-    frame: false
+    frame: true // en faire une fenetre
   });
 
-  mainWindow.setResizable(false); // empêcher de redimmensionner la fenêtre
+  mainWindow.setResizable(true); // autoriser le redimensionnement
 
   mainWindow.loadURL(`file://${__dirname}/index.html`); // on doit charger un chemin absolu
 

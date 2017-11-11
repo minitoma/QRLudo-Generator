@@ -20,6 +20,7 @@ $(document).ready(function() {
   document.getElementById('modalMusic').addEventListener('click', function(){
     selectMusic(event);
   }); // sur clic d'un lien de musique
+  document.getElementById('setImportedFile').addEventListener('click', importFile);
 
 });
 
@@ -82,55 +83,13 @@ function closeModalMusique(event) {
   }
 }
 
+// fonction pour charger un QRCode
+function importFile() {
+  document.getElementById('closeModalImport').click(); // fermer le popup d'import
 
-
-
-
-/*
-var element = document.getElementById('set-music');
-if (element) {
-if (element.addEventListener) {
-  element.addEventListener("click", function(){
-    var div = document.createElement('div');
-    div.setAttribute('class', 'modal fade');
-    div.setAttribute('role', 'dialog');
-  });
-
-    //element.addEventListener("click", myFunction);
-} else if (element.attachEvent) {
-    element.attachEvent("onclick", myFunction);
+  // recupérer le fichier
+  var importedFile = document.getElementById('importedFile').files[0];
+  if (importedFile) {
+    FacadeController.importQRCode(importedFile);
+  }
 }
-}
-
-function myFunction( ){}
-
-  //div.setAttribute('class', 'modal fade');
-*/
-/*
-
-  <!-- Popup -->
-  <div class="modal fade" id="myModal" role="dialog">
-    <div class="modal-dialog modal-sm">
-      <div class="modal-content">
-
-        <div class="row modal-body">
-          <div class="col-lg-12">
-            <h4 class="modal-title">Ajouter un champ</h4>
-          </div>
-        </div>
-
-        <div class="modal-header">
-          <button type="button" class="btn btn-default btn-popup set-legende" onclick="createTextBox()">Texte</button>
-          <button type="button" class="btn btn-default btn-popup set-music">Musique</button>
-        </div>
-
-        <div class="modal-footer">
-          <button type="button" class="btn btn-default" data-dismiss="modal" id="closeModal">Annuler</button>
-        </div>
-
-      </div>
-    </div>
-  </div>
-*/
-
-//});
