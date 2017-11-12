@@ -27,8 +27,8 @@ class FacadeController{
     QRCodeGenerator.generate(this.divImg, this.qrcode);
   }
 
-  static importQRCode(file) {
-    QRCodeLoader.loadQRCode(file);
+  importQRCode(file) {
+    return QRCodeLoader.loadQRCode(file);
   }
 
 }
