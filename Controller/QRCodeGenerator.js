@@ -1,7 +1,9 @@
 /*
 * Classe permettant de générer une image QRCode à partir d'un objet QRCode
-* L'insertion des métadonnées du QRCode dans les métadonnéees de l'image n'est pas encore gérée
+* On insère les données et les métadonnées du QRCode dans les métadonnées de l'image générée
 * Note : la page html appelant la méthode generate doit contenir un élément <img id="img-buffer" src="chemin/de/limage/centrale">
+*
+* À faire : supprimer les attributs par défaut xml inutiles
 */
 class QRCodeGenerator{
 
@@ -41,7 +43,7 @@ class QRCodeGenerator{
         background: '#fff',
 
         // content
-        text: qrcode.getDonnees(),
+        text: qrcode.getDonneesUtilisateur(),
 
         // corner radius relative to module width: 0.0 .. 0.5
         radius: 0.5,
@@ -69,17 +71,23 @@ class QRCodeGenerator{
 
       });
 
+      //On récupère le noeud racine xml (contenant données utilisateur + metadonnées) et on le convertit en tableau de int pour l'insérer dans les métadonnées de l'image
+      var donnees = unescape(qrcode.getRacineXml());
+      var donneesutf8 = [];
+      for (var i = 0; i < donnees.length; i++) {
+        donneesutf8.push(donnees.charCodeAt(i));
+      }
 
-      //On génère une image jpg à partir du canvas et contenant les métadonnées du qrcode dans l'attribut Description exif
+      //On génère une image jpg à partir du canvas et contenant les données du qrcode dans l'attribut XMLPacket
       var zerothIfd = {};
-      zerothIfd[piexif.ImageIFD.ImageDescription] = qrcode.getMetadonnees();
+      zerothIfd[piexif.ImageIFD.XMLPacket] = donneesutf8;
       var exifObj = {"0th":zerothIfd};
       var exifBytes = piexif.dump(exifObj);
-      var jpegData = document.getElementsByTagName("canvas")[0].toDataURL("image/jpeg");
+      var jpegData = div.getElementsByTagName("canvas")[0].toDataURL("image/jpeg");
       var exifModified = piexif.insert(exifBytes, jpegData);
 
       //On crée un élément img contenant l'image générée puis on l'insère dans le div
-      var canvas = document.getElementsByTagName("canvas")[0];
+      var canvas = div.getElementsByTagName("canvas")[0];
       var image = new Image();
 	    image.src = exifModified;
       $(div).prepend(image);
