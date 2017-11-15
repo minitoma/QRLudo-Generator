@@ -12,48 +12,13 @@ $(document).ready(function() {
     closeModalMusique(event);
   }); // sur clic du bouton closeModalMusique
 
-  document.getElementsByClassName('set-legende')[0].addEventListener('click', createTextBox); // sur clic du bouton creer champ texte
+  document.getElementsByClassName('set-legende')[0].addEventListener('click', function(){
+    createTextBox('');
+  }); // sur clic du bouton creer champ texte
   document.getElementById('read').addEventListener('click', getForm); // sur clic du bouton Lire pour ecouter les textes saisis
   document.getElementById('preview').addEventListener('click', preview); // prévisualiser le qr-code
 });
 
-// fonction pour prévisualiser un qrcode
-function preview() {
-  var qrcode = new QRCodeAtomique(); // instancier un objet qrcode
-
-  // on recupére le contenu du tab active
-  var div = document.getElementsByClassName('tab-pane fade active in')[0];
-  // on recupére le formulaire de ce div active
-  var form = div.childNodes[0].childNodes[0];
-
-  /* copier les données du formulaire dans le qrcode */
-  if (form != null) {
-    for(var i=0; i<form.length; i++) {
-
-      var form2 = form.childNodes[i].childNodes;
-      for(var j=0; j<form2.length; j++) {
-        switch (form2[j].tagName) {
-          case 'INPUT':
-            console.log(form2[j].tagName);
-            copyInputContent(qrcode, form2[j]);
-            break;
-
-          case 'LABEL':
-            console.log(form2[j].tagName);
-            copyLegendeContent(qrcode,form2[j]);
-            break;
-
-          default:
-            console.log(form2[j].tagName);
-        }
-      }
-    }
-  }
-
-  var div = document.getElementById('affichageqr').childNodes[1]; // recupérer le div correspondant
-  facade = new FacadeController(qrcode, div); // instancier la facade
-  facade.genererQRCode(form); // générer le qrcode
-}
 
 // fcontion pour créer un label
 function createLabel (fore, texte) {
@@ -76,8 +41,8 @@ function createInput (type, classe, id, value) {
 }
 
 // Générer une zone de texte
-function createTextBox() {
-  var child = [createLabel('legende', 'Légende'), createInput('text', 'form-control', 'legende', '')];
+function createTextBox(value) {
+  var child = [createLabel('legende', 'Légende'), createInput('text', 'form-control', 'legende', value)];
   var div = createDiv('form-group', '', child);
 
   var form = document.getElementsByClassName('in active')[0].childNodes[0].childNodes[0];
@@ -172,10 +137,10 @@ function createTabContent (id, idMenu, li) {
 
   var div2 = createDiv('row', 'content-form', [createForm('myForm')]);
 
-  var button = createButton('button', 'btn btn-default addChamp', 'modal', '#myModal', document.createTextNode('Ajouter un champ'+idMenu));
+  var button = createButton('button', 'btn btn-default addChamp', 'modal', '#myModal', document.createTextNode('Ajouter un champ'));
   var div4 = createDiv('col-md-6', '', [button]);
 
-  var button = createButton('button', 'btn btn-default closeTab', '', '', document.createTextNode('Annuler'+idMenu));
+  var button = createButton('button', 'btn btn-default closeTab', '', '', document.createTextNode('Annuler'));
   var div5 = createDiv('col-md-6', '', [button]);
 
   var div3 = createDiv('row', '', [div4, div5]);
@@ -195,6 +160,45 @@ function addChamp(event) {
     var form = document.getElementsByClassName('in active')[0].childNodes[0].childNodes;
   }
 }
+
+// fonction pour prévisualiser un qrcode
+function preview() {
+  var qrcode = new QRCodeAtomique(); // instancier un objet qrcode
+
+  // on recupére le contenu du tab active
+  var div = document.getElementsByClassName('tab-pane fade active in')[0];
+  // on recupére le formulaire de ce div active
+  var form = div.childNodes[0].childNodes[0];
+
+  /* copier les données du formulaire dans le qrcode */
+  if (form != null) {
+    for(var i=0; i<form.length; i++) {
+
+      var form2 = form.childNodes[i].childNodes;
+      for(var j=0; j<form2.length; j++) {
+        switch (form2[j].tagName) {
+          case 'INPUT':
+            console.log(form2[j].tagName);
+            copyInputContent(qrcode, form2[j]);
+            break;
+
+          case 'LABEL':
+            console.log(form2[j].tagName);
+            copyLegendeContent(qrcode,form2[j]);
+            break;
+
+          default:
+            console.log(form2[j].tagName);
+        }
+      }
+    }
+  }
+
+  var div = document.getElementById('affichageqr').childNodes[1]; // recupérer le div correspondant
+  facade = new FacadeController(qrcode, div); // instancier la facade
+  facade.genererQRCode(form); // générer le qrcode
+}
+
 
 // copier le contenu d'un element input
 function copyInputContent(qrcode, input) {
