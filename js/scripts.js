@@ -14,7 +14,9 @@ $(document).ready(function() {
 
   document.addEventListener('click', modalMusic); // affichage du popup de la liste des musiques
   document.getElementById('setFamilyName').addEventListener('click', createTabs); // récupérer le click derriére bouton create
-  document.addEventListener('click', closeTab); // sur click du bouton closeTab
+  document.addEventListener('click', function(){ // sur click du bouton closeTab
+    closeTab(event);
+  });
   document.addEventListener('click', addChamp); // sur click du bouton addChamp
 
   document.getElementById('modalMusic').addEventListener('click', function(){
@@ -58,17 +60,28 @@ function selectMusic(event) {
 }
 
 // fonction pour fermer un onglet
-function closeTab(event){
+function closeTab(event) {
+  if(event.target.tagName == 'BUTTON' && event.target.classList.contains("closeTab")) {
     var element = event.target;
-    if(element.tagName == 'BUTTON' && element.classList.contains("closeTab")){
-        console.log(element.parentNode.parentNode.parentNode.id);
-        console.log(document.getElementsByClassName(element.parentNode.parentNode.parentNode.id));
-        console.log(document.getElementById(element.parentNode.parentNode.parentNode.id));
-        // retrouver l'id tab parent et le supprimer de <ul class="nav nav-tabs">
-        document.querySelector('.nav-tabs').removeChild(document.getElementsByClassName(element.parentNode.parentNode.parentNode.id)[0]);
-        // retrouver l'element apr son id et le supprimer de <div class="tab-content">
-        document.getElementsByClassName('tab-content')[0].removeChild(document.getElementById(element.parentNode.parentNode.parentNode.id));
+    console.log(element.parentNode.parentNode.parentNode.id);
+    console.log(document.getElementsByClassName(element.parentNode.parentNode.parentNode.id));
+    console.log(document.getElementById(element.parentNode.parentNode.parentNode.id));
+    // retrouver l'id tab parent et le supprimer de <ul class="nav nav-tabs">
+    document.querySelector('.nav-tabs').removeChild(document.getElementsByClassName(element.parentNode.parentNode.parentNode.id)[0]);
+    // retrouver l'element apr son id et le supprimer de <div class="tab-content">
+    document.getElementsByClassName('tab-content')[0].removeChild(document.getElementById(element.parentNode.parentNode.parentNode.id));
+
+    // définit le tab 1 comme celui active
+    if (document.getElementsByClassName('tab-pane fade').length != 0
+        && document.getElementsByClassName('tab-pane fade active in').length == 0) {
+      document.getElementsByClassName('tab-pane fade')[0].setAttribute('class', 'tab-pane fade active in');
     }
+    if (document.getElementsByClassName('menu').length != 0
+        && document.getElementsByClassName('active menu').length == 0) {
+      document.getElementsByClassName('menu')[0].setAttribute('class', 'active ' +
+          document.getElementsByClassName('menu')[0].getAttribute('class'));
+    }
+  }
 }
 
 // effacer la liste des musiques avant de fermer le popup musique
@@ -92,4 +105,28 @@ function importFile() {
   if (importedFile) {
     FacadeController.importQRCode(importedFile);
   }
+}
+
+// définir le dernier tab créé comme celui active (tab et tabcontent)
+function setActive (div, li) {
+  if (document.getElementsByClassName('tab-pane fade active in').length == 0) {
+    div.setAttribute('class', 'tab-pane fade active in');
+  } else {
+    var div2 = document.getElementsByClassName('tab-pane fade active in')[0];
+    div2.setAttribute('class', 'tab-pane fade');
+    div.setAttribute('class', 'tab-pane fade active in');
+  }
+
+  if (document.getElementsByClassName('active menu').length == 0) {
+    li.setAttribute('class', 'active menu menu'+idMenu);
+  } else {
+    var li2 = document.getElementsByClassName('active menu')[0];
+    console.log(li2);
+    var id = li2.getAttribute('class').match(/\d+/g).join(''); // retourne le chiffre dans la chaine
+    console.log(id);
+    li2.setAttribute('class', 'menu menu' + id);
+    li.setAttribute('class', 'active menu menu'+idMenu);
+  }
+
+
 }
