@@ -66,9 +66,12 @@ class QRCodeLoader{
         break;
     }
 
+    console.log(qrcode.getRacineXml());
+
     return qrcode;
 
   }
+
 
 
   //Convertit un tableau d'entiers en chaîne de caractères

@@ -5,7 +5,8 @@ LIBS= jquery --save \
 			googleapis --save \
 			google-auth-library --save \
 			google-tts-api --save \
-			piexifjs
+			piexifjs \
+			lz-string
 
 # Pour créer un projet
 init:

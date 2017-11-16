@@ -43,7 +43,7 @@ class QRCodeGenerator{
         background: '#fff',
 
         // content
-        text: qrcode.getDonneesUtilisateur(),
+        text: CompresseurTexte.compresser(qrcode.getDonneesUtilisateur()),
 
         // corner radius relative to module width: 0.0 .. 0.5
         radius: 0.5,
@@ -91,6 +91,7 @@ class QRCodeGenerator{
       var image = new Image();
 	    image.src = exifModified;
       $(div).prepend(image);
+
 
       //On supprime le canvas initial
       canvas.parentNode.removeChild(canvas);
