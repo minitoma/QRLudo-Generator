@@ -23,6 +23,7 @@ $(document).ready(function() {
     selectMusic(event);
   }); // sur clic d'un lien de musique
   document.getElementById('setImportedFile').addEventListener('click', importFile);
+  document.getElementById('btnExportFile').addEventListener('click', exportFile);
 
 });
 
@@ -102,6 +103,22 @@ function importFile() {
   if (importedFile) {
     FacadeController.importQRCode(importedFile);
   }
+}
+
+// fonction pour enregistrer un QRCode
+function exportFile() {
+  // il faudra recupérer dans file l'image qrcode généré
+  var FileSaver = require('file-saver');
+  var file = new File(["Hello, world!"], "", {type: "text/plain;charset=utf-8"});
+  FileSaver.saveAs(file);
+
+  /*
+  var canvas = document.getElementById("my-canvas"), ctx = canvas.getContext("2d");
+// draw to canvas...
+canvas.toBlob(function(blob) {
+    saveAs(blob, "pretty image.png");
+});
+  */
 }
 
 // définir le dernier tab créé comme celui active (tab et tabcontent)
