@@ -65,6 +65,25 @@ function createForm(id) {
 function createMusicBox(event) {
   var element = event.target;
   if(element.tagName == 'BUTTON' && element.classList.contains("set-music")){
+
+    fs.readFile('bdd_music.txt', 'utf8', (err, data) => {
+      if (err) throw err;
+      console.log(data.split('\n'));
+      data = data.split('\n');
+
+//      if(element.tagName == 'BUTTON' && element.classList.contains("set-music")){
+        var div = document.getElementById('modalMusic').childNodes[1].childNodes[1].childNodes[3];
+        for (var i = 0; i < data.length-1; i++) {
+            var a = document.createElement('a');
+            a.setAttribute('class', 'hrefMusic');
+            a.setAttribute('href', '#' + data[i]);
+            a.appendChild(document.createTextNode(data[i]));
+          div.appendChild(createDiv('col-md-12', '', [a]));
+        }
+  //    }
+    });
+
+    /*
     // Load client secrets from a local file.
     fs.readFile('client_secret.json', function processClientSecrets(err, content) {
       if (err) {
@@ -74,6 +93,7 @@ function createMusicBox(event) {
       // Authorize a client with the loaded credentials, then call the Drive API.
       authorize(JSON.parse(content), listFiles, event);
     });
+    */
   }
 }
 
