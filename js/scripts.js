@@ -14,13 +14,16 @@ $(document).ready(function() {
 
   document.addEventListener('click', modalMusic); // affichage du popup de la liste des musiques
   document.getElementById('setFamilyName').addEventListener('click', createTabs); // récupérer le click derriére bouton create
-  document.addEventListener('click', closeTab); // sur click du bouton closeTab
+  document.addEventListener('click', function(){ // sur click du bouton closeTab
+    closeTab(event);
+  });
   document.addEventListener('click', addChamp); // sur click du bouton addChamp
 
   document.getElementById('modalMusic').addEventListener('click', function(){
     selectMusic(event);
   }); // sur clic d'un lien de musique
   document.getElementById('setImportedFile').addEventListener('click', importFile);
+  document.getElementById('btnExportFile').addEventListener('click', exportFile);
 
 });
 
@@ -58,17 +61,25 @@ function selectMusic(event) {
 }
 
 // fonction pour fermer un onglet
-function closeTab(event){
+function closeTab(event) {
+  if(event.target.tagName == 'BUTTON' && event.target.classList.contains("closeTab")) {
     var element = event.target;
-    if(element.tagName == 'BUTTON' && element.classList.contains("closeTab")){
-        console.log(element.parentNode.parentNode.parentNode.id);
-        console.log(document.getElementsByClassName(element.parentNode.parentNode.parentNode.id));
-        console.log(document.getElementById(element.parentNode.parentNode.parentNode.id));
-        // retrouver l'id tab parent et le supprimer de <ul class="nav nav-tabs">
-        document.querySelector('.nav-tabs').removeChild(document.getElementsByClassName(element.parentNode.parentNode.parentNode.id)[0]);
-        // retrouver l'element apr son id et le supprimer de <div class="tab-content">
-        document.getElementsByClassName('tab-content')[0].removeChild(document.getElementById(element.parentNode.parentNode.parentNode.id));
+    // retrouver l'id tab parent et le supprimer de <ul class="nav nav-tabs">
+    document.querySelector('.nav-tabs').removeChild(document.getElementsByClassName(element.parentNode.parentNode.parentNode.id)[0]);
+    // retrouver l'element apr son id et le supprimer de <div class="tab-content">
+    document.getElementsByClassName('tab-content')[0].removeChild(document.getElementById(element.parentNode.parentNode.parentNode.id));
+
+    // définit le tab 1 comme celui active
+    if (document.getElementsByClassName('tab-pane fade').length != 0
+        && document.getElementsByClassName('tab-pane fade active in').length == 0) {
+      document.getElementsByClassName('tab-pane fade')[0].setAttribute('class', 'tab-pane fade active in');
     }
+    if (document.getElementsByClassName('menu').length != 0
+        && document.getElementsByClassName('active menu').length == 0) {
+      document.getElementsByClassName('menu')[0].setAttribute('class', 'active ' +
+          document.getElementsByClassName('menu')[0].getAttribute('class'));
+    }
+  }
 }
 
 // effacer la liste des musiques avant de fermer le popup musique
@@ -92,4 +103,34 @@ function importFile() {
   if (importedFile) {
     FacadeController.importQRCode(importedFile);
   }
+}
+
+// fonction pour enregistrer un QRCode
+function exportFile() {
+  // il faudra recupérer dans file l'image qrcode généré
+  var FileSaver = require('file-saver');
+  var file = new File(["Hello, world!"], "", {type: "text/plain;charset=utf-8"});
+  FileSaver.saveAs(file);
+
+  /*
+  var canvas = document.getElementById("my-canvas"), ctx = canvas.getContext("2d");
+// draw to canvas...
+canvas.toBlob(function(blob) {
+    saveAs(blob, "pretty image.png");
+});
+  */
+}
+
+// définir le dernier tab créé comme celui active (tab et tabcontent)
+function setActive (div, li) {
+  if (document.getElementsByClassName('tab-pane fade active in').length != 0) {
+    document.getElementsByClassName('tab-pane fade active in')[0].setAttribute('class', 'tab-pane fade');
+  }
+  div.setAttribute('class', 'tab-pane fade active in');
+
+  if (document.getElementsByClassName('active menu').length != 0) {
+    var id = document.getElementsByClassName('active menu')[0].getAttribute('class').match(/\d+/g).join(''); // retourne le chiffre dans la chaine
+    document.getElementsByClassName('active menu')[0].setAttribute('class', 'menu menu' + id);
+  }
+  li.setAttribute('class', 'active menu menu'+idMenu);
 }
