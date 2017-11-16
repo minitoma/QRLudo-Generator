@@ -100,7 +100,9 @@ function importFile() {
 
   // recupérer le fichier
   var importedFile = document.getElementById('importedFile').files[0];
+console.log(importedFile);
   if (importedFile) {
+    //console.log(QRCodeLoader.loadQRCode(importedFile));
     FacadeController.importQRCode(importedFile);
   }
 }
