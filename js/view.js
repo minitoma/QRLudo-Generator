@@ -201,12 +201,12 @@ function preview() {
             console.log(form2[j].tagName);
             copyInputContent(qrcode, form2[j]);
             break;
-
+/*
           case 'LABEL':
             console.log(form2[j].tagName);
             copyLegendeContent(qrcode,form2[j]);
             break;
-
+*/
           default:
             console.log(form2[j].tagName);
         }

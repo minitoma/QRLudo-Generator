@@ -2,13 +2,26 @@
 
 class QRCodeLoader{
 
-  //Renvoie le QRCode crée à partir des informations du fichier image passé en paramètre
-  static loadQRCode(file){
 
+  //Renvoie le QRCode crée à partir des informations du fichier image passé en paramètre
+  static loadQRCode(file, callback){
+
+    var qrcode;
     var fileReader = new FileReader();
 
+    fileReader.readAsDataURL(file);
+
+    // `onload` as listener
+    fileReader.addEventListener('load', function (ev) {
+      console.log("dataUrlSize:", ev.target.result.length);
+
+      qrcode = QRCodeLoader.creerQRCode(ev.target.result);
+      callback(qrcode, FacadeController.drawQRCode); // renvoyer le qrcode créé
+    });
+
+/*
     fileReader.addEventListener("load", function () {
-      return QRCodeLoader.creerQRCode(fileReader.result);
+      QRCodeLoader.creerQRCode(fileReader.result);
     }, false);
 
     if (file) {
@@ -17,6 +30,7 @@ class QRCodeLoader{
     else{
       throw "Erreur de lecture du fichier";
     }
+*/
   }
 
   //Traduit les int en chaine xml utf8 puis crée un objet QRCode à partir des données reconstituées
@@ -32,6 +46,7 @@ class QRCodeLoader{
 
     //On convertit les données en chaîne de caractères
     var donnees = QRCodeLoader.bin2String(dataUtf8);
+
 
     //On convertit la chaine xml en données xml
     var qrxml = new window.DOMParser().parseFromString(donnees, "text/xml")
@@ -56,7 +71,7 @@ class QRCodeLoader{
         qrcode = new QRCodeAtomique();
         qrcode.setNoeudRacine(qrxml);
         break;
-      case DictionnaireXml.getValTypeEnsemble:
+      case DictionnaireXml.getValTypeEnsemble():
         qrcode = new QRCodeEnsemble();
         qrcode.setNoeudRacine(qrxml);
         break;
