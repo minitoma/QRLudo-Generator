@@ -109,18 +109,10 @@ console.log(importedFile);
 
 // fonction pour enregistrer un QRCode
 function exportFile() {
-  // il faudra recupérer dans file l'image qrcode généré
-  var FileSaver = require('file-saver');
-  var file = new File(["Hello, world!"], "", {type: "text/plain;charset=utf-8"});
-  FileSaver.saveAs(file);
-
-  /*
-  var canvas = document.getElementById("my-canvas"), ctx = canvas.getContext("2d");
-// draw to canvas...
-canvas.toBlob(function(blob) {
-    saveAs(blob, "pretty image.png");
-});
-  */
+  var img = document.getElementsByTagName('IMG')[0];
+  var url = img.src.replace(/^data:image\/[^;]/, 'data:application/octet-stream');
+  //console.log(url);
+  location.href = url;
 }
 
 // définir le dernier tab créé comme celui active (tab et tabcontent)
