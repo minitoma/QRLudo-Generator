@@ -1,4 +1,6 @@
 
+
+
 $(document).ready(function() {
 
   // pour les tabs
@@ -10,6 +12,19 @@ $(document).ready(function() {
       var y = $(event.relatedTarget).text();  // previous tab
       $(".act span").text(x);
       $(".prev span").text(y);
+  });
+
+  // desactiver les boutons preview et lire s'il y a rien à lire ou preview
+  document.getElementById('preview').disabled = true;
+  document.getElementById('read').disabled = true;
+
+  // desactiver exporter, faut preview avant de pouvoir exporter
+  document.getElementById('btnExportFile').disabled = true;
+
+  // désactiver le bouton créer s'il s'agit de qrcode unique
+  document.getElementById('qrCodeAtomique').addEventListener('click', function(){
+    document.getElementById('creer').disabled = true;
+    document.getElementById('modalFamilyName').childNodes[1].childNodes[1].childNodes[1].childNodes[1].childNodes[1].textContent = "Nom du QRCode";
   });
 
   document.addEventListener('click', modalMusic); // affichage du popup de la liste des musiques
@@ -73,7 +88,13 @@ function closeTab(event) {
     if (document.getElementsByClassName('tab-pane fade').length != 0
         && document.getElementsByClassName('tab-pane fade active in').length == 0) {
       document.getElementsByClassName('tab-pane fade')[0].setAttribute('class', 'tab-pane fade active in');
+    } else {
+      // y a plus de formulaire on desactive les boutons preview et lire
+      document.getElementById('preview').disabled = true;
+      document.getElementById('read').disabled = true;
+      document.getElementById('creer').disabled = false; // activer le bouton créer
     }
+
     if (document.getElementsByClassName('menu').length != 0
         && document.getElementsByClassName('active menu').length == 0) {
       document.getElementsByClassName('menu')[0].setAttribute('class', 'active ' +

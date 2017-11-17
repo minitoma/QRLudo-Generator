@@ -48,10 +48,11 @@ function createTextBox(value) {
   var form = document.getElementsByClassName('in active')[0].childNodes[0].childNodes[0];
   form.appendChild(div);
 
+  // sactiver les boutons preview et lire
+  document.getElementById('preview').disabled = false;
+  document.getElementById('read').disabled = false;
+
   document.getElementById('closeModal').click(); // fermer le popup
-    //var i = idInputText - ;
-  //document.getElementById("legende"+idInputText).focus(); // placer le curseur sur le champ de texte crée
-  //console.log(i, idInputText);
 }
 
 // créer un formulaire
@@ -212,11 +213,13 @@ function preview() {
         }
       }
     }
-  }
 
-  var div = document.getElementById('affichageqr').childNodes[1]; // recupérer le div correspondant
-  facade = new FacadeController(qrcode, div); // instancier la facade
-  facade.genererQRCode(form); // générer le qrcode
+    var div = document.getElementById('affichageqr').childNodes[1]; // recupérer le div correspondant
+    facade = new FacadeController(qrcode, div); // instancier la facade
+    facade.genererQRCode(form); // générer le qrcode
+
+    document.getElementById('btnExportFile').disabled = false; // activer le bouton exporter
+  }
 }
 
 
