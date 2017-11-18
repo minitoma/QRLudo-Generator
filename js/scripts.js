@@ -39,7 +39,6 @@ $(document).ready(function() {
   }); // sur clic d'un lien de musique
   document.getElementById('setImportedFile').addEventListener('click', importFile);
   document.getElementById('btnExportFile').addEventListener('click', exportFile);
-
 });
 
 
@@ -148,4 +147,46 @@ function setActive (div, li) {
     document.getElementsByClassName('active menu')[0].setAttribute('class', 'menu menu' + id);
   }
   li.setAttribute('class', 'active menu menu'+idMenu);
+}
+
+// =========
+// pour le drag and drop entre qrcode et lecteur
+
+function allowDrop(ev) { ev.preventDefault(); }
+
+function drag(ev) {
+    //logev.dataTransfer.setData("text", ev.target.id);
+    console.log('drag');
+}
+
+function drop(ev) {
+//    ev.preventDefault();
+  //  var data = ev.dataTransfer.getData("text");
+  //  ev.target.appendChild(document.getElementById(data));
+  console.log(event);
+  console.log(getForm());
+
+
+
+      //document.getElementById('audio').setAttribute('src', URL.createObjectURL(new Blob([getForm()], {type:'file'})));
+      //document.getElementById('audio').play();
+var dataurl = URL.createObjectURL(new Blob([getForm()], {type:'file'}));
+      //const convertSong = (filePath) => {
+        var songPromise = new Promise((resolve, reject) => {
+          fs.readFile(__dirname, (err, data) => {
+            if (err) { reject(err); }
+            resolve(dataurl.convert({ data, mimetype: 'audio/mp3' }));
+          });
+        });
+        console.log(songPromise);
+      //};
+
+  console.log(facade.qrcode.getDonneesUtilisateur());
+  console.log(facade.qrcode.getTailleContenu());
+  console.log(facade.qrcode.getTexte(0));
+
+
+
+
+
 }

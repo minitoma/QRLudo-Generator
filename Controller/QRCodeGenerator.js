@@ -90,6 +90,8 @@ class QRCodeGenerator{
       var canvas = div.getElementsByTagName("canvas")[0];
       var image = new Image();
 	    image.src = exifModified;
+      image.draggable = true;
+      image.setAttribute('ondragstart','drag(event)');
       $(div).prepend(image);
 
       //On supprime le canvas initial

@@ -184,6 +184,7 @@ function addChamp(event) {
 
 // fonction pour prévisualiser un qrcode
 function preview() {
+
   var qrcode = new QRCodeAtomique(); // instancier un objet qrcode
 
   // on recupére le contenu du tab active
@@ -217,6 +218,9 @@ function preview() {
     var div = document.getElementById('affichageqr').childNodes[1]; // recupérer le div correspondant
     facade = new FacadeController(qrcode, div); // instancier la facade
     facade.genererQRCode(form); // générer le qrcode
+
+    document.getElementsByTagName('IMG')[0].draggable = true;
+    console.log(document.getElementsByTagName('IMG')[0].draggable);
 
     document.getElementById('btnExportFile').disabled = false; // activer le bouton exporter
   }

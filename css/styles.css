@@ -64,8 +64,7 @@ div.modal-header.row {
 }
 
 section.page-header {
-  background: brown;
-  height: 71px;
+  border-bottom: 0;
 }
 
 #affichageqr > div > canvas {
@@ -82,4 +81,6 @@ section.page-header {
   margin-bottom: 0;
 }
 
-
+body > div > section.page-header > div > div > audio {
+  width: inherit;
+}

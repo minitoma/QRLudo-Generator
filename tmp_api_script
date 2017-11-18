@@ -137,26 +137,41 @@ var googleTTS = require('google-tts-api');
 
 // réupérer le formulaire et tous les champs
 function getForm() {
+
+  var txtomp3 = require("text-to-mp3");
+  var texte = "";
+
+  for (var i = 0; i < facade.qrcode.getTailleContenu() || function(){
+    txtomp3.getMp3(texte.toString(), function(err, binaryStream){
+      if(err){
+        console.log(err);
+        return;
+      }
+
+      //texte = texte.substring(texte.length - 1); // enlever le dernier ' '
+      console.log(texte);
+      var file = fs.createWriteStream("data_tmp.mp3"); // write it down the file
+      file.write(binaryStream);
+      file.end();
+    });
+    return false;
+  }(); i++) {
+    texte = texte + facade.qrcode.getTexte(i) + '. ';
+  }
+
+
+}
+
+
+/*
+
+
   var form = document.getElementsByClassName('in active')[0].childNodes[0].childNodes[0];
   var texte = "";
   // parcourir le formulaire
-  for (var i=0; i<form.length || function(){
+  //for (var i=0; i<form.length; i++) {
+  if(form.elements[i] != null) {
 
-    // Play the received speech
-    googleTTS(texte, 'fr', 1)   // speed normal = 1 (default), slow = 0.24
-    .then(function (url) {
-      console.log(url); // https://translate.google.com/translate_tts?...
-      var audio = new Audio(url);
-      //audio.play();
-      return url;
-    })
-    .catch(function (err) {
-      console.error(err.stack);
-    });
-
-
-    return false;}();
-     i++) {
     try {
         if (form.elements[i].type == "text") {
           texte = texte + form.elements[i].value + " ";
@@ -166,20 +181,27 @@ function getForm() {
     } catch (err) {
       document.getElementById(form.elements[i].id).innerHTML = err.message;
     }
-  }
-//  listen(texte);
-}
+  } else { i = 0; }
+  //}
+  listen(texte, getForm);
+  */
 
+
+
+/*
 // Fonction pour lire en audio une données
-function listen(texte) {
+function listen(texte, callback) {
   // Play the received speech
   googleTTS(texte, 'fr', 1)   // speed normal = 1 (default), slow = 0.24
   .then(function (url) {
     console.log(url); // https://translate.google.com/translate_tts?...
     var audio = new Audio(url);
     audio.play();
+    i++;
+    callback();
   })
   .catch(function (err) {
     console.error(err.stack);
   });
 }
+*/
