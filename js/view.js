@@ -15,7 +15,7 @@ $(document).ready(function() {
   document.getElementsByClassName('set-legende')[0].addEventListener('click', function(){
     createTextBox('');
   }); // sur clic du bouton creer champ texte
-  document.getElementById('read').addEventListener('click', getForm); // sur clic du bouton Lire pour ecouter les textes saisis
+  document.getElementById('read').addEventListener('click', Listen); // sur clic du bouton Lire pour ecouter les textes saisis
   document.getElementById('preview').addEventListener('click', preview); // prévisualiser le qr-code
 });
 

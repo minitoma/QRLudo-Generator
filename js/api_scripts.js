@@ -136,7 +136,7 @@ function listMusic(event, content){
 var googleTTS = require('google-tts-api');
 
 // réupérer le formulaire et tous les champs
-function getForm() {
+function Listen() {
   var form = document.getElementsByClassName('in active')[0].childNodes[0].childNodes[0];
   var texte = "";
   // parcourir le formulaire
@@ -147,19 +147,18 @@ function getForm() {
     .then(function (url) {
       console.log(url); // https://translate.google.com/translate_tts?...
       var audio = new Audio(url);
-      //audio.play();
-      return url;
+      audio.play();
+      console.log(texte);
     })
     .catch(function (err) {
       console.error(err.stack);
     });
 
-
     return false;}();
      i++) {
     try {
         if (form.elements[i].type == "text") {
-          texte = texte + form.elements[i].value + " ";
+          texte = texte + form.elements[i].value + ". ";
       } else {
         console.log("pas de type texte");
       }
@@ -167,19 +166,4 @@ function getForm() {
       document.getElementById(form.elements[i].id).innerHTML = err.message;
     }
   }
-//  listen(texte);
-}
-
-// Fonction pour lire en audio une données
-function listen(texte) {
-  // Play the received speech
-  googleTTS(texte, 'fr', 1)   // speed normal = 1 (default), slow = 0.24
-  .then(function (url) {
-    console.log(url); // https://translate.google.com/translate_tts?...
-    var audio = new Audio(url);
-    audio.play();
-  })
-  .catch(function (err) {
-    console.error(err.stack);
-  });
 }

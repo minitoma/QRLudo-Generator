@@ -64,7 +64,8 @@ div.modal-header.row {
 }
 
 section.page-header {
-  border-bottom: 0;
+  background: #d6d4d4;
+  height: 70px;
 }
 
 #affichageqr > div > canvas {
@@ -79,8 +80,4 @@ section.page-header {
 #setFamilyName,
 #setImportedFile {
   margin-bottom: 0;
-}
-
-body > div > section.page-header > div > div > audio {
-  width: inherit;
 }
