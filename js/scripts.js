@@ -31,7 +31,7 @@ $(document).ready(function() {
   document.addEventListener('click', function(){ // sur click du bouton closeTab
     closeTab(event);
   });
-  document.addEventListener('click', addChamp); // sur click du bouton addChamp
+  //document.addEventListener('click', addChamp); // sur click du bouton addChamp
 
   document.getElementById('modalMusic').addEventListener('click', function(){
     selectMusic(event);
@@ -145,4 +145,20 @@ function setActive (div, li) {
     document.getElementsByClassName('active menu')[0].setAttribute('class', 'menu menu' + id);
   }
   li.setAttribute('class', 'active menu menu'+idMenu);
+}
+
+// copier le contenu d'un element input
+function copyInputContent(qrcode, input) {
+  // tester s'il s'agit d'un input de musique
+  if(input.disabled) {
+    var url = 'https://drive.google.com/open?id=' + input.id;
+    qrcode.ajouterFichier(url, input.value);
+  } else {
+    qrcode.ajouterTexte(input.value);
+  }
+}
+
+// copier le contenu d'un element legende
+function copyLegendeContent(qrcode, legende) {
+  qrcode.ajouterTexte(legende.textContent);
 }

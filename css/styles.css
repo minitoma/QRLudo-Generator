@@ -81,3 +81,7 @@ section.page-header {
 #setImportedFile {
   margin-bottom: 0;
 }
+
+textarea {
+  resize: vertical;
+}

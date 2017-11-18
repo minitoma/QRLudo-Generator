@@ -60,9 +60,8 @@ class FacadeController{
         var div = createDiv('form-group', '', [label, input]);
 
         form.appendChild(div);
-      }else if (input[i].tagName == 'texte') {
-        value = input[i].textContent;
-        createTextBox(value);
+      }else if (input[i].tagName == 'texte' || input[i].tagName == 'textarea') {
+        createTextBox(input[i].textContent);
       }
 
     }
