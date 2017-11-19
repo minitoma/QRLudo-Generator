@@ -155,7 +155,7 @@ function getForm () {
   // transformer le texte en tableau de phrase pour eviter de depasser les 200 caractéres
   var reg=new RegExp("[.,;?!:]+", "g");
   texte = texte.split(reg);
-  //if (texte[texte.length-1] == " ") { console.log('oui');}
+  if (texte[texte.length-1] == " ") { console.log('oui');}
 
   listen(play);
 }
@@ -164,6 +164,13 @@ function listen(callback) {
   var phrase = texte[j];
   console.log(texte);
   console.log(phrase);
+
+  // ignorer la derniére phrase s'il s'agit d'un blanc
+  if (j == texte.length-1 && texte[texte.length-1] == " ") {
+    document.getElementById('stop').click();
+    return;
+  }
+
   if (j < texte.length) {
     j++;
   } else {
