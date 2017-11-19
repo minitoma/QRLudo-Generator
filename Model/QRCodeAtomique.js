@@ -7,8 +7,6 @@ class QRCodeAtomique extends QRCode{
       //On enregistre le type de qrcode comme attribut du noeud donneesUtilisateur
       this.donneesUtilisateur.setAttribute(DictionnaireXml.getAttTypeQRCode(), DictionnaireXml.getValTypeAtomique());
 
-      //On ajoute le noeud contenu au noeud donnees
-      this.donneesUtilisateur.appendChild(document.createElement(DictionnaireXml.getTagContenu()));
     }
 
     /*

@@ -15,6 +15,9 @@ class QRCode {
     this.racinexml.appendChild(this.donneesUtilisateur);
     this.racinexml.appendChild(this.metadonnees);
 
+    //On ajoute le noeud contenu au noeud donnees
+    this.donneesUtilisateur.appendChild(document.createElement(DictionnaireXml.getTagContenu()));
+
   }
 
   //Permet de mettre toutes les données du QRCode dans l'état d'un QRCode existant
