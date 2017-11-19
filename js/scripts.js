@@ -58,7 +58,7 @@ function selectMusic(event) {
 
       var form = document.getElementsByClassName('in active')[0].childNodes[0].childNodes[0];
 
-      var label = createLabel('titreMusique','Titre Musique');
+      var label = createLabel('titreMusique','Son');
       var input = createInput('text', 'form-control', element.getAttribute('href').substring(1), element.childNodes[0].nodeValue);
       input.disabled = 'true';
 

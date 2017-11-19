@@ -34,8 +34,8 @@ $(document).ready(function() {
 function createLabel (fore, texte) {
   var label = document.createElement('label');
   label.setAttribute('for', fore);
-  var texte = document.createTextNode('Légende');
-  label.appendChild(texte);
+  var txt= document.createTextNode(texte);
+  label.appendChild(txt);
   return label;
 }
 
@@ -62,7 +62,7 @@ function createInput (type, classe, id, value) {
 
 // Générer une zone de texte
 function createTextBox(textContent) {
-  var child = [createLabel('legende', 'Légende'), createTextarea('form-control', 'legende', textContent)];
+  var child = [createLabel('legende', 'Texte'), createTextarea('form-control', 'legende', textContent)];
   var div = createDiv('form-group', '', child);
 
   var form = document.getElementsByClassName('in active')[0].childNodes[0].childNodes[0];
@@ -137,7 +137,7 @@ function drawQRCode (qrcode) {
       var url = qrcode.getUrlFichier(i);
 
       var form = document.getElementsByClassName('in active')[0].childNodes[0].childNodes[0];
-      var label = createLabel('titreMusique','Titre Musique');
+      var label = createLabel('titreMusique','Son');
       var input = createInput('text', 'form-control', url, nom);
       input.disabled = 'true';
 
