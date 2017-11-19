@@ -27,46 +27,44 @@ class FacadeController{
     QRCodeGenerator.generate(this.divImg, this.qrcode);
   }
 
+  // fonction appelée pour importer un qrcode
   static importQRCode(file) {
-    console.log(QRCodeLoader.loadQRCode(file));
-/*
-    var path = require('path');
-    var xmlReader = require('read-xml');
-    console.log(file.path);
-    console.log(file.name);
+    var qrcode;
+    QRCodeLoader.loadQRCode(file, function(qrcode, callback){
+      console.log(qrcode.getDonneesUtilisateur());
 
-//    var FILE = path.join(__dirname, file);
+      callback(qrcode.getDonneesUtilisateur()); // faire le view du qrcode
+    });
+  }
 
-    // pass a buffer or a path to a xml file
-    xmlReader.readXML(fs.readFileSync(file.path), function(err, data) {
-      if (err) {
-        console.error(err);
+  // fonction appelée pour faire le view du qrcode
+  static drawQRCode (data) {
+    var buffer = document.implementation.createDocument(null, 'html', null);
+    var body = document.createElementNS('', 'body');
+    body.appendChild(document.createRange().createContextualFragment(data));
+    buffer.documentElement.appendChild(body);
+    var input = buffer.getElementsByTagName('contenu')[0].childNodes;
+
+    createTabs();
+
+    for (var i = 0; i < input.length; i++) {
+      var value;
+      if (input[i].tagName =='fichier') {
+        value = input[i].getAttribute('nom');
+        var form = document.getElementsByClassName('in active')[0].childNodes[0].childNodes[0];
+
+        var label = createLabel('titreMusique','Titre Musique');
+        var input = createInput('text', 'form-control', input[i].getAttribute('href'), value);
+        input.disabled = 'true';
+
+        var div = createDiv('form-group', '', [label, input]);
+
+        form.appendChild(div);
+      }else if (input[i].tagName == 'texte' || input[i].tagName == 'textarea') {
+        createTextBox(input[i].textContent);
       }
 
-      console.log('xml encoding:', data.encoding);
-      console.log('Decoded xml:', data.content);
-
-      var buffer = document.implementation.createDocument(null, 'html', null);
-      var body = document.createElementNS('', 'body');
-      body.appendChild(document.createRange().createContextualFragment(data.content));
-      buffer.documentElement.appendChild(body);
-      var contenu = buffer.getElementsByTagName('contenu');
-
-      //createTabs();
-
-      var i = 0;
-      while (i < contenu.length) {
-        for (var j = 0; j < contenu[j].length; j++) {
-          var texte = contenu[i][j];
-          console.log(texte.tagName);
-        }
-        i++;
-      }
-
-      console.log(buffer.getElementsByTagName('texte'));
-      //document.getElementById('dataXml').innerHTML = data.content;
-      console.log(buffer.childNodes);
-    });*/
+    }
   }
 
 }

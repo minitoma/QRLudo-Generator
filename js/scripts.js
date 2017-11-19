@@ -12,18 +12,32 @@ $(document).ready(function() {
       $(".prev span").text(y);
   });
 
+  // desactiver les boutons preview et lire s'il y a rien à lire ou preview
+  document.getElementById('preview').disabled = true;
+  document.getElementById('read').disabled = true;
+
+  // desactiver exporter, faut preview avant de pouvoir exporter
+  document.getElementById('btnExportFile').disabled = true;
+
+  // désactiver le bouton créer s'il s'agit de qrcode unique
+  document.getElementById('qrCodeAtomique').addEventListener('click', function(){
+  document.getElementById('creer').disabled = true;
+  document.getElementById('modalFamilyName').childNodes[1].childNodes[1].childNodes[1].childNodes[1].childNodes[1].textContent = "Nom du QRCode";
+
+  });
+
   document.addEventListener('click', modalMusic); // affichage du popup de la liste des musiques
   document.getElementById('setFamilyName').addEventListener('click', createTabs); // récupérer le click derriére bouton create
   document.addEventListener('click', function(){ // sur click du bouton closeTab
     closeTab(event);
   });
-  document.addEventListener('click', addChamp); // sur click du bouton addChamp
+  //document.addEventListener('click', addChamp); // sur click du bouton addChamp
 
   document.getElementById('modalMusic').addEventListener('click', function(){
     selectMusic(event);
   }); // sur clic d'un lien de musique
   document.getElementById('setImportedFile').addEventListener('click', importFile);
-
+  document.getElementById('btnExportFile').addEventListener('click', exportFile);
 });
 
 
@@ -72,10 +86,16 @@ function closeTab(event) {
     if (document.getElementsByClassName('tab-pane fade').length != 0
         && document.getElementsByClassName('tab-pane fade active in').length == 0) {
       document.getElementsByClassName('tab-pane fade')[0].setAttribute('class', 'tab-pane fade active in');
+    } else {
+      // y a plus de formulaire on desactive les boutons preview et lire
+      document.getElementById('preview').disabled = true;
+      document.getElementById('read').disabled = true;
+      document.getElementById('creer').disabled = false; // activer le bouton créer
     }
+
     if (document.getElementsByClassName('menu').length != 0
         && document.getElementsByClassName('active menu').length == 0) {
-      document.getElementsByClassName('menu')[0].setAttribute('class', 'active ' +
+          document.getElementsByClassName('menu')[0].setAttribute('class', 'active ' +
           document.getElementsByClassName('menu')[0].getAttribute('class'));
     }
   }
@@ -100,8 +120,17 @@ function importFile() {
   // recupérer le fichier
   var importedFile = document.getElementById('importedFile').files[0];
   if (importedFile) {
+    //console.log(QRCodeLoader.loadQRCode(importedFile));
     FacadeController.importQRCode(importedFile);
   }
+}
+
+// fonction pour enregistrer un QRCode
+function exportFile() {
+  var img = document.getElementsByTagName('IMG')[0];
+  var url = img.src.replace(/^data:image\/[^;]/, 'data:application/octet-stream');
+  //console.log(url);
+  location.href = url;
 }
 
 // définir le dernier tab créé comme celui active (tab et tabcontent)
@@ -116,4 +145,20 @@ function setActive (div, li) {
     document.getElementsByClassName('active menu')[0].setAttribute('class', 'menu menu' + id);
   }
   li.setAttribute('class', 'active menu menu'+idMenu);
+}
+
+// copier le contenu d'un element input
+function copyInputContent(qrcode, input) {
+  // tester s'il s'agit d'un input de musique
+  if(input.disabled) {
+    var url = 'https://drive.google.com/open?id=' + input.id;
+    qrcode.ajouterFichier(url, input.value);
+  } else {
+    qrcode.ajouterTexte(input.value);
+  }
+}
+
+// copier le contenu d'un element legende
+function copyLegendeContent(qrcode, legende) {
+  qrcode.ajouterTexte(legende.textContent);
 }

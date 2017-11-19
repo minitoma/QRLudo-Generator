@@ -1,11 +1,12 @@
 # QRCode_Generator
 Application pour générer des QR-Codes. Il faut initialiser d'abord le projet avant d'installer les librairies.
+Si le projet est déjà initialisé, on peut directement installer les librairies.
 
-# Pour initialiser le projet
-make init
+## Pour initialiser le projet
+    $ make init
 
-# Pour installer les librairies
-make install
+## Pour installer les librairies
+    $ make install
 
-# Pour supprimer les librairies
-make uninstall
+## Pour supprimer les librairies
+    $ make uninstall

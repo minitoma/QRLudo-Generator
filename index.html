@@ -33,7 +33,8 @@
 		<div class="container">
 
 			<section class="page-header">
-			</section>
+
+      </section>
 
 			<section class="row">
 				<div class="row">
@@ -45,13 +46,13 @@
 								</div> -->
                 <div class="row">
                   <!-- Trigger the modal with a button -->
-                  <div class="col-md-12"><button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalFamilyName">Créer</button></div>
+                  <div class="col-md-12"><button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalTypeQRCode" id="creer">Créer</button></div>
 								</div>
 								<div class="row">
 									<div class="col-md-12"><button type="button" class="btn btn-default" data-toggle="modal" data-target="#modalImport">Charger</button></div>
 								</div>
 								<div class="row">
-									<div class="col-md-12"><button type="button" class="btn btn-default" name="export">Exporter</button></div>
+									<div class="col-md-12"><button type="button" class="btn btn-default" id="btnExportFile">Exporter</button></div>
 								</div>
 <!--								<div class="row">
 									<div class="col-md-12"><button type="button" class="btn btn-default" name="save">Sauvegarder</button></div>
@@ -60,6 +61,30 @@
 					</div>
 
 					<div class="col-lg-6 colMiddle">
+
+            <!-- Popup pour type de qrcode -->
+            <div class="modal fade" id="modalTypeQRCode" role="dialog">
+              <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+
+                  <div class="row modal-body">
+                    <div class="col-lg-12">
+                      <h4 class="modal-title">Choisir un type de QRCode</h4>
+                    </div>
+                  </div>
+
+                  <div class="modal-header">
+                    <button type="button" class="btn btn-default btn-popup" id="qrCodeAtomique" data-toggle="modal" data-target="#modalFamilyName" data-dismiss="modal">QRCode Unique</button>
+                    <button type="button" class="btn btn-default btn-popup" id="qrCodeEnsemble" data-toggle="modal" data-target="#modalFamilyName" data-dismiss="modal">Famille de QRCode</button>
+                  </div>
+
+                  <div class="modal-footer">
+                  </div>
+
+                </div>
+              </div>
+            </div>
+            <!-- fin Popup pour type de qrcode -->
 
             <!-- Popup saisie de nom de famille-->
             <div class="modal fade" id="modalFamilyName" role="dialog">
@@ -98,7 +123,7 @@
                   </div>
 
                   <div class="modal-header">
-                    <input type="file" class="form-control" id="importedFile" accept=".jpg .jpeg .png">
+                    <input type="file" class="form-control" id="importedFile" accept=".jpg, .jpeg, .png">
                   </div>
 
                   <div class="modal-footer">
@@ -111,60 +136,60 @@
             </div>
             <!-- fin Popup pour charger un qrcode -->
 
-              <!-- Popup ajouter champ-->
-              <div class="modal fade" id="myModal" role="dialog">
-                <div class="modal-dialog modal-sm">
-                  <div class="modal-content">
+            <!-- Popup ajouter champ-->
+            <div class="modal fade" id="myModal" role="dialog">
+              <div class="modal-dialog modal-sm">
+                <div class="modal-content">
 
-                    <div class="row modal-body">
-                      <div class="col-lg-12">
-                        <h4 class="modal-title">Ajouter un champ</h4>
-                      </div>
+                  <div class="row modal-body">
+                    <div class="col-lg-12">
+                      <h4 class="modal-title">Ajouter un champ</h4>
                     </div>
-
-                    <div class="modal-header">
-                      <button type="button" class="btn btn-default btn-popup set-legende">Texte</button>
-                      <button type="button" class="btn btn-default btn-popup set-music" data-toggle="modal" data-target="#modalMusic">Musique</button>
-                    </div>
-
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-default" data-dismiss="modal" id="closeModal">Annuler</button>
-                    </div>
-
                   </div>
+
+                  <div class="modal-header">
+                    <button type="button" class="btn btn-default btn-popup set-legende">Texte</button>
+                    <button type="button" class="btn btn-default btn-popup set-music" data-toggle="modal" data-target="#modalMusic">Musique</button>
+                  </div>
+
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="closeModal">Annuler</button>
+                  </div>
+
                 </div>
               </div>
+            </div>
               <!-- fin Popup ajouter champ -->
 
-              <!-- Popup Liste Musiques -->
-              <div class="modal fade" id="modalMusic" role="dialog">
-                <div class="modal-dialog modal-lg">
-                  <div class="modal-content">
+            <!-- Popup Liste Musiques -->
+            <div class="modal fade" id="modalMusic" role="dialog">
+              <div class="modal-dialog modal-lg">
+                <div class="modal-content">
 
-                    <div class="row modal-body">
-                      <div class="col-lg-12">
-                        <h4 class="modal-title">Liste des Musiques</h4>
-                      </div>
+                  <div class="row modal-body">
+                    <div class="col-lg-12">
+                      <h4 class="modal-title">Liste des Musiques</h4>
                     </div>
-
-                    <div class="modal-header row">
-                        <!-- affichage des musiques -->
-                    </div>
-
-                    <div class="modal-footer">
-                      <button type="button" class="btn btn-default" data-dismiss="modal" id="closeModalMusique">Annuler</button>
-                    </div>
-
                   </div>
+
+                  <div class="modal-header row">
+                      <!-- affichage des musiques -->
+                  </div>
+
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="closeModalMusique">Annuler</button>
+                  </div>
+
                 </div>
               </div>
+            </div>
 
-              <!-- Tabs -->
-              <ul class="nav nav-tabs">
-                <!-- Les tabs -->
-              </ul>
+            <!-- Tabs -->
+            <ul class="nav nav-tabs">
+              <!-- Les tabs -->
+            </ul>
 
-              <div class="tab-content">
+            <div class="tab-content">
             <!-- Contenu des tab -->
             <!--    <div id="menu1" class="tab-pane fade in active">
                   <h3>Menu 1</h3>
@@ -179,7 +204,7 @@
                   <p>Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
                 </div>
                 -->
-              </div>
+            </div>
 
             <!--    <form id="myForm">  -->
                   <!-- Les champs de texte ou de musique seront ajoutés automatiquement par la fonction createTextBox()   -->
@@ -196,6 +221,9 @@
 								</div>
 								<div class="row">
 									<div class="col-md-12"><button type="button" class="btn btn-default" id="read">Lire</button></div>
+								</div>
+								<div class="row" hidden>
+									<div class="col-md-12"><button type="button" class="btn btn-default" id="stop">Stop</button></div>
 								</div>
 
                 <div class="row" id="affichageqr">

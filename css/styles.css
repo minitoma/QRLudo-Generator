@@ -64,8 +64,8 @@ div.modal-header.row {
 }
 
 section.page-header {
-  background: brown;
-  height: 71px;
+  background: #d6d4d4;
+  height: 70px;
 }
 
 #affichageqr > div > canvas {
@@ -74,9 +74,14 @@ section.page-header {
 
 #affichageqr > div > img {
   width: inherit;
+  margin-bottom: 10px;
 }
 
 #setFamilyName,
 #setImportedFile {
   margin-bottom: 0;
+}
+
+textarea {
+  resize: vertical;
 }

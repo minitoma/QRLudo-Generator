@@ -12,48 +12,23 @@ $(document).ready(function() {
     closeModalMusique(event);
   }); // sur clic du bouton closeModalMusique
 
-  document.getElementsByClassName('set-legende')[0].addEventListener('click', createTextBox); // sur clic du bouton creer champ texte
-  document.getElementById('read').addEventListener('click', getForm); // sur clic du bouton Lire pour ecouter les textes saisis
+  document.getElementsByClassName('set-legende')[0].addEventListener('click', function(){
+    createTextBox('');
+  }); // sur clic du bouton creer champ texte
+
+  document.getElementById('read').addEventListener('click', function(){
+    this.parentNode.parentNode.style.display = 'none';
+    document.getElementById('stop').parentNode.parentNode.style.display = 'block';
+    getForm();
+  }); // sur clic du bouton Lire pour ecouter les textes saisis
+  document.getElementById('stop').addEventListener('click', function(){
+    this.parentNode.parentNode.style.display = 'none';
+    document.getElementById('read').parentNode.parentNode.style.display = 'block';
+    stopLecture();
+  });
   document.getElementById('preview').addEventListener('click', preview); // prévisualiser le qr-code
 });
 
-// fonction pour prévisualiser un qrcode
-function preview() {
-  var qrcode = new QRCodeAtomique(); // instancier un objet qrcode
-
-  // on recupére le contenu du tab active
-  var div = document.getElementsByClassName('tab-pane fade active in')[0];
-  // on recupére le formulaire de ce div active
-  var form = div.childNodes[0].childNodes[0];
-
-  /* copier les données du formulaire dans le qrcode */
-  if (form != null) {
-    for(var i=0; i<form.length; i++) {
-
-      var form2 = form.childNodes[i].childNodes;
-      for(var j=0; j<form2.length; j++) {
-        switch (form2[j].tagName) {
-          case 'INPUT':
-            console.log(form2[j].tagName);
-            copyInputContent(qrcode, form2[j]);
-            break;
-
-          case 'LABEL':
-            console.log(form2[j].tagName);
-            copyLegendeContent(qrcode,form2[j]);
-            break;
-
-          default:
-            console.log(form2[j].tagName);
-        }
-      }
-    }
-  }
-
-  var div = document.getElementById('affichageqr').childNodes[1]; // recupérer le div correspondant
-  facade = new FacadeController(qrcode, div); // instancier la facade
-  facade.genererQRCode(form); // générer le qrcode
-}
 
 // fcontion pour créer un label
 function createLabel (fore, texte) {
@@ -62,6 +37,16 @@ function createLabel (fore, texte) {
   var texte = document.createTextNode('Légende');
   label.appendChild(texte);
   return label;
+}
+
+// fonction pour une zone de texte
+function createTextarea (classe, id, textcontent) {
+  var textarea = document.createElement('textarea');
+  textarea.setAttribute('class', classe);
+  idInputText++;
+  textarea.setAttribute('id', id+idInputText);
+  textarea.appendChild(document.createTextNode(textcontent));
+  return textarea;
 }
 
 // fonction pour une zone de texte
@@ -76,17 +61,18 @@ function createInput (type, classe, id, value) {
 }
 
 // Générer une zone de texte
-function createTextBox() {
-  var child = [createLabel('legende', 'Légende'), createInput('text', 'form-control', 'legende', '')];
+function createTextBox(textContent) {
+  var child = [createLabel('legende', 'Légende'), createTextarea('form-control', 'legende', textContent)];
   var div = createDiv('form-group', '', child);
 
   var form = document.getElementsByClassName('in active')[0].childNodes[0].childNodes[0];
   form.appendChild(div);
 
+  // sactiver les boutons preview et lire
+  document.getElementById('preview').disabled = false;
+  document.getElementById('read').disabled = false;
+
   document.getElementById('closeModal').click(); // fermer le popup
-    //var i = idInputText - ;
-  //document.getElementById("legende"+idInputText).focus(); // placer le curseur sur le champ de texte crée
-  //console.log(i, idInputText);
 }
 
 // créer un formulaire
@@ -100,6 +86,25 @@ function createForm(id) {
 function createMusicBox(event) {
   var element = event.target;
   if(element.tagName == 'BUTTON' && element.classList.contains("set-music")){
+
+    fs.readFile('bdd_music.txt', 'utf8', (err, data) => {
+      if (err) throw err;
+      console.log(data.split('\n'));
+      data = data.split('\n');
+
+//      if(element.tagName == 'BUTTON' && element.classList.contains("set-music")){
+        var div = document.getElementById('modalMusic').childNodes[1].childNodes[1].childNodes[3];
+        for (var i = 0; i < data.length-1; i++) {
+            var a = document.createElement('a');
+            a.setAttribute('class', 'hrefMusic');
+            a.setAttribute('href', '#' + data[i]);
+            a.appendChild(document.createTextNode(data[i]));
+          div.appendChild(createDiv('col-md-12', '', [a]));
+        }
+  //    }
+    });
+
+    /*
     // Load client secrets from a local file.
     fs.readFile('client_secret.json', function processClientSecrets(err, content) {
       if (err) {
@@ -109,6 +114,7 @@ function createMusicBox(event) {
       // Authorize a client with the loaded credentials, then call the Drive API.
       authorize(JSON.parse(content), listFiles, event);
     });
+    */
   }
 }
 
@@ -188,6 +194,7 @@ function createTabContent (id, idMenu, li) {
 }
 
 // fonction pour ajouter un champ
+/*
 function addChamp(event) {
   var element = event.target;
   if(element.tagName == 'BUTTON' && element.classList.contains("addChamp")){
@@ -195,20 +202,49 @@ function addChamp(event) {
     var form = document.getElementsByClassName('in active')[0].childNodes[0].childNodes;
   }
 }
+*/
 
-// copier le contenu d'un element input
-function copyInputContent(qrcode, input) {
-  // tester s'il s'agit d'un input de musique
-  if(input.disabled) {
-    var url = 'https://drive.google.com/open?id=' + input.id;
-    qrcode.ajouterFichier(url, input.value);
-  } else {
-    qrcode.ajouterTexte(input.value);
+// fonction pour prévisualiser un qrcode
+function preview() {
+
+  var qrcode = new QRCodeAtomique(); // instancier un objet qrcode
+
+  // on recupére le contenu du tab active
+  var div = document.getElementsByClassName('tab-pane fade active in')[0];
+  // on recupére le formulaire de ce div active
+  var form = div.childNodes[0].childNodes[0];
+
+  /* copier les données du formulaire dans le qrcode */
+  if (form != null) {
+    for(var i=0; i<form.length; i++) {
+
+      var form2 = form.childNodes[i].childNodes;
+      for(var j=0; j<form2.length; j++) {
+        switch (form2[j].tagName) {
+          case 'INPUT':
+          case 'TEXTAREA':
+            console.log(form2[j].tagName);
+            copyInputContent(qrcode, form2[j]);
+            break;
+/*
+          case 'LABEL':
+            console.log(form2[j].tagName);
+            copyLegendeContent(qrcode,form2[j]);
+            break;
+*/
+          default:
+            console.log(form2[j].tagName);
+        }
+      }
+    }
+
+    var div = document.getElementById('affichageqr').childNodes[1]; // recupérer le div correspondant
+    facade = new FacadeController(qrcode, div); // instancier la facade
+    facade.genererQRCode(form); // générer le qrcode
+
+    document.getElementsByTagName('IMG')[0].draggable = true;
+    console.log(document.getElementsByTagName('IMG')[0].draggable);
+
+    document.getElementById('btnExportFile').disabled = false; // activer le bouton exporter
   }
-}
-
-
-// copier le contenu d'un element legende
-function copyLegendeContent(qrcode, legende) {
-  qrcode.ajouterTexte(legende.textContent);
 }
