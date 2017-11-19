@@ -1,6 +1,6 @@
 var idInputText = 0; // pour identifier les inputs de façon unique
 var idMenu = 1; // pour identifier de facon unique les menus
-var facade = null; // un objet de FacadeController
+var facade = new FacadeController();
 
 $(document).ready(function() {
 
@@ -239,8 +239,7 @@ function preview() {
     }
 
     var div = document.getElementById('affichageqr').childNodes[1]; // recupérer le div correspondant
-    facade = new FacadeController(qrcode, div); // instancier la facade
-    facade.genererQRCode(form); // générer le qrcode
+    facade.genererQRCode(div, qrcode); // générer le qrcode
 
     document.getElementsByTagName('IMG')[0].draggable = true;
     console.log(document.getElementsByTagName('IMG')[0].draggable);
