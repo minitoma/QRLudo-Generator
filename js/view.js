@@ -237,7 +237,7 @@ function addChamp(event) {
 // fonction pour prévisualiser un qrcode
 function preview() {
 
-  var qrcode = new QRCodeAtomique(); // instancier un objet qrcode
+  var qrcode = facade.creerQRCodeAtomique(); // instancier un objet qrcode
 
   // on recupére le contenu du tab active
   var div = document.getElementsByClassName('tab-pane fade active in')[0];

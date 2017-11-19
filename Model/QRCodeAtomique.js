@@ -8,7 +8,7 @@ class QRCodeAtomique extends QRCode{
       this.donneesUtilisateur.setAttribute(DictionnaireXml.getAttTypeQRCode(), DictionnaireXml.getValTypeAtomique());
 
     }
-    
+      
     /*
     * Ajoute le nom et l'url du fichier dans le QRCode Atomique
     */
