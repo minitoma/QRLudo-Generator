@@ -119,32 +119,32 @@ function createMusicBox(event) {
 }
 
 // fonction appelée pour faire le view du qrcode
-function drawQRCode (data) {
+function drawQRCode (qrcode) {
   var buffer = document.implementation.createDocument(null, 'html', null);
   var body = document.createElementNS('', 'body');
-  body.appendChild(document.createRange().createContextualFragment(data));
+  //body.appendChild(document.createRange().createContextualFragment(data));
   buffer.documentElement.appendChild(body);
-  var input = buffer.getElementsByTagName('contenu')[0].childNodes;
 
   createTabs();
 
-  for (var i = 0; i < input.length; i++) {
-    var value;
-    if (input[i].tagName =='fichier') {
-      value = input[i].getAttribute('nom');
-      var form = document.getElementsByClassName('in active')[0].childNodes[0].childNodes[0];
+  for (var i=0; i<qrcode.getTailleContenu(); i++){
 
+    if (qrcode.getTypeContenu(i)==DictionnaireXml.getTagTexte()){
+      createTextBox(qrcode.getTexte(i));
+    }
+    else if (qrcode.getTypeContenu(i)==DictionnaireXml.getTagFichier()){
+      var nom = qrcode.getNomFichier(i);
+      var url = qrcode.getUrlFichier(i);
+
+      var form = document.getElementsByClassName('in active')[0].childNodes[0].childNodes[0];
       var label = createLabel('titreMusique','Titre Musique');
-      var input = createInput('text', 'form-control', input[i].getAttribute('href'), value);
+      var input = createInput('text', 'form-control', url, nom);
       input.disabled = 'true';
 
       var div = createDiv('form-group', '', [label, input]);
 
       form.appendChild(div);
-    }else if (input[i].tagName == 'texte' || input[i].tagName == 'textarea') {
-      createTextBox(input[i].textContent);
     }
-
   }
 }
 

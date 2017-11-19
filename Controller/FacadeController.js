@@ -33,7 +33,7 @@ class FacadeController{
 
     var qrcode;
     QRCodeLoader.loadQRCode(file, function(qrcode, callback){
-      callback(qrcode.getDonneesUtilisateur()); // faire le view du qrcode
+      callback(qrcode); // faire le view du qrcode
     });
 
   }
