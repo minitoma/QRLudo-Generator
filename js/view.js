@@ -147,11 +147,7 @@ function createImg(id, src) {
 // fonction pour créér des tabs
 function createTabs () {
   var li = document.createElement('li');
-  li.setAttribute('class', 'menu'+idMenu);
-
-  if (idMenu == 1) {
-    li.setAttribute('class', 'active menuActive menu'+idMenu);
-  }
+  li.setAttribute('class', 'menu menu'+idMenu);
 
   var a = document.createElement('a');
   a.setAttribute('data-toggle', 'tab');
@@ -163,33 +159,31 @@ function createTabs () {
   if(family == "" || family == null) {
     texte = document.createTextNode('Famille ' + idMenu);
   }
+  createTabContent(a.getAttribute('href'), idMenu, li);
+
   a.appendChild(texte);
   li.appendChild(a);
   document.querySelector('.nav-tabs').appendChild(li);
-
-  createTabContent(a.getAttribute('href'), idMenu);
   idMenu++;
 }
 
 // créer le contenu des tabs
-function createTabContent (id, idMenu) {
+function createTabContent (id, idMenu, li) {
 
   var div2 = createDiv('row', 'content-form', [createForm('myForm')]);
 
-  var button = createButton('button', 'btn btn-default addChamp', 'modal', '#myModal', document.createTextNode('Ajouter un champ'));
+  var button = createButton('button', 'btn btn-default addChamp', 'modal', '#myModal', document.createTextNode('Ajouter un champ'+idMenu));
   var div4 = createDiv('col-md-6', '', [button]);
 
-  var button = createButton('button', 'btn btn-default closeTab', '', '', document.createTextNode('Annuler'));
+  var button = createButton('button', 'btn btn-default closeTab', '', '', document.createTextNode('Annuler'+idMenu));
   var div5 = createDiv('col-md-6', '', [button]);
 
   var div3 = createDiv('row', '', [div4, div5]);
 
   var classe = 'tab-pane fade';
-  if (idMenu == 1) {
-    classe = 'tab-pane fade in active';
-  }
 
   var div = createDiv(classe, id.substring(1), [div2, div3]);
+  setActive(div, li);
   document.getElementsByClassName('tab-content')[0].appendChild(div);
 }
 

@@ -17,7 +17,6 @@ class QRCodeLoader{
     else{
       throw "Erreur de lecture du fichier";
     }
-
   }
 
   //Traduit les int en chaine xml utf8 puis crée un objet QRCode à partir des données reconstituées
@@ -66,12 +65,9 @@ class QRCodeLoader{
         break;
     }
 
-    console.log(qrcode.getRacineXml());
-
     return qrcode;
 
   }
-
 
 
   //Convertit un tableau d'entiers en chaîne de caractères

@@ -28,7 +28,45 @@ class FacadeController{
   }
 
   static importQRCode(file) {
-    return QRCodeLoader.loadQRCode(file);
+    console.log(QRCodeLoader.loadQRCode(file));
+/*
+    var path = require('path');
+    var xmlReader = require('read-xml');
+    console.log(file.path);
+    console.log(file.name);
+
+//    var FILE = path.join(__dirname, file);
+
+    // pass a buffer or a path to a xml file
+    xmlReader.readXML(fs.readFileSync(file.path), function(err, data) {
+      if (err) {
+        console.error(err);
+      }
+
+      console.log('xml encoding:', data.encoding);
+      console.log('Decoded xml:', data.content);
+
+      var buffer = document.implementation.createDocument(null, 'html', null);
+      var body = document.createElementNS('', 'body');
+      body.appendChild(document.createRange().createContextualFragment(data.content));
+      buffer.documentElement.appendChild(body);
+      var contenu = buffer.getElementsByTagName('contenu');
+
+      //createTabs();
+
+      var i = 0;
+      while (i < contenu.length) {
+        for (var j = 0; j < contenu[j].length; j++) {
+          var texte = contenu[i][j];
+          console.log(texte.tagName);
+        }
+        i++;
+      }
+
+      console.log(buffer.getElementsByTagName('texte'));
+      //document.getElementById('dataXml').innerHTML = data.content;
+      console.log(buffer.childNodes);
+    });*/
   }
 
 }

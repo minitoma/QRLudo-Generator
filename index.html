@@ -2,38 +2,27 @@
 <html>
   <head>
     <meta charset="UTF-8">
-
-    <!-- JQuery -->
     <script src="./node_modules/jquery/dist/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
     <script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
 
-    <!-- Scripts de la Vue -->
     <script src="./js/api_scripts.js"></script>
     <script src="./js/scripts.js"></script>
     <script src="./js/view.js"></script>
 
-    <!-- Classes du Modèle -->
     <script src="./Model/QRCode.js"></script>
     <script src="./Model/QRCodeEnsemble.js"></script>
     <script src="./Model/QRCodeAtomique.js"></script>
     <script src="./Model/DictionnaireXml.js"></script>
 
-    <!-- Classes du Controller -->
-    <script src="./Controller/QRCodeGenerator.js"></script>
-    <script src="./Controller/FacadeController.js"></script>
-    <script src="./Controller/QRCodeLoader.js"></script>
-    <script src="./Controller/CompresseurTexte.js"></script>
-
-    <!-- Librairie génération QRCode -->
     <script src="./node_modules/jquery/jquery-qrcode-0.14.0.min.js"></script>
     <script src="./node_modules/jquery/jquery-qrcode-0.14.0.js"></script>
     <script src="./node_modules/piexifjs/piexif.js"></script>
 
-    <!-- Librairie compression chaine de caractères -->
-    <script language="javascript" src="./node_modules/lz-string/libs/lz-string.js"></script>
+    <script src="./Controller/QRCodeGenerator.js"></script>
+    <script src="./Controller/FacadeController.js"></script>
+    <script src="./Controller/QRCodeLoader.js"></script>
 
-    <!-- Bootstrap -->
     <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="./css/styles.css">
 
@@ -109,7 +98,7 @@
                   </div>
 
                   <div class="modal-header">
-                    <input type="file" class="form-control" id="importedFile" accept=".xml">
+                    <input type="file" class="form-control" id="importedFile" accept=".jpg .jpeg .png">
                   </div>
 
                   <div class="modal-footer">
