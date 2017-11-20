@@ -30,6 +30,10 @@ class DictionnaireXml{
     return "texte";
   }
 
+  static getTagTextearea(){
+    return "textarea";
+  }
+
   static getTagFamille(){
     return "famille";
   }
@@ -64,7 +68,7 @@ class DictionnaireXml{
   static getAttOrdreFamille(){
     return "ordre";
   }
-  
+
 
 
 

@@ -48,21 +48,14 @@ class FacadeController{
     createTabs();
 
     for (var i = 0; i < input.length; i++) {
-      var value;
       if (input[i].tagName =='fichier') {
-        value = input[i].getAttribute('nom');
-        var form = document.getElementsByClassName('in active')[0].childNodes[0].childNodes[0];
-
-        var label = createLabel('titreMusique','Titre Musique');
-        var input = createInput('text', 'form-control', input[i].getAttribute('href'), value);
-        input.disabled = 'true';
-
-        var div = createDiv('form-group', '', [label, input]);
-
-        form.appendChild(div);
-      }else if (input[i].tagName == 'texte') {
-        value = input[i].textContent;
-        createTextBox(value);
+        var event = document.createElement('Event');
+        event.target = document.createElement('a');
+        event.target.href = input[i].getAttribute('url');
+        event.target.textContent = input[i].getAttribute('nom');
+        selectMusic(event);
+      }else if (input[i].tagName == 'texte' || input[i].tagName == 'textarea') {
+        createTextBox(input[i].textContent);
       }
 
     }
