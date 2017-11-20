@@ -58,9 +58,13 @@ function selectMusic(event) {
 
       var form = document.getElementsByClassName('in active')[0].childNodes[0].childNodes[0];
 
+      var label = createLabel('titreMusique','Son');
+      var input = createInput('text', 'form-control', element.getAttribute('href').substring(1), element.childNodes[0].nodeValue);
+
       var label = createLabel('titreMusique','Titre Musique');
 
       var input = createInput('text', 'form-control', element.getAttribute('href').substring(1), element.textContent);
+
       input.disabled = 'true';
 
       var div = createDiv('form-group', '', [label, input]);
@@ -125,7 +129,7 @@ function importFile() {
   var importedFile = document.getElementById('importedFile').files[0];
   if (importedFile) {
     //console.log(QRCodeLoader.loadQRCode(importedFile));
-    FacadeController.importQRCode(importedFile);
+    facade.importQRCode(importedFile);
   }
 }
 

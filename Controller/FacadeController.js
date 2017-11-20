@@ -4,49 +4,39 @@
 */
 class FacadeController{
 
-  constructor(qrcode, divImg){
-    this.qrcode = qrcode;
-    this.divImg = divImg; //Stocke l'id du div dans laquelle le controller écrit les QRCodes générés
+  constructor(){
+
   }
 
+  //Renvoie un nouveau QRCodeAtomique
   creerQRCodeAtomique(){
     return new QRCodeAtomique();
   }
 
+  //Renvoie un nouveau QRCodeEnsemble
   creerQRCodeEnsemble(){
     return new QRCodeEnsemble();
   }
 
-  genererQRCode(form){
+  //Génère une image QRCode à partir d'un objet QRCode dans le div passé en paramètre
+  genererQRCode(divImg, qrcode){
 
-    while (this.divImg.hasChildNodes()) {
-        this.divImg.removeChild(this.divImg.firstChild);
+    while (divImg.hasChildNodes()) {
+        divImg.removeChild(divImg.firstChild);
     }
 
-    //div.appendChild(createImg('img-buffer','./img/image.png')); // générer un élément img dans le div
-    QRCodeGenerator.generate(this.divImg, this.qrcode);
+    QRCodeGenerator.generate(divImg, qrcode);
   }
 
   // fonction appelée pour importer un qrcode
-  static importQRCode(file) {
+  importQRCode(file) {
+
     var qrcode;
     QRCodeLoader.loadQRCode(file, function(qrcode, callback){
-      console.log(qrcode.getDonneesUtilisateur());
-
-      callback(qrcode.getDonneesUtilisateur()); // faire le view du qrcode
+      callback(qrcode); // faire le view du qrcode
     });
   }
-
-  // fonction appelée pour faire le view du qrcode
-  static drawQRCode (data) {
-    var buffer = document.implementation.createDocument(null, 'html', null);
-    var body = document.createElementNS('', 'body');
-    body.appendChild(document.createRange().createContextualFragment(data));
-    buffer.documentElement.appendChild(body);
-    var input = buffer.getElementsByTagName('contenu')[0].childNodes;
-
-    createTabs();
-
+  
     for (var i = 0; i < input.length; i++) {
       if (input[i].tagName =='fichier') {
         var event = document.createElement('Event');
@@ -58,7 +48,5 @@ class FacadeController{
         createTextBox(input[i].textContent);
       }
 
-    }
-  }
 
 }

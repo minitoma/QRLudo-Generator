@@ -1,6 +1,6 @@
 var idInputText = 0; // pour identifier les inputs de façon unique
 var idMenu = 1; // pour identifier de facon unique les menus
-var facade = null; // un objet de FacadeController
+var facade = new FacadeController();
 
 $(document).ready(function() {
 
@@ -34,8 +34,8 @@ $(document).ready(function() {
 function createLabel (fore, texte) {
   var label = document.createElement('label');
   label.setAttribute('for', fore);
-  var texte = document.createTextNode('Légende');
-  label.appendChild(texte);
+  var txt= document.createTextNode(texte);
+  label.appendChild(txt);
   return label;
 }
 
@@ -62,7 +62,7 @@ function createInput (type, classe, id, value) {
 
 // Générer une zone de texte
 function createTextBox(textContent) {
-  var child = [createLabel('legende', 'Légende'), createTextarea('form-control', 'legende', textContent)];
+  var child = [createLabel('legende', 'Texte'), createTextarea('form-control', 'legende', textContent)];
   var div = createDiv('form-group', '', child);
 
   var form = document.getElementsByClassName('in active')[0].childNodes[0].childNodes[0];
@@ -115,6 +115,36 @@ function createMusicBox(event) {
       authorize(JSON.parse(content), listFiles, event);
     });
     */
+  }
+}
+
+// fonction appelée pour faire le view du qrcode
+function drawQRCode (qrcode) {
+  var buffer = document.implementation.createDocument(null, 'html', null);
+  var body = document.createElementNS('', 'body');
+  //body.appendChild(document.createRange().createContextualFragment(data));
+  buffer.documentElement.appendChild(body);
+
+  createTabs();
+
+  for (var i=0; i<qrcode.getTailleContenu(); i++){
+
+    if (qrcode.getTypeContenu(i)==DictionnaireXml.getTagTexte()){
+      createTextBox(qrcode.getTexte(i));
+    }
+    else if (qrcode.getTypeContenu(i)==DictionnaireXml.getTagFichier()){
+      var nom = qrcode.getNomFichier(i);
+      var url = qrcode.getUrlFichier(i);
+
+      var form = document.getElementsByClassName('in active')[0].childNodes[0].childNodes[0];
+      var label = createLabel('titreMusique','Son');
+      var input = createInput('text', 'form-control', url, nom);
+      input.disabled = 'true';
+
+      var div = createDiv('form-group', '', [label, input]);
+
+      form.appendChild(div);
+    }
   }
 }
 
@@ -178,10 +208,10 @@ function createTabContent (id, idMenu, li) {
 
   var div2 = createDiv('row', 'content-form', [createForm('myForm')]);
 
-  var button = createButton('button', 'btn btn-default addChamp', 'modal', '#myModal', document.createTextNode('Ajouter un champ'));
+  var button = createButton('button', 'btn btn-default addChamp', 'modal', '#myModal', document.createTextNode('Ajouter un champ'+idMenu));
   var div4 = createDiv('col-md-6', '', [button]);
 
-  var button = createButton('button', 'btn btn-default closeTab', '', '', document.createTextNode('Annuler'));
+  var button = createButton('button', 'btn btn-default closeTab', '', '', document.createTextNode('Annuler'+idMenu));
   var div5 = createDiv('col-md-6', '', [button]);
 
   var div3 = createDiv('row', '', [div4, div5]);
@@ -207,7 +237,7 @@ function addChamp(event) {
 // fonction pour prévisualiser un qrcode
 function preview() {
 
-  var qrcode = new QRCodeAtomique(); // instancier un objet qrcode
+  var qrcode = facade.creerQRCodeAtomique(); // instancier un objet qrcode
 
   // on recupére le contenu du tab active
   var div = document.getElementsByClassName('tab-pane fade active in')[0];
@@ -239,8 +269,7 @@ function preview() {
     }
 
     var div = document.getElementById('affichageqr').childNodes[1]; // recupérer le div correspondant
-    facade = new FacadeController(qrcode, div); // instancier la facade
-    facade.genererQRCode(form); // générer le qrcode
+    facade.genererQRCode(div, qrcode); // générer le qrcode
 
     document.getElementsByTagName('IMG')[0].draggable = true;
     console.log(document.getElementsByTagName('IMG')[0].draggable);

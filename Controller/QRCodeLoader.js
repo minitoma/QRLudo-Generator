@@ -15,21 +15,11 @@ class QRCodeLoader{
       console.log("dataUrlSize:", ev.target.result.length);
 
       qrcode = QRCodeLoader.creerQRCode(ev.target.result);
-      callback(qrcode, FacadeController.drawQRCode); // renvoyer le qrcode créé
+      if (callback){
+        callback(qrcode, drawQRCode); // renvoyer le qrcode créé
+      }
     });
 
-/*
-    fileReader.addEventListener("load", function () {
-      QRCodeLoader.creerQRCode(fileReader.result);
-    }, false);
-
-    if (file) {
-      fileReader.readAsDataURL(file);
-    }
-    else{
-      throw "Erreur de lecture du fichier";
-    }
-*/
   }
 
   //Traduit les int en chaine xml utf8 puis crée un objet QRCode à partir des données reconstituées
