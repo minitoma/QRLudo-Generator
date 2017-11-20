@@ -163,7 +163,7 @@ function createTabs () {
   var family = document.getElementById('familyName').value;
   var texte = document.createTextNode(family);
   if(family == "" || family == null) {
-    texte = document.createTextNode('Famille ' + idMenu);
+    texte = document.createTextNode('Sans titre');
   }
   createTabContent(a.getAttribute('href'), idMenu, li);
 
