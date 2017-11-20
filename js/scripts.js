@@ -120,7 +120,6 @@ function importFile() {
   // recupérer le fichier
   var importedFile = document.getElementById('importedFile').files[0];
   if (importedFile) {
-    //console.log(QRCodeLoader.loadQRCode(importedFile));
     facade.importQRCode(importedFile);
   }
 }

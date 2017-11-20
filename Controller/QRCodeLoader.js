@@ -14,7 +14,14 @@ class QRCodeLoader{
     fileReader.addEventListener('load', function (ev) {
       console.log("dataUrlSize:", ev.target.result.length);
 
+      try{
       qrcode = QRCodeLoader.creerQRCode(ev.target.result);
+      }
+      catch(e){
+        alert(e);
+        return;
+      }
+
       if (callback){
         callback(qrcode, drawQRCode); // renvoyer le qrcode créé
       }
