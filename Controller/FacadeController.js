@@ -35,9 +35,18 @@ class FacadeController{
     QRCodeLoader.loadQRCode(file, function(qrcode, callback){
       callback(qrcode); // faire le view du qrcode
     });
-
   }
-
+  
+    for (var i = 0; i < input.length; i++) {
+      if (input[i].tagName =='fichier') {
+        var event = document.createElement('Event');
+        event.target = document.createElement('a');
+        event.target.href = input[i].getAttribute('url');
+        event.target.textContent = input[i].getAttribute('nom');
+        selectMusic(event);
+      }else if (input[i].tagName == 'texte' || input[i].tagName == 'textarea') {
+        createTextBox(input[i].textContent);
+      }
 
 
 }

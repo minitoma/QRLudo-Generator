@@ -60,11 +60,19 @@ function selectMusic(event) {
 
       var label = createLabel('titreMusique','Son');
       var input = createInput('text', 'form-control', element.getAttribute('href').substring(1), element.childNodes[0].nodeValue);
+
+      var label = createLabel('titreMusique','Titre Musique');
+
+      var input = createInput('text', 'form-control', element.getAttribute('href').substring(1), element.textContent);
+
       input.disabled = 'true';
 
       var div = createDiv('form-group', '', [label, input]);
 
       form.appendChild(div);
+      // activer les boutons preview et lire
+      document.getElementById('preview').disabled = false;
+      document.getElementById('read').disabled = false;
       document.getElementById('closeModalMusique').click(); // fermer le popup de musique
       console.log(element);
       console.log(form);
@@ -129,9 +137,35 @@ function importFile() {
 function exportFile() {
   var img = document.getElementsByTagName('IMG')[0];
   var url = img.src.replace(/^data:image\/[^;]/, 'data:application/octet-stream');
-  //console.log(url);
-  location.href = url;
+
+  var xhr = new XMLHttpRequest();
+
+  xhr.responseType = 'blob'; //Set the response type to blob so xhr.response returns a blob
+  xhr.open('GET', url , true);
+
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState == xhr.DONE) {
+        //When request is done
+        //xhr.response will be a Blob ready to save
+        var filesaver = require('file-saver');
+        filesaver.saveAs(xhr.response, 'image.jpeg');
+        init_View(); // réinitialiser le view
+    }
+  };
+  xhr.send(); //Request is sent
 }
+
+// function appelée aprés chaque export pour réinitialiser la vue
+function init_View () {
+  facade = null;
+  document.getElementsByClassName('tab-content')[0].innerHTML = "";
+  document.getElementsByClassName('nav nav-tabs')[0].innerHTML = "";
+  document.getElementById('affichageqr').removeChild(document.getElementById('affichageqr').childNodes[1]);
+  document.getElementById('btnExportFile').disabled = true;
+  document.getElementById('preview').disabled = true;
+  document.getElementById('read').disabled = true;
+}
+
 
 // définir le dernier tab créé comme celui active (tab et tabcontent)
 function setActive (div, li) {

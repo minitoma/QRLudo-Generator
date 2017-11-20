@@ -68,7 +68,7 @@ function createTextBox(textContent) {
   var form = document.getElementsByClassName('in active')[0].childNodes[0].childNodes[0];
   form.appendChild(div);
 
-  // sactiver les boutons preview et lire
+  // activer les boutons preview et lire
   document.getElementById('preview').disabled = false;
   document.getElementById('read').disabled = false;
 
