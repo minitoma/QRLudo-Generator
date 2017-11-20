@@ -49,5 +49,14 @@ class QRCode {
     return new XMLSerializer().serializeToString(this.racinexml);
   }
 
+  setNomQRCode(nom){
+    var noeudNom = document.createElement(DictionnaireXml.getTagNomQRCode());
+    noeudNom.setAttribute(DictionnaireXml.getAttNomQRCode(), nom);
+    this.metadonnees.appendChild(noeudNom);
+  }
+
+  getNomQRCode(){
+    return this.metadonnees.getElementsByTagName(DictionnaireXml.getTagNomQRCode())[0].getAttribute(DictionnaireXml.getAttNomQRCode());
+  }
 
 }

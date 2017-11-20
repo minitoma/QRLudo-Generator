@@ -38,6 +38,10 @@ class DictionnaireXml{
     return "famille";
   }
 
+  static getTagNomQRCode(){
+    return "nom"
+  }
+
 
 
   //Attributs
@@ -69,6 +73,9 @@ class DictionnaireXml{
     return "ordre";
   }
 
+  static getAttNomQRCode(){
+    return "valeur";
+  }
 
 
 
