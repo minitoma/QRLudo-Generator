@@ -37,11 +37,11 @@ class QRCode {
 
 
   /*
-  * Renvoie les données contenues dans le QRCode sous la forme d'une chaîne de caractères
+  * Renvoie les données contenues dans le QRCode
   * Utilisée pour générer l'image du QRCode
   */
   getDonneesUtilisateur(){
-    return new XMLSerializer().serializeToString(this.donneesUtilisateur);
+    return this.donneesUtilisateur;
   }
 
 
