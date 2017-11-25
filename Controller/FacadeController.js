@@ -25,17 +25,27 @@ class FacadeController{
         divImg.removeChild(divImg.firstChild);
     }
 
-    QRCodeGenerator.generate(divImg, qrcode);
+    ImageGenerator.genererQRCode(divImg, qrcode, "#000", "QRC", "#000");
   }
+
+  genererImageFamilleQRCode(tableauQRCodes, divImg){
+    while (divImg.hasChildNodes()) {
+        divImg.removeChild(divImg.firstChild);
+    }
+    ImageGenerator.genererImageFamilleQRCode(tableauQRCodes, divImg);
+  }
+
 
   // fonction appelée pour importer un qrcode
   importQRCode(file) {
 
     var qrcode;
-    QRCodeLoader.loadQRCode(file, function(qrcode, callback){
+    QRCodeLoader.loadImage(file, function(qrcode, callback){
       callback(qrcode); // faire le view du qrcode
     });
+
   }
-    
+
+
 
 }
