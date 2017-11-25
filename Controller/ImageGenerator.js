@@ -15,9 +15,6 @@ class ImageGenerator{
      var jq = window.jQuery;
      var size = 450;
 
-     //On convertit le xml en json
-     var json = JSON.stringify(ImageGenerator.xmlToJson(qrcode.getDonneesUtilisateur()));
-
      //On limite la taille du texte en braille central à deux caractères
      if (texteBraille.length>2){
        texteBraille=texteBraille.substring(0,2);
@@ -55,7 +52,7 @@ class ImageGenerator{
         background: '#fff',
 
         // content
-        text: json,
+        text: qrcode.getDonneesUtilisateur(),
 
         // corner radius relative to module width: 0.0 .. 0.5
         radius: 0.5,
@@ -71,7 +68,7 @@ class ImageGenerator{
         // 4: image box
         mode: 2,
 
-        mSize: 0.15,
+        mSize: 0.10,
         mPosX: 0.5,
         mPosY: 0.5,
 
@@ -86,7 +83,7 @@ class ImageGenerator{
       //On récupère le noeud racine xml (contenant données utilisateur + metadonnées) et on le convertit en tableau de int pour l'insérer dans les métadonnées de l'image
       var donnees = unescape(qrcode.getRacineXml());
 
-      var donneesutf8 = ImageGenerator.__donneesToUTF8(this.__formaterXml(donnees));
+      var donneesutf8 = ImageGenerator.__donneesToUTF8(donnees) ;
 
       var canvas = div.getElementsByTagName("canvas")[0];
 
@@ -99,12 +96,6 @@ class ImageGenerator{
 
     }
 
-    /**
-    * Fonction qui supprime l'attribut xmlns du xml
-    **/
-    static __formaterXml(xml){
-      return unescape(xml.replace(' xmlns="http://www.w3.org/1999/xhtml"', ""));
-    }
 
     /*
     * Génère l'image de la famille d'un qrcode à partir d'un tableau de qrcodes de la famille et d'un div de sortie
@@ -141,10 +132,19 @@ class ImageGenerator{
       /*********************/
 
       //On transforme le texte de l'image (nom de la famille) en un tableau de plusieurs lignes dont chaque ligne fait 15 caractères ou moins (pour l'affichage dans l'image)
-      var lignes = ImageGenerator.textToLignes("famille "+famille,15);
+      //On ajoute également le nombre de qrcodes contenus et la date
+      var lignes = ImageGenerator.textToLignes("Famille "+famille,20);
+      lignes.push("");
+      lignes.push(tableauQRCodes.length+" QR-Codes");
 
-      var height = 200;
-      var width = 200;
+      var date = new Date();
+      var jj = date.getDate();
+      var mm = date.getMonth()+1;
+      var aa = date.getFullYear();
+      lignes.push(jj+"/"+mm+"/"+aa);
+
+      var height = 500;
+      var width = 500;
 
       //On crée le canvas
       var c = document.createElement("canvas");
@@ -152,33 +152,74 @@ class ImageGenerator{
       c.setAttribute("width", width);
       var ctx=c.getContext("2d");
 
-      //On insère un qrcode en fond en filligrane
-      var base_image = new Image();
+      //On définit les options des qrcodes de fond d'image
+      var options = {
 
-      base_image.onload = function(){
-        ctx.drawImage(base_image,50,50,50,50);
-        console.log("coucou");
-      };
+         // render method: 'canvas', 'image' or 'div'
+         render: 'canvas',
 
-      base_image.src = 'img/image.png';
+         // version range somewhere in 1 .. 40
+         minVersion: 10, //On force une certaine taille de QRCode pour que l'image centrale n'empêche pas la lecture des QRCodes contenant peu de données
+
+         // size in pixel
+         size: height/2,
+
+         // corner radius relative to module width: 0.0 .. 0.5
+         radius: 0.5,
+
+         // code color or image element
+         fill: '#4db8ff',
+
+         // background color or image element, null for transparent background
+         background: '#fff',
+
+         // content
+         text: "texte",
+
+         // quiet zone in modules
+         quiet: 2,
+
+       };
+
+      //On génère un QRCode dans la partie supérieure gauche du canvas
+      $(c).qrcode(options);
+
+      //On modifie les options et on génère les qrcodes des autres coins de l'image
+      options.fill="#00D091";
+      options.left=width/2;
+      options.top=0;
+      console.log(options);
+      $(c).qrcode(options);
+
+      options.fill="#FFA652";
+      options.left=0;
+      options.top=width/2;
+      console.log(options);
+      $(c).qrcode(options);
+
+      options.fill="#ff8080";
+      options.left=width/2;
+      options.top=width/2;
+      console.log(options);
+      $(c).qrcode(options);
 
 
-      /*
 
       //On écrit le texte dans le canvas
-      ctx.fillStyle = "#00a758";
-      ctx.font="20px Arial";
+      ctx.fillStyle = "#00004d";
+      ctx.font="40px Arial";
       ctx.textAlign = "center";
       var yTexte = height/2-30*Math.floor(lignes.length/2);
       for (var i=0; i<lignes.length; i++){
         ctx.fillText(lignes[i],width/2, yTexte);
-        yTexte+=25;
-      }*/
+        yTexte+=50;
+      }
 
 
-
+      //On convertit les métadonnées en tableau de int
       var donneesutf8 = ImageGenerator.__donneesToUTF8(unescape(chaineXml));
 
+      //On transforme le canvas en image jpeg avec les bonnes métadonnées
       ImageGenerator.__genererJPEG(donneesutf8, c, div);
 
 

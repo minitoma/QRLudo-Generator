@@ -41,7 +41,7 @@ class QRCode {
   * Utilisée pour générer l'image du QRCode
   */
   getDonneesUtilisateur(){
-    return this.donneesUtilisateur;
+    return new XMLSerializer().serializeToString(this.donneesUtilisateur);
   }
 
 
