@@ -3,7 +3,7 @@ class QRCodeLoader{
 
 
   //Renvoie le QRCode crée à partir des informations du fichier image passé en paramètre
-  static loadQRCode(file, callback){
+  static loadImage(file, callback){
 
     var qrcode;
     var fileReader = new FileReader();
@@ -14,13 +14,8 @@ class QRCodeLoader{
     fileReader.addEventListener('load', function (ev) {
       console.log("dataUrlSize:", ev.target.result.length);
 
-      try{
-      qrcode = QRCodeLoader.creerQRCode(ev.target.result);
-      }
-      catch(e){
-        alert(e);
-        return;
-      }
+
+      qrcode = QRCodeLoader.__traiterImage(ev.target.result);
 
       if (callback){
         callback(qrcode, drawQRCode); // renvoyer le qrcode créé
@@ -29,9 +24,11 @@ class QRCodeLoader{
 
   }
 
-  //Traduit les int en chaine xml utf8 puis crée un objet QRCode à partir des données reconstituées
-  static creerQRCode(data){
 
+  /*
+  * Lit le contenu des métadonnées de l'image passée en paramètre et détecte s'il s'agit d'un qrcode ou d'une famille de qrcodes, puis fait l'appel à la sous fonction en conséquence
+  */
+  static __traiterImage(data){
     //On récupère les données exif de l'image
     var exifObj = piexif.load(data);
     var dataUtf8 = exifObj["0th"][700];
@@ -52,24 +49,68 @@ class QRCodeLoader{
       throw "L'image est invalide (xml incorrect)";
     }
 
+    var nomPremierNoeud = qrxml.firstChild.nodeName;
+
+    console.log("nom premier noeud "+nomPremierNoeud);
+
+    if (nomPremierNoeud=="qrcode"){
+      return QRCodeLoader.__creerQRCode(qrxml.firstChild);
+    }
+    else if (nomPremierNoeud=="qrcodesfamille"){
+      console.log("test:"+qrxml.getElementsByTagName(DictionnaireXml.getTagRacine()));
+      return QRCodeLoader.__creerFamilleQRCodes(qrxml);
+    }
+
+  }
+
+  /*
+  * Crée et renvoie un tableau de qrcodes d'une même famille issus d'une image conteneur famille
+  */
+  static __creerFamilleQRCodes(xmlNode){
+
+    console.log("passage load famille");
+
+    var listeFamille = new Array();
+
+    console.log("avant");
+
+    var listeFamilleXml = xmlNode.getElementsByTagName(DictionnaireXml.getTagRacine());
+
+    console.log("après");
+
+    for (var i=0; i<listeFamilleXml.length; i++){
+      listeFamille.push(QRCodeLoader.__creerQRCode(listeFamilleXml[i]));
+    }
+
+    for (var i=0; i<listeFamille.length; i++){
+      console.log("affichage "+listeFamille[i].getRacineXml());
+    }
+
+    return listeFamille;
+  }
+
+  //On crée un objet QRCode à partir des données reconstituées
+  static __creerQRCode(xmlNode){
+
     //On lit le type de QRCode contenu dans l'image
-    var typeQRCode= qrxml.getElementsByTagName(DictionnaireXml.getTagDonneesUtilisateur())[0].getAttribute(DictionnaireXml.getAttTypeQRCode());
+    var typeQRCode= xmlNode.getElementsByTagName(DictionnaireXml.getTagDonneesUtilisateur())[0].getAttribute(DictionnaireXml.getAttTypeQRCode());
 
     //On vérifie que le xml est bien formé (qu'il possède un noeud donneesUtilisateur et un noeud metadonnees)
-    if (!qrxml.getElementsByTagName(DictionnaireXml.getTagDonneesUtilisateur()[0]) || !qrxml.getElementsByTagName(DictionnaireXml.getTagMetaDonnees()[0])){
+    if (!xmlNode.getElementsByTagName(DictionnaireXml.getTagDonneesUtilisateur()[0]) || !xmlNode.getElementsByTagName(DictionnaireXml.getTagMetaDonnees()[0])){
       throw "L'image est invalide (xml incorrect)";
     }
+
 
     //On instancie un objet QRCode du bon type
     var qrcode;
     switch(typeQRCode){
       case DictionnaireXml.getValTypeAtomique():
         qrcode = new QRCodeAtomique();
-        qrcode.setNoeudRacine(qrxml);
+        qrcode.setNoeudRacine(xmlNode);
         break;
       case DictionnaireXml.getValTypeEnsemble():
         qrcode = new QRCodeEnsemble();
-        qrcode.setNoeudRacine(qrxml);
+        qrcode.setNoeudRacine(xmlNode);
         break;
       default:
         throw "L'image est invalide (le type de QRCode n'est pas reconnu)";
