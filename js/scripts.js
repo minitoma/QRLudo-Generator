@@ -26,11 +26,12 @@ $(document).ready(function() {
 
   });
 
-  document.addEventListener('click', modalMusic); // affichage du popup de la liste des musiques
-  document.getElementById('setFamilyName').addEventListener('click', createTabs); // récupérer le click derriére bouton create
-  document.addEventListener('click', function(){ // sur click du bouton closeTab
-    closeTab(event);
+  // fonction pour dispatcher
+  document.addEventListener('click', function(){
+    recognizeFunction(event);
   });
+  document.getElementById('setFamilyName').addEventListener('click', createTabs); // récupérer le click derriére bouton create
+
   //document.addEventListener('click', addChamp); // sur click du bouton addChamp
 
   document.getElementById('modalMusic').addEventListener('click', function(){
@@ -41,12 +42,20 @@ $(document).ready(function() {
 });
 
 
-// fermer le premier popup avant que celui de la liste des musiques ne s'affiche
-function modalMusic(event) {
+// fonction pour appeler la foncton sollicitée
+function recognizeFunction (event) {
   var element = event.target;
-  if(element.tagName == 'BUTTON' && element.classList.contains("set-music")){
-    document.getElementById('closeModal').click();
+  if (element.tagName == 'BUTTON' && element.classList.contains("set-music")){
+    modalMusic();
+    createMusicBox();
+  } else if (element.tagName == 'BUTTON' && element.classList.contains("closeTab")) {
+    closeTab(element);
   }
+}
+
+// fermer le premier popup avant que celui de la liste des musiques ne s'affiche
+function modalMusic() {
+  document.getElementById('closeModal').click();
 }
 
 // renseigner la musique sur un champ texte et l'afficher
@@ -57,18 +66,10 @@ function selectMusic(event) {
     if(element.tagName == 'A') {
 
       var form = document.getElementsByClassName('in active')[0].childNodes[0].childNodes[0];
-
-      var label = createLabel('titreMusique','Son');
-      var input = createInput('text', 'form-control', element.getAttribute('href').substring(1), element.childNodes[0].nodeValue);
-
-      var label = createLabel('titreMusique','Titre Musique');
-
-      var input = createInput('text', 'form-control', element.getAttribute('href').substring(1), element.textContent);
-
+      var input = createInput('text', 'form-control', element.getAttribute('href').substring(1), element.textContent, null);
       input.disabled = 'true';
 
-      var div = createDiv('form-group', '', [label, input]);
-
+      var div = createDiv('form-group', '', [input]);
       form.appendChild(div);
       // activer les boutons preview et lire
       document.getElementById('preview').disabled = false;
@@ -82,30 +83,27 @@ function selectMusic(event) {
 }
 
 // fonction pour fermer un onglet
-function closeTab(event) {
-  if(event.target.tagName == 'BUTTON' && event.target.classList.contains("closeTab")) {
-    var element = event.target;
-    // retrouver l'id tab parent et le supprimer de <ul class="nav nav-tabs">
-    document.querySelector('.nav-tabs').removeChild(document.getElementsByClassName(element.parentNode.parentNode.parentNode.id)[0]);
-    // retrouver l'element apr son id et le supprimer de <div class="tab-content">
-    document.getElementsByClassName('tab-content')[0].removeChild(document.getElementById(element.parentNode.parentNode.parentNode.id));
+function closeTab (element) {
+  // retrouver l'id tab parent et le supprimer de <ul class="nav nav-tabs">
+  document.querySelector('.nav-tabs').removeChild(document.getElementsByClassName(element.parentNode.parentNode.parentNode.id)[0]);
+  // retrouver l'element apr son id et le supprimer de <div class="tab-content">
+  document.getElementsByClassName('tab-content')[0].removeChild(document.getElementById(element.parentNode.parentNode.parentNode.id));
 
-    // définit le tab 1 comme celui active
-    if (document.getElementsByClassName('tab-pane fade').length != 0
-        && document.getElementsByClassName('tab-pane fade active in').length == 0) {
-      document.getElementsByClassName('tab-pane fade')[0].setAttribute('class', 'tab-pane fade active in');
-    } else {
-      // y a plus de formulaire on desactive les boutons preview et lire
-      document.getElementById('preview').disabled = true;
-      document.getElementById('read').disabled = true;
-      document.getElementById('creer').disabled = false; // activer le bouton créer
-    }
+  // définit le tab 1 comme celui active
+  if (document.getElementsByClassName('tab-pane fade').length != 0
+      && document.getElementsByClassName('tab-pane fade active in').length == 0) {
+    document.getElementsByClassName('tab-pane fade')[0].setAttribute('class', 'tab-pane fade active in');
+  } else {
+    // y a plus de formulaire on desactive les boutons preview et lire
+    document.getElementById('preview').disabled = true;
+    document.getElementById('read').disabled = true;
+    document.getElementById('creer').disabled = false; // activer le bouton créer
+  }
 
-    if (document.getElementsByClassName('menu').length != 0
-        && document.getElementsByClassName('active menu').length == 0) {
-          document.getElementsByClassName('menu')[0].setAttribute('class', 'active ' +
-          document.getElementsByClassName('menu')[0].getAttribute('class'));
-    }
+  if (document.getElementsByClassName('menu').length != 0
+      && document.getElementsByClassName('active menu').length == 0) {
+        document.getElementsByClassName('menu')[0].setAttribute('class', 'active ' +
+        document.getElementsByClassName('menu')[0].getAttribute('class'));
   }
 }
 
@@ -149,7 +147,7 @@ function exportFile() {
         //xhr.response will be a Blob ready to save
         var filesaver = require('file-saver');
         filesaver.saveAs(xhr.response, 'image.jpeg');
-        init_View(); // réinitialiser le view
+        //init_View(); // réinitialiser le view
     }
   };
   xhr.send(); //Request is sent
@@ -157,13 +155,15 @@ function exportFile() {
 
 // function appelée aprés chaque export pour réinitialiser la vue
 function init_View () {
-  facade = null;
+  facade = new FacadeController();
   document.getElementsByClassName('tab-content')[0].innerHTML = "";
   document.getElementsByClassName('nav nav-tabs')[0].innerHTML = "";
   document.getElementById('affichageqr').removeChild(document.getElementById('affichageqr').childNodes[1]);
   document.getElementById('btnExportFile').disabled = true;
   document.getElementById('preview').disabled = true;
   document.getElementById('read').disabled = true;
+  document.getElementById('creer').disabled = false;
+  document.getElementById('import').disabled = false;
 }
 
 
@@ -182,7 +182,7 @@ function setActive (div, li) {
 }
 
 // copier le contenu d'un element input
-function copyInputContent(qrcode, input) {
+function copyContentToQRCode(qrcode, input) {
   // tester s'il s'agit d'un input de musique
   if(input.disabled) {
     var url = 'https://drive.google.com/open?id=' + input.id;
@@ -192,7 +192,9 @@ function copyInputContent(qrcode, input) {
   }
 }
 
-// copier le contenu d'un element legende
-function copyLegendeContent(qrcode, legende) {
-  qrcode.ajouterTexte(legende.textContent);
+// fonction pour supprimer le bouton add de l'avant dernier champ du formulaire
+function deleteAddBtn () {
+  var row = document.getElementById('myForm').childNodes[document.getElementById('myForm').childNodes.length - 2];
+  row.childNodes[0].removeChild(row.childNodes[0].childNodes[1]); // supprimer btn add
+  row.childNodes[0].childNodes[0].setAttribute('class', 'col-md-12'); // augmenter la taille du textarea
 }
