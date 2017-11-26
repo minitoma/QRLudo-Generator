@@ -57,6 +57,8 @@ div.form-group {
 
 button.btn.btn-default.addChamp {
   width: initial;
+  margin: 0 0 0 -20px;
+  height: 34px;
 }
 
 div.modal-header.row {
@@ -84,4 +86,20 @@ section.page-header {
 
 textarea {
   resize: vertical;
+}
+
+body > div > section.row > div > div.col-lg-3.colLeft > form > div:nth-child(1) > div > ul {
+  margin: -10px 0 0 136px;
+}
+
+input[type="image"] {
+  width: 20px;
+}
+
+#closeForm {
+  width: initial;
+}
+
+#braille {
+  width: inherit;
 }
