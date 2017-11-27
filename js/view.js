@@ -50,6 +50,7 @@ function createTextarea (classe, id, textcontent) {
   idInputText++;
   if (id) textarea.setAttribute('id', id+idInputText);
   if (textcontent) textarea.appendChild(document.createTextNode(textcontent));
+  textarea.setAttribute('placeholder', 'Mettre la légende');
   return textarea;
 }
 
@@ -188,14 +189,18 @@ function createTabContent (id, idMenu, li) {
   var div2 = createDiv('row', 'content-form', [createForm('myForm')]);
   var button = createButton('button', 'btn btn-default addChamp', 'modal', '#myModal', document.createTextNode('Ajouter un champ'+idMenu));
 
-  var div4 = createDiv('col-md-9 text-center', null, [createButton('button', 'btn btn-default closeTab', null, null, 'Supprimer')]);
+  var div4 = createDiv('col-md-6 text-center', null, [createButton('button', 'btn btn-default closeTab', null, null, 'Supprimer')]);
   var input = createInput('text', null, 'braille', null, null, null, null);
   input.setAttribute('maxlength', '2');
   input.disabled = false;
-  // bouton pour fermer annuler la création du qrcode et champ pour braille au milieu du qrcode
+  var inputColor = createInput('color', null, 'colorPicker', null, null, null, null);
+  inputColor.disabled = false;
+  // champ pour braille au milieu du qrcode
   var div5 = createDiv('col-md-3 text-center', null, [input]);
+  // palette de couleur pour la couleur du qrcode
+  var div6 = createDiv('col-md-3 text-center', null, [inputColor]);
 
-  var div3 = createDiv('row', null, [div4, div5]);
+  var div3 = createDiv('row', null, [div4, div5, div6]);
 
   var classe = 'tab-pane fade';
 
@@ -253,7 +258,8 @@ function preview () {
     }
 
     var div = document.getElementById('affichageqr').childNodes[1]; // recupérer le div correspondant
-    facade.genererQRCode(div, qrcode); // générer le qrcode
+    var color = document.getElementById('colorPicker').value; // récupérer la couleur sur la palette
+    facade.genererQRCode(div, qrcode, color); // générer le qrcode
 
     document.getElementsByTagName('IMG')[0].draggable = true;
     console.log(document.getElementsByTagName('IMG')[0].draggable);
@@ -271,6 +277,7 @@ function drawQRCode (qrcode) {
 
   //createTabs();
   baseViewQRCodeAtomique(null);
+  document.getElementById('colorPicker').setAttribute('value', qrcode.getColor()); // restaurer la couleur du qrcode
   for (var i=0; i<qrcode.getTailleContenu(); i++){
 
     if (qrcode.getTypeContenu(i) == DictionnaireXml.getTagTexte()){
@@ -296,10 +303,11 @@ function baseViewQRCodeAtomique (callback) {
 
   // bouton pour fermer annuler la création du qrcode et champ pour braille au milieu du qrcode
   html =
-    '<div class="row"><div class="col-md-9 text-center">'+
+    '<div class="row"><div class="col-md-6 text-center">'+
         '<button type="button" class="btn btn-default" id="closeForm">Annuler</button>'+
     '</div><div class="col-md-3 text-center"><input type="text" id="braille" maxlength="2">'+
-    '</div></div>';
+    '</div><div class="col-md-3 text-center"><input type="color" id="colorPicker"/></div>'
+    '</div>';
   document.getElementsByClassName('tab-content')[0].innerHTML += html;
   // appel de la fonction init_View sur clic du bouton
   document.getElementById('closeForm').addEventListener('click', init_View);

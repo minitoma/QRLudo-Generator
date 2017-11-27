@@ -208,6 +208,8 @@ function copyContentToQRCode (qrcode, input) {
   } else {
     qrcode.ajouterTexte(input.value);
   }
+  // copier la couleur dans le qrcode
+  qrcode.ajouterColor(document.getElementById('colorPicker').value);
 }
 
 // fonction pour supprimer le bouton add de l'avant dernier champ du formulaire
