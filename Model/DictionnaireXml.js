@@ -38,8 +38,16 @@ class DictionnaireXml{
     return "famille";
   }
 
-  static getTagColor () {
-    return "color";
+  static getTagColorBraille () {
+    return "colorBraille";
+  }
+
+  static getTagColorQRCode(){
+    return "colorQRCode";
+  }
+
+  static getTagTexteBraille(){
+    return "texteBraille";
   }
 
 
@@ -75,6 +83,14 @@ class DictionnaireXml{
 
   static getAttNomQRCode(){
     return "valeur";
+  }
+
+  static getAttCouleur(){
+    return "color";
+  }
+
+  static getAttTexteBraille(){
+    return "texte";
   }
 
 

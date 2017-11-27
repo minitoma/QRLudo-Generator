@@ -35,7 +35,6 @@ class QRCode {
     return new XMLSerializer().serializeToString(this.metadonnees);
   }
 
-
   /*
   * Renvoie les données contenues dans le QRCode
   * Utilisée pour générer l'image du QRCode
@@ -49,14 +48,52 @@ class QRCode {
     return new XMLSerializer().serializeToString(this.racinexml);
   }
 
+  //Setter du nom du QRCode (nom de l'onglet)
   setNomQRCode(nom){
     var noeudNom = document.createElement(DictionnaireXml.getTagNomQRCode());
     noeudNom.setAttribute(DictionnaireXml.getAttNomQRCode(), nom);
     this.metadonnees.appendChild(noeudNom);
   }
 
+  //Renvoie le nom du QRCode (nom de l'onglet)
   getNomQRCode(){
     return this.metadonnees.getElementsByTagName(DictionnaireXml.getTagNomQRCode())[0].getAttribute(DictionnaireXml.getAttNomQRCode());
+  }
+
+  //Setter du texte central en braille
+  setTexteBraille(texte){
+    var noeud = document.createElement(DictionnaireXml.getTagTexteBraille());
+    noeudNom.setAttribute(DictionnaireXml.getAttTexteBraille(), texte);
+    this.metadonnees.append(noeudNom);
+  }
+
+  //Renvoie le texte central en braille
+  getTexteBraille(){
+    return this.metadonnees.getElementsByTagName(DictionnaireXml.getTagTexteBraille())[0].getAttribute(DictionnaireXml.getAttTexteBraille());
+  }
+
+  //Setter de la couleur du texte en braille
+  setColorBraille(color){
+    var noeud = document.createElement(DictionnaireXml.getTagColorBraille());
+    noeud.setAttribute(DictionnaireXml.getAttCouleur(), color);
+    this.metadonnees.appendChild(noeud);
+  }
+
+  //Renvoie la couleur du texte en braille
+  getColorBraille(){
+    return this.metadonnees.getElementsByTagName(DictionnaireXml.getTagColorBraille())[0].getAttribute(DictionnaireXml.getAttCouleur());
+  }
+
+  //Set la couleur du QRCode
+  setColorQR(color){
+    var noeud = document.createElement(DictionnaireXml.getTagColorQRCode());
+    noeud.setAttribute(DictionnaireXml.getAttCouleur(), color);
+    this.metadonnees.appendChild(noeud);
+  }
+
+  //Renvoie la couleur du QRCode
+  getColorQRCode(){
+    return this.metadonnees.getElementsByTagName(DictionnaireXml.getTagColorQRCode())[0].getAttribute(DictionnaireXml.getAttCouleur());
   }
 
 }

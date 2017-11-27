@@ -1,4 +1,7 @@
 
+/*
+* Permet de créer un objet QRCode à partir d'une image QRCode ou d'instancier un tableau contenant les objets QRCodes obtenus à partir d'une image enregistrant une famille de QRCodes
+*/
 class QRCodeLoader{
 
 
@@ -68,22 +71,14 @@ class QRCodeLoader{
   */
   static __creerFamilleQRCodes(xmlNode){
 
-    console.log("passage load famille");
-
     var listeFamille = new Array();
 
-    console.log("avant");
 
     var listeFamilleXml = xmlNode.getElementsByTagName(DictionnaireXml.getTagRacine());
 
-    console.log("après");
 
     for (var i=0; i<listeFamilleXml.length; i++){
       listeFamille.push(QRCodeLoader.__creerQRCode(listeFamilleXml[i]));
-    }
-
-    for (var i=0; i<listeFamille.length; i++){
-      console.log("affichage "+listeFamille[i].getRacineXml());
     }
 
     return listeFamille;

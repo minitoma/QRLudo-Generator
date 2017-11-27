@@ -7,7 +7,8 @@ LIBS= jquery --save \
 			google-tts-api --save \
 			piexifjs \
 			file-saver \
-			braille
+			braille\
+			xmltojson
 
 # Pour créer un projet
 init:

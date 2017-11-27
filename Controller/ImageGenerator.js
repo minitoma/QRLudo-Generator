@@ -10,10 +10,14 @@ class ImageGenerator{
   /*
   * Génère l'image du QRCode passé en paramètre dans le div dont l'id est passé en paramètre
   */
-  static genererQRCode(div, qrcode, couleurQR, texteBraille, couleurBraille){
+  static genererQRCode(div, qrcode){
 
      var jq = window.jQuery;
      var size = 450;
+
+     var texteBraille = qrcode.getTexteBraille();
+     var couleurQR = qrcode.getColorQRCode();
+     var couleurBraille = qrcode.getColorBraille();
 
      //On limite la taille du texte en braille central à deux caractères
      if (texteBraille.length>2){
