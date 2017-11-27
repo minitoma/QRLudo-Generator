@@ -20,7 +20,6 @@ class FacadeController{
 
   //Génère une image QRCode à partir d'un objet QRCode dans le div passé en paramètre
   genererQRCode(divImg, qrcode){
-
     while (divImg.hasChildNodes()) {
         divImg.removeChild(divImg.firstChild);
     }
@@ -29,24 +28,12 @@ class FacadeController{
   }
 
   // fonction appelée pour importer un qrcode
-  importQRCode(file) {
-
+  importQRCode (file) {
     var qrcode;
     QRCodeLoader.loadQRCode(file, function(qrcode, callback){
+      console.log(qrcode.getDonneesUtilisateur());
       callback(qrcode); // faire le view du qrcode
     });
   }
-  
-    for (var i = 0; i < input.length; i++) {
-      if (input[i].tagName =='fichier') {
-        var event = document.createElement('Event');
-        event.target = document.createElement('a');
-        event.target.href = input[i].getAttribute('url');
-        event.target.textContent = input[i].getAttribute('nom');
-        selectMusic(event);
-      }else if (input[i].tagName == 'texte' || input[i].tagName == 'textarea') {
-        createTextBox(input[i].textContent);
-      }
-
 
 }
