@@ -96,10 +96,15 @@ input[type="image"] {
   width: 20px;
 }
 
+div:nth-child(2) > div.col-md-9.text-center > button, 
 #closeForm {
   width: initial;
 }
 
 #braille {
   width: inherit;
+}
+
+body > div > section.row > div > div.col-lg-6.colMiddle > ul > li.menu > a > input[type="image"] {
+  margin: 0 0 -5px 5px;
 }

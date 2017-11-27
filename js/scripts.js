@@ -30,12 +30,11 @@ $(document).ready(function() {
   document.addEventListener('click', function(){
     recognizeFunction(event);
   });
-  document.getElementById('setFamilyName').addEventListener('click', createTabs); // récupérer le click derriére bouton create
 
   //document.addEventListener('click', addChamp); // sur click du bouton addChamp
 
   document.getElementById('modalMusic').addEventListener('click', function(){
-    selectMusic(event);
+    selectMusic(event, null);
   }); // sur clic d'un lien de musique
   document.getElementById('setImportedFile').addEventListener('click', importFile);
   document.getElementById('btnExportFile').addEventListener('click', exportFile);
@@ -59,27 +58,34 @@ function modalMusic() {
 }
 
 // renseigner la musique sur un champ texte et l'afficher
-function selectMusic(event) {
-  if (event) {
+function selectMusic (event, imported) {
+  var div2;
+  if (event && imported == null) {
     var element = event.target;
 
     if(element.tagName == 'A') {
-
-      var form = document.getElementsByClassName('in active')[0].childNodes[0].childNodes[0];
-      var input = createInput('text', 'form-control', element.getAttribute('href').substring(1), element.textContent, null);
-      input.disabled = 'true';
-
-      var div = createDiv('form-group', '', [input]);
-      form.appendChild(div);
-      // activer les boutons preview et lire
-      document.getElementById('preview').disabled = false;
-      document.getElementById('read').disabled = false;
-      document.getElementById('closeModalMusique').click(); // fermer le popup de musique
-      console.log(element);
-      console.log(form);
-      console.log("numero input " + idInputText);
+      div2 = createDiv('col-md-9', null, [createInput('text', 'form-control', element.getAttribute('href').substring(1), element.textContent, null, null, null)]);
     }
+  } else if (event == null && imported) {
+    div2 = createDiv('col-md-9', null, [createInput('text', 'form-control', imported[0], imported[1], null, null, null)]);
   }
+
+  var form = document.getElementsByClassName('in active')[0].childNodes[0].childNodes[0];
+
+  var btn = createButton('button', 'btn btn-default addChamp', 'modal', '#myModal', null);
+  btn.appendChild(createInput('image', null, null, null, 'add.png', null, null));
+  var div3 = createDiv('col-md-3', null, [btn]);
+
+  var div = createDiv('form-group', null, [createDiv('row', null, [div2, div3])]);
+  form.appendChild(div);
+  // activer les boutons preview et lire
+  document.getElementById('preview').disabled = false;
+  document.getElementById('read').disabled = false;
+  document.getElementById('closeModalMusique').click(); // fermer le popup de musique
+  console.log(element);
+  console.log(form);
+  console.log("numero input " + idInputText);
+  if (document.getElementById('myForm').childNodes.length > 1) { deleteAddBtn(); }
 }
 
 // fonction pour fermer un onglet
@@ -98,12 +104,24 @@ function closeTab (element) {
     document.getElementById('preview').disabled = true;
     document.getElementById('read').disabled = true;
     document.getElementById('creer').disabled = false; // activer le bouton créer
+    document.getElementById('import').disabled = false; // activer le bouton créer
   }
 
   if (document.getElementsByClassName('menu').length != 0
       && document.getElementsByClassName('active menu').length == 0) {
         document.getElementsByClassName('menu')[0].setAttribute('class', 'active ' +
         document.getElementsByClassName('menu')[0].getAttribute('class'));
+  }
+
+  // ajouter btn addTabs sur le dernier onlet
+  if (document.getElementsByClassName('menu').length != 0) {
+    var menu = document.getElementsByClassName('menu')[document.getElementsByClassName('menu').length - 1];
+    var input = createInput('image', 'addTabs', null, null, 'add.png', 'modal', '#modalFamilyName');
+    input.disabled = false;
+    if (menu.childNodes[0].childNodes.length <= 1) { // tester si le bouton n'existe pas
+      menu.childNodes[0].appendChild(input); // mettre input dans a
+    }
+
   }
 }
 
@@ -120,7 +138,7 @@ function closeModalMusique(event) {
 }
 
 // fonction pour charger un QRCode
-function importFile() {
+function importFile () {
   document.getElementById('closeModalImport').click(); // fermer le popup d'import
 
   // recupérer le fichier
@@ -132,7 +150,7 @@ function importFile() {
 }
 
 // fonction pour enregistrer un QRCode
-function exportFile() {
+function exportFile () {
   var img = document.getElementsByTagName('IMG')[0];
   var url = img.src.replace(/^data:image\/[^;]/, 'data:application/octet-stream');
 
@@ -147,7 +165,7 @@ function exportFile() {
         //xhr.response will be a Blob ready to save
         var filesaver = require('file-saver');
         filesaver.saveAs(xhr.response, 'image.jpeg');
-        //init_View(); // réinitialiser le view
+        init_View(); // réinitialiser le view
     }
   };
   xhr.send(); //Request is sent
@@ -158,7 +176,7 @@ function init_View () {
   facade = new FacadeController();
   document.getElementsByClassName('tab-content')[0].innerHTML = "";
   document.getElementsByClassName('nav nav-tabs')[0].innerHTML = "";
-  document.getElementById('affichageqr').removeChild(document.getElementById('affichageqr').childNodes[1]);
+  document.getElementById('affichageqr').childNodes[1].innerHTML = '<div class="col-md-12"> <!-- affichage du qrcode --> </div>';
   document.getElementById('btnExportFile').disabled = true;
   document.getElementById('preview').disabled = true;
   document.getElementById('read').disabled = true;
@@ -182,7 +200,7 @@ function setActive (div, li) {
 }
 
 // copier le contenu d'un element input
-function copyContentToQRCode(qrcode, input) {
+function copyContentToQRCode (qrcode, input) {
   // tester s'il s'agit d'un input de musique
   if(input.disabled) {
     var url = 'https://drive.google.com/open?id=' + input.id;
@@ -197,4 +215,11 @@ function deleteAddBtn () {
   var row = document.getElementById('myForm').childNodes[document.getElementById('myForm').childNodes.length - 2];
   row.childNodes[0].removeChild(row.childNodes[0].childNodes[1]); // supprimer btn add
   row.childNodes[0].childNodes[0].setAttribute('class', 'col-md-12'); // augmenter la taille du textarea
+}
+
+// fonction pour supprimer le bouton add tabs de l'avant dernier tab
+function deleteAddBtnTabs () {
+  // recupérer l'avant dernier menu
+  var menu = document.getElementsByClassName('menu')[document.getElementsByClassName('menu').length - 2];
+  menu.childNodes[0].removeChild(menu.childNodes[0].childNodes[1]);
 }
