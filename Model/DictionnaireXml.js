@@ -38,8 +38,8 @@ class DictionnaireXml{
     return "famille";
   }
 
-  static getTagNomQRCode(){
-    return "nom"
+  static getTagColor () {
+    return "color";
   }
 
 
@@ -76,7 +76,6 @@ class DictionnaireXml{
   static getAttNomQRCode(){
     return "valeur";
   }
-
 
 
 

@@ -19,13 +19,12 @@ class FacadeController{
   }
 
   //Génère une image QRCode à partir d'un objet QRCode dans le div passé en paramètre
-  genererQRCode(divImg, qrcode){
-
+  genererQRCode(divImg, qrcode, color){
     while (divImg.hasChildNodes()) {
         divImg.removeChild(divImg.firstChild);
     }
 
-    ImageGenerator.genererQRCode(divImg, qrcode, "#000", "QRC", "#000");
+    QRCodeGenerator.generate(divImg, qrcode, color);
   }
 
   genererImageFamilleQRCode(tableauQRCodes, divImg){
@@ -37,15 +36,13 @@ class FacadeController{
 
 
   // fonction appelée pour importer un qrcode
-  importQRCode(file) {
-
+  importQRCode (file) {
     var qrcode;
-    QRCodeLoader.loadImage(file, function(qrcode, callback){
+    QRCodeLoader.loadQRCode(file, function(qrcode, callback){
+      console.log(qrcode.getDonneesUtilisateur());
       callback(qrcode); // faire le view du qrcode
     });
 
   }
-
-
 
 }

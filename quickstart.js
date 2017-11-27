@@ -1,4 +1,4 @@
-/* ============================ API GOOGLE DRIVE ========================== */
+
 
 var fs = require('fs');
 var readline = require('readline');
@@ -11,6 +11,17 @@ var SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly'];
 var TOKEN_DIR = (process.env.HOME || process.env.HOMEPATH ||
     process.env.USERPROFILE) + '/.credentials/';
 var TOKEN_PATH = TOKEN_DIR + 'drive-nodejs-quickstart.json';
+
+// Load client secrets from a local file.
+fs.readFile('client_secret.json', function processClientSecrets(err, content) {
+  if (err) {
+    console.log('Error loading client secret file: ' + err);
+    return;
+  }
+  // Authorize a client with the loaded credentials, then call the
+  // Drive API.
+  authorize(JSON.parse(content), listFiles);
+});
 
 /**
  * Create an OAuth2 client with the given credentials, and then execute the
@@ -32,7 +43,7 @@ function authorize(credentials, callback) {
       getNewToken(oauth2Client, callback);
     } else {
       oauth2Client.credentials = JSON.parse(token);
-      callback(oauth2Client, listMusic);
+      callback(oauth2Client);
     }
   });
 }
@@ -91,113 +102,26 @@ function storeToken(token) {
  *
  * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
  */
-function listFiles(auth, callback) {
+function listFiles(auth) {
   var service = google.drive('v3');
   service.files.list({
     auth: auth,
     pageSize: 10,
     fields: "nextPageToken, files(id, name)"
-  }, function(err, response, listMusic) {
+  }, function(err, response) {
     if (err) {
       console.log('The API returned an error: ' + err);
       return;
     }
-    if (response.files.length == 0) {
+    var files = response.files;
+    if (files.length == 0) {
       console.log('No files found.');
     } else {
-  //    console.log('Files:');
-      /*for (var i = 0; i < files.length; i++) {
+      console.log('Files:');
+      for (var i = 0; i < files.length; i++) {
         var file = files[i];
         console.log('%s (%s)', file.name, file.id);
-      }*/
-      callback(response.files);
+      }
     }
   });
-}
-
-// liste de la musique dispo sur le drive
-function listMusic (content){
-  var div = document.getElementById('modalMusic').childNodes[1].childNodes[1].childNodes[3];
-  for (var i = 0; i < content.length; i++) {
-      var a = document.createElement('a');
-      a.setAttribute('class', 'hrefMusic');
-      a.setAttribute('href', '#' + content[i].id);
-      a.appendChild(document.createTextNode(content[i].name));
-    div.appendChild(createDiv('col-md-12', '', [a]));
-  }
-}
-
-/* ============================ API GOOGLE TEXT-TO-SPEECH ========================== */
-
-var googleTTS = require('google-tts-api');
-var texte = "", j = 0, audio = null;
-
-// réupérer le formulaire et tous les champs
-function getForm () {
-  var form = document.getElementsByClassName('in active')[0].childNodes[0].childNodes[0];
-  // parcourir le formulaire
-  for (var i=0; i<form.length; i++) {
-    try {
-        if (form.elements[i].type == "text" || form.elements[i].tagName == 'TEXTAREA') {
-          texte = texte + form.elements[i].value + ". ";
-      } else {
-        console.log("pas de type texte");
-      }
-    } catch (err) {
-      document.getElementById(form.elements[i].id).innerHTML = err.message;
-    }
-  }
-
-  // transformer le texte en tableau de phrase pour eviter de depasser les 200 caractéres
-  var reg=new RegExp("[.,;?!:]+", "g");
-  texte = texte.split(reg);
-  if (texte[texte.length-1] == " ") { console.log('oui');}
-
-  listen(play);
-}
-
-function listen(callback) {
-  var phrase = texte[j];
-  console.log(texte);
-  console.log(phrase);
-
-  // ignorer la derniére phrase s'il s'agit d'un blanc
-  if (j == texte.length-1 && texte[texte.length-1] == " ") {
-    document.getElementById('stop').click();
-    return;
-  }
-
-  if (j < texte.length) {
-    j++;
-  } else {
-    j = 0;
-    texte = "";
-    document.getElementById('stop').click();
-  }
-  callback(phrase, listen);
-}
-
-function play (phrase, callback) {
-    // Play the received speech
-    googleTTS(phrase, 'fr', 1)   // speed normal = 1 (default), slow = 0.24
-    .then(function (url) {
-      console.log(url); // https://translate.google.com/translate_tts?...
-      audio = new Audio(url);
-
-      audio.addEventListener('ended', function() {
-        callback(play);
-      });
-      audio.play();
-    })
-    .catch(function (err) {
-      console.error(err.stack);
-    });
-}
-
-function stopLecture () {
-  audio.pause();
-  audio = null;
-  texte = "";
-  j = 0;
-  return;
 }
