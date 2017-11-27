@@ -10,7 +10,7 @@ class QRCodeGenerator{
   /*
   * Génère l'image du QRCode passé en paramètre dans le div dont l'id est passé en paramètre
   */
-  static generate(div, qrcode){
+  static generate(div, qrcode, color){
 
      var jq = window.jQuery;
      var size = 450;
@@ -37,7 +37,7 @@ class QRCodeGenerator{
         size: size,
 
         // code color or image element
-        fill: '#000',
+        fill: color,
 
         // background color or image element, null for transparent background
         background: '#fff',
