@@ -277,6 +277,7 @@ function drawQRCode (qrcode) {
 
   //createTabs();
   baseViewQRCodeAtomique(null);
+  document.getElementById('colorPicker').setAttribute('value', qrcode.getColor()); // restaurer la couleur du qrcode
   for (var i=0; i<qrcode.getTailleContenu(); i++){
 
     if (qrcode.getTypeContenu(i) == DictionnaireXml.getTagTexte()){

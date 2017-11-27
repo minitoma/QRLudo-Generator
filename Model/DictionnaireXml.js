@@ -38,6 +38,10 @@ class DictionnaireXml{
     return "famille";
   }
 
+  static getTagColor () {
+    return "color";
+  }
+
 
 
   //Attributs
@@ -68,7 +72,6 @@ class DictionnaireXml{
   static getAttOrdreFamille(){
     return "ordre";
   }
-
 
 
 

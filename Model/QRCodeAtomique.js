@@ -29,12 +29,28 @@ class QRCodeAtomique extends QRCode{
     }
 
     /*
+    * Ajoute la couleur passée en paramètre dans le QRCode Atomique
+    */
+    ajouterColor(color){
+      var noeud = document.createElement(DictionnaireXml.getTagColor());
+      noeud.textContent = color;
+      this.donneesUtilisateur.getElementsByTagName(DictionnaireXml.getTagContenu())[0].appendChild(noeud);
+    }
+
+    /*
     * Supprime l'élément (texte ou fichier) contenu à l'indice passé en paramètre
     */
     supprimerContenu(indice){
       this.testIndiceContenuCorrect(indice); //On vérifie que le l'indice correspond à celui d'un élément
       var listeContenu = this.donneesUtilisateur.getElementsByTagName(DictionnaireXml.getTagContenu())[0];
       listeContenu.removeChild(listeContenu.childNodes[indice]);
+    }
+
+    /*
+    * Renvoie la couleur contenue dans le QRCode
+    */
+    getColor(){
+      return this.donneesUtilisateur.getElementsByTagName(DictionnaireXml.getTagColor())[0].childNodes[0].textContent;
     }
 
     /*
