@@ -10,11 +10,10 @@ class QRCodeAtomique extends QRCode{
     }
 
     /*
-    * Ajoute le nom et l'url du fichier dans le QRCode Atomique
+    * Ajoute l'url du fichier dans le QRCode Atomique
     */
-    ajouterFichier(url, nom){
+    ajouterFichier(url){
       var noeud = document.createElement(DictionnaireXml.getTagFichier());
-      noeud.setAttribute(DictionnaireXml.getAttNomFichier(), nom);
       noeud.setAttribute(DictionnaireXml.getAttUrlFichier(), url);
       this.donneesUtilisateur.getElementsByTagName(DictionnaireXml.getTagContenu())[0].appendChild(noeud);
     }
@@ -67,20 +66,6 @@ class QRCodeAtomique extends QRCode{
       }
       else{
         throw "L'élément demandé n'est pas un texte";
-      }
-    }
-
-    /*
-    * Renvoie le nom du fichier contenu à l'indice passé en paramètre
-    */
-    getNomFichier(indice){
-      this.testIndiceContenuCorrect(indice);
-
-      if (this.getTypeContenu(indice)==DictionnaireXml.getTagFichier()){
-        return this.donneesUtilisateur.getElementsByTagName(DictionnaireXml.getTagContenu())[0].childNodes[indice].getAttribute(DictionnaireXml.getAttNomFichier());
-      }
-      else{
-        throw "L'élément demandé n'est pas un fichier";
       }
     }
 
