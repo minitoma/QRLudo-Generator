@@ -24,7 +24,7 @@ class FacadeController{
         divImg.removeChild(divImg.firstChild);
     }
 
-    ImageGenerator.generate(divImg, qrcode);
+    ImageGenerator.genererQRCode(divImg, qrcode);
   }
 
   //Génère une image contenant une famille de QRCodes dans les metadonnees
@@ -38,8 +38,9 @@ class FacadeController{
   //Fonction appelée pour importer un qrcode
   importQRCode (file) {
     var qrcode;
-    QRCodeLoader.loadQRCode(file, function(qrcode, callback){
+    QRCodeLoader.loadImage(file, function(qrcode, callback){
       console.log(qrcode.getDonneesUtilisateur());
+      console.log(qrcode.getMetadonnees());
       callback(qrcode); // faire le view du qrcode
     });
 

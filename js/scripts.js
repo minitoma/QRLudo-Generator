@@ -100,11 +100,12 @@ function closeTab (element) {
       && document.getElementsByClassName('tab-pane fade active in').length == 0) {
     document.getElementsByClassName('tab-pane fade')[0].setAttribute('class', 'tab-pane fade active in');
   } else {
-    // y a plus de formulaire on desactive les boutons preview et lire
+    // s'il n'y a plus de formulaire on desactive les boutons preview et lire
     document.getElementById('preview').disabled = true;
     document.getElementById('read').disabled = true;
     document.getElementById('creer').disabled = false; // activer le bouton créer
     document.getElementById('import').disabled = false; // activer le bouton créer
+    document.getElementById('nameFamily').style.display = 'none';
   }
 
   if (document.getElementsByClassName('menu').length != 0
@@ -207,8 +208,10 @@ function copyContentToQRCode (qrcode, input) {
   } else {
     qrcode.ajouterTexte(input.value);
   }
-  // copier la couleur dans le qrcode
-  qrcode.ajouterColor(document.getElementById('colorPicker').value);
+  // copier la couleur du qrcode et du braille
+  qrcode.setColorQR(document.getElementById('colorQR').value);
+  qrcode.setColorBraille(document.getElementById('colorBraille').value);
+  qrcode.setTexteBraille(document.getElementById('braille').value);
 }
 
 // fonction pour supprimer le bouton add de l'avant dernier champ du formulaire

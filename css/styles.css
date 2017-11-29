@@ -79,7 +79,7 @@ section.page-header {
   margin-bottom: 10px;
 }
 
-#setFamilyName,
+#setNameQRCode,
 #setImportedFile {
   margin-bottom: 0;
 }
@@ -96,9 +96,15 @@ input[type="image"] {
   width: 20px;
 }
 
-div:nth-child(2) > div.col-md-9.text-center > button, 
-#closeForm {
+div:nth-child(2) > div.col-md-3.text-center > button,
+#closeForm,
+#nameFamily {
   width: initial;
+}
+
+#nameFamily {
+  margin: 0 0 13px -13px;
+  display: none;
 }
 
 #braille {

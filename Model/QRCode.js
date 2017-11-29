@@ -63,8 +63,8 @@ class QRCode {
   //Setter du texte central en braille
   setTexteBraille(texte){
     var noeud = document.createElement(DictionnaireXml.getTagTexteBraille());
-    noeudNom.setAttribute(DictionnaireXml.getAttTexteBraille(), texte);
-    this.metadonnees.append(noeudNom);
+    noeud.setAttribute(DictionnaireXml.getAttTexteBraille(), texte);
+    this.metadonnees.append(noeud);
   }
 
   //Renvoie le texte central en braille
