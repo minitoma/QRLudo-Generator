@@ -48,7 +48,7 @@ button.btn.btn-default.btn-popup {
 
 
 ul.nav.nav-tabs {
-  display: ;
+  margin-left: -13px;
 }
 
 div.form-group {
@@ -79,7 +79,7 @@ section.page-header {
   margin-bottom: 10px;
 }
 
-#setFamilyName,
+#setNameQRCode,
 #setImportedFile {
   margin-bottom: 0;
 }
@@ -96,9 +96,14 @@ input[type="image"] {
   width: 20px;
 }
 
-div:nth-child(2) > div.col-md-9.text-center > button, 
-#closeForm {
+div:nth-child(2) > div.col-md-3.text-center > button,
+#nameFamily {
   width: initial;
+}
+
+#nameFamily {
+  margin: 0 0 13px -13px;
+  display: none;
 }
 
 #braille {
@@ -107,4 +112,16 @@ div:nth-child(2) > div.col-md-9.text-center > button,
 
 body > div > section.row > div > div.col-lg-6.colMiddle > ul > li.menu > a > input[type="image"] {
   margin: 0 0 -5px 5px;
+}
+
+li.active {
+  border: 1px solid gray;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+body > div > section.row > div > div.col-lg-6.colMiddle > ul > li.active > a {
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  margin: 0;
 }
