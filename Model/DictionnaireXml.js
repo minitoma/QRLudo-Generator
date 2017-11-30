@@ -51,7 +51,6 @@ class DictionnaireXml{
   }
 
 
-
   //Attributs
   static getAttTypeQRCode(){
     return "type";
@@ -63,10 +62,6 @@ class DictionnaireXml{
 
   static getValTypeEnsemble(){
     return "ensemble";
-  }
-
-  static getAttNomFichier(){
-    return "nom";
   }
 
   static getAttUrlFichier(){
