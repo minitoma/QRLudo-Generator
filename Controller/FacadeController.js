@@ -45,4 +45,8 @@ class FacadeController{
 
   }
 
+  getTailleReelleQRCode(qrcode){
+      return qrcode.getDonneesUtilisateur().length;
+  }
+
 }
