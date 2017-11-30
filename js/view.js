@@ -1,6 +1,7 @@
 var idInputText = 0; // pour identifier les inputs de façon unique
 var idMenu = 1; // pour identifier de facon unique les menus
 var facade = new FacadeController();
+var tabQRCode = null;
 
 $(document).ready(function() {
 
@@ -157,6 +158,9 @@ function createImg(id, src) {
 
 // fonction pour créér des tabs
 function createTabs () {
+  // initialiser le tableau de qrcode
+  tabQRCode = [];
+
   document.getElementsByClassName('nav nav-tabs')[0].style.display = 'block';
   document.getElementById('nameFamily').style.display = 'block';
   var li = document.createElement('li');
@@ -175,43 +179,64 @@ function createTabs () {
   createTabContent(a.getAttribute('href'), idMenu, li);
 
   a.appendChild(texte);
-  var input = createInput('image', 'addTabs', null, null, 'add.png', 'modal', '#modalNameQRCode');
-  input.disabled = false;
-  a.appendChild(input);
+
   li.appendChild(a);
+  li.addEventListener('click', function(){
+    switchTab(event, null);
+  });
   document.querySelector('.nav-tabs').appendChild(li);
   idMenu++;
-  if (document.getElementsByClassName('menu').length > 1) { deleteAddBtnTabs(); }
+  switchTab(null, true);
 }
 
 // créer le contenu des tabs
 function createTabContent (id, idMenu, li) {
 
-  var div2 = createDiv('row', 'content-form', [createForm('myForm')]);
   var button = createButton('button', 'btn btn-default addChamp', 'modal', '#myModal', document.createTextNode('Ajouter un champ'+idMenu));
 
-  var div4 = createDiv('col-md-3 text-center', null, [createButton('button', 'btn btn-default closeTab', null, null, 'Supprimer')]);
-  var input = createInput('text', null, 'braille', 'QR', null, null, null);
+  var checkbox = createInput('checkbox', null, 'checkBraille', null, null, null, null);
+  checkbox.disabled = false;
+
+  var div4 = createDiv('col-md-6 text-center', null, [checkbox, document.createTextNode('Texte en braille')]);
+  // palette de couleur pour la couleur du qrcode
+  var inputColorQR = createInput('color', null, 'colorQR', null, null, null, null);
+  var div5 = createDiv('col-md-6 text-center', null, [inputColorQR]);
+
+  var input = createInput('text', null, 'braille', null, null, null, null);
   input.setAttribute('maxlength', '2');
+  input.setAttribute('title', 'Texte en braille');
   input.disabled = false;
 
-  var inputColorQR = createInput('color', null, 'colorQR', null, null, null, null);
   var inputColorBraille = createInput('color', null, 'colorBraille', null, null, null, null);
+  inputColorQR.setAttribute('title', 'Couleur du QRCode');
+  inputColorBraille.setAttribute('title', 'Couleur du texte en braille');
   inputColorQR.disabled = false;
   inputColorBraille.disabled = false;
   // champ pour braille au milieu du qrcode
-  var div5 = createDiv('col-md-3 text-center', null, [input]);
-  // palette de couleur pour la couleur du qrcode
-  var div6 = createDiv('col-md-3 text-center', null, [inputColorQR]);
+  var div6 = createDiv('col-md-3 text-center', null, [input]);
   var div7 = createDiv('col-md-3 text-center', null, [inputColorBraille]);
+  var div8 = createDiv('col-md-6', null, null);
 
-  var div3 = createDiv('row', null, [div4, div5, div6, div7]);
+  var div3 = createDiv('row', null, [div4, div5]);
+  var div5 = createDiv('row', null, [div6, div7, div8]);
+  div5.style.display = 'none';
 
   var classe = 'tab-pane fade';
 
-  var div = createDiv(classe, id.substring(1), [div2, div3]);
+  var div2 = createDiv('row', 'content-form', [createForm('myForm'),div3, div5]);
+  var div = createDiv(classe, id.substring(1), [div2]);
   setActive(div, li);
   document.getElementsByClassName('tab-content')[0].appendChild(div);
+
+  // ajouter un eventlistener au checbox pour afficher ou masquer les options du braille
+  checkbox.addEventListener('change', function(){
+    if (checkbox.checked) {
+      div5.style.display = 'block';
+    } else {
+      div5.style.display = 'none';
+    }
+  });
+
   createTextBox(null);
 }
 
@@ -228,7 +253,7 @@ function addChamp(event) {
 
 // fonction pour prévisualiser un qrcode
 function preview () {
-  if (document.getElementById('nameFamily').style.display == 'block' && document.getElementById('nameFamily').value != '') {
+  //if (document.getElementById('nameFamily').style.display == 'block' && document.getElementById('nameFamily').value != '') {
 
     var qrcode = facade.creerQRCodeAtomique(); // instancier un objet qrcode
 
@@ -271,9 +296,7 @@ function preview () {
 
       document.getElementById('btnExportFile').disabled = false; // activer le bouton exporter
     }
-  } else {
-    alert("Veuillez saisir le nom de la famille");
-  }
+//  } else { alert("Veuillez saisir le nom de la famille"); }
 }
 
 // fonction appelée pour faire le view du qrcode
@@ -315,9 +338,9 @@ function baseViewQRCodeAtomique (callback) {
   html =
     '<div class="row"><div class="col-md-3 text-center">'+
         '<button type="button" class="btn btn-default" id="closeForm">Annuler</button>'+
-    '</div><div class="col-md-3 text-center"><input type="text" id="braille" value="QR" maxlength="2">'+
-    '</div><div class="col-md-3 text-center"><input type="color" id="colorBraille"/>'+
-    '</div><div class="col-md-3 text-center"><input type="color" id="colorQR"/></div>'+
+    '</div><div class="col-md-3 text-center"><input type="text" id="braille" title="Texte en braille" maxlength="2">'+
+    '</div><div class="col-md-3 text-center"><input type="color" id="colorBraille" title="Couleur du texte en braille"/>'+
+    '</div><div class="col-md-3 text-center"><input type="color" id="colorQR" title="Couleur du QRCode"/></div>'+
     '</div>';
   document.getElementsByClassName('tab-content')[0].innerHTML += html;
   // appel de la fonction init_View sur clic du bouton
