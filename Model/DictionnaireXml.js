@@ -39,15 +39,15 @@ class DictionnaireXml{
   }
 
   static getTagColorBraille () {
-    return "colorBraille";
+    return "colorbraille";
   }
 
   static getTagColorQRCode(){
-    return "colorQRCode";
+    return "colorqrcode";
   }
 
   static getTagTexteBraille(){
-    return "texteBraille";
+    return "textebraille";
   }
 
 

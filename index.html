@@ -55,7 +55,7 @@
                     <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" id="creer">Créer</button>
                     <ul class="dropdown-menu" role="menu">
                       <li><a href="#" id="createQRCodeAtomique">Créer un QR-Code</a></li>
-                      <li><a href="#" id="createQRCodeEnsemble" data-toggle="modal" data-target="#modalFamilyName">Créer une famille de QR-Code</a></li>
+                      <li><a href="#" id="createQRCodeEnsemble" data-toggle="modal" data-target="#modalNameQRCode">Créer une famille de QR-Code</a></li>
                     </ul>
                   </div>
 								</div>
@@ -86,8 +86,8 @@
                   </div>
 
                   <div class="modal-header">
-                    <button type="button" class="btn btn-default btn-popup" id="qrCodeAtomique" data-toggle="modal" data-target="#modalFamilyName" data-dismiss="modal">QRCode Unique</button>
-                    <button type="button" class="btn btn-default btn-popup" id="qrCodeEnsemble" data-toggle="modal" data-target="#modalFamilyName" data-dismiss="modal">Famille de QRCode</button>
+                    <button type="button" class="btn btn-default btn-popup" id="qrCodeAtomique" data-toggle="modal" data-dismiss="modal">QRCode Unique</button>
+                    <button type="button" class="btn btn-default btn-popup" id="qrCodeEnsemble" data-toggle="modal" data-target="#modalNameQRCode" data-dismiss="modal">Famille de QRCode</button>
                   </div>
 
                   <div class="modal-footer">
@@ -99,23 +99,23 @@
             <!-- fin Popup pour type de qrcode -->
 
             <!-- Popup saisie de nom de famille-->
-            <div class="modal fade" id="modalFamilyName" role="dialog">
+            <div class="modal fade" id="modalNameQRCode" role="dialog">
               <div class="modal-dialog modal-sm">
                 <div class="modal-content">
 
                   <div class="row modal-body">
                     <div class="col-lg-12">
-                      <h4 class="modal-title">Famille de QR-Code</h4>
+                      <h4 class="modal-title">Nom du QR-Code</h4>
                     </div>
                   </div>
 
                   <div class="modal-header">
-                    <input type="text" class="form-control" id="familyName">
+                    <input type="text" class="form-control" id="nameQRCode">
                   </div>
 
                   <div class="modal-footer">
-                    <button type="button" class="btn btn-default" data-dismiss="modal" id="setFamilyName">Valider</button>
-                    <button type="button" class="btn btn-default" data-dismiss="modal" id="closeModalFamilyName">Annuler</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="setNameQRCode">Valider</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal" id="closeModaNameQRCode">Annuler</button>
                   </div>
 
                 </div>
@@ -193,6 +193,13 @@
                   </div>
 
                 </div>
+              </div>
+            </div>
+
+            <!-- Nom de la famille -->
+            <div class="row">
+              <div class="col-md-12">
+                <input type="text" class="form-control" id="nameFamily" placeholder="Nom de la famille">
               </div>
             </div>
 
