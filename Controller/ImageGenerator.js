@@ -227,7 +227,7 @@ class ImageGenerator{
       var donneesutf8 = ImageGenerator.__donneesToUTF8(unescape(chaineXml));
 
       //On transforme le canvas en image jpeg avec les bonnes métadonnées
-      ImageGenerator.__genererJPEG(donneesutf8, c, div);
+      return ImageGenerator.__genererJPEG(donneesutf8, c, div);
 
 
     }
@@ -302,6 +302,7 @@ class ImageGenerator{
     }
 
     //Prend un tableau de données utf8, un canvas d'entrée et un div de sortie et affiche dans le div l'image jpeg générée à partir du canvas et ayant pour metadonnées le tableau utf8
+    // retourne aussi l'img pour une sauvegarde d'une famille de qrcode
     static __genererJPEG(donneesUtf8, canvas, divSortie){
 
       //On génère une image jpg à partir du canvas et contenant les données du qrcode dans l'attribut XMLPacket
@@ -316,7 +317,7 @@ class ImageGenerator{
       var image = new Image();
       image.src = exifModified;
       $(divSortie).prepend(image);
-
+      return image;
     }
 
     //https://davidwalsh.name/convert-xml-json

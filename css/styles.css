@@ -80,6 +80,7 @@ section.page-header {
   margin-bottom: 10px;
 }
 
+#saveFamily,
 #setNameQRCode,
 #setImportedFile {
   margin-bottom: 0;

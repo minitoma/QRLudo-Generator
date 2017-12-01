@@ -24,7 +24,7 @@ class FacadeController{
         divImg.removeChild(divImg.firstChild);
     }
 
-    ImageGenerator.genererQRCode(divImg, qrcode);
+    return ImageGenerator.genererQRCode(divImg, qrcode);
   }
 
   //Génère une image contenant une famille de QRCodes dans les metadonnees

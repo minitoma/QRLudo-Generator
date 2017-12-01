@@ -1,7 +1,7 @@
 var idInputText = 0; // pour identifier les inputs de façon unique
 var idMenu = 1; // pour identifier de facon unique les menus
 var facade = new FacadeController();
-var tabQRCode = null;
+var tabQRCode = [];
 
 $(document).ready(function() {
 
@@ -279,11 +279,12 @@ function preview () {
     if (document.getElementById('nameFamily').value == '') {
       alert("Veuillez saisir le nom de la famille");
     } else {
-      previewQRCode();
+      document.getElementById('previewFamily').style.display = 'block'; // afficher le bouton exporter famille
+      previewQRCode(true); // true pour famille
     }
 //  } else if (document.getElementById('nameFamily').style.display == 'none' && document.getElementById('nameFamily').value == '') { // qrcode atomique
   } else {
-    previewQRCode();
+    previewQRCode(false); // pour qrcode atomique, pas de famille
   }
 }
 
@@ -296,9 +297,12 @@ function drawQRCode (qrcode) {
 
   //createTabs();
   baseViewQRCodeAtomique(null);
-  document.getElementById('colorBraille').setAttribute('value', qrcode.getColorBraille()); // restaurer la couleur du braille
+  if (qrcode.getTexteBraille() != null) {
+    document.getElementById('colorBraille').setAttribute('value', qrcode.getColorBraille()); // restaurer la couleur du braille
+    document.getElementById('braille').setAttribute('value', qrcode.getTexteBraille()); // restaurer le texte en braille
+    document.getElementById('checkBraille').click();
+  }
   document.getElementById('colorQR').setAttribute('value', qrcode.getColorQRCode()); // restaurer la couleur du qrcode
-  document.getElementById('braille').setAttribute('value', qrcode.getTexteBraille()); // restaurer le texte en braille
   for (var i=0; i<qrcode.getTailleContenu(); i++){
 
     if (qrcode.getTypeContenu(i) == DictionnaireXml.getTagTexte()){
@@ -335,7 +339,7 @@ function baseViewQRCodeAtomique (callback) {
   document.getElementById('content-form').innerHTML += html;
 
   // ajouter un eventlistener au checbox pour afficher ou masquer les options du braille
-  document.getElementById('checkBraille').addEventListener('click', function(){
+  document.getElementById('checkBraille').addEventListener('change', function(){
     if (this.checked) {
       document.getElementById('braille').parentNode.parentNode.style.display = 'block';
     } else {
