@@ -55,9 +55,10 @@ div.form-group {
   margin-top: 20px;
 }
 
+button.btn.btn-default.deleteChamp,
 button.btn.btn-default.addChamp {
   width: initial;
-  margin: 0 0 0 -20px;
+  margin: 0 0 0 -5px;
   height: 34px;
 }
 
