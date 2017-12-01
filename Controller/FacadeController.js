@@ -6,6 +6,7 @@ class FacadeController{
 
   constructor(){
     self.imageGenerator = new ImageGenerator();
+    self.compresseurXml = new CompresseurTexte();
   }
 
   //Renvoie un nouveau QRCodeAtomique
@@ -46,8 +47,9 @@ class FacadeController{
 
   }
 
+  //Renvoie la taille réelle du qrcode après compression
   getTailleReelleQRCode(qrcode){
-      return qrcode.getDonneesUtilisateur().length;
+      return self.compresseurXml.compresser(qrcode.getDonneesUtilisateur()).length;
   }
 
 }
