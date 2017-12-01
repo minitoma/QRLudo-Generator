@@ -5,7 +5,7 @@
 class FacadeController{
 
   constructor(){
-
+    self.imageGenerator = new ImageGenerator();
   }
 
   //Renvoie un nouveau QRCodeAtomique
@@ -24,7 +24,7 @@ class FacadeController{
         divImg.removeChild(divImg.firstChild);
     }
 
-    ImageGenerator.genererQRCode(divImg, qrcode);
+    self.imageGenerator.genererQRCode(divImg, qrcode);
   }
 
   //Génère une image contenant une famille de QRCodes dans les metadonnees
@@ -32,7 +32,7 @@ class FacadeController{
     while (divImg.hasChildNodes()) {
         divImg.removeChild(divImg.firstChild);
     }
-    ImageGenerator.genererImageFamilleQRCode(tableauQRCodes, divImg);
+    self.imageGenerator.genererImageFamilleQRCode(tableauQRCodes, divImg);
   }
 
   //Fonction appelée pour importer un qrcode

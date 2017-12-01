@@ -7,13 +7,21 @@
 */
 class ImageGenerator{
 
+  constructor(){
+    self.compresseur = new CompresseurTexte();
+  }
+
   /*
   * Génère l'image du QRCode passé en paramètre dans le div dont l'id est passé en paramètre
   */
-  static genererQRCode(div, qrcode){
+  genererQRCode(div, qrcode){
 
      var jq = window.jQuery;
      var size = 450;
+
+     var donneesQR = qrcode.getDonneesUtilisateur();
+     
+     //var donneesQR = self.compresseur.compresser(qrcode.getDonneesUtilisateur());
 
      var texteBraille = qrcode.getTexteBraille();
      var couleurQR = qrcode.getColorQRCode();
@@ -56,7 +64,7 @@ class ImageGenerator{
         background: '#fff',
 
         // content
-        text: qrcode.getDonneesUtilisateur(),
+        text: donneesQR,
 
         // corner radius relative to module width: 0.0 .. 0.5
         radius: 0.5,
@@ -87,12 +95,12 @@ class ImageGenerator{
       //On récupère le noeud racine xml (contenant données utilisateur + metadonnées) et on le convertit en tableau de int pour l'insérer dans les métadonnées de l'image
       var donnees = unescape(qrcode.getRacineXml());
 
-      var donneesutf8 = ImageGenerator.__donneesToUTF8(donnees) ;
+      var donneesutf8 = this.__donneesToUTF8(donnees) ;
 
       var canvas = div.getElementsByTagName("canvas")[0];
 
       //On génère l'image jpeg dans le div avec l'image du canvas et les métadonnées
-      ImageGenerator.__genererJPEG(donneesutf8, canvas, div);
+      this.__genererJPEG(donneesutf8, canvas, div);
 
       //On supprime le canvas initial
       canvas.parentNode.removeChild(canvas);
@@ -104,7 +112,7 @@ class ImageGenerator{
     /*
     * Génère l'image de la famille d'un qrcode à partir d'un tableau de qrcodes de la famille et d'un div de sortie
     */
-    static genererImageFamilleQRCode(tableauQRCodes, div){
+    genererImageFamilleQRCode(tableauQRCodes, div){
 
       /************************/
       /* Traitements QRCodes */
@@ -137,7 +145,7 @@ class ImageGenerator{
 
       //On transforme le texte de l'image (nom de la famille) en un tableau de plusieurs lignes dont chaque ligne fait 15 caractères ou moins (pour l'affichage dans l'image)
       //On ajoute également le nombre de qrcodes contenus et la date
-      var lignes = ImageGenerator.textToLignes("Famille "+famille,20);
+      var lignes = this.textToLignes("Famille "+famille,20);
       lignes.push("");
       lignes.push(tableauQRCodes.length+" QR-Codes");
 
@@ -224,16 +232,16 @@ class ImageGenerator{
 
 
       //On convertit les métadonnées en tableau de int
-      var donneesutf8 = ImageGenerator.__donneesToUTF8(unescape(chaineXml));
+      var donneesutf8 = this.__donneesToUTF8(unescape(chaineXml));
 
       //On transforme le canvas en image jpeg avec les bonnes métadonnées
-      ImageGenerator.__genererJPEG(donneesutf8, c, div);
+      this.__genererJPEG(donneesutf8, c, div);
 
 
     }
 
     //Transforme un texte en lignes ne dépassant chacune pas la valeur de nbMaxCarLigne
-    static textToLignes(text, nbMaxCarLigne){
+    textToLignes(text, nbMaxCarLigne){
 
       var mots = text.split(" ");
       var lignes = new Array();
@@ -248,7 +256,7 @@ class ImageGenerator{
 
         //Si on a la place de mettre le mot actuel dans la ligne courante, on l'ajoute
         if (mots[i].length+1+lignes[lignes.length-1].length<=nbMaxCarLigne){
-          lignes[lignes.length-1] = ImageGenerator.__ajouterMot(lignes[lignes.length-1], mots[i]);
+          lignes[lignes.length-1] = this.__ajouterMot(lignes[lignes.length-1], mots[i]);
         }
         else if(mots[i].length>nbMaxCarLigne){ //Si le mot est trop long pour rentrer dans une seule ligne
           var nbCarOccupes = lignes[lignes.length-1].length;
@@ -257,7 +265,7 @@ class ImageGenerator{
           if (nbCarRestants>3){//Si le nombre de caractères disponibles sur la ligne courante est supérieur à trois, on ajoute le début du mot sur la ligne
             var moitie1mot = mots[i].substring(0, nbCarRestants-2)
             var moitie2mot = mots[i].substring(nbCarRestants-2);
-            lignes[lignes.length-1] = ImageGenerator.__ajouterMot(lignes[lignes.length-1], moitie1mot);
+            lignes[lignes.length-1] = this.__ajouterMot(lignes[lignes.length-1], moitie1mot);
             lignes[lignes.length-1] += "-";
             mots.splice(i+1, 0, moitie2mot);
           }
@@ -281,7 +289,7 @@ class ImageGenerator{
     }
 
     //Permet d'ajouter un mot à une ligne en ajoutant ou pas un caractère espace avant le mot. Fonction utilisée par textToLignes
-    static __ajouterMot(ligne, mot){
+    __ajouterMot(ligne, mot){
       var out="";
       if (ligne==""){
         out=mot;
@@ -293,7 +301,7 @@ class ImageGenerator{
     }
 
     //Prend une chaine utf-16 en entrée et la sort en utf-8
-    static __donneesToUTF8(donnees){
+    __donneesToUTF8(donnees){
       var donneesutf8 = [];
       for (var i = 0; i < donnees.length; i++) {
         donneesutf8.push(donnees.charCodeAt(i));
@@ -302,7 +310,7 @@ class ImageGenerator{
     }
 
     //Prend un tableau de données utf8, un canvas d'entrée et un div de sortie et affiche dans le div l'image jpeg générée à partir du canvas et ayant pour metadonnées le tableau utf8
-    static __genererJPEG(donneesUtf8, canvas, divSortie){
+    __genererJPEG(donneesUtf8, canvas, divSortie){
 
       //On génère une image jpg à partir du canvas et contenant les données du qrcode dans l'attribut XMLPacket
       var zerothIfd = {};
@@ -321,7 +329,7 @@ class ImageGenerator{
 
     //https://davidwalsh.name/convert-xml-json
     // Changes XML to JSON
-    static xmlToJson(xml) {
+    xmlToJson(xml) {
 
     	// Create the return object
     	var obj = {};
@@ -345,14 +353,14 @@ class ImageGenerator{
     			var item = xml.childNodes.item(i);
     			var nodeName = item.nodeName;
     			if (typeof(obj[nodeName]) == "undefined") {
-    				obj[nodeName] = ImageGenerator.xmlToJson(item);
+    				obj[nodeName] = this.xmlToJson(item);
     			} else {
     				if (typeof(obj[nodeName].push) == "undefined") {
     					var old = obj[nodeName];
     					obj[nodeName] = [];
     					obj[nodeName].push(old);
     				}
-    				obj[nodeName].push(ImageGenerator.xmlToJson(item));
+    				obj[nodeName].push(this.xmlToJson(item));
     			}
     		}
     	}
