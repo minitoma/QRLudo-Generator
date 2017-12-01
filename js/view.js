@@ -96,12 +96,33 @@ function createTextBox (textContent) {
   '</div>'+
 */
   var div2 = createDiv('col-md-9', null, [createTextarea('form-control', 'legende', textContent)]);
-  var btn = createButton('button', 'btn btn-default addChamp', 'modal', '#myModal', null);
-  btn.appendChild(createInput('image', null, null, null, 'add.png', null, null));
-  var div3 = createDiv('col-md-3', null, [btn]);
-  var div = createDiv('form-group', null, [createDiv('row', null, [div2, div3])]);
+  var btnAdd = createButton('button', 'btn btn-default addChamp', 'modal', '#myModal', null);
+  var btnDelete = createButton('button', 'btn btn-default deleteChamp', null, null, null);
+  btnAdd.appendChild(createInput('image', null, null, null, 'add.png', null, null));
+  btnDelete.appendChild(createInput('image', 'deleteChamp', null, null, 'delete.png', null, null));
+  var div3 = createDiv('col-md-6', null, [btnAdd]);
+  var div4 = createDiv('col-md-6', null, [btnDelete]);
+  var div = createDiv('form-group', null, [createDiv('row', null, [div2, createDiv('col-md-3', null, [createDiv('row', null, [div3, div4])])])]);
   var form = document.getElementsByClassName('in active')[0].childNodes[0].childNodes[0];
   form.appendChild(div);
+
+  // ajouter un eventlistener sur deleteChamp pour supprimer le champ sur click du bouton
+  btnDelete.addEventListener('click', function(){
+    form.removeChild(div); // suppression du champ
+    // ajout des btn add et delete au champ précédent si il existe
+    if (form.length != 0) {
+      // recupérer le texte saisi avant de remplacer
+      var textContent = form.childNodes[form.length-1].childNodes[0].childNodes[0].childNodes[0].value;
+      // recréer le input et le div form-group
+      div2 = createDiv('col-md-9', null, [createTextarea('form-control', 'legende', textContent)]);
+      div = createDiv('form-group', null, [createDiv('row', null, [div2, createDiv('col-md-3', null, [createDiv('row', null, [div3, div4])])])]);
+      // recréer le champ précédent avec les boutons add et delete
+      form.replaceChild(div, form.childNodes[form.length-1]);
+    } else {
+      // il n' y a plus de champ on réinitilise l'application
+      init_View();
+    }
+  });
 
   // activer les boutons preview et lire
   document.getElementById('preview').disabled = false;
@@ -218,22 +239,22 @@ function createTabContent (id, idMenu, li) {
   var div8 = createDiv('col-md-6', null, null);
 
   var div3 = createDiv('row', null, [div4, div5]);
-  var div5 = createDiv('row', null, [div6, div7, div8]);
-  div5.style.display = 'none';
+  var div9 = createDiv('row', null, [div6, div7, div8]);
+  div9.style.display = 'none';
 
   var classe = 'tab-pane fade';
 
-  var div2 = createDiv('row', 'content-form', [createForm('myForm'),div3, div5]);
+  var div2 = createDiv('row', 'content-form', [createForm('myForm'), div3, div9]);
   var div = createDiv(classe, id.substring(1), [div2]);
   setActive(div, li);
   document.getElementsByClassName('tab-content')[0].appendChild(div);
 
   // ajouter un eventlistener au checbox pour afficher ou masquer les options du braille
   checkbox.addEventListener('change', function(){
-    if (checkbox.checked) {
-      div5.style.display = 'block';
+    if (this.checked) {
+      div9.style.display = 'block';
     } else {
-      div5.style.display = 'none';
+      div9.style.display = 'none';
     }
   });
 
@@ -253,50 +274,17 @@ function addChamp(event) {
 
 // fonction pour prévisualiser un qrcode
 function preview () {
-  //if (document.getElementById('nameFamily').style.display == 'block' && document.getElementById('nameFamily').value != '') {
-
-    var qrcode = facade.creerQRCodeAtomique(); // instancier un objet qrcode
-
-    var form; // variable pour recupérer le ou les formulaires
-
-    // tester s'il s'agit d'un qrcode atomique ou d'une famille
-    if (document.getElementsByClassName('nav nav-tabs')[0].style.display == 'none') {
-      form = document.getElementById('myForm').childNodes; //on recupérer le formulaire
-    } else if (document.getElementsByClassName('nav nav-tabs')[0].style.display != 'none') {
-      // on recupére le contenu du tab active
-      var div = document.getElementsByClassName('tab-pane fade active in')[0];
-      // on recupére le formulaire de ce div active
-      form = div.childNodes[0].childNodes[0].childNodes; //on recupérer le formulaire
+  // famille de qrcode
+  if (document.getElementById('nameFamily').style.display == 'block') {
+    if (document.getElementById('nameFamily').value == '') {
+      alert("Veuillez saisir le nom de la famille");
+    } else {
+      previewQRCode();
     }
-
-    /* copier les données du formulaire dans le qrcode */
-    if (form != null) {
-      for(var i=0; i<form.length; i++) {
-        var form2 = form[i].childNodes[0].childNodes;
-        console.log(form2);
-        for(var j=0; j<form2.length; j++) {
-          switch (form2[j].childNodes[0].tagName) {
-            case 'INPUT':
-            case 'TEXTAREA':
-              console.log(form2[j].childNodes[0].tagName);
-              copyContentToQRCode(qrcode, form2[j].childNodes[0]);
-              break;
-
-            default:
-              console.log(form2[j].childNodes[0].tagName);
-          }
-        }
-      }
-
-
-      facade.genererQRCode(document.getElementById('affichageqr').childNodes[1], qrcode); // générer le   qrcode
-
-      document.getElementsByTagName('IMG')[0].draggable = true;
-      console.log(document.getElementsByTagName('IMG')[0].draggable);
-
-      document.getElementById('btnExportFile').disabled = false; // activer le bouton exporter
-    }
-//  } else { alert("Veuillez saisir le nom de la famille"); }
+//  } else if (document.getElementById('nameFamily').style.display == 'none' && document.getElementById('nameFamily').value == '') { // qrcode atomique
+  } else {
+    previewQRCode();
+  }
 }
 
 // fonction appelée pour faire le view du qrcode
@@ -336,15 +324,27 @@ function baseViewQRCodeAtomique (callback) {
 
   // bouton pour fermer annuler la création du qrcode et champ pour braille au milieu du qrcode
   html =
-    '<div class="row"><div class="col-md-3 text-center">'+
-        '<button type="button" class="btn btn-default" id="closeForm">Annuler</button>'+
-    '</div><div class="col-md-3 text-center"><input type="text" id="braille" title="Texte en braille" maxlength="2">'+
-    '</div><div class="col-md-3 text-center"><input type="color" id="colorBraille" title="Couleur du texte en braille"/>'+
-    '</div><div class="col-md-3 text-center"><input type="color" id="colorQR" title="Couleur du QRCode"/></div>'+
-    '</div>';
-  document.getElementsByClassName('tab-content')[0].innerHTML += html;
+    '<div class="row"><div class="col-md-6 text-center"><input type="checkbox" id="checkBraille">Texte en braille</div>'+
+    '<div class="col-md-6 text-center"><input type="color" id="colorQR" title="Couleur du QRCode"/></div></div>'+
+        //'<button type="button" class="btn btn-default" id="closeForm">Annuler</button>'+
+    '<div class="row" style="display:none;"><div class="col-md-3 text-center"><input type="text" id="braille" title="Texte en braille" maxlength="2"></div>'+
+    '<div class="col-md-3 text-center"><input type="color" id="colorBraille" title="Couleur du texte en braille"/></div>'+
+    '<div class="col-md-6 text-center"></div></div>';
+
+  //document.getElementsByClassName('tab-content')[0].innerHTML += html;
+  document.getElementById('content-form').innerHTML += html;
+
+  // ajouter un eventlistener au checbox pour afficher ou masquer les options du braille
+  document.getElementById('checkBraille').addEventListener('click', function(){
+    if (this.checked) {
+      document.getElementById('braille').parentNode.parentNode.style.display = 'block';
+    } else {
+      document.getElementById('braille').parentNode.parentNode.style.display = 'none';
+    }
+  });
+
   // appel de la fonction init_View sur clic du bouton
-  document.getElementById('closeForm').addEventListener('click', init_View);
+  //document.getElementById('closeForm').addEventListener('click', init_View);
   document.getElementsByClassName('nav nav-tabs')[0].style.display = 'none';
   document.getElementById('nameFamily').style.display = 'none';
   // activer les boutons lire et preview

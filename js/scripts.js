@@ -117,7 +117,9 @@ function closeTab (element) {
   }
 
   // simuler un click sur le tab active pour ajouter les boutons add et del
-  document.getElementsByClassName('menu active')[0].childNodes[0].click();
+  if (document.getElementsByClassName('menu active')[0]) {
+    document.getElementsByClassName('menu active')[0].childNodes[0].click();
+  }
 }
 
 // effacer la liste des musiques avant de fermer le popup musique
@@ -196,7 +198,7 @@ function setActive (div, li) {
 //fonction pour générer une famille de qrcode
 function previewFamily () {
 
-facade.genererImageFamilleQRCode(tabQRCode, document.getElementById('affichagefamille'));
+  //facade.genererImageFamilleQRCode(tabQRCode, document.getElementById('affichagefamille'));
 /*
   for (var qrcode in tableauQRCode) {
     if (tableauQRCode.hasOwnProperty(qrcode)) {
@@ -204,6 +206,80 @@ facade.genererImageFamilleQRCode(tabQRCode, document.getElementById('affichagefa
     }
   }
   */
+
+      var qrcode = facade.creerQRCodeAtomique(); // instancier un objet qrcode
+
+      var form; // variable pour recupérer le ou les formulaires
+
+      // on recupére le contenu du tab active
+      var div = document.getElementsByClassName('tab-pane fade active in')[0];
+      // on recupére le formulaire de ce div active
+      form = div.childNodes[0].childNodes[0].childNodes; //on recupérer le formulaire
+
+      /* copier les données du formulaire dans le qrcode */
+      if (form != null) {
+        for(var i=0; i<form.length; i++) {
+          var form2 = form[i].childNodes[0].childNodes;
+          console.log(form2);
+          for(var j=0; j<form2.length; j++) {
+            switch (form2[j].childNodes[0].tagName) {
+              case 'INPUT':
+              case 'TEXTAREA':
+                console.log(form2[j].childNodes[0].tagName);
+                copyContentToQRCode(qrcode, form2[j].childNodes[0]);
+                break;
+
+              default:
+                console.log(form2[j].childNodes[0].tagName);
+            }
+          }
+        }
+
+        facade.genererQRCode(document.getElementById('affichageqr').childNodes[1], qrcode); // générer le qrcode
+
+        document.getElementsByTagName('IMG')[0].draggable = true;
+        console.log(document.getElementsByTagName('IMG')[0].draggable);
+
+        document.getElementById('btnExportFile').disabled = false; // activer le bouton exporter
+      }
+
+
+}
+
+//fonction pour générer un qrcode atomique
+function previewQRCode () {
+  var qrcode = facade.creerQRCodeAtomique(); // instancier un objet qrcode
+
+  // variable pour recupérer le formulaire
+  var form = document.getElementById('myForm').childNodes;
+
+  /* copier les données du formulaire dans le qrcode */
+  if (form != null) {
+    for(var i=0; i<form.length; i++) {
+      var form2 = form[i].childNodes[0].childNodes;
+      console.log(form2);
+      for(var j=0; j<form2.length; j++) {
+        switch (form2[j].childNodes[0].tagName) {
+          case 'INPUT':
+          case 'TEXTAREA':
+            console.log(form2[j].childNodes[0].tagName);
+            copyContentToQRCode(qrcode, form2[j].childNodes[0]);
+            break;
+
+          default:
+            console.log(form2[j].childNodes[0].tagName);
+        }
+      }
+    }
+
+    facade.genererQRCode(document.getElementById('affichageqr').childNodes[1], qrcode); // générer le qrcode
+
+    document.getElementsByTagName('IMG')[0].draggable = true;
+    console.log(document.getElementsByTagName('IMG')[0].draggable);
+
+    document.getElementById('btnExportFile').disabled = false; // activer le bouton exporter
+  }
+
 }
 
 // copier le contenu d'un element input
@@ -230,7 +306,7 @@ function copyContentToQRCode (qrcode, input) {
   }
 
   // enregistrer le qrcode dans le tableau
-  tabQRCode.push(qrcode);
+//  tabQRCode.push(qrcode);
 }
 
 // fonction pour supprimer le bouton add de l'avant dernier champ du formulaire
