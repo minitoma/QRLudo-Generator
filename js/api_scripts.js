@@ -45,7 +45,7 @@ function authorize(credentials, callback) {
  * @param {getEventsCallback} callback The callback to call with the authorized
  *     client.
  */
-function getNewToken(oauth2Client, callback) {
+function getNewToken(oauth2Client) {
   var authUrl = oauth2Client.generateAuthUrl({
     access_type: 'offline',
     scope: SCOPES
@@ -105,15 +105,11 @@ function listFiles(auth, callback) {
     if (response.files.length == 0) {
       console.log('No files found.');
     } else {
-  //    console.log('Files:');
-      /*for (var i = 0; i < files.length; i++) {
-        var file = files[i];
-        console.log('%s (%s)', file.name, file.id);
-      }*/
       callback(response.files);
     }
   });
 }
+
 
 // liste de la musique dispo sur le drive
 function listMusic (content){
