@@ -50,6 +50,10 @@ class DictionnaireXml{
     return "textebraille";
   }
 
+  static getTagNomQRCode(){
+    return "valeur";
+  }
+
 
   //Attributs
   static getAttTypeQRCode(){

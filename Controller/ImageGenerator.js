@@ -20,7 +20,7 @@ class ImageGenerator{
      var size = 450;
 
      var donneesQR = qrcode.getDonneesUtilisateur();
-     
+
      //var donneesQR = self.compresseur.compresser(qrcode.getDonneesUtilisateur());
 
      var texteBraille = qrcode.getTexteBraille();
@@ -234,8 +234,8 @@ class ImageGenerator{
       //On convertit les métadonnées en tableau de int
       var donneesutf8 = this.__donneesToUTF8(unescape(chaineXml));
 
-      //On transforme le canvas en image jpeg avec les bonnes métadonnées
-      this.__genererJPEG(donneesutf8, c, div);
+      // On transforme le canvas en image jpeg avec les bonnes métadonnées
+      return this.__genererJPEG(donneesutf8, c, div);
 
 
     }
@@ -310,7 +310,12 @@ class ImageGenerator{
     }
 
     //Prend un tableau de données utf8, un canvas d'entrée et un div de sortie et affiche dans le div l'image jpeg générée à partir du canvas et ayant pour metadonnées le tableau utf8
+<<<<<<< HEAD
+    // retourne aussi l'img pour une sauvegarde d'une famille de qrcode
+    static __genererJPEG(donneesUtf8, canvas, divSortie){
+=======
     __genererJPEG(donneesUtf8, canvas, divSortie){
+>>>>>>> 8f9d45813485916f859a7f755edddcf1fd2d2d50
 
       //On génère une image jpg à partir du canvas et contenant les données du qrcode dans l'attribut XMLPacket
       var zerothIfd = {};
@@ -324,7 +329,7 @@ class ImageGenerator{
       var image = new Image();
       image.src = exifModified;
       $(divSortie).prepend(image);
-
+      return image;
     }
 
     //https://davidwalsh.name/convert-xml-json

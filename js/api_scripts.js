@@ -123,7 +123,7 @@ function listMusic (content){
       a.setAttribute('class', 'hrefMusic');
       a.setAttribute('href', '#' + content[i].id);
       a.appendChild(document.createTextNode(content[i].name));
-    div.appendChild(createDiv('col-md-12', '', [a]));
+    div.appendChild(createDiv('col-md-12 text-center', '', [a]));
   }
 }
 
