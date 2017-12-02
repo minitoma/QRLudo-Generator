@@ -330,12 +330,12 @@ function previewQRCode (famille) {
   var qrcode = facade.creerQRCodeAtomique(); // instancier un objet qrcode
 
   // variable pour recupérer le formulaire
-  var form = document.getElementById('myFormActive').childNodes[0];
+  var form = document.getElementById('myFormActive').childNodes;
 
   /* copier les données du formulaire dans le qrcode */
   if (form != null) {
-    //for(var i=0; i<form.length; i++) {
-      var element = form.childNodes[0].childNodes[0].childNodes[0];
+    for(var i=0; i<form.length; i++) {
+      var element = form[i].childNodes[0].childNodes[0].childNodes[0];
       //var form2 = form.childNodes[0].childNodes;
       console.log(element);
       //for(var j=0; j<form2.length; j++) {
@@ -352,21 +352,21 @@ function previewQRCode (famille) {
             console.log(element.tagName);
         }
       //}
-    //}
+    }
 
-    facade.genererQRCode(document.getElementById('affichageqr').childNodes[1], qrcode); // générer le qrcode
+    if (facade.getTailleReelleQRCode(qrcode) > 500 ) {
+      alert ("La taille de ce qr code dépasse le maximum autorisé (500).\nTaille = "+ facade.getTailleReelleQRCode(qrcode));
+      qrcode = null;
+    } else {
+      facade.genererQRCode(document.getElementById('affichageqr').childNodes[1], qrcode); // générer le qrcode
+      document.getElementById('btnExportFile').disabled = false; // activer le bouton exporter
 
-//    document.getElementsByTagName('IMG')[0].draggable = true;
-//    console.log(document.getElementsByTagName('IMG')[0].draggable);
-
-    document.getElementById('btnExportFile').disabled = false; // activer le bouton exporter
+      if (famille) {
+        return qrcode;
+      }
+    }
   }
 
-  if (famille) {
-    return qrcode;
-    //qrcode.ajouterAFamille('famille', 1);
-    //tabQRCode.push(qrcode);
-  }
 
 }
 

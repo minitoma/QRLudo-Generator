@@ -113,8 +113,13 @@ function createTextBox (textContent) {
     if (form.length != 0) {
       // recupérer le texte saisi avant de remplacer
       var textContent = form.childNodes[form.length-1].childNodes[0].childNodes[0].childNodes[0].value;
-      // recréer le input et le div form-group
-      div2 = createDiv('col-md-9', null, [createTextarea('form-control', 'legende', textContent)]);
+
+      // recréer le input ou textarea et le div form-group
+      if (form.childNodes[form.length-1].childNodes[0].childNodes[0].childNodes[0].tagName == 'INPUT') {
+        div2 = createDiv('col-md-9', null, [createInput('text', 'form-control', null, textContent, null, null, null)]);
+      } else {
+        div2 = createDiv('col-md-9', null, [createTextarea('form-control', 'legende', textContent)]);
+      }
       div = createDiv('form-group', null, [createDiv('row', null, [div2, createDiv('col-md-3', null, [createDiv('row', null, [div3, div4])])])]);
       // recréer le champ précédent avec les boutons add et delete
       form.replaceChild(div, form.childNodes[form.length-1]);
@@ -326,7 +331,8 @@ function drawQRCodeFamille (qrcode) {
         else if (qr.getTypeContenu(j) == DictionnaireXml.getTagFichier()){
           var nom = qr.getNomFichier(j);
           var url = qr.getUrlFichier(j);
-          selectMusic (null, [url, nom]); // appel de selectMusic pour créer un champ input de music
+
+          //selectMusic (null, [url, nom]); // appel de selectMusic pour créer un champ input de music
         }
       }
 
@@ -334,6 +340,8 @@ function drawQRCodeFamille (qrcode) {
   }
   document.getElementById('nameFamily').setAttribute('value', qrcode[0].getNomFamille());
   document.getElementById('nameFamily').style.display = 'block';
+  document.getElementById('creer').disabled = true;
+  document.getElementById('import').disabled = true;
 }
 
 // fonction appelée pour faire le view du qrcode atomique
@@ -351,9 +359,8 @@ function drawQRCodeAtomique (qrcode) {
       createTextBox(qrcode.getTexte(i));
     }
     else if (qrcode.getTypeContenu(i) == DictionnaireXml.getTagFichier()){
-      var nom = qrcode.getNomFichier(i);
-      var url = qrcode.getUrlFichier(i);
-      selectMusic (null, [url, nom]); // appel de selectMusic pour créer un chap input de music
+      // appel de selectMusic pour créer un chap input de music
+      selectMusic (null, [(qrcode.getUrlFichier(i).split("id="))[1], "musique"]);
     }
   }
 }
