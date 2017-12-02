@@ -8,7 +8,7 @@
 class ImageGenerator{
 
   constructor(){
-    self.compresseur = new CompresseurTexte();
+    this.compresseur = new CompresseurTexte();
   }
 
   /*
@@ -19,9 +19,7 @@ class ImageGenerator{
      var jq = window.jQuery;
      var size = 450;
 
-     var donneesQR = qrcode.getDonneesUtilisateur();
-
-     //var donneesQR = self.compresseur.compresser(qrcode.getDonneesUtilisateur());
+     var donneesQR = this.compresseur.compresser(qrcode.getDonneesUtilisateur());
 
      var texteBraille = qrcode.getTexteBraille();
      var couleurQR = qrcode.getColorQRCode();
@@ -310,12 +308,9 @@ class ImageGenerator{
     }
 
     //Prend un tableau de données utf8, un canvas d'entrée et un div de sortie et affiche dans le div l'image jpeg générée à partir du canvas et ayant pour metadonnées le tableau utf8
-<<<<<<< HEAD
     // retourne aussi l'img pour une sauvegarde d'une famille de qrcode
-    static __genererJPEG(donneesUtf8, canvas, divSortie){
-=======
+
     __genererJPEG(donneesUtf8, canvas, divSortie){
->>>>>>> 8f9d45813485916f859a7f755edddcf1fd2d2d50
 
       //On génère une image jpg à partir du canvas et contenant les données du qrcode dans l'attribut XMLPacket
       var zerothIfd = {};
