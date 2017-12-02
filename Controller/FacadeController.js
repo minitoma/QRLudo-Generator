@@ -5,7 +5,8 @@
 class FacadeController{
 
   constructor(){
-
+    self.imageGenerator = new ImageGenerator();
+    self.compresseurXml = new CompresseurTexte();
   }
 
   //Renvoie un nouveau QRCodeAtomique
@@ -24,7 +25,7 @@ class FacadeController{
         divImg.removeChild(divImg.firstChild);
     }
 
-    return ImageGenerator.genererQRCode(divImg, qrcode);
+    return this.ImageGenerator.genererQRCode(divImg, qrcode);
   }
 
   //Génère une image contenant une famille de QRCodes dans les metadonnees
@@ -32,7 +33,7 @@ class FacadeController{
     while (divImg.hasChildNodes()) {
         divImg.removeChild(divImg.firstChild);
     }
-    ImageGenerator.genererImageFamilleQRCode(tableauQRCodes, divImg);
+    self.imageGenerator.genererImageFamilleQRCode(tableauQRCodes, divImg);
   }
 
   //Fonction appelée pour importer un qrcode
@@ -43,6 +44,11 @@ class FacadeController{
       callback(qrcode); // faire le view du qrcode
     });
 
+  }
+
+  //Renvoie la taille réelle du qrcode après compression
+  getTailleReelleQRCode(qrcode){
+      return self.compresseurXml.compresser(qrcode.getDonneesUtilisateur()).length;
   }
 
 }

@@ -1,0 +1,30 @@
+<donneesutilisateur xmlns="http://www.w3.org/1999/xhtml" type="atomique"><contenu><texte>
+<donneesutilisateur xmlns="http://www.w3.org/1999/xhtml" type="atomique"><contenu><fichier url="
+<donneesutilisateur xmlns="http://www.w3.org/1999/xhtml" type="atomique"><contenu>
+<donneesutilisateur xmlns="http://www.w3.org/1999/xhtml" type="ensemble"><contenu><texte>
+<donneesutilisateur xmlns="http://www.w3.org/1999/xhtml" type="ensemble"><contenu><fichier url="
+<donneesutilisateur xmlns="http://www.w3.org/1999/xhtml" type="ensemble"><contenu>
+<donneesutilisateur xmlns="http://www.w3.org/1999/xhtml" type="atomique">
+<donneesutilisateur xmlns="http://www.w3.org/1999/xhtml" type="ensemble">
+<contenu><texte>
+<contenu><fichier url="
+</texte><texte>
+</texte><fichier url="
+</texte></contenu><famille nom="
+</texte></contenu></donneesutilisateur>
+</fichier><texte>
+</fichier><fichier url="
+</fichier></contenu><famille nom="
+</fichier></contenu></donneesutilisateur>
+</contenu><famille nom="
+</contenu></donneesutilisateur>
+"></famille></donneesutilisateur>
+"></famille>
+</donneesutilisateur>
+<fichier url="
+<famille nom="
+<texte></texte>
+<texte>
+</texte>
+" ordre="
+"></
