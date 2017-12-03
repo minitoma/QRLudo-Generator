@@ -44,6 +44,7 @@ $(document).ready(function() {
   document.getElementById('saveFamily').addEventListener('click', function(){
     exportFile(true);
   });
+  $('#initView').click(function(){ init_View(); });
 
 });
 
@@ -103,8 +104,14 @@ function selectMusic (event, imported) {
       // recréer le champ précédent avec les boutons add et delete
       form.replaceChild(div, form.childNodes[form.length-1]);
     } else {
-      // il n' y a plus de champ on réinitilise l'application
-      init_View();
+      // s'il s'agit d'une famille il faut juste supprimer le tab correspondant
+      if (document.getElementsByClassName('nav-tabs nav')[0].style.display == 'block') {
+        //closeTab();
+        console.log(event);
+      } else {
+        // il n' y a plus de champ on réinitilise l'application
+        init_View();
+      }
     }
   });
 
@@ -180,7 +187,8 @@ function exportFile (family) {
   var img, nameFile;
   if (family) { // si on a une famille à enregistrer
     img = document.getElementById('affichageFamille').childNodes[1].childNodes[1].childNodes[3].childNodes[1].childNodes[0];
-    nameFile = document.getElementsByClassName('menu active')[0].childNodes[0].textContent; // nom du fichier = nom de l'onglet
+    nameFile = document.getElementById('nameFamily').value + '.jpeg'; // nom de la famille
+    //document.getElementsByClassName('menu active')[0].childNodes[0].textContent; // nom du fichier = nom de l'onglet
     exportFamily(); // pour enregistrer tous les qrcode en meme temps
   } else {
     img = document.getElementsByTagName('IMG')[0];
@@ -196,11 +204,10 @@ function exportFile (family) {
 
   xhr.onreadystatechange = function () {
     if (xhr.readyState == xhr.DONE) {
-        //When request is done
-        //xhr.response will be a Blob ready to save
-        var filesaver = require('file-saver');
-        filesaver.saveAs(xhr.response, nameFile);
-    //    init_View(); // réinitialiser le view
+      //When request is done
+      //xhr.response will be a Blob ready to save
+      var filesaver = require('file-saver');
+      filesaver.saveAs(xhr.response, nameFile);
     }
   };
   xhr.send(); //Request is sent
@@ -240,22 +247,17 @@ function init_View () {
   document.getElementById('import').disabled = false;
   document.getElementById('nameFamily').style.display = 'none';
   document.getElementById('previewFamily').style.display = 'none';
+  document.getElementById('initView').style.display = 'none';
 }
 
 
 // définir le dernier tab créé comme celui active (tab et tabcontent)
 function setActive (div, li) {
-  // remettre l'id des forms à myForm
-  for (var i = 0; i < document.getElementsByClassName('tab-pane fade').length; i++) {
-    document.getElementsByClassName('tab-pane fade')[i].childNodes[0].childNodes[0].setAttribute('id', 'myForm');
-  }
 
   if (document.getElementsByClassName('tab-pane fade active in').length != 0) {
     document.getElementsByClassName('tab-pane fade active in')[0].setAttribute('class', 'tab-pane fade');
   }
   div.setAttribute('class', 'tab-pane fade active in');
-  // mettre l'id du formulaire actif à myFormActive
-  div.childNodes[0].childNodes[0].setAttribute('id', 'myFormActive');
 
   if (document.getElementsByClassName('active menu').length != 0) {
     var id = document.getElementsByClassName('active menu')[0].getAttribute('class').match(/\d+/g).join(''); // retourne le chiffre dans la chaine
@@ -330,7 +332,7 @@ function previewQRCode (famille) {
   var qrcode = facade.creerQRCodeAtomique(); // instancier un objet qrcode
 
   // variable pour recupérer le formulaire
-  var form = document.getElementById('myFormActive').childNodes;
+  var form = document.getElementsByClassName('tab-pane fade active in')[0].childNodes[0].childNodes[0].childNodes;
 
   /* copier les données du formulaire dans le qrcode */
   if (form != null) {
@@ -360,6 +362,7 @@ function previewQRCode (famille) {
     } else {
       facade.genererQRCode(document.getElementById('affichageqr').childNodes[1], qrcode); // générer le qrcode
       document.getElementById('btnExportFile').disabled = false; // activer le bouton exporter
+      document.getElementById('initView').style.display = 'block'; // afficher le bouton terminer
 
       if (famille) {
         return qrcode;
@@ -404,7 +407,9 @@ function copyContentToQRCode (qrcode, input) {
 
 // fonction pour supprimer le bouton add de l'avant dernier champ du formulaire
 function deleteAddBtn () {
-  var row = document.getElementById('myFormActive').childNodes[document.getElementById('myFormActive').childNodes.length - 2];
+  var row = document.getElementsByClassName('tab-pane fade active in')[0].childNodes[0].childNodes[0].childNodes
+  [document.getElementsByClassName('tab-pane fade active in')[0].childNodes[0].childNodes[0].childNodes.length-2];
+
   row.childNodes[0].removeChild(row.childNodes[0].childNodes[1]); // supprimer btn add
   row.childNodes[0].childNodes[0].setAttribute('class', 'col-md-12'); // augmenter la taille du textarea
 }
@@ -418,11 +423,11 @@ function deleteBtnTabs () {
 }
 
 /*
-fonction pour la gestion des boutons add et del quand on change d'onglet
+fonction pour la gestion des boutons add et del, et du formulaire actif quand on change d'onglet
 le parametre create est booleen,
 si true ça veut dire que c'est la fonction createTabs qui appelle la fonction switchTab
 */
-function switchTab (event, create, active) {
+function switchTab (event, create) {
 
   var inputAdd, inputDel;
   if ((event && event.target.tagName == 'A' && event.target.parentNode.classList.contains("menu") && !create) ||

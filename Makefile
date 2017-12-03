@@ -26,6 +26,13 @@ install:
 uninstall:
 	npm uninstall $(LIBS)
 
+# For building and packaging app
+
+release:
+	@echo "Installation de electron-packager"
+	@npm install electron-packager --save-dev
+	@echo "Packaging sur une platforme 64 bits"
+	@sudo ./node_modules/.bin/electron-packager . --platform=linux --arch=x64
 
 	# Pour la documentation sur les packages
 	#https://www.npmjs.com/

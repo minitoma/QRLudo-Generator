@@ -1,6 +1,12 @@
 
 body {
-    background: burlywood;
+
+  background: burlywood;
+  /*
+  background-image: url('../img/fern.jpg');
+  */
+  background-repeat: no-repeat;
+
 }
 
 div.container {
@@ -108,6 +114,9 @@ div:nth-child(2) > div.col-md-3.text-center > button,
   display: none;
 }
 
+#content-form > div:nth-child(2) > div:nth-child(1) {
+  color: white;
+}
 #braille {
   width: inherit;
 }

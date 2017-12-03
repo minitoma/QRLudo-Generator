@@ -1,3 +1,0 @@
-Scanner QRCode Légende <-> densité pop.
-Gestion sons
-Livre
