@@ -344,10 +344,8 @@ function drawQRCodeFamille (qrcode) {
           createTextBox(qr.getTexte(j));
         }
         else if (qr.getTypeContenu(j) == DictionnaireXml.getTagFichier()){
-          var nom = qr.getNomFichier(j);
-          var url = qr.getUrlFichier(j);
-
-          //selectMusic (null, [url, nom]); // appel de selectMusic pour créer un champ input de music
+           // appel de selectMusic pour créer un champ input de music
+          selectMusic (null, [qrcode.getUrlFichier(i), qrcode.getNomFichier(qrcode.getUrlFichier(i))]);
         }
       }
 
@@ -375,7 +373,7 @@ function drawQRCodeAtomique (qrcode) {
     }
     else if (qrcode.getTypeContenu(i) == DictionnaireXml.getTagFichier()){
       // appel de selectMusic pour créer un chap input de music
-      selectMusic (null, [(qrcode.getUrlFichier(i).split("id="))[1], "musique"]);
+      selectMusic (null, [qrcode.getUrlFichier(i), qrcode.getNomFichier(qrcode.getUrlFichier(i))]);
     }
   }
 }

@@ -1,12 +1,16 @@
 
 body {
 
-  background: burlywood;
+  background: #417142;
   /*
   background-image: url('../img/fern.jpg');
   */
   background-repeat: no-repeat;
 
+}
+
+.btn-default {
+  background-color: #5bbd5c;
 }
 
 div.container {
