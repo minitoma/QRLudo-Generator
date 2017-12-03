@@ -19,13 +19,9 @@ class QRCodeEnsemble extends QRCode{
       var listeLiens = qrcodeatomique.getListeLiensDistants();
       var tailleListe = listeLiens.length;
 
-      if (!listeLiens || tailleListe==0){
-        throw "Le qrcode passé ne contient aucun lien distant";
-      }
-
       //On ajoute tous les liens de QRCode passé en paramètre
       for (var i=0; i<tailleListe; i++){
-        this.ajouterLien(listeLiens[i]);
+        this.ajouterLien(listeLiens[i][0], listeLiens[i][1]);
       }
 
     }
@@ -33,15 +29,15 @@ class QRCodeEnsemble extends QRCode{
     /*
     * Ajoute dans la base le lien passé en paramètre
     */
-    ajouterLien(url){
+    ajouterLien(url, nom){
       //On ajoute le lien que s'il n'est pas déjà contenu dans le QRCodeEnsemble
       if (!this.__lienContenu(url)){
         var noeud = document.createElement(DictionnaireXml.getTagFichier());
         noeud.setAttribute(DictionnaireXml.getAttUrlFichier(), url);
         this.donneesUtilisateur.getElementsByTagName(DictionnaireXml.getTagContenu())[0].appendChild(noeud);
+        super.ajouterFichier(url, nom)
       }
     }
-
 
 
     /*
