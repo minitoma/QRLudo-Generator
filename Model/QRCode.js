@@ -9,6 +9,7 @@ class QRCode {
 
     //On crée les éléments racine XML des données et metadonnées
     this.donneesUtilisateur = document.createElement(DictionnaireXml.getTagDonneesUtilisateur());
+
     this.metadonnees = document.createElement(DictionnaireXml.getTagMetaDonnees());
 
     this.racinexml = document.createElement(DictionnaireXml.getTagRacine());
@@ -17,6 +18,9 @@ class QRCode {
 
     //On ajoute le noeud contenu au noeud donnees
     this.donneesUtilisateur.appendChild(document.createElement(DictionnaireXml.getTagContenu()));
+
+    //On ajoute le noeud fichiers aux metadonnees
+    this.metadonnees.appendChild(document.createElement(DictionnaireXml.getTagEnsembleFichiers()));
 
   }
 
@@ -84,7 +88,7 @@ class QRCode {
     return this.metadonnees.getElementsByTagName(DictionnaireXml.getTagColorBraille())[0].getAttribute(DictionnaireXml.getAttCouleur());
   }
 
-  //Set la couleur du QRCode
+  //Setter de la couleur du QRCode
   setColorQR(color){
     var noeud = document.createElement(DictionnaireXml.getTagColorQRCode());
     noeud.setAttribute(DictionnaireXml.getAttCouleur(), color);
@@ -94,6 +98,34 @@ class QRCode {
   //Renvoie la couleur du QRCode
   getColorQRCode(){
     return this.metadonnees.getElementsByTagName(DictionnaireXml.getTagColorQRCode())[0].getAttribute(DictionnaireXml.getAttCouleur());
+  }
+
+  //Ajoute un fichier (couple url, nom) dans les metadonnees
+  ajouterFichier(url, nom){
+    var noeud = document.createElement(DictionnaireXml.getTagFichier());
+    noeud.setAttribute(DictionnaireXml.getAttUrlFichier(), url);
+    noeud.setAttribute(DictionnaireXml.getAttNomFichier(), nom);
+
+    this.metadonnees.getElementsByTagName(DictionnaireXml.getTagEnsembleFichiers())[0].appendChild(noeud);
+  }
+
+  //Renvoie le nom du fichier sauvegardé dans le qrcode ayant pour url la chaîne passée en paramètres
+  getNomFichier(url){
+
+    var noeudsFichier = this.metadonnees.getElementsByTagName(DictionnaireXml.getTagEnsembleFichiers())[0].childNodes;
+
+    //On itère sur tous les fichiers du qrcode
+    for (var i=0; i<noeudsFichier.length; i++){
+      var noeudFichier = noeudsFichier.item(i);
+
+      //Si on trouve le fichier avec l'url passée en paramètre, on renvoie le nom du fichier
+      if (noeudFichier.getAttribute(DictionnaireXml.getAttUrlFichier())==url){
+        return noeudFichier.getAttribute(DictionnaireXml.getAttNomFichier());
+      }
+    }
+
+    //On renvoie une exception si le fichier ayant cet id n'est pas présent dans le qrcode
+    throw "Le fichier n'est pas présent dans le QRCode";
   }
 
 }

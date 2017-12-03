@@ -10,12 +10,14 @@ class QRCodeAtomique extends QRCode{
     }
 
     /*
-    * Ajoute l'url du fichier dans le QRCode Atomique
+    * Ajoute l'url du fichier dans le QRCode Atomique.
+    * Fait aussi appel à la méthode ajouterFichier de la superclasse pour enregistrer le nom du fichier
     */
-    ajouterFichier(url){
+    ajouterFichier(url, nom){
       var noeud = document.createElement(DictionnaireXml.getTagFichier());
       noeud.setAttribute(DictionnaireXml.getAttUrlFichier(), url);
       this.donneesUtilisateur.getElementsByTagName(DictionnaireXml.getTagContenu())[0].appendChild(noeud);
+      super.ajouterFichier(url, nom);
     }
 
     /*
@@ -177,7 +179,15 @@ class QRCodeAtomique extends QRCode{
 
       for (var i=0; i<nbLiens; i++){
           var noeud = noeudsFichiers[i];
-          liste.push(noeud.getAttribute(DictionnaireXml.getAttUrlFichier()));
+
+          var url = noeud.getAttribute(DictionnaireXml.getAttUrlFichier());
+          var nom = super.getNomFichier(url);
+
+          var couple = new Array();
+          couple.push(url);
+          couple.push(nom);
+
+          liste.push(couple);
       }
 
       return liste;
