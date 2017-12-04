@@ -40,6 +40,8 @@ div.col-lg-3.colRight {
 button.btn.btn-default {
   margin: 0 10px 10px 0;
   width: inherit;
+  background: #00A658;
+  color:#e0e0d1;
 }
 
 form.col-md-12 {
