@@ -50,6 +50,14 @@ class DictionnaireXml{
     return "textebraille";
   }
 
+  static getTagNomQRCode(){
+    return "valeur";
+  }
+
+  static getTagEnsembleFichiers(){
+    return "fichiers";
+  }
+
 
   //Attributs
   static getAttTypeQRCode(){
@@ -66,6 +74,10 @@ class DictionnaireXml{
 
   static getAttUrlFichier(){
     return "url";
+  }
+
+  static getAttNomFichier(){
+    return "nom";
   }
 
   static getAttNomFamille(){

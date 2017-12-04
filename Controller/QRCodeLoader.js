@@ -20,8 +20,13 @@ class QRCodeLoader{
 
       qrcode = QRCodeLoader.__traiterImage(ev.target.result);
 
+      // renvoyer le qrcode créé avec la méthode en conséquence pour recréer la vue
       if (callback){
-        callback(qrcode, drawQRCode); // renvoyer le qrcode créé
+        if (Array.isArray(qrcode)) {
+          callback(qrcode, drawQRCodeFamille);
+        } else {
+          callback(qrcode, drawQRCodeAtomique);
+        }
       }
     });
 

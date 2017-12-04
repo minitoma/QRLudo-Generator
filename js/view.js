@@ -1,7 +1,8 @@
 var idInputText = 0; // pour identifier les inputs de façon unique
 var idMenu = 1; // pour identifier de facon unique les menus
 var facade = new FacadeController();
-var tabQRCode = null;
+var tabQRCode = [];
+
 
 $(document).ready(function() {
 
@@ -96,12 +97,51 @@ function createTextBox (textContent) {
   '</div>'+
 */
   var div2 = createDiv('col-md-9', null, [createTextarea('form-control', 'legende', textContent)]);
-  var btn = createButton('button', 'btn btn-default addChamp', 'modal', '#myModal', null);
-  btn.appendChild(createInput('image', null, null, null, 'add.png', null, null));
-  var div3 = createDiv('col-md-3', null, [btn]);
-  var div = createDiv('form-group', null, [createDiv('row', null, [div2, div3])]);
+  var btnAdd = createButton('button', 'btn btn-default addChamp', 'modal', '#myModal', null);
+  var btnDelete = createButton('button', 'btn btn-default deleteChamp', null, null, null);
+  btnAdd.appendChild(createInput('image', null, null, null, 'add.png', null, null));
+  btnDelete.appendChild(createInput('image', 'deleteChamp', null, null, 'delete.png', null, null));
+  var div3 = createDiv('col-md-6', null, [btnAdd]);
+  var div4 = createDiv('col-md-6', null, [btnDelete]);
+  var div = createDiv('form-group', null, [createDiv('row', null, [div2, createDiv('col-md-3', null, [createDiv('row', null, [div3, div4])])])]);
   var form = document.getElementsByClassName('in active')[0].childNodes[0].childNodes[0];
   form.appendChild(div);
+
+  // ajouter un eventlistener sur deleteChamp pour supprimer le champ sur click du bouton
+  btnDelete.addEventListener('click', function(){
+    form.removeChild(div); // suppression du champ
+    // ajout des btn add et delete au champ précédent si il existe
+    if (form.length != 0) {
+      // recupérer le texte saisi avant de remplacer
+      var textContent = form.childNodes[form.length-1].childNodes[0].childNodes[0].childNodes[0].value;
+
+      // recréer le input ou textarea et le div form-group
+      if (form.childNodes[form.length-1].childNodes[0].childNodes[0].childNodes[0].tagName == 'INPUT') {
+        div2 = createDiv('col-md-9', null, [createInput('text', 'form-control', null, textContent, null, null, null)]);
+      } else {
+        div2 = createDiv('col-md-9', null, [createTextarea('form-control', 'legende', textContent)]);
+      }
+      div = createDiv('form-group', null, [createDiv('row', null, [div2, createDiv('col-md-3', null, [createDiv('row', null, [div3, div4])])])]);
+      // recréer le champ précédent avec les boutons add et delete
+      form.replaceChild(div, form.childNodes[form.length-1]);
+    } else {
+      // s'il s'agit d'une famille il faut juste supprimer le tab correspondant
+      if (document.getElementsByClassName('nav-tabs nav')[0].style.display == 'block') {
+        //closeTab();
+        document.getElementsByClassName('nav-tabs nav')[0].removeChild(document.getElementsByClassName('active menu')[0]);
+        document.getElementsByClassName('tab-content')[0].removeChild(document.getElementsByClassName('tab-pane fade active in')[0]);
+        if (document.getElementsByClassName('menu')[0]) {
+          document.getElementsByClassName('menu')[0].childNodes[0].click();
+        } else {
+          init_View();
+        }
+
+      } else {
+        // il n' y a plus de champ on réinitilise l'application
+        init_View();
+      }
+    }
+  });
 
   // activer les boutons preview et lire
   document.getElementById('preview').disabled = false;
@@ -109,7 +149,7 @@ function createTextBox (textContent) {
 
   document.getElementById('closeModal').click(); // fermer le popup
   // s'il ya plus d'un champ, on supprime le btn add de l'avant dernie champ
-  if (document.getElementById('myForm').childNodes.length > 1) { deleteAddBtn(); }
+  if (document.getElementsByClassName('tab-pane fade active in')[0].childNodes[0].childNodes[0].childNodes.length > 1) { deleteAddBtn(); }
 }
 
 // créer un formulaire
@@ -135,7 +175,7 @@ function createMusicBox () {
 
 // créer un élément div
 function createDiv(classe, id, child) {
-  var div = document.createElement('div');
+  var div = document.createElement('DIV');
   if (classe) div.setAttribute('class', classe);
   if (id) div.setAttribute('id', id);
 
@@ -156,8 +196,11 @@ function createImg(id, src) {
   return img;
 }
 
-// fonction pour créér des tabs
-function createTabs () {
+/*
+ fonction pour créér des tabs
+ si imported = true : cette fonction est appelée pour recréer une famille de qrcode
+*/
+function createTabs (imported) {
   // initialiser le tableau de qrcode
   tabQRCode = [];
 
@@ -176,7 +219,8 @@ function createTabs () {
   if (family == "" || family == null) {
     texte = document.createTextNode('Sans titre');
   }
-  createTabContent(a.getAttribute('href'), idMenu, li);
+
+  createTabContent(a.getAttribute('href'), idMenu, li, imported);
 
   a.appendChild(texte);
 
@@ -189,8 +233,11 @@ function createTabs () {
   switchTab(null, true);
 }
 
-// créer le contenu des tabs
-function createTabContent (id, idMenu, li) {
+/*
+ fonction pour créer le contenu des tabs
+ si imported = true : cette fonction est appelée pour recréer une famille de qrcode
+ */
+function createTabContent (id, idMenu, li, imported) {
 
   var button = createButton('button', 'btn btn-default addChamp', 'modal', '#myModal', document.createTextNode('Ajouter un champ'+idMenu));
 
@@ -218,26 +265,27 @@ function createTabContent (id, idMenu, li) {
   var div8 = createDiv('col-md-6', null, null);
 
   var div3 = createDiv('row', null, [div4, div5]);
-  var div5 = createDiv('row', null, [div6, div7, div8]);
-  div5.style.display = 'none';
+  var div9 = createDiv('row', null, [div6, div7, div8]);
+  div9.style.display = 'none';
 
   var classe = 'tab-pane fade';
 
-  var div2 = createDiv('row', 'content-form', [createForm('myForm'),div3, div5]);
+  var div2 = createDiv('row', 'content-form', [createForm('myFormActive'), div3, div9]);
   var div = createDiv(classe, id.substring(1), [div2]);
   setActive(div, li);
   document.getElementsByClassName('tab-content')[0].appendChild(div);
 
   // ajouter un eventlistener au checbox pour afficher ou masquer les options du braille
   checkbox.addEventListener('change', function(){
-    if (checkbox.checked) {
-      div5.style.display = 'block';
+    if (this.checked) {
+      div9.style.display = 'block';
     } else {
-      div5.style.display = 'none';
+      div9.style.display = 'none';
     }
   });
 
-  createTextBox(null);
+  if (!imported) { createTextBox(null); }
+
 }
 
 // fonction pour ajouter un champ
@@ -253,73 +301,79 @@ function addChamp(event) {
 
 // fonction pour prévisualiser un qrcode
 function preview () {
-  //if (document.getElementById('nameFamily').style.display == 'block' && document.getElementById('nameFamily').value != '') {
-
-    var qrcode = facade.creerQRCodeAtomique(); // instancier un objet qrcode
-
-    var form; // variable pour recupérer le ou les formulaires
-
-    // tester s'il s'agit d'un qrcode atomique ou d'une famille
-    if (document.getElementsByClassName('nav nav-tabs')[0].style.display == 'none') {
-      form = document.getElementById('myForm').childNodes; //on recupérer le formulaire
-    } else if (document.getElementsByClassName('nav nav-tabs')[0].style.display != 'none') {
-      // on recupére le contenu du tab active
-      var div = document.getElementsByClassName('tab-pane fade active in')[0];
-      // on recupére le formulaire de ce div active
-      form = div.childNodes[0].childNodes[0].childNodes; //on recupérer le formulaire
+  // famille de qrcode
+  if (document.getElementById('nameFamily').style.display == 'block') {
+    if (document.getElementById('nameFamily').value == '') {
+      alert("Veuillez saisir le nom de la famille");
+    } else {
+      document.getElementById('previewFamily').style.display = 'block'; // afficher le bouton exporter famille
+      document.getElementById('initView').style.display = 'block'; // afficher le bouton terminer
+      previewQRCode(true); // true pour famille
     }
+//  } else if (document.getElementById('nameFamily').style.display == 'none' && document.getElementById('nameFamily').value == '') { // qrcode atomique
+  } else {
+    previewQRCode(false); // pour qrcode atomique, pas de famille
+  }
+}
 
-    /* copier les données du formulaire dans le qrcode */
-    if (form != null) {
-      for(var i=0; i<form.length; i++) {
-        var form2 = form[i].childNodes[0].childNodes;
-        console.log(form2);
-        for(var j=0; j<form2.length; j++) {
-          switch (form2[j].childNodes[0].tagName) {
-            case 'INPUT':
-            case 'TEXTAREA':
-              console.log(form2[j].childNodes[0].tagName);
-              copyContentToQRCode(qrcode, form2[j].childNodes[0]);
-              break;
+// fonction appelée pour faire le view d'une famille de  qrcode
+function drawQRCodeFamille (qrcode) {
+  for (var i = 0; i < qrcode.length; i++) {
+    var qr = qrcode[i];
+      console.log(qr.getDonneesUtilisateur());
+      console.log(qr.getMetadonnees());
+      // appel de createTabs avec true pour recréer une famille importée
+      document.getElementById('nameQRCode').value = qr.getNomQRCode();
+      createTabs(true);
 
-            default:
-              console.log(form2[j].childNodes[0].tagName);
-          }
+      // s'il y a du texte en braille
+      if (qr.getTexteBraille() != null && qr.getTexteBraille() != "") {
+        var brailleColor = document.getElementsByClassName('tab-pane fade active in')[0].childNodes[0].childNodes[2].childNodes[1].childNodes[0];
+        var brailleText = document.getElementsByClassName('tab-pane fade active in')[0].childNodes[0].childNodes[2].childNodes[0].childNodes[0];
+        var checkBraille = document.getElementsByClassName('tab-pane fade active in')[0].childNodes[0].childNodes[1].childNodes[0].childNodes[0];
+        brailleColor.setAttribute('value', qr.getColorBraille()); // restaurer la couleur du braille
+        brailleText.setAttribute('value', qr.getTexteBraille()); // restaurer le texte en braille
+        checkBraille.click();
+      }
+      // recupérer et restaurer la couleur du qrcode
+      var qrCodeColor = document.getElementsByClassName('tab-pane fade active in')[0].childNodes[0].childNodes[1].childNodes[1].childNodes[0];
+      qrCodeColor.setAttribute('value', qr.getColorQRCode()); // restaurer la couleur du qrcode
+      for (var j=0; j<qr.getTailleContenu(); j++){
+
+        if (qr.getTypeContenu(j) == DictionnaireXml.getTagTexte()){
+          createTextBox(qr.getTexte(j));
+        }
+        else if (qr.getTypeContenu(j) == DictionnaireXml.getTagFichier()){
+           // appel de selectMusic pour créer un champ input de music
+          selectMusic (null, [qrcode.getUrlFichier(i), qrcode.getNomFichier(qrcode.getUrlFichier(i))]);
         }
       }
 
-
-      facade.genererQRCode(document.getElementById('affichageqr').childNodes[1], qrcode); // générer le   qrcode
-
-      document.getElementsByTagName('IMG')[0].draggable = true;
-      console.log(document.getElementsByTagName('IMG')[0].draggable);
-
-      document.getElementById('btnExportFile').disabled = false; // activer le bouton exporter
-    }
-//  } else { alert("Veuillez saisir le nom de la famille"); }
+      document.getElementsByClassName('nav-tabs nav')[0].style.display = 'block';
+  }
+  document.getElementById('nameFamily').setAttribute('value', qrcode[0].getNomFamille());
+  document.getElementById('nameFamily').style.display = 'block';
+  document.getElementById('creer').disabled = true;
+  document.getElementById('import').disabled = true;
 }
 
-// fonction appelée pour faire le view du qrcode
-function drawQRCode (qrcode) {
-  var buffer = document.implementation.createDocument(null, 'html', null);
-  var body = document.createElementNS('', 'body');
-  //body.appendChild(document.createRange().createContextualFragment(data));
-  buffer.documentElement.appendChild(body);
-
-  //createTabs();
+// fonction appelée pour faire le view du qrcode atomique
+function drawQRCodeAtomique (qrcode) {
   baseViewQRCodeAtomique(null);
-  document.getElementById('colorBraille').setAttribute('value', qrcode.getColorBraille()); // restaurer la couleur du braille
+  if (qrcode.getTexteBraille() != null && qrcode.getTexteBraille() != "") {
+    document.getElementById('colorBraille').setAttribute('value', qrcode.getColorBraille()); // restaurer la couleur du braille
+    document.getElementById('braille').setAttribute('value', qrcode.getTexteBraille()); // restaurer le texte en braille
+    document.getElementById('checkBraille').click();
+  }
   document.getElementById('colorQR').setAttribute('value', qrcode.getColorQRCode()); // restaurer la couleur du qrcode
-  document.getElementById('braille').setAttribute('value', qrcode.getTexteBraille()); // restaurer le texte en braille
   for (var i=0; i<qrcode.getTailleContenu(); i++){
 
     if (qrcode.getTypeContenu(i) == DictionnaireXml.getTagTexte()){
       createTextBox(qrcode.getTexte(i));
     }
     else if (qrcode.getTypeContenu(i) == DictionnaireXml.getTagFichier()){
-      var nom = qrcode.getNomFichier(i);
-      var url = qrcode.getUrlFichier(i);
-      selectMusic (null, [url, nom]); // appel de selectMusic pour créer un chap input de music
+      // appel de selectMusic pour créer un chap input de music
+      selectMusic (null, [qrcode.getUrlFichier(i), qrcode.getNomFichier(qrcode.getUrlFichier(i))]);
     }
   }
 }
@@ -329,22 +383,34 @@ function baseViewQRCodeAtomique (callback) {
   var html =
       '<div class="tab-pane fade active in" id="menu1">'+
         '<div class="row" id="content-form">'+
-          '<form id="myForm"></form>'+
+          '<form id="myFormActive"></form>'+
       '</div></div>';
 
   document.getElementsByClassName('tab-content')[0].innerHTML = html;
 
   // bouton pour fermer annuler la création du qrcode et champ pour braille au milieu du qrcode
   html =
-    '<div class="row"><div class="col-md-3 text-center">'+
-        '<button type="button" class="btn btn-default" id="closeForm">Annuler</button>'+
-    '</div><div class="col-md-3 text-center"><input type="text" id="braille" title="Texte en braille" maxlength="2">'+
-    '</div><div class="col-md-3 text-center"><input type="color" id="colorBraille" title="Couleur du texte en braille"/>'+
-    '</div><div class="col-md-3 text-center"><input type="color" id="colorQR" title="Couleur du QRCode"/></div>'+
-    '</div>';
-  document.getElementsByClassName('tab-content')[0].innerHTML += html;
+    '<div class="row"><div class="col-md-6 text-center"><input type="checkbox" id="checkBraille">Texte en braille</div>'+
+    '<div class="col-md-6 text-center"><input type="color" id="colorQR" title="Couleur du QRCode"/></div></div>'+
+        //'<button type="button" class="btn btn-default" id="closeForm">Annuler</button>'+
+    '<div class="row" style="display:none;"><div class="col-md-3 text-center"><input type="text" id="braille" title="Texte en braille" maxlength="2"></div>'+
+    '<div class="col-md-3 text-center"><input type="color" id="colorBraille" title="Couleur du texte en braille"/></div>'+
+    '<div class="col-md-6 text-center"></div></div>';
+
+  //document.getElementsByClassName('tab-content')[0].innerHTML += html;
+  document.getElementById('content-form').innerHTML += html;
+
+  // ajouter un eventlistener au checbox pour afficher ou masquer les options du braille
+  document.getElementById('checkBraille').addEventListener('change', function(){
+    if (this.checked) {
+      document.getElementById('braille').parentNode.parentNode.style.display = 'block';
+    } else {
+      document.getElementById('braille').parentNode.parentNode.style.display = 'none';
+    }
+  });
+
   // appel de la fonction init_View sur clic du bouton
-  document.getElementById('closeForm').addEventListener('click', init_View);
+  //document.getElementById('closeForm').addEventListener('click', init_View);
   document.getElementsByClassName('nav nav-tabs')[0].style.display = 'none';
   document.getElementById('nameFamily').style.display = 'none';
   // activer les boutons lire et preview
@@ -356,6 +422,7 @@ function baseViewQRCodeAtomique (callback) {
   if (callback) callback(null);
 }
 
+/*
 // retourne l'architecture html de base pour une famille de qrcode
 function baseViewQRCodeEnsemble (callback) {
   document.getElementsByClassName('nav nav-tabs')[0].style.display = 'block';
@@ -370,3 +437,4 @@ function baseViewQRCodeEnsemble (callback) {
   document.getElementsByClassName('tab-content')[0].innerHTML = html;
   if (callback) callback(null);
 }
+*/
