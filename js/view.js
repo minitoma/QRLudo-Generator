@@ -3,6 +3,7 @@ var idMenu = 1; // pour identifier de facon unique les menus
 var facade = new FacadeController();
 var tabQRCode = [];
 
+
 $(document).ready(function() {
 
   document.getElementById('closeModalMusique').addEventListener('click', function(){
@@ -124,8 +125,21 @@ function createTextBox (textContent) {
       // recréer le champ précédent avec les boutons add et delete
       form.replaceChild(div, form.childNodes[form.length-1]);
     } else {
-      // il n' y a plus de champ on réinitilise l'application
-      init_View();
+      // s'il s'agit d'une famille il faut juste supprimer le tab correspondant
+      if (document.getElementsByClassName('nav-tabs nav')[0].style.display == 'block') {
+        //closeTab();
+        document.getElementsByClassName('nav-tabs nav')[0].removeChild(document.getElementsByClassName('active menu')[0]);
+        document.getElementsByClassName('tab-content')[0].removeChild(document.getElementsByClassName('tab-pane fade active in')[0]);
+        if (document.getElementsByClassName('menu')[0]) {
+          document.getElementsByClassName('menu')[0].childNodes[0].click();
+        } else {
+          init_View();
+        }
+
+      } else {
+        // il n' y a plus de champ on réinitilise l'application
+        init_View();
+      }
     }
   });
 
@@ -135,7 +149,7 @@ function createTextBox (textContent) {
 
   document.getElementById('closeModal').click(); // fermer le popup
   // s'il ya plus d'un champ, on supprime le btn add de l'avant dernie champ
-  if (document.getElementById('myFormActive').childNodes.length > 1) { deleteAddBtn(); }
+  if (document.getElementsByClassName('tab-pane fade active in')[0].childNodes[0].childNodes[0].childNodes.length > 1) { deleteAddBtn(); }
 }
 
 // créer un formulaire
@@ -161,7 +175,7 @@ function createMusicBox () {
 
 // créer un élément div
 function createDiv(classe, id, child) {
-  var div = document.createElement('div');
+  var div = document.createElement('DIV');
   if (classe) div.setAttribute('class', classe);
   if (id) div.setAttribute('id', id);
 
@@ -293,6 +307,7 @@ function preview () {
       alert("Veuillez saisir le nom de la famille");
     } else {
       document.getElementById('previewFamily').style.display = 'block'; // afficher le bouton exporter famille
+      document.getElementById('initView').style.display = 'block'; // afficher le bouton terminer
       previewQRCode(true); // true pour famille
     }
 //  } else if (document.getElementById('nameFamily').style.display == 'none' && document.getElementById('nameFamily').value == '') { // qrcode atomique
@@ -329,10 +344,8 @@ function drawQRCodeFamille (qrcode) {
           createTextBox(qr.getTexte(j));
         }
         else if (qr.getTypeContenu(j) == DictionnaireXml.getTagFichier()){
-          var nom = qr.getNomFichier(j);
-          var url = qr.getUrlFichier(j);
-
-          //selectMusic (null, [url, nom]); // appel de selectMusic pour créer un champ input de music
+           // appel de selectMusic pour créer un champ input de music
+          selectMusic (null, [qrcode.getUrlFichier(i), qrcode.getNomFichier(qrcode.getUrlFichier(i))]);
         }
       }
 
@@ -360,7 +373,7 @@ function drawQRCodeAtomique (qrcode) {
     }
     else if (qrcode.getTypeContenu(i) == DictionnaireXml.getTagFichier()){
       // appel de selectMusic pour créer un chap input de music
-      selectMusic (null, [(qrcode.getUrlFichier(i).split("id="))[1], "musique"]);
+      selectMusic (null, [qrcode.getUrlFichier(i), qrcode.getNomFichier(qrcode.getUrlFichier(i))]);
     }
   }
 }
