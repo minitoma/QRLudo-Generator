@@ -34,7 +34,7 @@ release:
 	@echo "Installation de electron-packager"
 	@sudo npm install electron-packager --save-dev
 	@echo "==================================="
-	@echo "Packaging sur une platforme 64 bits"
+	@echo "Packaging sur une platforme linux 64 bits"
 	@sudo ./node_modules/.bin/electron-packager . --platform=linux --arch=x64
 
 	@# Pour la documentation sur les packages
