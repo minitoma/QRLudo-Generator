@@ -1,4 +1,4 @@
-/*
+  /*
 * Classe permettant de générer une image QRCode à partir d'un objet QRCode
 * On insère les données et les métadonnées du QRCode dans les métadonnées de l'image générée
 * Note : la page html appelant la méthode generate doit contenir un élément <img id="img-buffer" src="chemin/de/limage/centrale">
@@ -18,6 +18,7 @@ class ImageGenerator{
 
      var jq = window.jQuery;
      var size = 450;
+
 
      var donneesQR = this.compresseur.compresser(qrcode.getDonneesUtilisateur());
 
