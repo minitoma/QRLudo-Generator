@@ -128,4 +128,8 @@ class QRCode {
     throw "Le fichier n'est pas présent dans le QRCode";
   }
 
+  getTypeQR(){
+    return this.donneesUtilisateur.getAttribute(DictionnaireXml.getAttTypeQRCode());
+  }
+
 }
