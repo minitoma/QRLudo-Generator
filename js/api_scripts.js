@@ -92,6 +92,13 @@ function storeToken(token) {
  * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
  */
 function listFiles(auth, callback) {
+  try {
+
+  } catch (e) {
+
+  } finally {
+
+  }
   var service = google.drive('v3');
   service.files.list({
     auth: auth,
@@ -100,10 +107,14 @@ function listFiles(auth, callback) {
   }, function(err, response, listMusic) {
     if (err) {
       console.log('The API returned an error: ' + err);
+      alert('Pas de connexion internet');
+      $('#closeModalMusique').click();
       return;
-    }
-    if (response.files.length == 0) {
+    } else if (response.files.length == 0) {
       console.log('No files found.');
+      alert('Aucun fichier trouvé');
+      $('#closeModalMusique').click();
+      return;
     } else {
       callback(response.files);
     }
@@ -187,6 +198,7 @@ function play (phrase, callback) {
     })
     .catch(function (err) {
       console.error(err.stack);
+      alert('Pas de connexion internet');
     });
 }
 
