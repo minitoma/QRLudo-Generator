@@ -1,3 +1,7 @@
+/**
+* Jules Leguy
+* 2017
+**/
 
 class CompresseurTexte{
 

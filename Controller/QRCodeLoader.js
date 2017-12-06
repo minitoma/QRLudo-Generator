@@ -1,3 +1,7 @@
+/**
+* Jules Leguy
+* 2017
+**/
 
 /*
 * Permet de créer un objet QRCode à partir d'une image QRCode ou d'instancier un tableau contenant les objets QRCodes obtenus à partir d'une image enregistrant une famille de QRCodes

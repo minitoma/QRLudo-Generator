@@ -1,3 +1,8 @@
+/**
+* Jules Leguy
+* 2017
+**/
+
 /*
 * Classe permettant de stocker et d'accéder au données contenues dans un QRCode
 */
@@ -128,6 +133,7 @@ class QRCode {
     throw "Le fichier n'est pas présent dans le QRCode";
   }
 
+  //Retourne la chaîne contenant le type de qrcode (atomique ou ensemble)
   getTypeQR(){
     return this.donneesUtilisateur.getAttribute(DictionnaireXml.getAttTypeQRCode());
   }
