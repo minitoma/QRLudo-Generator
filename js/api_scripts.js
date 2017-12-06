@@ -92,13 +92,7 @@ function storeToken(token) {
  * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
  */
 function listFiles(auth, callback) {
-  try {
-
-  } catch (e) {
-
-  } finally {
-
-  }
+  
   var service = google.drive('v3');
   service.files.list({
     auth: auth,

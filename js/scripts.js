@@ -196,7 +196,6 @@ function exportFile (family) {
   }
 
   var url = img.src.replace(/^data:image\/[^;]/, 'data:application/octet-stream');
-
   var xhr = new XMLHttpRequest();
 
   xhr.responseType = 'blob'; //Set the response type to blob so xhr.response returns a blob
@@ -208,10 +207,42 @@ function exportFile (family) {
       //xhr.response will be a Blob ready to save
       var filesaver = require('file-saver');
       filesaver.saveAs(xhr.response, nameFile);
+
+      if (family) {
+        for (var i = 0; i < tabQRCode.length; i++) {
+          var qrcode = tabQRCode[i];
+          var filename = qrcode.getNomQRCode()+'.jpeg';
+
+          $.get(__dirname+'/'+qrcode.getNomQRCode()+'.jpeg')
+            .done(function() {
+              // exists code
+              console.log('fichier existe');
+              var date = new Date;
+              filename = qrcode.getNomQRCode()+'-'+date.getHours()+'-'+date.getMinutes()+'-'+date.getSeconds()+'-'+date.getFullYear()+'-'+date.getMonth()+'-'+date.getDate()+'.jpeg';
+            })
+            .fail(function() {
+
+            })
+            .always(function() {
+              // enegistrer le qrcode atomatiquement
+              var imgData = $('#affichageqr')[0].childNodes[1].childNodes[0].src;
+
+              var data = imgData.replace(/^data:image\/\w+;base64,/, '');
+
+              fs.writeFile(filename, data, {encoding: 'base64'}, function(err) {
+                if (err) {
+                  console.log('err', err);
+                }
+                //success
+              });
+            });
+        }
+      }
     }
   };
   xhr.send(); //Request is sent
 }
+
 
 // fonction pour sauvegarder les qrcodes d'une meme famille en même temps
 function exportFamily () {
