@@ -154,14 +154,13 @@ class QRCodeAtomique extends QRCode{
     */
     ajouterAFamille(nom, ordre){
       if (this.appartientFamille()){
-        throw "Le QRCode appartient déjà à une famille. Il faut appeler supprimerDeLaFamille() avant de l'ajouter dans une nouvelle famille.";
+        this.supprimerDeLaFamille();
       }
-      else{
-        var noeud = document.createElement(DictionnaireXml.getTagFamille());
-        noeud.setAttribute(DictionnaireXml.getAttNomFamille(), nom);
-        noeud.setAttribute(DictionnaireXml.getAttOrdreFamille(), ordre);
-        this.donneesUtilisateur.appendChild(noeud);
-      }
+
+      var noeud = document.createElement(DictionnaireXml.getTagFamille());
+      noeud.setAttribute(DictionnaireXml.getAttNomFamille(), nom);
+      noeud.setAttribute(DictionnaireXml.getAttOrdreFamille(), ordre);
+      this.donneesUtilisateur.appendChild(noeud);
 
     }
 
