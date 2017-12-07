@@ -19,8 +19,7 @@ class ImageGenerator{
 
      var jq = window.jQuery;
      var size = 450;
-
-
+     
      var donneesQR = this.compresseur.compresser(qrcode.getDonneesUtilisateur());
 
      var texteBraille = qrcode.getTexteBraille();
