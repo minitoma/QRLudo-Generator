@@ -24,7 +24,7 @@ class QRCodeLoader{
 
       qrcode = QRCodeLoader.__traiterImage(ev.target.result);
 
-      if (qrcode.getTypeQR()==DictionnaireXml.getValTypeAtomique() && qrcode.appartientFamille()){
+      if (!Array.isArray(qrcode) && qrcode.getTypeQR()==DictionnaireXml.getValTypeAtomique() && qrcode.appartientFamille()){
         alert("Les QR Codes appartenant a une famille ne peuvent pas être chargés séparément. Merci de charger l'image de la famille complète.");
         return;
       }
