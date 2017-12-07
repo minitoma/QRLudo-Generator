@@ -66,9 +66,10 @@ div.form-group {
 }
 
 button.btn.btn-default.deleteChamp,
-button.btn.btn-default.addChamp {
+button.btn.btn-default.addChamp,
+button.btn.btn-default.playChamp {
   width: initial;
-  margin: 0 0 0 -5px;
+  margin: 0 0 0 -20px;
   height: 34px;
 }
 

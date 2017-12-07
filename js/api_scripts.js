@@ -92,7 +92,7 @@ function storeToken(token) {
  * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
  */
 function listFiles(auth, callback) {
-  
+
   var service = google.drive('v3');
   service.files.list({
     auth: auth,
@@ -134,18 +134,23 @@ var googleTTS = require('google-tts-api');
 var texte = "", j = 0, audio = null;
 
 // réupérer le formulaire et tous les champs
-function getForm () {
-  var form = document.getElementsByClassName('in active')[0].childNodes[0].childNodes[0];
-  // parcourir le formulaire
-  for (var i=0; i<form.length; i++) {
-    try {
-        if (form.elements[i].type == "text" || form.elements[i].tagName == 'TEXTAREA') {
-          texte = texte + form.elements[i].value + ". ";
-      } else {
-        console.log("pas de type texte");
+function getForm (data) {
+  if (data) {
+    texte = data;
+  } else {
+
+    var form = document.getElementsByClassName('in active')[0].childNodes[0].childNodes[0];
+    // parcourir le formulaire
+    for (var i=0; i<form.length; i++) {
+      try {
+          if (form.elements[i].type == "text" || form.elements[i].tagName == 'TEXTAREA') {
+            texte = texte + form.elements[i].value + ".";
+        } else {
+          console.log("pas de type texte");
+        }
+      } catch (err) {
+        document.getElementById(form.elements[i].id).innerHTML = err.message;
       }
-    } catch (err) {
-      document.getElementById(form.elements[i].id).innerHTML = err.message;
     }
   }
 
@@ -191,8 +196,10 @@ function play (phrase, callback) {
       audio.play();
     })
     .catch(function (err) {
-      console.error(err.stack);
-      alert('Pas de connexion internet');
+      console.log(err);
+      if (phrase != null && phrase!="") {
+        alert('Pas de connexion internet');  
+      }
     });
 }
 

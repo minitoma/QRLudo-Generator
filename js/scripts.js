@@ -82,15 +82,24 @@ function selectMusic (event, imported) {
 
   var btnAdd = createButton('button', 'btn btn-default addChamp', 'modal', '#myModal', null);
   var btnDelete = createButton('button', 'btn btn-default deleteChamp', null, null, null);
+  var btnPlay = createButton('button', 'btn btn-default playChamp', null, null, null);
   btnAdd.appendChild(createInput('image', null, null, null, 'add.png', null, null));
   btnDelete.appendChild(createInput('image', 'deleteChamp', null, null, 'delete.png', null, null));
+  btnPlay.appendChild(createInput('image', 'playChamp', null, null, 'play.png', null, null));
 
-  var div3 = createDiv('col-md-6', null, [btnAdd]);
-  var div4 = createDiv('col-md-6', null, [btnDelete]);
+  var div3 = createDiv('col-md-4', null, [btnAdd]);
+  var div4 = createDiv('col-md-4', null, [btnDelete]);
+  var div5 = createDiv('col-md-4', null, [btnPlay]);
 
-  var div = createDiv('form-group', null, [createDiv('row', null, [div2, createDiv('col-md-3', null, [createDiv('row', null, [div3, div4])])])]);
+  var div = createDiv('form-group', null, [createDiv('row', null, [div2, createDiv('col-md-3', null, [createDiv('row', null, [div3, div4, div5])])])]);
   //var div = createDiv('form-group', null, [createDiv('row', null, [div2, div3])]);
   form.appendChild(div);
+
+  // ajouter un eventlistener sur playChamp pour lire le champ sur click du bouton
+  btnPlay.addEventListener('click', function(){
+    var texte = document.getElementsByClassName('playChamp')[0].parentNode.parentNode.parentNode.parentNode.childNodes[0].childNodes[0].value;
+    getForm(texte);
+  });
   // ajouter un eventlistener sur deleteChamp pour supprimer le champ sur click du bouton
   btnDelete.addEventListener('click', function(){
     form.removeChild(div); // suppression du champ
@@ -100,7 +109,7 @@ function selectMusic (event, imported) {
       var textContent = form.childNodes[form.length-1].childNodes[0].childNodes[0].childNodes[0].value;
       // recréer le input et le div form-group
       div2 = createDiv('col-md-9', null, [createTextarea('form-control', 'legende', textContent)]);
-      div = createDiv('form-group', null, [createDiv('row', null, [div2, createDiv('col-md-3', null, [createDiv('row', null, [div3, div4])])])]);
+      div = createDiv('form-group', null, [createDiv('row', null, [div2, createDiv('col-md-3', null, [createDiv('row', null, [div3, div4, div5])])])]);
       // recréer le champ précédent avec les boutons add et delete
       form.replaceChild(div, form.childNodes[form.length-1]);
     } else {
