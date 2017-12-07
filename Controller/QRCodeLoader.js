@@ -1,3 +1,7 @@
+/**
+* Jules Leguy
+* 2017
+**/
 
 /*
 * Permet de créer un objet QRCode à partir d'une image QRCode ou d'instancier un tableau contenant les objets QRCodes obtenus à partir d'une image enregistrant une famille de QRCodes
@@ -19,6 +23,11 @@ class QRCodeLoader{
 
 
       qrcode = QRCodeLoader.__traiterImage(ev.target.result);
+
+      if (qrcode.getTypeQR()==DictionnaireXml.getValTypeAtomique() && qrcode.appartientFamille()){
+        alert("Les QR Codes appartenant a une famille ne peuvent pas être chargés séparément. Merci de charger l'image de la famille complète.");
+        return;
+      }
 
       // renvoyer le qrcode créé avec la méthode en conséquence pour recréer la vue
       if (callback){
@@ -58,8 +67,6 @@ class QRCodeLoader{
     }
 
     var nomPremierNoeud = qrxml.firstChild.nodeName;
-
-    console.log("nom premier noeud "+nomPremierNoeud);
 
     if (nomPremierNoeud=="qrcode"){
       return QRCodeLoader.__creerQRCode(qrxml.firstChild);

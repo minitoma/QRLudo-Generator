@@ -1,3 +1,8 @@
+/**
+* Jules Leguy
+* 2017
+**/
+
 /*s
 * Classe stockant les chaines de caractères des tags et attributs pouvant être contenus dans le xml représentant un QRCode
 * Permet de changer globalement la chaîne représentant un tag ou un attribut

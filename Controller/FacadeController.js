@@ -1,3 +1,8 @@
+/**
+* Jules Leguy, Alassane Diop
+* 2017
+**/
+
 /*
 * Classe permettant à la vue d'interagir avec le controller.
 * La vue instancie cette classe une seule fois à son initialisation et fait systématiquement appel à cette instance quand elle a besoin d'un traitement du controller.
