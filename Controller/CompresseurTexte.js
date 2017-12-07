@@ -1,8 +1,12 @@
+/**
+* Jules Leguy
+* 2017
+**/
 
 class CompresseurTexte{
 
   /**
-  * On initialise le tableau des chaînes compressables à partir du fichier
+  * On initialise le tableau des chaînes compressibles à partir du fichier
   * En cas de changement, voir la documentation de la fonction compresser(texte) plus bas pour assurer la compatibilité avec les qrcodes générés avec cette version (v1)
   */
   constructor(){

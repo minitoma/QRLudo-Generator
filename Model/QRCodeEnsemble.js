@@ -1,7 +1,11 @@
+/**
+* Jules Leguy, David Dembele
+* 2017
+**/
+
 /*
 *Classe permettant de stocker et d'accéder au données contenues dans un QRCode de type Ensemble
 */
-
 class QRCodeEnsemble extends QRCode{
 
     constructor() {

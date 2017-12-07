@@ -1,3 +1,11 @@
+/**
+* Jules Leguy
+* 2017
+**/
+
+/**
+* Classe permettant de stocker et d'accéder aux données contenues dans un QRCode de type atomique
+*/
 class QRCodeAtomique extends QRCode{
 
     //Constructeur d'un QRCodeAtomique vide

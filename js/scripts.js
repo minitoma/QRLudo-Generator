@@ -259,6 +259,7 @@ function exportFamily () {
   var tabForm; // tableau de tous les formulaires
   var tabOnget; // tableau de tous les menus
 
+  tabQRCode = [];
   // recupérer tous les formulaires et menus (tabForm.length == tabOnget.length)
   tabForm = document.getElementsByClassName('tab-pane fade');
   tabOnget = document.getElementsByClassName('menu');
@@ -269,7 +270,7 @@ function exportFamily () {
     setActive(tabForm[i], tabOnget[i]);
      // generer le qrcode du formulaire aactive et le mettre dans le tableau de qrcode
     var qrcode = previewQRCode(true);
-    qrcode.ajouterAFamille('famille', i+1);
+    qrcode.ajouterAFamille(document.getElementById('nameFamily').value, i+1);
     tabQRCode.push(qrcode);
   }
 }
