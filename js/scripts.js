@@ -82,15 +82,24 @@ function selectMusic (event, imported) {
 
   var btnAdd = createButton('button', 'btn btn-default addChamp', 'modal', '#myModal', null);
   var btnDelete = createButton('button', 'btn btn-default deleteChamp', null, null, null);
+  var btnPlay = createButton('button', 'btn btn-default playChamp', null, null, null);
   btnAdd.appendChild(createInput('image', null, null, null, 'add.png', null, null));
   btnDelete.appendChild(createInput('image', 'deleteChamp', null, null, 'delete.png', null, null));
+  btnPlay.appendChild(createInput('image', 'playChamp', null, null, 'play.png', null, null));
 
-  var div3 = createDiv('col-md-6', null, [btnAdd]);
-  var div4 = createDiv('col-md-6', null, [btnDelete]);
+  var div3 = createDiv('col-md-4', null, [btnAdd]);
+  var div4 = createDiv('col-md-4', null, [btnDelete]);
+  var div5 = createDiv('col-md-4', null, [btnPlay]);
 
-  var div = createDiv('form-group', null, [createDiv('row', null, [div2, createDiv('col-md-3', null, [createDiv('row', null, [div3, div4])])])]);
+  var div = createDiv('form-group', null, [createDiv('row', null, [div2, createDiv('col-md-3', null, [createDiv('row', null, [div3, div4, div5])])])]);
   //var div = createDiv('form-group', null, [createDiv('row', null, [div2, div3])]);
   form.appendChild(div);
+
+  // ajouter un eventlistener sur playChamp pour lire le champ sur click du bouton
+  btnPlay.addEventListener('click', function(){
+    var texte = document.getElementsByClassName('playChamp')[0].parentNode.parentNode.parentNode.parentNode.childNodes[0].childNodes[0].value;
+    getForm(texte);
+  });
   // ajouter un eventlistener sur deleteChamp pour supprimer le champ sur click du bouton
   btnDelete.addEventListener('click', function(){
     form.removeChild(div); // suppression du champ
@@ -100,7 +109,7 @@ function selectMusic (event, imported) {
       var textContent = form.childNodes[form.length-1].childNodes[0].childNodes[0].childNodes[0].value;
       // recréer le input et le div form-group
       div2 = createDiv('col-md-9', null, [createTextarea('form-control', 'legende', textContent)]);
-      div = createDiv('form-group', null, [createDiv('row', null, [div2, createDiv('col-md-3', null, [createDiv('row', null, [div3, div4])])])]);
+      div = createDiv('form-group', null, [createDiv('row', null, [div2, createDiv('col-md-3', null, [createDiv('row', null, [div3, div4, div5])])])]);
       // recréer le champ précédent avec les boutons add et delete
       form.replaceChild(div, form.childNodes[form.length-1]);
     } else {
@@ -196,7 +205,6 @@ function exportFile (family) {
   }
 
   var url = img.src.replace(/^data:image\/[^;]/, 'data:application/octet-stream');
-
   var xhr = new XMLHttpRequest();
 
   xhr.responseType = 'blob'; //Set the response type to blob so xhr.response returns a blob
@@ -208,10 +216,42 @@ function exportFile (family) {
       //xhr.response will be a Blob ready to save
       var filesaver = require('file-saver');
       filesaver.saveAs(xhr.response, nameFile);
+
+      if (family) {
+        for (var i = 0; i < tabQRCode.length; i++) {
+          var qrcode = tabQRCode[i];
+          var filename = qrcode.getNomQRCode()+'.jpeg';
+
+          $.get(__dirname+'/'+qrcode.getNomQRCode()+'.jpeg')
+            .done(function() {
+              // exists code
+              console.log('fichier existe');
+              var date = new Date;
+              filename = qrcode.getNomQRCode()+'-'+date.getHours()+'-'+date.getMinutes()+'-'+date.getSeconds()+'-'+date.getFullYear()+'-'+date.getMonth()+'-'+date.getDate()+'.jpeg';
+            })
+            .fail(function() {
+
+            })
+            .always(function() {
+              // enegistrer le qrcode atomatiquement
+              var imgData = $('#affichageqr')[0].childNodes[1].childNodes[0].src;
+
+              var data = imgData.replace(/^data:image\/\w+;base64,/, '');
+
+              fs.writeFile(filename, data, {encoding: 'base64'}, function(err) {
+                if (err) {
+                  console.log('err', err);
+                }
+                //success
+              });
+            });
+        }
+      }
     }
   };
   xhr.send(); //Request is sent
 }
+
 
 // fonction pour sauvegarder les qrcodes d'une meme famille en même temps
 function exportFamily () {
@@ -411,8 +451,9 @@ function deleteAddBtn () {
   var row = document.getElementsByClassName('tab-pane fade active in')[0].childNodes[0].childNodes[0].childNodes
   [document.getElementsByClassName('tab-pane fade active in')[0].childNodes[0].childNodes[0].childNodes.length-2];
 
-  row.childNodes[0].removeChild(row.childNodes[0].childNodes[1]); // supprimer btn add
-  row.childNodes[0].childNodes[0].setAttribute('class', 'col-md-12'); // augmenter la taille du textarea
+  row.childNodes[0].childNodes[1].childNodes[0].childNodes[2].setAttribute('class', 'col-md-12'); // augmenter la taille du btn play
+  row.childNodes[0].childNodes[1].childNodes[0].removeChild(row.childNodes[0].childNodes[1].childNodes[0].childNodes[1]); // supprimer btn del
+  row.childNodes[0].childNodes[1].childNodes[0].removeChild(row.childNodes[0].childNodes[1].childNodes[0].childNodes[0]); // supprimer btn add
 }
 
 // fonction pour supprimer le bouton add tabs de l'avant dernier tab

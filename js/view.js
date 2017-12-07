@@ -17,7 +17,7 @@ $(document).ready(function() {
   document.getElementById('read').addEventListener('click', function(){
     this.parentNode.parentNode.style.display = 'none';
     document.getElementById('stop').parentNode.parentNode.style.display = 'block';
-    getForm();
+    getForm(null);
   }); // sur clic du bouton Lire pour ecouter les textes saisis
   document.getElementById('stop').addEventListener('click', function(){
     this.parentNode.parentNode.style.display = 'none';
@@ -99,31 +99,39 @@ function createTextBox (textContent) {
   var div2 = createDiv('col-md-9', null, [createTextarea('form-control', 'legende', textContent)]);
   var btnAdd = createButton('button', 'btn btn-default addChamp', 'modal', '#myModal', null);
   var btnDelete = createButton('button', 'btn btn-default deleteChamp', null, null, null);
+  var btnPlay = createButton('button', 'btn btn-default playChamp', null, null, null);
   btnAdd.appendChild(createInput('image', null, null, null, 'add.png', null, null));
   btnDelete.appendChild(createInput('image', 'deleteChamp', null, null, 'delete.png', null, null));
-  var div3 = createDiv('col-md-6', null, [btnAdd]);
-  var div4 = createDiv('col-md-6', null, [btnDelete]);
-  var div = createDiv('form-group', null, [createDiv('row', null, [div2, createDiv('col-md-3', null, [createDiv('row', null, [div3, div4])])])]);
+  btnPlay.appendChild(createInput('image', 'playChamp', null, null, 'play.png', null, null));
+  var div3 = createDiv('col-md-4', null, [btnAdd]);
+  var div4 = createDiv('col-md-4', null, [btnDelete]);
+  var div5 = createDiv('col-md-4', null, [btnPlay]);
+  var div = createDiv('form-group', null, [createDiv('row', null, [div2, createDiv('col-md-3', null, [createDiv('row', null, [div3, div4, div5])])])]);
   var form = document.getElementsByClassName('in active')[0].childNodes[0].childNodes[0];
   form.appendChild(div);
 
+  // ajouter un eventlistener sur playChamp pour lire le champ sur click du bouton
+  btnPlay.addEventListener('click', function(){
+    var texte = event.target.parentNode.parentNode.parentNode.parentNode.childNodes[0].childNodes[0].value;
+    getForm(texte);
+  });
   // ajouter un eventlistener sur deleteChamp pour supprimer le champ sur click du bouton
   btnDelete.addEventListener('click', function(){
     form.removeChild(div); // suppression du champ
     // ajout des btn add et delete au champ précédent si il existe
     if (form.length != 0) {
       // recupérer le texte saisi avant de remplacer
-      var textContent = form.childNodes[form.length-1].childNodes[0].childNodes[0].childNodes[0].value;
+      var textContent = form.childNodes[form.childNodes.length-1].childNodes[0].childNodes[0].childNodes[0].value;
 
       // recréer le input ou textarea et le div form-group
-      if (form.childNodes[form.length-1].childNodes[0].childNodes[0].childNodes[0].tagName == 'INPUT') {
+      if (form.childNodes[form.childNodes.length-1].childNodes[0].childNodes[0].childNodes[0].tagName == 'INPUT') {
         div2 = createDiv('col-md-9', null, [createInput('text', 'form-control', null, textContent, null, null, null)]);
       } else {
         div2 = createDiv('col-md-9', null, [createTextarea('form-control', 'legende', textContent)]);
       }
-      div = createDiv('form-group', null, [createDiv('row', null, [div2, createDiv('col-md-3', null, [createDiv('row', null, [div3, div4])])])]);
+      div = createDiv('form-group', null, [createDiv('row', null, [div2, createDiv('col-md-3', null, [createDiv('row', null, [div3, div4, div5])])])]);
       // recréer le champ précédent avec les boutons add et delete
-      form.replaceChild(div, form.childNodes[form.length-1]);
+      form.replaceChild(div, form.childNodes[form.childNodes.length-1]);
     } else {
       // s'il s'agit d'une famille il faut juste supprimer le tab correspondant
       if (document.getElementsByClassName('nav-tabs nav')[0].style.display == 'block') {
@@ -340,12 +348,11 @@ function drawQRCodeFamille (qrcode) {
       qrCodeColor.setAttribute('value', qr.getColorQRCode()); // restaurer la couleur du qrcode
       for (var j=0; j<qr.getTailleContenu(); j++){
 
-        if (qr.getTypeContenu(j) == DictionnaireXml.getTagTexte()){
+        if (qr.getTypeContenu(j) == DictionnaireXml.getTagTexte()) {
           createTextBox(qr.getTexte(j));
-        }
-        else if (qr.getTypeContenu(j) == DictionnaireXml.getTagFichier()){
+        } else if (qr.getTypeContenu(j) == DictionnaireXml.getTagFichier()) {
            // appel de selectMusic pour créer un champ input de music
-          selectMusic (null, [qrcode.getUrlFichier(i), qrcode.getNomFichier(qrcode.getUrlFichier(i))]);
+          selectMusic (null, [qr.getUrlFichier(j), qr.getNomFichier(qr.getUrlFichier(j))]);
         }
       }
 
@@ -370,8 +377,7 @@ function drawQRCodeAtomique (qrcode) {
 
     if (qrcode.getTypeContenu(i) == DictionnaireXml.getTagTexte()){
       createTextBox(qrcode.getTexte(i));
-    }
-    else if (qrcode.getTypeContenu(i) == DictionnaireXml.getTagFichier()){
+    } else if (qrcode.getTypeContenu(i) == DictionnaireXml.getTagFichier()){
       // appel de selectMusic pour créer un chap input de music
       selectMusic (null, [qrcode.getUrlFichier(i), qrcode.getNomFichier(qrcode.getUrlFichier(i))]);
     }

@@ -1,12 +1,21 @@
 
 body {
 
-  background: #417142;
+  background: #d8d8d8;
   /*
   background-image: url('../img/fern.jpg');
   */
   background-repeat: no-repeat;
 
+}
+
+body > div > section.page-header > div > div.col-md-3.imgAngers > img {
+  width: inherit;
+  float: left;
+}
+body > div > section.page-header > div > div.col-md-3.imgQRLudo > img {
+  float: right;
+  width: inherit;
 }
 
 .btn-default {
@@ -68,9 +77,10 @@ div.form-group {
 }
 
 button.btn.btn-default.deleteChamp,
-button.btn.btn-default.addChamp {
+button.btn.btn-default.addChamp,
+button.btn.btn-default.playChamp {
   width: initial;
-  margin: 0 0 0 -5px;
+  margin: 0 0 0 -20px;
   height: 34px;
 }
 
@@ -79,8 +89,7 @@ div.modal-header.row {
 }
 
 section.page-header {
-  background: #d6d4d4;
-  height: 70px;
+  height: 65px;
 }
 
 #affichageqr > div > canvas {
@@ -121,7 +130,7 @@ div:nth-child(2) > div.col-md-3.text-center > button,
 }
 
 #content-form > div:nth-child(2) > div:nth-child(1) {
-  color: white;
+  color: #080808;
 }
 #braille {
   width: inherit;
