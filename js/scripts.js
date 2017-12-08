@@ -451,8 +451,9 @@ function deleteAddBtn () {
   var row = document.getElementsByClassName('tab-pane fade active in')[0].childNodes[0].childNodes[0].childNodes
   [document.getElementsByClassName('tab-pane fade active in')[0].childNodes[0].childNodes[0].childNodes.length-2];
 
-  row.childNodes[0].removeChild(row.childNodes[0].childNodes[1]); // supprimer btn add
-  row.childNodes[0].childNodes[0].setAttribute('class', 'col-md-12'); // augmenter la taille du textarea
+  row.childNodes[0].childNodes[1].childNodes[0].childNodes[2].setAttribute('class', 'col-md-12'); // augmenter la taille du btn play
+  row.childNodes[0].childNodes[1].childNodes[0].removeChild(row.childNodes[0].childNodes[1].childNodes[0].childNodes[1]); // supprimer btn del
+  row.childNodes[0].childNodes[1].childNodes[0].removeChild(row.childNodes[0].childNodes[1].childNodes[0].childNodes[0]); // supprimer btn add
 }
 
 // fonction pour supprimer le bouton add tabs de l'avant dernier tab

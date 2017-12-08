@@ -198,7 +198,9 @@ function play (phrase, callback) {
     .catch(function (err) {
       console.log(err);
       if (phrase != null && phrase!="") {
-        alert('Pas de connexion internet');  
+        alert('Pas de connexion internet');
+      } else {
+        document.getElementById('stop').click();
       }
     });
 }

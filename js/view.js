@@ -112,7 +112,7 @@ function createTextBox (textContent) {
 
   // ajouter un eventlistener sur playChamp pour lire le champ sur click du bouton
   btnPlay.addEventListener('click', function(){
-    var texte = document.getElementsByClassName('playChamp')[0].parentNode.parentNode.parentNode.parentNode.childNodes[0].childNodes[0].value;
+    var texte = event.target.parentNode.parentNode.parentNode.parentNode.childNodes[0].childNodes[0].value;
     getForm(texte);
   });
   // ajouter un eventlistener sur deleteChamp pour supprimer le champ sur click du bouton
@@ -121,17 +121,17 @@ function createTextBox (textContent) {
     // ajout des btn add et delete au champ précédent si il existe
     if (form.length != 0) {
       // recupérer le texte saisi avant de remplacer
-      var textContent = form.childNodes[form.length-1].childNodes[0].childNodes[0].childNodes[0].value;
+      var textContent = form.childNodes[form.childNodes.length-1].childNodes[0].childNodes[0].childNodes[0].value;
 
       // recréer le input ou textarea et le div form-group
-      if (form.childNodes[form.length-1].childNodes[0].childNodes[0].childNodes[0].tagName == 'INPUT') {
+      if (form.childNodes[form.childNodes.length-1].childNodes[0].childNodes[0].childNodes[0].tagName == 'INPUT') {
         div2 = createDiv('col-md-9', null, [createInput('text', 'form-control', null, textContent, null, null, null)]);
       } else {
         div2 = createDiv('col-md-9', null, [createTextarea('form-control', 'legende', textContent)]);
       }
       div = createDiv('form-group', null, [createDiv('row', null, [div2, createDiv('col-md-3', null, [createDiv('row', null, [div3, div4, div5])])])]);
       // recréer le champ précédent avec les boutons add et delete
-      form.replaceChild(div, form.childNodes[form.length-1]);
+      form.replaceChild(div, form.childNodes[form.childNodes.length-1]);
     } else {
       // s'il s'agit d'une famille il faut juste supprimer le tab correspondant
       if (document.getElementsByClassName('nav-tabs nav')[0].style.display == 'block') {
@@ -350,10 +350,9 @@ function drawQRCodeFamille (qrcode) {
 
         if (qr.getTypeContenu(j) == DictionnaireXml.getTagTexte()) {
           createTextBox(qr.getTexte(j));
-        }
-        else if (qr.getTypeContenu(j) == DictionnaireXml.getTagFichier()) {
+        } else if (qr.getTypeContenu(j) == DictionnaireXml.getTagFichier()) {
            // appel de selectMusic pour créer un champ input de music
-          selectMusic (null, [qr.getUrlFichier(i), qr.getNomFichier(qr.getUrlFichier(i))]);
+          selectMusic (null, [qr.getUrlFichier(j), qr.getNomFichier(qr.getUrlFichier(j))]);
         }
       }
 

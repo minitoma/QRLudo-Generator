@@ -19,8 +19,7 @@ class ImageGenerator{
 
      var jq = window.jQuery;
      var size = 450;
-
-
+     
      var donneesQR = this.compresseur.compresser(qrcode.getDonneesUtilisateur());
 
      var texteBraille = qrcode.getTexteBraille();
@@ -230,13 +229,11 @@ class ImageGenerator{
         yTexte+=50;
       }
 
-
       //On convertit les métadonnées en tableau de int
       var donneesutf8 = this.__donneesToUTF8(unescape(chaineXml));
 
       // On transforme le canvas en image jpeg avec les bonnes métadonnées
       return this.__genererJPEG(donneesutf8, c, div);
-
 
     }
 
@@ -326,8 +323,6 @@ class ImageGenerator{
       var image = new Image();
       image.src = exifModified;
       $(divSortie).prepend(image);
-
-      console.log(image);
 
       return image;
     }
