@@ -425,7 +425,7 @@ function baseViewQRCodeAtomique (callback) {
   // désactiver les bouton import et creer
   document.getElementById('creer').disabled = true;
   document.getElementById('import').disabled = true;
-  if (callback) callback(null);
+  if (callback) { callback(null); }
 }
 
 /*
