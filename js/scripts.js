@@ -72,10 +72,10 @@ function selectMusic (event, imported) {
     var element = event.target;
 
     if(element.tagName == 'A') {
-      div2 = createDiv('col-md-9', null, [createInput('text', 'form-control', element.getAttribute('href').substring(1), element.textContent, null, null, null)]);
+      div2 = createDiv('col-md-9', null, [createInput('text', 'form-control', element.getAttribute('href').substring(1), element.textContent, null, null, null,null)]);
     }
   } else if (event == null && imported) {
-    div2 = createDiv('col-md-9', null, [createInput('text', 'form-control', imported[0], imported[1], null, null, null)]);
+    div2 = createDiv('col-md-9', null, [createInput('text', 'form-control', imported[0], imported[1], null, null, null, null)]);
   }
 
   var form = document.getElementsByClassName('in active')[0].childNodes[0].childNodes[0];
@@ -83,9 +83,9 @@ function selectMusic (event, imported) {
   var btnAdd = createButton('button', 'btn btn-default addChamp', 'modal', '#myModal', null);
   var btnDelete = createButton('button', 'btn btn-default deleteChamp', null, null, null);
   var btnPlay = createButton('button', 'btn btn-default playChamp', null, null, null);
-  btnAdd.appendChild(createInput('image', null, null, null, 'add.png', null, null));
-  btnDelete.appendChild(createInput('image', 'deleteChamp', null, null, 'delete.png', null, null));
-  btnPlay.appendChild(createInput('image', 'playChamp', null, null, 'play.png', null, null));
+  btnAdd.appendChild(createInput('image', null, null, null, 'add.png', null, null, 'Ajouter un nouveau champ'));
+  btnDelete.appendChild(createInput('image', 'deleteChamp', null, null, 'delete.png', null, null, 'Supprimer ce champ'));
+  btnPlay.appendChild(createInput('image', 'playChamp', null, null, 'play.png', null, null, 'Ecouter le contenu du champ'));
 
   var div3 = createDiv('col-md-4', null, [btnAdd]);
   var div4 = createDiv('col-md-4', null, [btnDelete]);
@@ -110,7 +110,7 @@ function selectMusic (event, imported) {
 
       // recréer le input ou textarea et le div form-group
       if (form.childNodes[form.childNodes.length-1].childNodes[0].childNodes[0].childNodes[0].tagName == 'INPUT') {
-        div2 = createDiv('col-md-9', null, [createInput('text', 'form-control', null, textContent, null, null, null)]);
+        div2 = createDiv('col-md-9', null, [createInput('text', 'form-control', null, textContent, null, null, null, null)]);
       } else {
         div2 = createDiv('col-md-9', null, [createTextarea('form-control', 'legende', textContent)]);
       }
@@ -491,8 +491,8 @@ function switchTab (event, create) {
       }
     }
     // ajouter les boutons add et del sur l'onglet courant
-    inputAdd = createInput('image', 'addTabs', null, null, 'add.png', 'modal', '#modalNameQRCode');
-    inputDel = createInput('image', 'closeTab', null, null, 'delete.png', null, null);
+    inputAdd = createInput('image', 'addTabs', null, null, 'add.png', 'modal', '#modalNameQRCode', 'Ajouter un nouveau champ');
+    inputDel = createInput('image', 'closeTab', null, null, 'delete.png', null, null, 'Supprimer ce champ');
     inputAdd.disabled = false;
     inputDel.disabled = false;
   }
