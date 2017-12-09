@@ -10,8 +10,9 @@
 class FacadeController{
 
   constructor(){
-    this.imageGenerator = new ImageGenerator();
     this.compresseurXml = new CompresseurTexte();
+    this.imageGenerator = new ImageGenerator(this.compresseurXml);
+
   }
 
   //Renvoie un nouveau QRCodeAtomique
