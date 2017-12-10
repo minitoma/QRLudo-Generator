@@ -57,7 +57,7 @@ function createTextarea (classe, id, textcontent) {
 }
 
 // fonction pour une zone de texte
-function createInput (type, classe, id, value, src, datatoggle, datatarget) {
+function createInput (type, classe, id, value, src, datatoggle, datatarget, title) {
   var input = document.createElement('input');
   if (type) input.setAttribute('type', type);
   if (classe) input.setAttribute('class', classe);
@@ -67,6 +67,7 @@ function createInput (type, classe, id, value, src, datatoggle, datatarget) {
   if (src) input.setAttribute('src', __dirname+'/img/'+src);
   if (datatoggle) input.setAttribute('data-toggle', datatoggle);
   if (datatarget) input.setAttribute('data-target', datatarget);
+  if (title) input.setAttribute('title', title);
   input.setAttribute('disabled', 'disabled');
   return input;
 }
@@ -100,9 +101,9 @@ function createTextBox (textContent) {
   var btnAdd = createButton('button', 'btn btn-default addChamp', 'modal', '#myModal', null);
   var btnDelete = createButton('button', 'btn btn-default deleteChamp', null, null, null);
   var btnPlay = createButton('button', 'btn btn-default playChamp', null, null, null);
-  btnAdd.appendChild(createInput('image', null, null, null, 'add.png', null, null));
-  btnDelete.appendChild(createInput('image', 'deleteChamp', null, null, 'delete.png', null, null));
-  btnPlay.appendChild(createInput('image', 'playChamp', null, null, 'play.png', null, null));
+  btnAdd.appendChild(createInput('image', null, null, null, 'add.png', null, null, 'Ajouter un nouveau champ'));
+  btnDelete.appendChild(createInput('image', 'deleteChamp', null, null, 'delete.png', null, null, 'Supprimer ce champ'));
+  btnPlay.appendChild(createInput('image', 'playChamp', null, null, 'play.png', null, null, 'Ecouter le contenu du champ'));
   var div3 = createDiv('col-md-4', null, [btnAdd]);
   var div4 = createDiv('col-md-4', null, [btnDelete]);
   var div5 = createDiv('col-md-4', null, [btnPlay]);
@@ -125,7 +126,7 @@ function createTextBox (textContent) {
 
       // recréer le input ou textarea et le div form-group
       if (form.childNodes[form.childNodes.length-1].childNodes[0].childNodes[0].childNodes[0].tagName == 'INPUT') {
-        div2 = createDiv('col-md-9', null, [createInput('text', 'form-control', null, textContent, null, null, null)]);
+        div2 = createDiv('col-md-9', null, [createInput('text', 'form-control', null, textContent, null, null, null, null)]);
       } else {
         div2 = createDiv('col-md-9', null, [createTextarea('form-control', 'legende', textContent)]);
       }
@@ -249,22 +250,19 @@ function createTabContent (id, idMenu, li, imported) {
 
   var button = createButton('button', 'btn btn-default addChamp', 'modal', '#myModal', document.createTextNode('Ajouter un champ'+idMenu));
 
-  var checkbox = createInput('checkbox', null, 'checkBraille', null, null, null, null);
+  var checkbox = createInput('checkbox', null, 'checkBraille', null, null, null, null, null);
   checkbox.disabled = false;
 
   var div4 = createDiv('col-md-6 text-center', null, [checkbox, document.createTextNode('Texte en braille')]);
   // palette de couleur pour la couleur du qrcode
-  var inputColorQR = createInput('color', null, 'colorQR', null, null, null, null);
+  var inputColorQR = createInput('color', null, 'colorQR', null, null, null, null, 'Couleur du QRCode');
   var div5 = createDiv('col-md-6 text-center', null, [inputColorQR]);
 
-  var input = createInput('text', null, 'braille', null, null, null, null);
+  var input = createInput('text', null, 'braille', null, null, null, null, 'Texte en braille');
   input.setAttribute('maxlength', '2');
-  input.setAttribute('title', 'Texte en braille');
   input.disabled = false;
 
-  var inputColorBraille = createInput('color', null, 'colorBraille', null, null, null, null);
-  inputColorQR.setAttribute('title', 'Couleur du QRCode');
-  inputColorBraille.setAttribute('title', 'Couleur du texte en braille');
+  var inputColorBraille = createInput('color', null, 'colorBraille', null, null, null, null, 'Couleur du texte en braille');
   inputColorQR.disabled = false;
   inputColorBraille.disabled = false;
   // champ pour braille au milieu du qrcode
@@ -425,7 +423,7 @@ function baseViewQRCodeAtomique (callback) {
   // désactiver les bouton import et creer
   document.getElementById('creer').disabled = true;
   document.getElementById('import').disabled = true;
-  if (callback) callback(null);
+  if (callback) { callback(null); }
 }
 
 /*
