@@ -72,10 +72,10 @@ function selectMusic (event, imported) {
     var element = event.target;
 
     if(element.tagName == 'A') {
-      div2 = createDiv('col-md-9', null, [createInput('text', 'form-control', element.getAttribute('href').substring(1), element.textContent, null, null, null)]);
+      div2 = createDiv('col-md-9', null, [createInput('text', 'form-control', element.getAttribute('href').substring(1), element.textContent, null, null, null,null)]);
     }
   } else if (event == null && imported) {
-    div2 = createDiv('col-md-9', null, [createInput('text', 'form-control', imported[0], imported[1], null, null, null)]);
+    div2 = createDiv('col-md-9', null, [createInput('text', 'form-control', imported[0], imported[1], null, null, null, null)]);
   }
 
   var form = document.getElementsByClassName('in active')[0].childNodes[0].childNodes[0];
@@ -83,9 +83,9 @@ function selectMusic (event, imported) {
   var btnAdd = createButton('button', 'btn btn-default addChamp', 'modal', '#myModal', null);
   var btnDelete = createButton('button', 'btn btn-default deleteChamp', null, null, null);
   var btnPlay = createButton('button', 'btn btn-default playChamp', null, null, null);
-  btnAdd.appendChild(createInput('image', null, null, null, 'add.png', null, null));
-  btnDelete.appendChild(createInput('image', 'deleteChamp', null, null, 'delete.png', null, null));
-  btnPlay.appendChild(createInput('image', 'playChamp', null, null, 'play.png', null, null));
+  btnAdd.appendChild(createInput('image', null, null, null, 'add.png', null, null, 'Ajouter un nouveau champ'));
+  btnDelete.appendChild(createInput('image', 'deleteChamp', null, null, 'delete.png', null, null, 'Supprimer ce champ'));
+  btnPlay.appendChild(createInput('image', 'playChamp', null, null, 'play.png', null, null, 'Ecouter le contenu du champ'));
 
   var div3 = createDiv('col-md-4', null, [btnAdd]);
   var div4 = createDiv('col-md-4', null, [btnDelete]);
@@ -106,12 +106,17 @@ function selectMusic (event, imported) {
     // ajout des btn add et delete au champ précédent si il existe
     if (form.length != 0) {
       // recupérer le texte saisi avant de remplacer
-      var textContent = form.childNodes[form.length-1].childNodes[0].childNodes[0].childNodes[0].value;
-      // recréer le input et le div form-group
-      div2 = createDiv('col-md-9', null, [createTextarea('form-control', 'legende', textContent)]);
+      var textContent = form.childNodes[form.childNodes.length-1].childNodes[0].childNodes[0].childNodes[0].value;
+
+      // recréer le input ou textarea et le div form-group
+      if (form.childNodes[form.childNodes.length-1].childNodes[0].childNodes[0].childNodes[0].tagName == 'INPUT') {
+        div2 = createDiv('col-md-9', null, [createInput('text', 'form-control', null, textContent, null, null, null, null)]);
+      } else {
+        div2 = createDiv('col-md-9', null, [createTextarea('form-control', 'legende', textContent)]);
+      }
       div = createDiv('form-group', null, [createDiv('row', null, [div2, createDiv('col-md-3', null, [createDiv('row', null, [div3, div4, div5])])])]);
       // recréer le champ précédent avec les boutons add et delete
-      form.replaceChild(div, form.childNodes[form.length-1]);
+      form.replaceChild(div, form.childNodes[form.childNodes.length-1]);
     } else {
       // s'il s'agit d'une famille il faut juste supprimer le tab correspondant
       if (document.getElementsByClassName('nav-tabs nav')[0].style.display == 'block') {
@@ -164,6 +169,7 @@ function closeTab (element) {
   if (document.getElementsByClassName('menu active')[0]) {
     document.getElementsByClassName('menu active')[0].childNodes[0].click();
   }
+  idMenu--;
 }
 
 // effacer la liste des musiques avant de fermer le popup musique
@@ -195,12 +201,13 @@ function importFile () {
 function exportFile (family) {
   var img, nameFile;
   if (family) { // si on a une famille à enregistrer
-    img = document.getElementById('affichageFamille').childNodes[1].childNodes[1].childNodes[3].childNodes[1].childNodes[0];
-    nameFile = document.getElementById('nameFamily').value + '.jpeg'; // nom de la famille
+    img = $('#affichageFamille')[0].childNodes[1].childNodes[1].childNodes[3].childNodes[1].childNodes[0];
+    nameFile = $('#nameFamily')[0].value + '.jpeg'; // nom de la famille
     //document.getElementsByClassName('menu active')[0].childNodes[0].textContent; // nom du fichier = nom de l'onglet
-    exportFamily(); // pour enregistrer tous les qrcode en meme temps
+    console.log(tabQRCode);
+  //  exportFamily(); // pour enregistrer tous les qrcode en meme temps
   } else {
-    img = document.getElementsByTagName('IMG')[0];
+    img = $('#affichageqr')[0].childNodes[1].childNodes[0];
     nameFile = 'image.jpeg'; // nom du ficher par defaut
   }
 
@@ -218,33 +225,28 @@ function exportFile (family) {
       filesaver.saveAs(xhr.response, nameFile);
 
       if (family) {
-        for (var i = 0; i < tabQRCode.length; i++) {
-          var qrcode = tabQRCode[i];
-          var filename = qrcode.getNomQRCode()+'.jpeg';
+        //exportFamily();
+        // recupérer tous les formulaires et menus (tabForm.length == tabOnget.length)
+        var tabForm = document.getElementsByClassName('tab-pane fade');
+        var tabOnget = document.getElementsByClassName('menu');
 
-          $.get(__dirname+'/'+qrcode.getNomQRCode()+'.jpeg')
-            .done(function() {
-              // exists code
-              console.log('fichier existe');
-              var date = new Date;
-              filename = qrcode.getNomQRCode()+'-'+date.getHours()+'-'+date.getMinutes()+'-'+date.getSeconds()+'-'+date.getFullYear()+'-'+date.getMonth()+'-'+date.getDate()+'.jpeg';
-            })
-            .fail(function() {
+        // parcourir simultanément formulaire et tab
+        for (var i = 0; i < tabForm.length; i++) {
+          console.log(tabForm[i]);
+          setActive(tabForm[i], tabOnget[i]);
+          previewQRCode(true);
 
-            })
-            .always(function() {
-              // enegistrer le qrcode atomatiquement
-              var imgData = $('#affichageqr')[0].childNodes[1].childNodes[0].src;
+          var filename = $('li.active.menu')[0].childNodes[0].textContent + '.jpeg'
+          // enegistrer le qrcode atomatiquement
+          var imgData = $('#affichageqr')[0].childNodes[1].childNodes[0].src;
 
-              var data = imgData.replace(/^data:image\/\w+;base64,/, '');
-
-              fs.writeFile(filename, data, {encoding: 'base64'}, function(err) {
-                if (err) {
-                  console.log('err', err);
-                }
-                //success
-              });
-            });
+          var data = imgData.replace(/^data:image\/\w+;base64,/, '');
+          fs.writeFile(filename, data, {encoding: 'base64'}, function(err) {
+            if (err) {
+              console.log('err', err);
+            }
+            //success
+          });
         }
       }
     }
@@ -260,6 +262,7 @@ function exportFamily () {
   var tabOnget; // tableau de tous les menus
 
   tabQRCode = [];
+
   // recupérer tous les formulaires et menus (tabForm.length == tabOnget.length)
   tabForm = document.getElementsByClassName('tab-pane fade');
   tabOnget = document.getElementsByClassName('menu');
@@ -268,9 +271,9 @@ function exportFamily () {
   for (var i = 0; i < tabForm.length; i++) {
     console.log(tabForm[i]);
     setActive(tabForm[i], tabOnget[i]);
+
      // generer le qrcode du formulaire aactive et le mettre dans le tableau de qrcode
     var qrcode = previewQRCode(true);
-    qrcode.ajouterAFamille(document.getElementById('nameFamily').value, i+1);
     tabQRCode.push(qrcode);
   }
 }
@@ -406,6 +409,10 @@ function previewQRCode (famille) {
       document.getElementById('initView').style.display = 'block'; // afficher le bouton terminer
 
       if (famille) {
+        //console.log(facade.genererQRCode(document.getElementById('affichageqr').childNodes[1], qrcode));
+        // calculer le numéro de l'onglet
+        //qrcode.ajouterAFamille($('#nameFamily')[0].value, $('li.active.menu')[0].childNodes[0].getAttribute('href').match(/\d+/g).join(''));
+        console.log(qrcode);
         return qrcode;
       }
     }
@@ -418,8 +425,7 @@ function previewQRCode (famille) {
 function copyContentToQRCode (qrcode, input) {
   // tester s'il s'agit d'un input de musique
   if(input.disabled) {
-    var url = 'https://drive.google.com/open?id=' + input.id;
-    qrcode.ajouterFichier(url, input.value);
+    qrcode.ajouterFichier(input.id, input.value);
   } else {
     qrcode.ajouterTexte(input.value);
   }
@@ -440,6 +446,7 @@ function copyContentToQRCode (qrcode, input) {
   // mettre le nom de l'onglet si on a une famille
   if (document.getElementsByClassName('nav nav-tabs')[0].style.display == 'block') {
     qrcode.setNomQRCode(document.getElementsByClassName('menu active')[0].childNodes[0].textContent);
+    qrcode.ajouterAFamille($('#nameFamily')[0].value, $('li.active.menu')[0].childNodes[0].getAttribute('href').match(/\d+/g).join(''));
   }
 
   // enregistrer le qrcode dans le tableau
@@ -483,8 +490,8 @@ function switchTab (event, create) {
       }
     }
     // ajouter les boutons add et del sur l'onglet courant
-    inputAdd = createInput('image', 'addTabs', null, null, 'add.png', 'modal', '#modalNameQRCode');
-    inputDel = createInput('image', 'closeTab', null, null, 'delete.png', null, null);
+    inputAdd = createInput('image', 'addTabs', null, null, 'add.png', 'modal', '#modalNameQRCode', 'Ajouter un nouveau champ');
+    inputDel = createInput('image', 'closeTab', null, null, 'delete.png', null, null, 'Supprimer ce champ');
     inputAdd.disabled = false;
     inputDel.disabled = false;
   }
