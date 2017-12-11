@@ -425,8 +425,7 @@ function previewQRCode (famille) {
 function copyContentToQRCode (qrcode, input) {
   // tester s'il s'agit d'un input de musique
   if(input.disabled) {
-    var url = 'https://drive.google.com/open?id=' + input.id;
-    qrcode.ajouterFichier(url, input.value);
+    qrcode.ajouterFichier(input.id, input.value);
   } else {
     qrcode.ajouterTexte(input.value);
   }
