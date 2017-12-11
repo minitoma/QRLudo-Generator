@@ -120,11 +120,13 @@ function listFiles(auth, callback) {
 function listMusic (content){
   var div = document.getElementById('modalMusic').childNodes[1].childNodes[1].childNodes[3];
   for (var i = 0; i < content.length; i++) {
-      var a = document.createElement('a');
-      a.setAttribute('class', 'hrefMusic');
-      a.setAttribute('href', '#' + content[i].id);
-      a.appendChild(document.createTextNode(content[i].name));
-    div.appendChild(createDiv('col-md-12 text-center', '', [a]));
+      if (content[i].name.endsWith(".mp3")){
+        var a = document.createElement('a');
+        a.setAttribute('class', 'hrefMusic');
+        a.setAttribute('href', '#' + content[i].id);
+        a.appendChild(document.createTextNode(content[i].name));
+        div.appendChild(createDiv('col-md-12 text-center', '', [a]));
+      }
   }
 }
 
