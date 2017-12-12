@@ -65,7 +65,7 @@ class QRCodeAtomique extends QRCode{
     }
 
     /*
-    * Renvoie le texte contenu à l'indice passé en paramètre
+    * Renvoie le texte contenu à l'indice passé en paramètre  
     */
     getTexte(indice){
       this.testIndiceContenuCorrect(indice);

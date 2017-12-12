@@ -8,8 +8,8 @@
 */
 class ImageGenerator{
 
-  constructor(){
-    this.compresseur = new CompresseurTexte();
+  constructor(compresseur){
+    this.compresseur = compresseur;
   }
 
   /*
@@ -19,7 +19,7 @@ class ImageGenerator{
 
      var jq = window.jQuery;
      var size = 450;
-     
+
      var donneesQR = this.compresseur.compresser(qrcode.getDonneesUtilisateur());
 
      var texteBraille = qrcode.getTexteBraille();
@@ -326,46 +326,5 @@ class ImageGenerator{
 
       return image;
     }
-
-    //https://davidwalsh.name/convert-xml-json
-    // Changes XML to JSON
-    xmlToJson(xml) {
-
-    	// Create the return object
-    	var obj = {};
-
-    	if (xml.nodeType == 1) { // element
-    		// do attributes
-    		if (xml.attributes.length > 0) {
-    		obj["@att"] = {};
-    			for (var j = 0; j < xml.attributes.length; j++) {
-    				var attribute = xml.attributes.item(j);
-    				obj["@att"][attribute.nodeName] = attribute.nodeValue;
-    			}
-    		}
-    	} else if (xml.nodeType == 3) { // text
-    		obj = xml.nodeValue;
-    	}
-
-    	// do children
-    	if (xml.hasChildNodes()) {
-    		for(var i = 0; i < xml.childNodes.length; i++) {
-    			var item = xml.childNodes.item(i);
-    			var nodeName = item.nodeName;
-    			if (typeof(obj[nodeName]) == "undefined") {
-    				obj[nodeName] = this.xmlToJson(item);
-    			} else {
-    				if (typeof(obj[nodeName].push) == "undefined") {
-    					var old = obj[nodeName];
-    					obj[nodeName] = [];
-    					obj[nodeName].push(old);
-    				}
-    				obj[nodeName].push(this.xmlToJson(item));
-    			}
-    		}
-    	}
-    	return obj;
-  }
-
 
 }
