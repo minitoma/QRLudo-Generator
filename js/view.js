@@ -112,7 +112,8 @@ function createTextBox (textContent) {
   form.appendChild(div);
 
   // ajouter un eventlistener sur playChamp pour lire le champ sur click du bouton
-  btnPlay.addEventListener('click', function(){
+  btnPlay.addEventListener('click', function(event){
+    console.log(event.target);
     var texte = event.target.parentNode.parentNode.parentNode.parentNode.childNodes[0].childNodes[0].value;
     getForm(texte);
   });
