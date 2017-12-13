@@ -9,7 +9,6 @@ Il faut installer le projet et activer l'api googe drive avant de déployer et d
 
 ## Pour activer l'api de google drive
     $ node quickstart.js
-	![alt text](https://github.com/minitoma/QRLudo-Generator/tree/master/img/qrludo.png)
     Ensuite aller sur le lien internet généré (se connecter éventuellement sur le compte google).
     Enfin copier le code généré sur le terminal.
 
