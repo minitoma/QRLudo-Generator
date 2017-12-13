@@ -1,15 +1,11 @@
 # QRCode_Generator
-Application pour générer des QR-Codes. Il faut initialiser d'abord le projet avant d'installer les librairies.
-Si le projet est déjà initialisé, on peut directement installer les librairies.
+Application pour générer des QR-Codes qui seront lus (synthése vocale), à l'aide d'une application android.
+Il faut installer le projet et activer l'api googe drive avant de déployer et d'executer le logiciel créé.
 
-## Pour initialiser le projet
-    $ make init
-
-## Pour installer les librairies
+## Pour installer le projet
+    $ git clone https://github.com/minitoma/QRLudo-Generator.git
+    $ cd QRLudo-Generator
     $ make install
-
-## Pour supprimer les librairies
-    $ make uninstall
 
 ## Pour activer l'api de google drive
     $ node quickstart.js
@@ -18,4 +14,9 @@ Si le projet est déjà initialisé, on peut directement installer les librairie
 
 ## Pour déployer l'Application
     $ make release
-    si erreur lors du packaging, remplacer dans le `makefile` `./node_modules/.bin/electron` par `electron`.
+
+## Pour executer 
+    $ ./QRLudo-Generator
+
+## Pour supprimer les librairies
+    $ make uninstall
