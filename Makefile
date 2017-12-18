@@ -13,13 +13,13 @@ LIBS=	electron --save-dev \
 install:
 	@echo "Installation / Mise à jour de Node.js"
 	@sudo apt-get update
-	@sudo apt-get install nodejs npm
+	@sudo apt-get -y install nodejs npm nodejs-legacy
 	@echo "Installation des librairies requises"
 	@npm install $(LIBS)
 	@# Installation de jquery-qrcode-0.14.0
 	@mkdir jquery-qrcode-temp
-	@wget https://release.larsjung.de/jquery-qrcode/jquery-qrcode-0.14.0.zip
-	@unzip jquery-qrcode-0.14.0.zip -d jquery-qrcode-temp
+	@wget -q https://release.larsjung.de/jquery-qrcode/jquery-qrcode-0.14.0.zip
+	@unzip -q jquery-qrcode-0.14.0.zip -d jquery-qrcode-temp
 	@cp jquery-qrcode-temp/*.js ./node_modules/jquery/
 	@rm -rf jquery-qrcode-temp jquery-qrcode-0.14.0.zip
 
