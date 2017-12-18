@@ -11,6 +11,9 @@ LIBS=	electron --save-dev \
 	braille
 
 install:
+	@echo "Installation / Mise à jour de Node.js"
+	@sudo apt-get update
+	@sudo apt-get install nodejs npm
 	@echo "Installation des librairies requises"
 	@npm install $(LIBS)
 	@# Installation de jquery-qrcode-0.14.0
