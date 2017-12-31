@@ -5,7 +5,7 @@ Il faut installer le projet et activer l'api googe drive avant de déployer et d
 ## Pour installer le projet
     $ git clone https://github.com/minitoma/QRLudo-Generator.git
     $ cd QRLudo-Generator
-    $ make install
+    $ sudo make install
 
 ## Pour activer l'api de google drive
     $ node quickstart.js
@@ -13,10 +13,10 @@ Il faut installer le projet et activer l'api googe drive avant de déployer et d
     Enfin copier le code généré sur le terminal.
 
 ## Pour déployer l'Application
-    $ make release
+    $ sudo make release
 
 ## Pour executer 
     $ ./QRLudo-Generator
 
 ## Pour supprimer les librairies
-    $ make uninstall
+    $ sudo make uninstall
