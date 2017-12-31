@@ -1,3 +1,0 @@
-le nom d'un fichier xml ne doit pas contenir d'espace
-chemin du fichier xml à charger à définir en fonction de la machine et du systéme du client. Pour le moment les fichiers se trouvent dans la racine du projet
-penser à utiliser une variable globale __dirname

@@ -1,3 +1,42 @@
+/*
+// voir les erreurs en alert
+window.onerror = function (msg, url, lineNo, columnNo, error) {
+    var string = msg.toLowerCase();
+    var substring = "script error";
+    if (string.indexOf(substring) > -1){
+        alert('Script Error: See Browser Console for Detail');
+    } else {
+        var message = [
+            'Message: ' + msg,
+            'URL: ' + url,
+            'Line: ' + lineNo,
+            'Column: ' + columnNo,
+            'Error object: ' + JSON.stringify(error)
+        ].join(' - ');
+
+        alert(message);
+    }
+    return false;
+};
+*/
+
+// essayer de charger tous les modules nécessaires, sinon erreur renvoyée
+try {
+  require(__dirname + '/node_modules/bootstrap/');
+  require(__dirname + '/node_modules/braille/');
+  require(__dirname + '/node_modules/electron/');
+  require(__dirname + '/node_modules/electron-debug/');
+  require(__dirname + '/node_modules/electron-packager/');
+  require(__dirname + '/node_modules/file-saver/');
+  require(__dirname + '/node_modules/google-auth-library/');
+  require(__dirname + '/node_modules/google-tts-api/');
+  require(__dirname + '/node_modules/googleapis/');
+  require(__dirname + '/node_modules/jquery/');
+  require(__dirname + '/node_modules/jquery-qrcode/');
+  require(__dirname + '/node_modules/piexifjs/');
+} catch (ex) {
+  alert(ex);
+}
 
 $(document).ready(function() {
 
