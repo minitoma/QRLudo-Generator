@@ -1,23 +1,31 @@
-LIBS=	electron --save-dev \
-	jquery --save \
-	jquery-qrcode \
-	bootstrap \
+LIBS=bootstrap \
+	braille \
+	electron --save-dev \
 	electron-debug \
-	googleapis --save \
+	file-saver \
 	google-auth-library --save \
 	google-tts-api --save \
-	piexifjs \
-	file-saver \
-	braille \
-	bower
+	googleapis --save \
+	jquery --save \
+	jquery-qrcode \
+	piexifjs
 
 install:
 	@echo "Installation / Mise à jour de Node.js"
-	@sudo apt-get update
-	@sudo apt-get -y install nodejs npm nodejs-legacy
+
+	sudo apt-get update
+	sudo curl -sL https://deb.nodesource.com/setup_9.x | sudo -E bash -
+	sudo apt-get install -y nodejs
+	sudo apt-get install -y build-essential
+
 	@echo "Installation des librairies requises"
-	@npm install $(LIBS)
-	@bower install lrsjng/jquery-qrcode
+	sudo npm install $(LIBS)
+	@# Installation de jquery-qrcode-0.14.0
+	sudo mkdir jquery-qrcode-temp
+	sudo wget -q https://release.larsjung.de/jquery-qrcode/jquery-qrcode-0.14.0.zip
+	sudo unzip -q jquery-qrcode-0.14.0.zip -d jquery-qrcode-temp
+	sudo cp jquery-qrcode-temp/*.js ./node_modules/jquery/
+	sudo rm -rf jquery-qrcode-temp jquery-qrcode-0.14.0.zip
 
 uninstall:
 	npm uninstall $(LIBS)
