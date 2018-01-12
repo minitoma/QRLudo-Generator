@@ -151,3 +151,25 @@ body > div > section.row > div > div.col-lg-6.colMiddle > ul > li.active > a {
   border-top-right-radius: 5px;
   margin: 0;
 }
+
+#content-item {
+  display: none;
+}
+
+div.tab-content-qrcode-family.row {
+  display: none;
+}
+div.tab-content-qrcode-family.row > div.tab-content-liste.col-md-3 {
+  border: 1px solid;
+  width: inherit;
+}
+
+div.tab-content-qrcode-family.row > div.tab-content-liste-content.col-md-9 {
+  border: 1px solid;
+  margin-left: 25px;
+}
+
+ul#sortable > li > span {
+  margin-left: -10px;
+  display: block;
+}

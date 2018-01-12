@@ -21,7 +21,7 @@ window.onerror = function (msg, url, lineNo, columnNo, error) {
 */
 
 // essayer de charger tous les modules nécessaires, sinon erreur renvoyée
-try {
+/*try {
   require(__dirname + '/node_modules/bootstrap/');
   require(__dirname + '/node_modules/braille/');
   require(__dirname + '/node_modules/electron/');
@@ -36,7 +36,7 @@ try {
   require(__dirname + '/node_modules/piexifjs/');
 } catch (ex) {
   alert(ex);
-}
+}*/
 
 $(document).ready(function() {
 
@@ -49,6 +49,19 @@ $(document).ready(function() {
       var y = $(event.relatedTarget).text();  // previous tab
       $(".act span").text(x);
       $(".prev span").text(y);
+  });
+
+  // pour rendre les listes sortables
+  $(function() {
+    $("#sortable").sortable();
+    $("#sortable").disableSelection();
+  });
+
+  $(function(){
+    $('#sortable > li').click(function(event){
+      $('.tab-content-liste-content > div').css('display', 'none');
+      $('.tab-content-liste-content > div.'+event.target.id).css('display', 'block');
+    });
   });
 
   // desactiver les boutons preview et lire s'il y a rien à lire ou preview

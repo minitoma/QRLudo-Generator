@@ -13,7 +13,12 @@
     <script src="./Model/QRCodeAtomique.js"></script>
     <script src="./Model/DictionnaireXml.js"></script>
 
-	<script src="./node_modules/jquery/jquery-qrcode-0.14.0.min.js"></script> 
+    <!-- scripts pour sortable -->
+    <script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <!-- fin script pour sortable-->
+
+	  <script src="./node_modules/jquery/jquery-qrcode-0.14.0.min.js"></script>
     <script src="./node_modules/jquery/jquery-qrcode-0.14.0.js"></script>
     <script src="./node_modules/piexifjs/piexif.js"></script>
 
@@ -28,6 +33,7 @@
 
     <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="./css/styles.css">
+
 
   </head>
 
@@ -244,7 +250,8 @@
               <!-- Les tabs -->
             </ul>
 
-            <div class="tab-content">
+            <!-- contenu d'un qrcode unique -->
+            <div class="tab-content-qrcode-unique">
             <!-- Contenu des tab -->
 <!--
               <div class="row" id="content-form">
@@ -261,9 +268,28 @@
                       </textarea>
                     </div>
                 </div>
-
-
               -->
+            </div>
+
+            <!-- contenu d'une famille de qrcode -->
+            <div class="tab-content-qrcode-family row">
+              <div class="tab-content-liste col-md-3">
+                <ul id="sortable" class="list-group">
+                  <!-- chaque item représente un qrcode
+                  <li id="item"> item </li>
+                  -->
+                </ul>
+                <input type="image" src="./img/add.png" data-toggle="modal" data-target="#modalNameQRCode" title="Ajouter un nouveau qrcode">
+              </div>
+
+              <div class="tab-content-liste-content col-md-9">
+              <!--
+                <div id="content-item" class="item1">
+                  content item 1
+                </div>
+              -->
+              </div>
+
             </div>
             <!--    <form id="myForm">  -->
                   <!-- Les champs de texte ou de musique seront ajoutés automatiquement par la fonction createTextBox()   -->
@@ -271,6 +297,8 @@
       <!--        </div>    -->
 
 					</div>
+
+
 
 					<div class="col-lg-3 colRight">
 

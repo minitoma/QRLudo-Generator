@@ -29,13 +29,12 @@ $(document).ready(function() {
     baseViewQRCodeAtomique(createTextBox);
   }); // création d'un qrcode atomique
   document.getElementById('setNameQRCode').addEventListener('click', function(){
-    createTabs();
+    createItems();
     document.getElementById('creer').disabled = true;
     document.getElementById('import').disabled = true;
     //baseViewQRCodeEnsemble(createTextBox);
   }); // creation d'une famille de qrcode atomique
 });
-
 
 // fcontion pour créer un label
 function createLabel (fore, texte) {
@@ -204,6 +203,46 @@ function createImg(id, src) {
   if (id) img.setAttribute('id', id);
   if (src) img.setAttribute('src', src);
   return img;
+}
+
+/*
+ fonction pour créér des items
+ si imported = true : cette fonction est appelée pour recréer une famille de qrcode
+*/
+function createItems (imported) {
+  $('#nameFamily').css('display', 'block');
+  $('div.tab-content-qrcode-family.row').css('display', 'block');
+
+  var li = document.createElement('LI');
+  li.setAttribute('id', $('#nameQRCode').val());
+  li.setAttribute('class', 'list-group-item');
+  li.appendChild(document.createTextNode($('#nameQRCode').val()));
+  $('ul#sortable').append(li);
+
+  $('ul#sortable > li').click(function(){
+    $('.tab-content-liste-content > div').css('display', 'none');
+    $('ul#sortable > li').removeClass('active');
+    $(this).addClass('active');
+    $('.tab-content-liste-content > div.'+this.id).css('display', 'block');
+  });
+
+  var p = document.createElement('P');
+  p.appendChild(document.createTextNode($('#nameQRCode').val()));
+  var div = createDiv($('#nameQRCode').val(), 'content-item', [document.createTextNode($('#nameQRCode').val())]);
+
+  //ajout du bouton pour supprimer un qrcode.
+  var inputDel = createInput('image', null, null, null, 'delete.png', null, null, 'Supprimer ce qrcode');
+  inputDel.disabled = false;
+  div.append(inputDel);
+  $('div.tab-content-liste-content').append(div);
+
+  //supprimer l'item et le content-item
+  $('div#content-item > input[type="image"]').click(function(){
+    $(this).parent().remove();
+    $('li#'+$(this).parent().attr('class')).remove();
+  });
+
+  $('ul#sortable > li:last-child').click();
 }
 
 /*
