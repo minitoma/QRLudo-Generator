@@ -10,8 +10,10 @@ $(document).ready(function() {
     closeModalMusique(event);
   }); // sur clic du bouton closeModalMusique
 
-  document.getElementsByClassName('set-legende')[0].addEventListener('click', function(){
-    createTextBox('');
+  $('button.set-legende').click(function(){
+  //document.getElementsByClassName('set-legende')[0].addEventListener('click', function(){
+  createItemContent($('li.active').attr('id'));
+    //createTextBox('');
   }); // sur clic du bouton creer champ texte
 
   document.getElementById('read').addEventListener('click', function(){
@@ -28,12 +30,24 @@ $(document).ready(function() {
   document.getElementById('createQRCodeAtomique').addEventListener('click', function(){
     baseViewQRCodeAtomique(createTextBox);
   }); // création d'un qrcode atomique
-  document.getElementById('setNameQRCode').addEventListener('click', function(){
-    createItems();
-    document.getElementById('creer').disabled = true;
-    document.getElementById('import').disabled = true;
-    //baseViewQRCodeEnsemble(createTextBox);
+
+  $('#setNameQRCode').click(function(e){
+    if ($('#nameQRCode').val()) {
+      createItems();
+      $('#creer').attr('disabled', true);
+      $('#import').attr('disabled', true);
+    } else {
+      e.preventDefault();
+    }
   }); // creation d'une famille de qrcode atomique
+
+  $('#nameQRCode').keypress(function(e){
+    var key = e.keyCode;
+    if (!(key >= 65 && key <= 90) && !(key >= 97 && key <= 122)) {
+      e.preventDefault();
+    }
+  });
+
 });
 
 // fcontion pour créer un label
@@ -49,7 +63,8 @@ function createTextarea (classe, id, textcontent) {
   var textarea = document.createElement('textarea');
   if (classe) textarea.setAttribute('class', classe);
   idInputText++;
-  if (id) textarea.setAttribute('id', id+idInputText);
+  //if (id) textarea.setAttribute('id', id+idInputText);
+  if (id) textarea.setAttribute('id', id);
   if (textcontent) textarea.appendChild(document.createTextNode(textcontent));
   textarea.setAttribute('placeholder', 'Mettre la légende');
   return textarea;
@@ -82,6 +97,88 @@ function createButton(type, classe, datatoggle, datatarget, texte) {
   return button;
 }
 
+function createClickableImg (classe, src, title) {
+  var a = document.createElement('A');
+  var img = document.createElement('IMG');
+  img.setAttribute('class', 'clickableImg '+ classe)
+  img.setAttribute('src', __dirname+'/img/'+src);
+  img.setAttribute('title', title);
+
+  if (src == 'add.png') {
+    img.setAttribute('data-toggle', 'modal')
+    img.setAttribute('data-target', '#myModal');
+  }
+
+  a.append(img);
+  return a;
+}
+
+// créer le contenu d'un item à partir de l'id renseigné.
+function createItemContent (id) {
+  var textarea = createTextarea('form-control', 'legende', null);
+  var div2 = createDiv('col-md-12', null, [textarea]);
+
+  var btnAdd    =   createClickableImg('addChamp', 'add.png', 'Ajouter un nouveau champ');
+  var btnDelete =   createClickableImg('deleteChamp', 'delete.png', 'Supprimer ce champ');
+  var btnPlay   =   createClickableImg('playChamp', 'play.png', 'Ecouter le contenu du champ');
+
+  var span = document.createElement('SPAN');
+  span.append(btnAdd, btnDelete, btnPlay);
+  var div3 = createDiv('col-md-12 optButton', null, [span]);
+
+  var div = createDiv('form-group', null, [createDiv('row', null, [div2, div3])]);
+  var form = $('div#content-item.'+id).find($('form#myFormActive'));
+  form.append(div);
+
+  $('div#content-item').find('img.deleteChamp').click(function(){
+    $(this).parents('div.form-group').remove();
+    /*if (form.length != 0) {
+      // recupérer le texte saisi avant de remplacer
+      var textContent = form.childNodes[form.childNodes.length-1].childNodes[0].childNodes[0].childNodes[0].value;
+
+      // recréer le input ou textarea et le div form-group
+      if (form.childNodes[form.childNodes.length-1].childNodes[0].childNodes[0].childNodes[0].tagName == 'INPUT') {
+        div2 = createDiv('col-md-9', null, [createInput('text', 'form-control', null, textContent, null, null, null, null)]);
+      } else {
+        div2 = createDiv('col-md-9', null, [createTextarea('form-control', 'legende', textContent)]);
+      }
+      div = createDiv('form-group', null, [createDiv('row', null, [div2, createDiv('col-md-3', null, [createDiv('row', null, [div3, div4, div5])])])]);
+      // recréer le champ précédent avec les boutons add et delete
+      form.replaceChild(div, form.childNodes[form.childNodes.length-1]);
+    } else {
+      // s'il s'agit d'une famille il faut juste supprimer le tab correspondant
+      if (document.getElementsByClassName('nav-tabs nav')[0].style.display == 'block') {
+        //closeTab();
+        document.getElementsByClassName('nav-tabs nav')[0].removeChild(document.getElementsByClassName('active menu')[0]);
+        document.getElementsByClassName('tab-content')[0].removeChild(document.getElementsByClassName('tab-pane fade active in')[0]);
+        if (document.getElementsByClassName('menu')[0]) {
+          document.getElementsByClassName('menu')[0].childNodes[0].click();
+        } else {
+          init_View();
+        }
+
+      } else {
+        // il n' y a plus de champ on réinitilise l'application
+        init_View();
+      }
+    }*/
+  });
+
+  // ajouter un eventlistener sur playChamp pour lire le champ sur click du bouton
+  $('div#content-item').find('img.playChamp').click(function(event){
+    console.log(event.target);
+    var texte = event.target.parentNode.parentNode.parentNode.parentNode.childNodes[0].childNodes[0].value;
+    getForm(texte);
+  });
+
+
+  // activer les boutons preview et lire
+  $('#preview').attr('disabled', false);
+  $('#read').attr('disabled', false);
+
+  $('#closeModal').trigger('click'); // fermer le popup d'ajout d'un nouveau champ
+}
+
 // Générer une zone de texte
 function createTextBox (textContent) {
   /*
@@ -98,7 +195,9 @@ function createTextBox (textContent) {
 */
   var div2 = createDiv('col-md-9', null, [createTextarea('form-control', 'legende', textContent)]);
   var btnAdd = createButton('button', 'btn btn-default addChamp', 'modal', '#myModal', null);
-  var btnDelete = createButton('button', 'btn btn-default deleteChamp', null, null, null);
+  var btnDelete = createInput('image', null, null, null, 'delete.png', null, null, 'Supprimer ce qrcode');
+  btnDelete.disabled = false;
+  //var btnDelete = createButton('button', 'btn btn-default deleteChamp', null, null, null);
   var btnPlay = createButton('button', 'btn btn-default playChamp', null, null, null);
   btnAdd.appendChild(createInput('image', null, null, null, 'add.png', null, null, 'Ajouter un nouveau champ'));
   btnDelete.appendChild(createInput('image', 'deleteChamp', null, null, 'delete.png', null, null, 'Supprimer ce champ'));
@@ -107,7 +206,8 @@ function createTextBox (textContent) {
   var div4 = createDiv('col-md-4', null, [btnDelete]);
   var div5 = createDiv('col-md-4', null, [btnPlay]);
   var div = createDiv('form-group', null, [createDiv('row', null, [div2, createDiv('col-md-3', null, [createDiv('row', null, [div3, div4, div5])])])]);
-  var form = document.getElementsByClassName('in active')[0].childNodes[0].childNodes[0];
+  //var form = document.getElementsByClassName('in active')[0].childNodes[0].childNodes[0];
+  var form = document.getElementById('myFormActive');
   form.appendChild(div);
 
   // ajouter un eventlistener sur playChamp pour lire le champ sur click du bouton
@@ -228,7 +328,8 @@ function createItems (imported) {
 
   var p = document.createElement('P');
   p.appendChild(document.createTextNode($('#nameQRCode').val()));
-  var div = createDiv($('#nameQRCode').val(), 'content-item', [document.createTextNode($('#nameQRCode').val())]);
+  //var div = createDiv($('#nameQRCode').val(), 'content-item', [document.createTextNode('Fermer')]);
+  var div = createDiv($('#nameQRCode').val(), 'content-item', null);
 
   //ajout du bouton pour supprimer un qrcode.
   var inputDel = createInput('image', null, null, null, 'delete.png', null, null, 'Supprimer ce qrcode');
@@ -237,12 +338,43 @@ function createItems (imported) {
   $('div.tab-content-liste-content').append(div);
 
   //supprimer l'item et le content-item
-  $('div#content-item > input[type="image"]').click(function(){
+  $('div#content-item > input[title="Supprimer ce qrcode"]').click(function(){
     $(this).parent().remove();
     $('li#'+$(this).parent().attr('class')).remove();
+    $('ul#sortable > li:first-child').click();
   });
 
   $('ul#sortable > li:last-child').click();
+
+  var html =
+      '<div class="row" id="content-form">'+
+        '<form id="myFormActive"></form>'+
+    '</div>';
+
+  $('.tab-content-liste-content > #content-item:last-child').append(html);
+
+  // bouton pour fermer annuler la création du qrcode et champ pour braille au milieu du qrcode
+  html =
+    '<div class="row"><div class="col-md-6 text-center"><input type="checkbox" id="checkBraille">Texte en braille</div>'+
+    '<div class="col-md-6 text-center"><input type="color" id="colorQR" title="Couleur du QRCode"/></div></div>'+
+        //'<button type="button" class="btn btn-default" id="closeForm">Annuler</button>'+
+    '<div class="row" style="display:none;"><div class="col-md-3 text-center"><input type="text" id="braille" title="Texte en braille" maxlength="2"></div>'+
+    '<div class="col-md-3 text-center"><input type="color" id="colorBraille" title="Couleur du texte en braille"/></div>'+
+    '<div class="col-md-6 text-center"></div></div>';
+
+  $('.tab-content-liste-content > #content-item:last-child > #content-form').append(html);
+
+  // ajouter un eventlistener au checbox pour afficher ou masquer les options du braille
+  $('#checkBraille').change(function(){
+    if (this.checked) {
+      document.getElementById('braille').parentNode.parentNode.style.display = 'block';
+    } else {
+      document.getElementById('braille').parentNode.parentNode.style.display = 'none';
+    }
+  });
+
+  createItemContent($('li.active').attr('id'));
+
 }
 
 /*

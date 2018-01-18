@@ -141,17 +141,16 @@ function getForm (data) {
     texte = data;
   } else {
 
-    var form = document.getElementsByClassName('in active')[0].childNodes[0].childNodes[0];
+    var idActive = $('li.active').attr('id');
+    var form = $('div#content-item.'+idActive).find($('form#myFormActive'));
+    var tab = form.find('textarea, input');
     // parcourir le formulaire
-    for (var i=0; i<form.length; i++) {
+    for (var i=0; i<tab.length; i++) {
       try {
-          if (form.elements[i].type == "text" || form.elements[i].tagName == 'TEXTAREA') {
-            texte = texte + form.elements[i].value + ".";
-        } else {
-          console.log("pas de type texte");
-        }
+        texte = texte + tab[i].value + ".";
       } catch (err) {
-        document.getElementById(form.elements[i].id).innerHTML = err.message;
+        console.log(err);
+        //document.getElementById(tab[i].id).innerHTML = err.message;
       }
     }
   }

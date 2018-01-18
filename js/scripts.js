@@ -429,20 +429,20 @@ function previewQRCode (famille) {
   var qrcode = facade.creerQRCodeAtomique(); // instancier un objet qrcode
 
   // variable pour recupérer le formulaire
-  var form = document.getElementsByClassName('tab-pane fade active in')[0].childNodes[0].childNodes[0].childNodes;
+  var idActive = $('li.active').attr('id');
+  var form = $('div#content-item.'+idActive).find($('form#myFormActive'));
+  var tab = form.find('textarea, input');
 
   /* copier les données du formulaire dans le qrcode */
   if (form != null) {
     for(var i=0; i<form.length; i++) {
-      var element = form[i].childNodes[0].childNodes[0].childNodes[0];
+      var element = tab[i];
       //var form2 = form.childNodes[0].childNodes;
       console.log(element);
-      //for(var j=0; j<form2.length; j++) {
-        //switch (form2[j].childNodes[0].tagName) {
+
         switch (element.tagName) {
           case 'INPUT':
           case 'TEXTAREA':
-            //console.log(form2[j].childNodes[0].tagName);
             console.log(element.tagName);
             copyContentToQRCode(qrcode, element);
             break;
@@ -450,14 +450,13 @@ function previewQRCode (famille) {
           default:
             console.log(element.tagName);
         }
-      //}
     }
 
     if (facade.getTailleReelleQRCode(qrcode) > 500 ) {
       alert ("La taille de ce qr code dépasse le maximum autorisé (500).\nTaille = "+ facade.getTailleReelleQRCode(qrcode));
       qrcode = null;
     } else {
-      facade.genererQRCode(document.getElementById('affichageqr').childNodes[1], qrcode); // générer le qrcode
+        facade.genererQRCode(document.getElementById('affichageqr').childNodes[1], qrcode); // générer le qrcode
       document.getElementById('btnExportFile').disabled = false; // activer le bouton exporter
       document.getElementById('initView').style.display = 'block'; // afficher le bouton terminer
 
@@ -482,24 +481,25 @@ function copyContentToQRCode (qrcode, input) {
   } else {
     qrcode.ajouterTexte(input.value);
   }
-  // recupérer le div parent des div la couleur du qrcode et les options du braille
-  var row = document.getElementsByClassName('tab-pane fade active in')[0].childNodes[0];
+  // recupérer la couleur du qrcode et les options du braille
+  var idActive = $('li.active').attr('id');
   // copier la couleur du qrcode et du braille
-  qrcode.setColorQR(row.childNodes[1].childNodes[1].childNodes[0].value);
+  qrcode.setColorQR($('div#content-item.'+idActive).find('input#colorQR').value);
   // tester si le checkbox pour les options du braille est checked
-  if (row.childNodes[1].childNodes[0].childNodes[0].checked) {
+  if ($('div#content-item.'+idActive).find('input#checkBraille').checked) {
     // mettre la couleur et le texte en braille dans le qrcode
-    qrcode.setTexteBraille(row.childNodes[2].childNodes[0].childNodes[0].value);
-    qrcode.setColorBraille(row.childNodes[2].childNodes[1].childNodes[0].value);
+    qrcode.setTexteBraille($('div#content-item.'+idActive).find('input#braille').value);
+    qrcode.setColorBraille($('div#content-item.'+idActive).find('input#colorBraille').value);
   } else {
     qrcode.setTexteBraille('');
     qrcode.setColorBraille('');
   }
 
   // mettre le nom de l'onglet si on a une famille
-  if (document.getElementsByClassName('nav nav-tabs')[0].style.display == 'block') {
-    qrcode.setNomQRCode(document.getElementsByClassName('menu active')[0].childNodes[0].textContent);
-    qrcode.ajouterAFamille($('#nameFamily')[0].value, $('li.active.menu')[0].childNodes[0].getAttribute('href').match(/\d+/g).join(''));
+  if ($('input#nameFamily').css('display') == 'block') {
+    qrcode.setNomQRCode(idActive);
+    //qrcode.ajouterAFamille($('#nameFamily').val(), $('li.active.menu')[0].childNodes[0].getAttribute('href').match(/\d+/g).join(''));
+    qrcode.ajouterAFamille($('#nameFamily').val(), idActive);
   }
 
   // enregistrer le qrcode dans le tableau
