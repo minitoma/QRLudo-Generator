@@ -89,13 +89,12 @@ $(document).ready(function() {
     selectMusic(event, null);
   }); // sur clic d'un lien de musique
   document.getElementById('setImportedFile').addEventListener('click', importFile);
-  document.getElementById('btnExportFile').addEventListener('click', function(){
-    exportFile(false);
+
+  $('#btnExportFile, #saveFamily').click(function(){
+    exportFile();
   });
+
   document.getElementById('previewFamily').addEventListener('click',previewFamily);
-  document.getElementById('saveFamily').addEventListener('click', function(){
-    exportFile(true);
-  });
   $('#initView').click(function(){ init_View(); });
 
 });
@@ -241,16 +240,17 @@ function importFile () {
 /*
  fonction pour enregistrer une image de qrcode si famille = false sinon une image de famille
 */
-function exportFile (family) {
+function exportFile () {
   var img, nameFile;
-  if (family) { // si on a une famille à enregistrer
-    img = $('#affichageFamille')[0].childNodes[1].childNodes[1].childNodes[3].childNodes[1].childNodes[0];
-    nameFile = $('#nameFamily')[0].value + '.jpeg'; // nom de la famille
+  if (typeQR == 'famille') { // si on a une famille à enregistrer
+    img = $('#affichageFamille').find('img')[0];
+    nameFile = $('#nameFamily').val() + '.jpeg'; // nom de la famille
     //document.getElementsByClassName('menu active')[0].childNodes[0].textContent; // nom du fichier = nom de l'onglet
     console.log(tabQRCode);
-  //  exportFamily(); // pour enregistrer tous les qrcode en meme temps
-  } else {
-    img = $('#affichageqr')[0].childNodes[1].childNodes[0];
+  }
+
+  if (typeQR == 'atomique') {
+    img = $('#affichageqr').find('img')[0];
     nameFile = 'image.jpeg'; // nom du ficher par defaut
   }
 
@@ -267,21 +267,15 @@ function exportFile (family) {
       var filesaver = require('file-saver');
       filesaver.saveAs(xhr.response, nameFile);
 
-      if (family) {
-        //exportFamily();
-        // recupérer tous les formulaires et menus (tabForm.length == tabOnget.length)
-        var tabForm = document.getElementsByClassName('tab-pane fade');
-        var tabOnget = document.getElementsByClassName('menu');
-
-        // parcourir simultanément formulaire et tab
-        for (var i = 0; i < tabForm.length; i++) {
-          console.log(tabForm[i]);
-          setActive(tabForm[i], tabOnget[i]);
+      if (typeQR == 'famille') {
+        $('ul#sortable > li').each(function(){
+          // simuler un click sur chaque item et generer le qrcode du item actif et le mettre dans le tableau de qrcode
+          $(this).trigger('click');
           previewQRCode(true);
 
-          var filename = $('li.active.menu')[0].childNodes[0].textContent + '.jpeg'
+          var filename = $(this).attr('id') + '.jpeg';
           // enegistrer le qrcode atomatiquement
-          var imgData = $('#affichageqr')[0].childNodes[1].childNodes[0].src;
+          var imgData = $('#affichageqr').find('img').attr('src');
 
           var data = imgData.replace(/^data:image\/\w+;base64,/, '');
           fs.writeFile(filename, data, {encoding: 'base64'}, function(err) {
@@ -290,7 +284,7 @@ function exportFile (family) {
             }
             //success
           });
-        }
+        });
       }
     }
   };
@@ -300,25 +294,15 @@ function exportFile (family) {
 
 // fonction pour sauvegarder les qrcodes d'une meme famille en même temps
 function exportFamily () {
-  // on prend chaque formulaire, on génére son qrcode, on l'enregistre
-  var tabForm; // tableau de tous les formulaires
-  var tabOnget; // tableau de tous les menus
-
+  // on prend chaque item, on génére son qrcode, on l'enregistre
   tabQRCode = [];
 
-  // recupérer tous les formulaires et menus (tabForm.length == tabOnget.length)
-  tabForm = document.getElementsByClassName('tab-pane fade');
-  tabOnget = document.getElementsByClassName('menu');
-
-  // parcourir simultanément formulaire et tab
-  for (var i = 0; i < tabForm.length; i++) {
-    console.log(tabForm[i]);
-    setActive(tabForm[i], tabOnget[i]);
-
-     // generer le qrcode du formulaire aactive et le mettre dans le tableau de qrcode
+  $('ul#sortable > li').each(function(){
+    // simuler un click sur chaque item et generer le qrcode du item actif et le mettre dans le tableau de qrcode
+    $(this).trigger('click');
     var qrcode = previewQRCode(true);
     tabQRCode.push(qrcode);
-  }
+  });
 }
 
 // function appelée aprés chaque export pour réinitialiser la vue
@@ -332,22 +316,6 @@ function init_View () {
   $('#btnExportFile, #preview, #read').attr('disabled', true);
   $('#creer, #import').attr('disabled', false);
   $('#previewFamily, #initView, #nameFamily').css('display', 'none');
-}
-
-
-// définir le dernier tab créé comme celui active (tab et tabcontent)
-function setActive (div, li) {
-
-  if (document.getElementsByClassName('tab-pane fade active in').length != 0) {
-    document.getElementsByClassName('tab-pane fade active in')[0].setAttribute('class', 'tab-pane fade');
-  }
-  div.setAttribute('class', 'tab-pane fade active in');
-
-  if (document.getElementsByClassName('active menu').length != 0) {
-    var id = document.getElementsByClassName('active menu')[0].getAttribute('class').match(/\d+/g).join(''); // retourne le chiffre dans la chaine
-    document.getElementsByClassName('active menu')[0].setAttribute('class', 'menu menu' + id);
-  }
-  li.setAttribute('class', 'active menu menu'+idMenu);
 }
 
 //fonction pour générer une famille de qrcode
@@ -430,25 +398,11 @@ function previewQRCode (famille) {
   if (form != null) {
     for(var i=0; i<tab.length; i++) {
       var element = tab[i];
-      //var form2 = form.childNodes[0].childNodes;
-      console.log(element);
 
       if (element.tagName == "TEXTAREA") {
           console.log(element.tagName);
           copyContentToQRCode(qrcode, element);
       }
-/*
-        switch (element.tagName) {
-          case 'INPUT':
-          case 'TEXTAREA':
-            console.log(element.tagName);
-            copyContentToQRCode(qrcode, element);
-            break;
-
-          default:
-            console.log(element.tagName);
-        }
-        */
     }
 
     if (facade.getTailleReelleQRCode(qrcode) > 500 ) {
@@ -468,8 +422,6 @@ function previewQRCode (famille) {
       }
     }
   }
-
-
 }
 
 // copier le contenu d'un element input
@@ -510,65 +462,11 @@ function copyContentToQRCode (qrcode, input) {
   }
 
   // mettre le nom de l'onglet si on a une famille
-  if ($('input#nameFamily').css('display') == 'block') {
+  if (typeQR == 'famille') {
     qrcode.setNomQRCode(idActive);
-    //qrcode.ajouterAFamille($('#nameFamily').val(), $('li.active.menu')[0].childNodes[0].getAttribute('href').match(/\d+/g).join(''));
-    qrcode.ajouterAFamille($('#nameFamily').val(), idActive);
+    qrcode.ajouterAFamille($('#nameFamily').val(), $('#'+idActive).index()+1);
   }
 
   // enregistrer le qrcode dans le tableau
 //  tabQRCode.push(qrcode);
-}
-
-// fonction pour supprimer le bouton add de l'avant dernier champ du formulaire
-function deleteAddBtn () {
-  var row = document.getElementsByClassName('tab-pane fade active in')[0].childNodes[0].childNodes[0].childNodes
-  [document.getElementsByClassName('tab-pane fade active in')[0].childNodes[0].childNodes[0].childNodes.length-2];
-
-  row.childNodes[0].childNodes[1].childNodes[0].childNodes[2].setAttribute('class', 'col-md-12'); // augmenter la taille du btn play
-  row.childNodes[0].childNodes[1].childNodes[0].removeChild(row.childNodes[0].childNodes[1].childNodes[0].childNodes[1]); // supprimer btn del
-  row.childNodes[0].childNodes[1].childNodes[0].removeChild(row.childNodes[0].childNodes[1].childNodes[0].childNodes[0]); // supprimer btn add
-}
-
-// fonction pour supprimer le bouton add tabs de l'avant dernier tab
-function deleteBtnTabs () {
-  // recupérer l'avant dernier menu
-  var menu = document.getElementsByClassName('menu')[document.getElementsByClassName('menu').length - 2];
-///  menu.childNodes[0].removeChild(menu.childNodes[0].childNodes[1]); // supprimer le bouton add ensuite
-  //menu.childNodes[0].removeChild(menu.childNodes[0].childNodes[2]); // supprimer le bouton delete en premier
-}
-
-/*
-fonction pour la gestion des boutons add et del, et du formulaire actif quand on change d'onglet
-le parametre create est booleen,
-si true ça veut dire que c'est la fonction createTabs qui appelle la fonction switchTab
-*/
-function switchTab (event, create) {
-
-  var inputAdd, inputDel;
-  if ((event && event.target.tagName == 'A' && event.target.parentNode.classList.contains("menu") && !create) ||
-        (create && !event)) {
-    // parcourir tous les tabs et retirer leur bouton add et del
-    for (var i=0; i<document.getElementsByClassName('menu').length; i++) {
-      if (document.getElementsByClassName('menu')[i].childNodes[0].childNodes.length > 1) {
-        while (document.getElementsByClassName('menu')[i].childNodes[0].childNodes.length > 1) {
-          document.getElementsByClassName('menu')[i].childNodes[0].removeChild(document.getElementsByClassName('menu')[i].childNodes[0].childNodes[1]);
-        }
-      }
-    }
-    // ajouter les boutons add et del sur l'onglet courant
-    inputAdd = createInput('image', 'addTabs', null, null, 'add.png', 'modal', '#modalNameQRCode', 'Ajouter un nouveau champ');
-    inputDel = createInput('image', 'closeTab', null, null, 'delete.png', null, null, 'Supprimer ce champ');
-    inputAdd.disabled = false;
-    inputDel.disabled = false;
-  }
-
-  if (event && event.target.tagName == 'A' && event.target.parentNode.classList.contains("menu") && !create) {
-    event.target.appendChild(inputAdd);
-    event.target.appendChild(inputDel);
-  } else if (create && !event) {
-    var lastTab = document.getElementsByClassName('menu')[document.getElementsByClassName('menu').length-1];
-    lastTab.childNodes[0].appendChild(inputAdd);
-    lastTab.childNodes[0].appendChild(inputDel);
-  }
 }
