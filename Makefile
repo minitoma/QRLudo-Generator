@@ -4,9 +4,9 @@ LIBS=bootstrap \
 	electron-debug \
 	electron-packager \
 	file-saver \
-	google-auth-library \
-	google-tts-api \
 	googleapis \
+	google-auth-library@0.* \
+	google-tts-api \
 	jquery \
 	jquery-qrcode \
 	piexifjs

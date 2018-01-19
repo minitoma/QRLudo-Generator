@@ -124,28 +124,27 @@ function selectMusic (event, imported) {
     var element = event.target;
 
     if(element.tagName == 'A') {
-      div2 = createDiv('col-md-9', null, [createInput('text', 'form-control', element.getAttribute('href').substring(1), element.textContent, null, null, null,null)]);
+      //div2 = createDiv('col-md-9', null, [createInput('text', 'form-control', element.getAttribute('href').substring(1), element.textContent, null, null, null,null)]);
+      var textarea = createTextarea('form-control', 'legende', element.textContent);
+      textarea.setAttribute('disabled', true);
+      var div2 = createDiv('col-md-12', null, [textarea]);
     }
   } else if (event == null && imported) {
     div2 = createDiv('col-md-9', null, [createInput('text', 'form-control', imported[0], imported[1], null, null, null, null)]);
   }
 
-  var form = document.getElementsByClassName('in active')[0].childNodes[0].childNodes[0];
+  var btnAdd    =   createClickableImg('addChamp', 'add.png', 'Ajouter un nouveau champ');
+  var btnDelete =   createClickableImg('deleteChamp', 'delete.png', 'Supprimer ce champ');
+  var btnPlay   =   createClickableImg('playChamp', 'play.png', 'Ecouter le contenu du champ');
 
-  var btnAdd = createButton('button', 'btn btn-default addChamp', 'modal', '#myModal', null);
-  var btnDelete = createButton('button', 'btn btn-default deleteChamp', null, null, null);
-  var btnPlay = createButton('button', 'btn btn-default playChamp', null, null, null);
-  btnAdd.appendChild(createInput('image', null, null, null, 'add.png', null, null, 'Ajouter un nouveau champ'));
-  btnDelete.appendChild(createInput('image', 'deleteChamp', null, null, 'delete.png', null, null, 'Supprimer ce champ'));
-  btnPlay.appendChild(createInput('image', 'playChamp', null, null, 'play.png', null, null, 'Ecouter le contenu du champ'));
+  var span = document.createElement('SPAN');
+  span.append(btnAdd, btnDelete, btnPlay);
+  var div3 = createDiv('col-md-12 optButton', null, [span]);
+  var div = createDiv('form-group', null, [createDiv('row', null, [div2, div3])]);
 
-  var div3 = createDiv('col-md-4', null, [btnAdd]);
-  var div4 = createDiv('col-md-4', null, [btnDelete]);
-  var div5 = createDiv('col-md-4', null, [btnPlay]);
-
-  var div = createDiv('form-group', null, [createDiv('row', null, [div2, createDiv('col-md-3', null, [createDiv('row', null, [div3, div4, div5])])])]);
-  //var div = createDiv('form-group', null, [createDiv('row', null, [div2, div3])]);
-  form.appendChild(div);
+  var idActive = $('li.active').attr('id');
+  var form = $('div#content-item.'+idActive).find($('form#myFormActive'));
+  form.append(div);
 
   // ajouter un eventlistener sur playChamp pour lire le champ sur click du bouton
   btnPlay.addEventListener('click', function(event){
@@ -154,7 +153,7 @@ function selectMusic (event, imported) {
     getForm(texte);
   });
   // ajouter un eventlistener sur deleteChamp pour supprimer le champ sur click du bouton
-  btnDelete.addEventListener('click', function(){
+/*  btnDelete.addEventListener('click', function(){
     form.removeChild(div); // suppression du champ
     // ajout des btn add et delete au champ précédent si il existe
     if (form.length != 0) {
@@ -180,9 +179,10 @@ function selectMusic (event, imported) {
         init_View();
       }
     }
-  });
+  });*/
 
   // activer les boutons preview et lire
+/*
   document.getElementById('preview').disabled = false;
   document.getElementById('read').disabled = false;
   document.getElementById('closeModalMusique').click(); // fermer le popup de musique
@@ -190,6 +190,8 @@ function selectMusic (event, imported) {
   console.log(form);
   console.log("numero input " + idInputText);
   if (document.getElementById('myFormActive').childNodes.length > 1) { deleteAddBtn(); }
+  */
+  $('button#closeModalMusique').trigger('click'); // fermer le popup de musique
 }
 
 // fonction pour fermer un onglet
@@ -334,8 +336,8 @@ function exportFamily () {
 // function appelée aprés chaque export pour réinitialiser la vue
 function init_View () {
   facade = new FacadeController();
-  document.getElementsByClassName('tab-content')[0].innerHTML = "";
-  document.getElementsByClassName('nav nav-tabs')[0].innerHTML = "";
+  //document.getElementsByClassName('tab-content')[0].innerHTML = "";
+  //document.getElementsByClassName('nav nav-tabs')[0].innerHTML = "";
   document.getElementById('affichageqr').childNodes[1].innerHTML = '<div class="col-md-12"> <!-- affichage du qrcode --> </div>';
   document.getElementById('btnExportFile').disabled = true;
   document.getElementById('preview').disabled = true;
@@ -429,9 +431,15 @@ function previewQRCode (famille) {
   var qrcode = facade.creerQRCodeAtomique(); // instancier un objet qrcode
 
   // variable pour recupérer le formulaire
-  var idActive = $('li.active').attr('id');
-  var form = $('div#content-item.'+idActive).find($('form#myFormActive'));
-  var tab = form.find('textarea, input');
+  var idActive, form, tab;
+  if (famille) {
+    idActive = $('li.active').attr('id');
+    form = $('div#content-item.'+idActive).find($('form#myFormActive'));
+  } else {
+    form = $('form#myFormActive');
+  }
+
+  tab = form.find('textarea, input');
 
   /* copier les données du formulaire dans le qrcode */
   if (form != null) {
@@ -456,9 +464,9 @@ function previewQRCode (famille) {
       alert ("La taille de ce qr code dépasse le maximum autorisé (500).\nTaille = "+ facade.getTailleReelleQRCode(qrcode));
       qrcode = null;
     } else {
-        facade.genererQRCode(document.getElementById('affichageqr').childNodes[1], qrcode); // générer le qrcode
-      document.getElementById('btnExportFile').disabled = false; // activer le bouton exporter
-      document.getElementById('initView').style.display = 'block'; // afficher le bouton terminer
+      facade.genererQRCode($('#affichageqr').children()[0], qrcode); // générer le qrcode
+      $('#btnExportFile').attr('disabled', false); // activer le bouton exporter
+      $('#initView').css('display', 'block'); // afficher le bouton terminer
 
       if (famille) {
         //console.log(facade.genererQRCode(document.getElementById('affichageqr').childNodes[1], qrcode));
@@ -481,18 +489,33 @@ function copyContentToQRCode (qrcode, input) {
   } else {
     qrcode.ajouterTexte(input.value);
   }
+
   // recupérer la couleur du qrcode et les options du braille
-  var idActive = $('li.active').attr('id');
+  var idActive;
   // copier la couleur du qrcode et du braille
-  qrcode.setColorQR($('div#content-item.'+idActive).find('input#colorQR').value);
-  // tester si le checkbox pour les options du braille est checked
-  if ($('div#content-item.'+idActive).find('input#checkBraille').checked) {
-    // mettre la couleur et le texte en braille dans le qrcode
-    qrcode.setTexteBraille($('div#content-item.'+idActive).find('input#braille').value);
-    qrcode.setColorBraille($('div#content-item.'+idActive).find('input#colorBraille').value);
-  } else {
-    qrcode.setTexteBraille('');
-    qrcode.setColorBraille('');
+  if ($('input#nameFamily').css('display') == 'block') { // famille de qrcode
+    idActive = $('li.active').attr('id');
+    qrcode.setColorQR($('div#content-item.'+idActive).find('input#colorQR').val());
+    // tester si le checkbox pour les options du braille est checked
+    if ($('div#content-item.'+idActive).find('input#checkBraille').prop('checked')) {
+      // mettre la couleur et le texte en braille dans le qrcode
+      qrcode.setTexteBraille($('div#content-item.'+idActive).find('input#braille').val());
+      qrcode.setColorBraille($('div#content-item.'+idActive).find('input#colorBraille').val());
+    } else {
+      qrcode.setTexteBraille('');
+      qrcode.setColorBraille('');
+    }
+  } else {// qrcode atomique
+    qrcode.setColorQR($('input#colorQR').val());
+    // tester si le checkbox pour les options du braille est checked
+    if ($('input#checkBraille').prop('checked')) {
+      // mettre la couleur et le texte en braille dans le qrcode
+      qrcode.setTexteBraille($('input#braille').val());
+      qrcode.setColorBraille($('input#colorBraille').val());
+    } else {
+      qrcode.setTexteBraille('');
+      qrcode.setColorBraille('');
+    }
   }
 
   // mettre le nom de l'onglet si on a une famille

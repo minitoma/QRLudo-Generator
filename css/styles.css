@@ -140,7 +140,8 @@ div:nth-child(2) > div.col-md-3.text-center > button,
   color: #080808;
 }
 #braille {
-  width: inherit;
+  text-align: center;
+  width: 30px;
 }
 
 body > div > section.row > div > div.col-lg-6.colMiddle > ul > li.menu > a > input[type="image"] {

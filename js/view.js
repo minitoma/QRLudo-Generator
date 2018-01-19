@@ -2,6 +2,7 @@ var idInputText = 0; // pour identifier les inputs de façon unique
 var idMenu = 1; // pour identifier de facon unique les menus
 var facade = new FacadeController();
 var tabQRCode = [];
+var typeQR; // rens le type de qrcode
 
 
 $(document).ready(function() {
@@ -16,19 +17,21 @@ $(document).ready(function() {
     //createTextBox('');
   }); // sur clic du bouton creer champ texte
 
-  document.getElementById('read').addEventListener('click', function(){
-    this.parentNode.parentNode.style.display = 'none';
-    document.getElementById('stop').parentNode.parentNode.style.display = 'block';
+  $('button#read').click(function(){
+    $('div.colRight > form > div:nth-child(2)').css('display', 'none');
+    $('div.colRight > form > div:nth-child(3)').css('display', 'block');
     getForm(null);
   }); // sur clic du bouton Lire pour ecouter les textes saisis
-  document.getElementById('stop').addEventListener('click', function(){
-    this.parentNode.parentNode.style.display = 'none';
-    document.getElementById('read').parentNode.parentNode.style.display = 'block';
+  $('button#stop').click(function(){
+    $('div.colRight > form > div:nth-child(3)').css('display', 'none');
+    $('div.colRight > form > div:nth-child(2)').css('display', 'block');
     stopLecture();
   });
   document.getElementById('preview').addEventListener('click', preview); // prévisualiser le qr-code
-  document.getElementById('createQRCodeAtomique').addEventListener('click', function(){
-    baseViewQRCodeAtomique(createTextBox);
+  $('a#createQRCodeAtomique').click(function(){
+    //baseViewQRCodeAtomique(createTextBox);
+    typeQR = 'atomique';
+    baseViewQRCodeAtomique();
   }); // création d'un qrcode atomique
 
   $('#setNameQRCode').click(function(e){
@@ -113,6 +116,75 @@ function createClickableImg (classe, src, title) {
   return a;
 }
 
+/*
+  QRCode atomique
+  Fonction qui permet de créer le contenu d'un QRCode Atomique
+*/
+function createContent () {
+  var textarea = createTextarea('form-control', 'legende', null);
+  var div2 = createDiv('col-md-12', null, [textarea]);
+
+  var btnAdd    =   createClickableImg('addChamp', 'add.png', 'Ajouter un nouveau champ');
+  var btnDelete =   createClickableImg('deleteChamp', 'delete.png', 'Supprimer ce champ');
+  var btnPlay   =   createClickableImg('playChamp', 'play.png', 'Ecouter le contenu du champ');
+
+  var span = document.createElement('SPAN');
+  span.append(btnAdd, btnDelete, btnPlay);
+  var div3 = createDiv('col-md-12 optButton', null, [span]);
+
+  var div = createDiv('form-group', null, [createDiv('row', null, [div2, div3])]);
+  var form = $('div#content-item.'+id).find($('form#myFormActive'));
+  form.append(div);
+
+  $('div#content-item').find('img.deleteChamp').click(function(){
+    $(this).parents('div.form-group').remove();
+    /*if (form.length != 0) {
+      // recupérer le texte saisi avant de remplacer
+      var textContent = form.childNodes[form.childNodes.length-1].childNodes[0].childNodes[0].childNodes[0].value;
+
+      // recréer le input ou textarea et le div form-group
+      if (form.childNodes[form.childNodes.length-1].childNodes[0].childNodes[0].childNodes[0].tagName == 'INPUT') {
+        div2 = createDiv('col-md-9', null, [createInput('text', 'form-control', null, textContent, null, null, null, null)]);
+      } else {
+        div2 = createDiv('col-md-9', null, [createTextarea('form-control', 'legende', textContent)]);
+      }
+      div = createDiv('form-group', null, [createDiv('row', null, [div2, createDiv('col-md-3', null, [createDiv('row', null, [div3, div4, div5])])])]);
+      // recréer le champ précédent avec les boutons add et delete
+      form.replaceChild(div, form.childNodes[form.childNodes.length-1]);
+    } else {
+      // s'il s'agit d'une famille il faut juste supprimer le tab correspondant
+      if (document.getElementsByClassName('nav-tabs nav')[0].style.display == 'block') {
+        //closeTab();
+        document.getElementsByClassName('nav-tabs nav')[0].removeChild(document.getElementsByClassName('active menu')[0]);
+        document.getElementsByClassName('tab-content')[0].removeChild(document.getElementsByClassName('tab-pane fade active in')[0]);
+        if (document.getElementsByClassName('menu')[0]) {
+          document.getElementsByClassName('menu')[0].childNodes[0].click();
+        } else {
+          init_View();
+        }
+
+      } else {
+        // il n' y a plus de champ on réinitilise l'application
+        init_View();
+      }
+    }*/
+  });
+
+  // ajouter un eventlistener sur playChamp pour lire le champ sur click du bouton
+  $('div#content-item').find('img.playChamp').click(function(event){
+    console.log(event.target);
+    var texte = event.target.parentNode.parentNode.parentNode.parentNode.childNodes[0].childNodes[0].value;
+    getForm(texte);
+  });
+
+
+  // activer les boutons preview et lire
+  $('#preview').attr('disabled', false);
+  $('#read').attr('disabled', false);
+
+  $('#closeModal').trigger('click'); // fermer le popup d'ajout d'un nouveau champ
+}
+
 // créer le contenu d'un item à partir de l'id renseigné.
 function createItemContent (id) {
   var textarea = createTextarea('form-control', 'legende', null);
@@ -127,7 +199,12 @@ function createItemContent (id) {
   var div3 = createDiv('col-md-12 optButton', null, [span]);
 
   var div = createDiv('form-group', null, [createDiv('row', null, [div2, div3])]);
-  var form = $('div#content-item.'+id).find($('form#myFormActive'));
+  var form;
+  if (id) {
+    form = $('div#content-item.'+id).find($('form#myFormActive'));
+  } else {
+    form = $('form#myFormActive');
+  }
   form.append(div);
 
   $('div#content-item').find('img.deleteChamp').click(function(){
@@ -312,6 +389,7 @@ function createImg(id, src) {
 function createItems (imported) {
   $('#nameFamily').css('display', 'block');
   $('div.tab-content-qrcode-family.row').css('display', 'block');
+  $('div.tab-content-qrcode-unique').css('display', 'none');
 
   var li = document.createElement('LI');
   li.setAttribute('id', $('#nameQRCode').val());
@@ -326,10 +404,9 @@ function createItems (imported) {
     $('.tab-content-liste-content > div.'+this.id).css('display', 'block');
   });
 
-  var p = document.createElement('P');
-  p.appendChild(document.createTextNode($('#nameQRCode').val()));
-  //var div = createDiv($('#nameQRCode').val(), 'content-item', [document.createTextNode('Fermer')]);
-  var div = createDiv($('#nameQRCode').val(), 'content-item', null);
+  //var p = document.createElement('P');
+  //p.appendChild(document.createTextNode($('#nameQRCode').val()));
+  var div = createDiv($('#nameQRCode').val(), 'content-item', [document.createTextNode($('#nameQRCode').val().toUpperCase())]);
 
   //ajout du bouton pour supprimer un qrcode.
   var inputDel = createInput('image', null, null, null, 'delete.png', null, null, 'Supprimer ce qrcode');
@@ -556,13 +633,32 @@ function drawQRCodeAtomique (qrcode) {
 
 // retourne l'architecture html de base pour un qrcode atomique
 function baseViewQRCodeAtomique (callback) {
+var html =
+      '<div class="row" id="content-form">'+
+        '<form id="myFormActive"></form>'+
+    '</div>';
+
+  $('.content').append(html);
+
+  // bouton pour fermer annuler la création du qrcode et champ pour braille au milieu du qrcode
+  html =
+    '<div class="row"><div class="col-md-6 text-center"><input type="checkbox" id="checkBraille">Texte en braille</div>'+
+    '<div class="col-md-6 text-center"><input type="color" id="colorQR" title="Couleur du QRCode"/></div></div>'+
+        //'<button type="button" class="btn btn-default" id="closeForm">Annuler</button>'+
+    '<div class="row" style="display:none;"><div class="col-md-3 text-center"><input type="text" id="braille" title="Texte en braille" maxlength="2"></div>'+
+    '<div class="col-md-3 text-center"><input type="color" id="colorBraille" title="Couleur du texte en braille"/></div>'+
+    '<div class="col-md-6 text-center"></div></div>';
+
+  $('.content > #content-form').append(html);
+
+  /*
   var html =
       '<div class="tab-pane fade active in" id="menu1">'+
         '<div class="row" id="content-form">'+
           '<form id="myFormActive"></form>'+
       '</div></div>';
 
-  document.getElementsByClassName('tab-content')[0].innerHTML = html;
+  $('div.tab-content-qrcode-unique').append(html);
 
   // bouton pour fermer annuler la création du qrcode et champ pour braille au milieu du qrcode
   html =
@@ -574,28 +670,27 @@ function baseViewQRCodeAtomique (callback) {
     '<div class="col-md-6 text-center"></div></div>';
 
   //document.getElementsByClassName('tab-content')[0].innerHTML += html;
-  document.getElementById('content-form').innerHTML += html;
-
+  $('div#content-form').append(html);
+*/
   // ajouter un eventlistener au checbox pour afficher ou masquer les options du braille
-  document.getElementById('checkBraille').addEventListener('change', function(){
-    if (this.checked) {
-      document.getElementById('braille').parentNode.parentNode.style.display = 'block';
+    $('input#checkBraille').change(function(){
+    if ($(this).prop('checked')) {
+      $('div#content-form').children('div:last-child').css('display', 'block');
     } else {
-      document.getElementById('braille').parentNode.parentNode.style.display = 'none';
+      $('div#content-form').children('div:last-child').css('display', 'none');
     }
   });
 
   // appel de la fonction init_View sur clic du bouton
   //document.getElementById('closeForm').addEventListener('click', init_View);
-  document.getElementsByClassName('nav nav-tabs')[0].style.display = 'none';
-  document.getElementById('nameFamily').style.display = 'none';
+  //document.getElementsByClassName('nav nav-tabs')[0].style.display = 'none';
+  $('input#nameFamily').css('display', 'none');
   // activer les boutons lire et preview
-  document.getElementById('preview').disabled = false;
-  document.getElementById('read').disabled = false;
+  $('#preview, #read').css('disabled', false)
   // désactiver les bouton import et creer
-  document.getElementById('creer').disabled = true;
-  document.getElementById('import').disabled = true;
-  if (callback) { callback(null); }
+  $('#creer, #import').css('disabled', true)
+  //if (callback) { callback(null); }
+  createItemContent(null);
 }
 
 /*
