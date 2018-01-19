@@ -116,6 +116,9 @@ section.page-header {
 textarea {
   resize: vertical;
 }
+textarea.legende-music {
+  resize: none;
+}
 
 body > div > section.row > div > div.col-lg-3.colLeft > form > div:nth-child(1) > div > ul {
   margin: -10px 0 0 136px;
@@ -169,6 +172,9 @@ div.optButton,
 #content-item {
   display: none;
 }
+div.optButton > span > a {
+  margin: 2px;
+}
 /* fin affichage */
 
 #myFormActive > div > div > div:nth-child(2) > span {
@@ -179,6 +185,7 @@ div.optButton,
   position: absolute;
 }
 
+div.tab-content-qrcode-unique,
 div.tab-content-qrcode-family.row {
   display: none;
 }

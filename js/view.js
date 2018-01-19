@@ -13,7 +13,7 @@ $(document).ready(function() {
 
   $('button.set-legende').click(function(){
   //document.getElementsByClassName('set-legende')[0].addEventListener('click', function(){
-  createItemContent($('li.active').attr('id'));
+  createItemContent($('li.active').attr('id'), null);
     //createTextBox('');
   }); // sur clic du bouton creer champ texte
 
@@ -29,14 +29,13 @@ $(document).ready(function() {
   });
   document.getElementById('preview').addEventListener('click', preview); // prévisualiser le qr-code
   $('a#createQRCodeAtomique').click(function(){
-    //baseViewQRCodeAtomique(createTextBox);
-    typeQR = 'atomique';
-    baseViewQRCodeAtomique();
+    baseViewQRCodeAtomique(createItemContent);
   }); // création d'un qrcode atomique
 
   $('#setNameQRCode').click(function(e){
     if ($('#nameQRCode').val()) {
       createItems();
+      $('#nameQRCode').val('');
       $('#creer').attr('disabled', true);
       $('#import').attr('disabled', true);
     } else {
@@ -186,8 +185,8 @@ function createContent () {
 }
 
 // créer le contenu d'un item à partir de l'id renseigné.
-function createItemContent (id) {
-  var textarea = createTextarea('form-control', 'legende', null);
+function createItemContent (idActive, data) {
+  var textarea = createTextarea('form-control', 'legende', data ? data:null);
   var div2 = createDiv('col-md-12', null, [textarea]);
 
   var btnAdd    =   createClickableImg('addChamp', 'add.png', 'Ajouter un nouveau champ');
@@ -200,58 +199,32 @@ function createItemContent (id) {
 
   var div = createDiv('form-group', null, [createDiv('row', null, [div2, div3])]);
   var form;
-  if (id) {
-    form = $('div#content-item.'+id).find($('form#myFormActive'));
-  } else {
-    form = $('form#myFormActive');
-  }
+
+  if (typeQR == 'atomique') { form = $('form#myFormActive'); }
+  if (typeQR == 'famille')  { form = $('div#content-item.'+idActive).find($('form#myFormActive')); }
+
   form.append(div);
 
-  $('div#content-item').find('img.deleteChamp').click(function(){
+  // ajout un event sur click du bouton supprimer champ
+  $('img.deleteChamp').click(function(){
     $(this).parents('div.form-group').remove();
-    /*if (form.length != 0) {
-      // recupérer le texte saisi avant de remplacer
-      var textContent = form.childNodes[form.childNodes.length-1].childNodes[0].childNodes[0].childNodes[0].value;
-
-      // recréer le input ou textarea et le div form-group
-      if (form.childNodes[form.childNodes.length-1].childNodes[0].childNodes[0].childNodes[0].tagName == 'INPUT') {
-        div2 = createDiv('col-md-9', null, [createInput('text', 'form-control', null, textContent, null, null, null, null)]);
-      } else {
-        div2 = createDiv('col-md-9', null, [createTextarea('form-control', 'legende', textContent)]);
-      }
-      div = createDiv('form-group', null, [createDiv('row', null, [div2, createDiv('col-md-3', null, [createDiv('row', null, [div3, div4, div5])])])]);
-      // recréer le champ précédent avec les boutons add et delete
-      form.replaceChild(div, form.childNodes[form.childNodes.length-1]);
-    } else {
-      // s'il s'agit d'une famille il faut juste supprimer le tab correspondant
-      if (document.getElementsByClassName('nav-tabs nav')[0].style.display == 'block') {
-        //closeTab();
-        document.getElementsByClassName('nav-tabs nav')[0].removeChild(document.getElementsByClassName('active menu')[0]);
-        document.getElementsByClassName('tab-content')[0].removeChild(document.getElementsByClassName('tab-pane fade active in')[0]);
-        if (document.getElementsByClassName('menu')[0]) {
-          document.getElementsByClassName('menu')[0].childNodes[0].click();
-        } else {
-          init_View();
-        }
-
-      } else {
-        // il n' y a plus de champ on réinitilise l'application
-        init_View();
-      }
-    }*/
+    // supprimer le qrcode s'il n'y a plus de champs textarea
+    if (form.find('textarea').length == 0) {
+      if (typeQR == 'atomique') { init_View(); }
+      if (typeQR == 'famille')  { $('div#content-item.'+idActive+' > input[title="Supprimer ce qrcode"]').trigger('click'); }
+    }
   });
 
   // ajouter un eventlistener sur playChamp pour lire le champ sur click du bouton
-  $('div#content-item').find('img.playChamp').click(function(event){
+  $('img.playChamp').click(function(event){
     console.log(event.target);
     var texte = event.target.parentNode.parentNode.parentNode.parentNode.childNodes[0].childNodes[0].value;
     getForm(texte);
   });
 
-
-  // activer les boutons preview et lire
-  $('#preview').attr('disabled', false);
-  $('#read').attr('disabled', false);
+  // activer/desactiver les boutons
+  $('#preview, #read').attr('disabled', false);
+  $('#creer, #import').attr('disabled', true);
 
   $('#closeModal').trigger('click'); // fermer le popup d'ajout d'un nouveau champ
 }
@@ -387,6 +360,7 @@ function createImg(id, src) {
  si imported = true : cette fonction est appelée pour recréer une famille de qrcode
 */
 function createItems (imported) {
+  typeQR = 'famille';
   $('#nameFamily').css('display', 'block');
   $('div.tab-content-qrcode-family.row').css('display', 'block');
   $('div.tab-content-qrcode-unique').css('display', 'none');
@@ -419,6 +393,11 @@ function createItems (imported) {
     $(this).parent().remove();
     $('li#'+$(this).parent().attr('class')).remove();
     $('ul#sortable > li:first-child').click();
+
+    // reinitialiser la vue s'il n'y a plus de qrcode
+    if ($('li.active').length == 0) {
+      init_View();
+    }
   });
 
   $('ul#sortable > li:last-child').click();
@@ -450,7 +429,7 @@ function createItems (imported) {
     }
   });
 
-  createItemContent($('li.active').attr('id'));
+  createItemContent($('li.active').attr('id'), null);
 
 }
 
@@ -623,7 +602,7 @@ function drawQRCodeAtomique (qrcode) {
   for (var i=0; i<qrcode.getTailleContenu(); i++){
 
     if (qrcode.getTypeContenu(i) == DictionnaireXml.getTagTexte()){
-      createTextBox(qrcode.getTexte(i));
+      createItemContent(null, qrcode.getTexte(i));
     } else if (qrcode.getTypeContenu(i) == DictionnaireXml.getTagFichier()){
       // appel de selectMusic pour créer un chap input de music
       selectMusic (null, [qrcode.getUrlFichier(i), qrcode.getNomFichier(qrcode.getUrlFichier(i))]);
@@ -633,7 +612,9 @@ function drawQRCodeAtomique (qrcode) {
 
 // retourne l'architecture html de base pour un qrcode atomique
 function baseViewQRCodeAtomique (callback) {
-var html =
+  typeQR = 'atomique';
+  $('div.tab-content-qrcode-unique').css('display', 'block');
+  var html =
       '<div class="row" id="content-form">'+
         '<form id="myFormActive"></form>'+
     '</div>';
@@ -651,27 +632,6 @@ var html =
 
   $('.content > #content-form').append(html);
 
-  /*
-  var html =
-      '<div class="tab-pane fade active in" id="menu1">'+
-        '<div class="row" id="content-form">'+
-          '<form id="myFormActive"></form>'+
-      '</div></div>';
-
-  $('div.tab-content-qrcode-unique').append(html);
-
-  // bouton pour fermer annuler la création du qrcode et champ pour braille au milieu du qrcode
-  html =
-    '<div class="row"><div class="col-md-6 text-center"><input type="checkbox" id="checkBraille">Texte en braille</div>'+
-    '<div class="col-md-6 text-center"><input type="color" id="colorQR" title="Couleur du QRCode"/></div></div>'+
-        //'<button type="button" class="btn btn-default" id="closeForm">Annuler</button>'+
-    '<div class="row" style="display:none;"><div class="col-md-3 text-center"><input type="text" id="braille" title="Texte en braille" maxlength="2"></div>'+
-    '<div class="col-md-3 text-center"><input type="color" id="colorBraille" title="Couleur du texte en braille"/></div>'+
-    '<div class="col-md-6 text-center"></div></div>';
-
-  //document.getElementsByClassName('tab-content')[0].innerHTML += html;
-  $('div#content-form').append(html);
-*/
   // ajouter un eventlistener au checbox pour afficher ou masquer les options du braille
     $('input#checkBraille').change(function(){
     if ($(this).prop('checked')) {
@@ -689,23 +649,6 @@ var html =
   $('#preview, #read').css('disabled', false)
   // désactiver les bouton import et creer
   $('#creer, #import').css('disabled', true)
-  //if (callback) { callback(null); }
-  createItemContent(null);
+  if (callback) { callback(null, null); }
+  //createItemContent(null, null);
 }
-
-/*
-// retourne l'architecture html de base pour une famille de qrcode
-function baseViewQRCodeEnsemble (callback) {
-  document.getElementsByClassName('nav nav-tabs')[0].style.display = 'block';
-
-  var html =
-      '<div class="tab-pane fade active in" id="menu1">'+
-        '<div class="row" id="content-form">'+
-          '<form id="myForm"></form>'+
-        '</div>'+
-      '</div> ';
-
-  document.getElementsByClassName('tab-content')[0].innerHTML = html;
-  if (callback) callback(null);
-}
-*/

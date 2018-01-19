@@ -119,19 +119,19 @@ function modalMusic() {
 
 // renseigner la musique sur un champ texte et l'afficher
 function selectMusic (event, imported) {
-  var div2;
+  var div2, textarea;
   if (event && imported == null) {
     var element = event.target;
 
     if(element.tagName == 'A') {
-      //div2 = createDiv('col-md-9', null, [createInput('text', 'form-control', element.getAttribute('href').substring(1), element.textContent, null, null, null,null)]);
-      var textarea = createTextarea('form-control', 'legende', element.textContent);
-      textarea.setAttribute('disabled', true);
-      var div2 = createDiv('col-md-12', null, [textarea]);
+      textarea = createTextarea('form-control legende-music', element.getAttribute('href').substring(1), element.textContent);
     }
   } else if (event == null && imported) {
-    div2 = createDiv('col-md-9', null, [createInput('text', 'form-control', imported[0], imported[1], null, null, null, null)]);
+    textarea = createTextarea('form-control legende-music', imported[0], imported[1]);
   }
+
+  textarea.setAttribute('disabled', true);
+  div2 = createDiv('col-md-12', null, [textarea]);
 
   var btnAdd    =   createClickableImg('addChamp', 'add.png', 'Ajouter un nouveau champ');
   var btnDelete =   createClickableImg('deleteChamp', 'delete.png', 'Supprimer ce champ');
@@ -142,44 +142,32 @@ function selectMusic (event, imported) {
   var div3 = createDiv('col-md-12 optButton', null, [span]);
   var div = createDiv('form-group', null, [createDiv('row', null, [div2, div3])]);
 
-  var idActive = $('li.active').attr('id');
-  var form = $('div#content-item.'+idActive).find($('form#myFormActive'));
+  var idActive, form = null;
+
+  if (typeQR == 'atomique') { form = $('form#myFormActive'); }
+  if (typeQR == 'famille') {
+    idActive = $('li.active').attr('id');
+    form = $('div#content-item.'+idActive).find($('form#myFormActive'));
+  }
+
   form.append(div);
 
+  // ajout un event sur click du bouton supprimer champ
+  $('img.deleteChamp').click(function(){
+    $(this).parents('div.form-group').remove();
+    // supprimer le qrcode s'il n'y a plus de champs textarea
+    if (form.find('textarea').length == 0) {
+      if (typeQR == 'atomique') { init_View(); }
+      if (typeQR == 'famille') { $('div#content-item.'+idActive+' > input[title="Supprimer ce qrcode"]').trigger('click'); }
+    }
+  });
+
   // ajouter un eventlistener sur playChamp pour lire le champ sur click du bouton
-  btnPlay.addEventListener('click', function(event){
+  $('img.playChamp').click(function(event){
     console.log(event.target);
     var texte = event.target.parentNode.parentNode.parentNode.parentNode.childNodes[0].childNodes[0].value;
     getForm(texte);
   });
-  // ajouter un eventlistener sur deleteChamp pour supprimer le champ sur click du bouton
-/*  btnDelete.addEventListener('click', function(){
-    form.removeChild(div); // suppression du champ
-    // ajout des btn add et delete au champ précédent si il existe
-    if (form.length != 0) {
-      // recupérer le texte saisi avant de remplacer
-      var textContent = form.childNodes[form.childNodes.length-1].childNodes[0].childNodes[0].childNodes[0].value;
-
-      // recréer le input ou textarea et le div form-group
-      if (form.childNodes[form.childNodes.length-1].childNodes[0].childNodes[0].childNodes[0].tagName == 'INPUT') {
-        div2 = createDiv('col-md-9', null, [createInput('text', 'form-control', null, textContent, null, null, null, null)]);
-      } else {
-        div2 = createDiv('col-md-9', null, [createTextarea('form-control', 'legende', textContent)]);
-      }
-      div = createDiv('form-group', null, [createDiv('row', null, [div2, createDiv('col-md-3', null, [createDiv('row', null, [div3, div4, div5])])])]);
-      // recréer le champ précédent avec les boutons add et delete
-      form.replaceChild(div, form.childNodes[form.childNodes.length-1]);
-    } else {
-      // s'il s'agit d'une famille il faut juste supprimer le tab correspondant
-      if (document.getElementsByClassName('nav-tabs nav')[0].style.display == 'block') {
-        //closeTab();
-        console.log(event);
-      } else {
-        // il n' y a plus de champ on réinitilise l'application
-        init_View();
-      }
-    }
-  });*/
 
   // activer les boutons preview et lire
 /*
@@ -335,18 +323,15 @@ function exportFamily () {
 
 // function appelée aprés chaque export pour réinitialiser la vue
 function init_View () {
+  $('div.tab-content-qrcode-unique > div:first-child, #affichageqr > div:first-child').empty();
+  $('div.tab-content-qrcode-family').css('display', 'none');
   facade = new FacadeController();
+  typeQR = null;
   //document.getElementsByClassName('tab-content')[0].innerHTML = "";
   //document.getElementsByClassName('nav nav-tabs')[0].innerHTML = "";
-  document.getElementById('affichageqr').childNodes[1].innerHTML = '<div class="col-md-12"> <!-- affichage du qrcode --> </div>';
-  document.getElementById('btnExportFile').disabled = true;
-  document.getElementById('preview').disabled = true;
-  document.getElementById('read').disabled = true;
-  document.getElementById('creer').disabled = false;
-  document.getElementById('import').disabled = false;
-  document.getElementById('nameFamily').style.display = 'none';
-  document.getElementById('previewFamily').style.display = 'none';
-  document.getElementById('initView').style.display = 'none';
+  $('#btnExportFile, #preview, #read').attr('disabled', true);
+  $('#creer, #import').attr('disabled', false);
+  $('#previewFamily, #initView, #nameFamily').css('display', 'none');
 }
 
 
@@ -367,8 +352,8 @@ function setActive (div, li) {
 
 //fonction pour générer une famille de qrcode
 function previewFamily () {
-exportFamily();
-  var div = document.getElementById('affichageFamille').childNodes[1].childNodes[1].childNodes[3].childNodes[1];
+  exportFamily();
+  var div = $('div#affichageFamille').find('div.col-md-12.text-center')[0];
   facade.genererImageFamilleQRCode(tabQRCode, div);
   //document.getElementById('affichageFamille').style.display = 'block';
 
@@ -439,15 +424,20 @@ function previewQRCode (famille) {
     form = $('form#myFormActive');
   }
 
-  tab = form.find('textarea, input');
+  tab = form.find('textarea');
 
   /* copier les données du formulaire dans le qrcode */
   if (form != null) {
-    for(var i=0; i<form.length; i++) {
+    for(var i=0; i<tab.length; i++) {
       var element = tab[i];
       //var form2 = form.childNodes[0].childNodes;
       console.log(element);
 
+      if (element.tagName == "TEXTAREA") {
+          console.log(element.tagName);
+          copyContentToQRCode(qrcode, element);
+      }
+/*
         switch (element.tagName) {
           case 'INPUT':
           case 'TEXTAREA':
@@ -458,6 +448,7 @@ function previewQRCode (famille) {
           default:
             console.log(element.tagName);
         }
+        */
     }
 
     if (facade.getTailleReelleQRCode(qrcode) > 500 ) {

@@ -14,8 +14,6 @@ LIBS=bootstrap \
 install:
 	@echo "Installation / Mise à jour de Node.js"
 
-	sudo apt-get update
-	sudo apt-get install -y nodejs nodejs-legacy npm
 	sudo npm init -y
 	@echo "Installation des librairies requises"
 	sudo npm install $(LIBS) --save
@@ -28,7 +26,7 @@ install:
 	sudo rm -rf jquery-qrcode-temp jquery-qrcode-0.14.0.zip
 
 uninstall:
-	npm uninstall $(LIBS)
+	sudo npm uninstall $(LIBS)
 
 # For building and packaging app
 

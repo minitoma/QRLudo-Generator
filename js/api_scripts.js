@@ -140,9 +140,14 @@ function getForm (data) {
   if (data) {
     texte = data;
   } else {
+    var form = null;
 
-    var idActive = $('li.active').attr('id');
-    var form = $('div#content-item.'+idActive).find($('form#myFormActive'));
+    if (typeQR == 'atomique') { form = $('form#myFormActive'); }
+    if (typeQR == 'famille') {
+      var idActive = $('li.active').attr('id');
+      form = $('div#content-item.'+idActive).find($('form#myFormActive'));
+    }
+
     var tab = form.find('textarea, input');
     // parcourir le formulaire
     for (var i=0; i<tab.length; i++) {
