@@ -90,11 +90,9 @@ $(document).ready(function() {
   }); // sur clic d'un lien de musique
   document.getElementById('setImportedFile').addEventListener('click', importFile);
 
-  $('#btnExportFile, #saveFamily').click(function(){
-    exportFile();
-  });
+  $('#btnExportFile, #saveFamily').click(function(){ exportFile(); });
 
-  document.getElementById('previewFamily').addEventListener('click',previewFamily);
+  $('#previewFamily').click(function(){ previewFamily(); });
   $('#initView').click(function(){ init_View(); });
 
 });
@@ -308,8 +306,8 @@ function exportFamily () {
 
 // function appelée aprés chaque export pour réinitialiser la vue
 function init_View () {
-  $('div.tab-content-qrcode-unique > div:first-child, #affichageqr > div:first-child').empty();
-  $('div.tab-content-qrcode-family').css('display', 'none');
+  $('div.tab-content-qrcode-unique > div:first-child, #affichageqr > div:first-child, ul#sortable, div.tab-content-liste-content').empty();
+  $('div.tab-content-qrcode-family, div.tab-content-qrcode-unique').css('display', 'none');
   facade = new FacadeController();
   typeQR = null;
   //document.getElementsByClassName('tab-content')[0].innerHTML = "";

@@ -353,9 +353,9 @@ function createItems (imported) {
   // ajouter un eventlistener au checbox pour afficher ou masquer les options du braille
   $('input#checkBraille').change(function(){
     if ($(this).prop('checked')) {
-      $('#content-form > div:nth-child(3)').css('display', 'block');
+      $('div#content-item.'+$('li.active').attr('id')+' > div#content-form > div:nth-child(3)').css('display', 'block');
     } else {
-      $('#content-form > div:nth-child(3)').css('display', 'none');
+      $('div#content-item.'+$('li.active').attr('id')+' > div#content-form > div:nth-child(3)').css('display', 'none');
     }
   });
 
@@ -486,30 +486,31 @@ function preview () {
 function drawQRCodeFamille (qrcode) {
   for (var i = 0; i < qrcode.length; i++) {
     var qr = qrcode[i];
-      console.log(qr.getDonneesUtilisateur());
-      console.log(qr.getMetadonnees());
-      // appel de createItems avec true pour recréer une famille importée
-      $('#nameQRCode').val(qr.getNomQRCode());
-      createItems(true);
+    console.log(qr.getDonneesUtilisateur());
+    console.log(qr.getMetadonnees());
+    // appel de createItems avec true pour recréer une famille importée
+    $('#nameQRCode').val(qr.getNomQRCode());
+    createItems(true);
+    var activeItem = $('div#content-item.'+$('li.active').attr('id'));
+    // s'il y a du texte en braille
+    if (qr.getTexteBraille() != null && qr.getTexteBraille() != "") {
+      activeItem.find($('input#colorBraille')).val(qr.getColorBraille()); // restaurer la couleur du braille
+      activeItem.find($('input#braille')).val(qr.getTexteBraille()); // restaurer le texte en braille
+      activeItem.find($('input#checkBraille')).trigger('click');
+    }
+    // recupérer et restaurer la couleur du qrcode
+    activeItem.find($('input#colorQR')).val(qr.getColorQRCode()); // restaurer la couleur du qrcode
+    for (var j=0; j<qr.getTailleContenu(); j++){
 
-      // s'il y a du texte en braille
-      if (qr.getTexteBraille() != null && qr.getTexteBraille() != "") {
-        $('input#colorBraille').val(qr.getColorBraille()); // restaurer la couleur du braille
-        $('input#braille').val(qr.getTexteBraille()); // restaurer le texte en braille
-        $('input#checkBraille').trigger('click');
+      if (qr.getTypeContenu(j) == DictionnaireXml.getTagTexte()) {
+        createItemContent($('li.active').attr('id'), qr.getTexte(j));
+      } else if (qr.getTypeContenu(j) == DictionnaireXml.getTagFichier()) {
+         // appel de selectMusic pour créer un champ input de music
+        selectMusic(null, [qr.getUrlFichier(j), qr.getNomFichier(qr.getUrlFichier(j))]);
       }
-      // recupérer et restaurer la couleur du qrcode
-      $('input#colorQR').val(qr.getColorQRCode()); // restaurer la couleur du qrcode
-      for (var j=0; j<qr.getTailleContenu(); j++){
-
-        if (qr.getTypeContenu(j) == DictionnaireXml.getTagTexte()) {
-          createItemContent($('li.active').attr('id'), qr.getTexte(j));
-        } else if (qr.getTypeContenu(j) == DictionnaireXml.getTagFichier()) {
-           // appel de selectMusic pour créer un champ input de music
-          selectMusic(null, [qr.getUrlFichier(j), qr.getNomFichier(qr.getUrlFichier(j))]);
-        }
-      }
+    }
   }
+
   $('#nameFamily').val(qrcode[0].getNomFamille())
                   .css('display', 'block');
   $('#creer, #import').attr('disabled', true);
