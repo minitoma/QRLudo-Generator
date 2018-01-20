@@ -124,12 +124,13 @@ function selectMusic (event, imported) {
 
     if(element.tagName == 'A') {
       textarea = createTextarea('form-control legende-music', element.getAttribute('href').substring(1), element.textContent);
+      textarea.setAttribute('disabled', true);
     }
   } else if (event == null && imported) {
     textarea = createTextarea('form-control legende-music', imported[0], imported[1]);
+    textarea.setAttribute('disabled', true);
   }
 
-  textarea.setAttribute('disabled', true);
   div2 = createDiv('col-md-12', null, [textarea]);
 
   var btnAdd    =   createClickableImg('addChamp', 'add.png', 'Ajouter un nouveau champ');

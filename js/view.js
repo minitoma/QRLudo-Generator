@@ -34,7 +34,7 @@ $(document).ready(function() {
 
   $('#setNameQRCode').click(function(e){
     if ($('#nameQRCode').val()) {
-      createItems();
+      createItems(false);
       $('#nameQRCode').val('');
       $('#creer').attr('disabled', true);
       $('#import').attr('disabled', true);
@@ -351,11 +351,11 @@ function createItems (imported) {
   $('.tab-content-liste-content > #content-item:last-child > #content-form').append(html);
 
   // ajouter un eventlistener au checbox pour afficher ou masquer les options du braille
-  $('#checkBraille').change(function(){
-    if (this.checked) {
-      document.getElementById('braille').parentNode.parentNode.style.display = 'block';
+  $('input#checkBraille').change(function(){
+    if ($(this).prop('checked')) {
+      $('#content-form > div:nth-child(3)').css('display', 'block');
     } else {
-      document.getElementById('braille').parentNode.parentNode.style.display = 'none';
+      $('#content-form > div:nth-child(3)').css('display', 'none');
     }
   });
 
@@ -524,7 +524,7 @@ function drawQRCodeAtomique (qrcode) {
     $('input#checkBraille').trigger('click');
   }
 
-  $('input#colorQR').attrval(qrcode.getColorQRCode()); // restaurer la couleur du qrcode
+  $('input#colorQR').val(qrcode.getColorQRCode()); // restaurer la couleur du qrcode
 
   for (var i=0; i<qrcode.getTailleContenu(); i++){
 
