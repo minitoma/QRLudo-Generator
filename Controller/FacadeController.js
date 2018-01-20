@@ -27,11 +27,15 @@ class FacadeController{
 
   //Génère une image QRCode à partir d'un objet QRCode dans le div passé en paramètre
   genererQRCode(divImg, qrcode){
-    while (divImg.hasChildNodes()) {
+    try {
+      while (divImg.hasChildNodes()) {
         divImg.removeChild(divImg.firstChild);
-    }
+      }
 
-    return this.imageGenerator.genererQRCode(divImg, qrcode);
+      return this.imageGenerator.genererQRCode(divImg, qrcode);
+    } catch (e) {
+      alert(e);
+    }
   }
 
   //Génère une image contenant une famille de QRCodes dans les metadonnees
