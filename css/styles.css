@@ -217,3 +217,7 @@ ul#sortable > li {
   padding-right: 0;
   text-align: center;
 }
+
+#myFormActive > div > div:nth-child(2) {
+  border: 1px solid #c5c4c4;
+}

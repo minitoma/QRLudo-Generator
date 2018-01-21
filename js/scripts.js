@@ -1,5 +1,6 @@
 
 $(document).ready(function() {
+
   try {
     // pour rendre les listes sortables
     $(function() {
@@ -21,11 +22,6 @@ $(document).ready(function() {
   // desactiver exporter, faut preview avant de pouvoir exporter
   // désactiver le bouton créer s'il s'agit de qrcode unique
   $('#btnExportFile, #preview, #read').attr('disabled', true);
-
-
-  $('#qrCodeAtomique').click(function(){
-  //document.getElementById('modalFamilyName').childNodes[1].childNodes[1].childNodes[1].childNodes[1].childNodes[1].textContent = "Nom du QRCode";
-  });
 
   // fonction pour dispatcher
   document.addEventListener('click', function(){
@@ -79,13 +75,21 @@ function selectMusic (event, imported) {
     var btnPlay   =   createClickableImg('playChamp', 'play.png', 'Ecouter le contenu du champ');
 
     var span = document.createElement('SPAN');
+
     span.append(btnAdd, btnDelete, btnPlay);
-    var div3 = createDiv('col-md-12 optButton', null, [span]);
-    var div = createDiv('form-group', null, [createDiv('row', null, [div2, div3])]);
+
+    var div;
+    if (typeQR == 'ensemble') { // on ne supprime pas ou ajouter des champs pour un qrcode ensemble
+      div = createDiv('form-group', null, [createDiv('row', null, [div2])]);
+    } else {
+      var div3 = createDiv('col-md-12 optButton', null, [span]);
+      div = createDiv('form-group', null, [createDiv('row', null, [div2, div3])]);
+    }
 
     var idActive, form = null;
 
     if (typeQR == 'atomique') { form = $('form#myFormActive'); }
+    if (typeQR == 'ensemble') { form = $('form#myFormActive > div:last-child'); }
     if (typeQR == 'famille') {
       idActive = $('li.active').attr('id');
       form = $('div#content-item.'+idActive).find($('form#myFormActive'));
@@ -98,7 +102,7 @@ function selectMusic (event, imported) {
       $(this).parents('div.form-group').remove();
       // supprimer le qrcode s'il n'y a plus de champs textarea
       if (form.find('textarea').length == 0) {
-        if (typeQR == 'atomique') { init_View(); }
+        if (typeQR == 'atomique' || typeQR == 'ensemble') { init_View(); }
         if (typeQR == 'famille') { $('div#content-item.'+idActive+' > input[title="Supprimer ce qrcode"]').trigger('click'); }
       }
     });
@@ -140,7 +144,7 @@ function exportFile () {
       nameFile = $('#nameFamily').val() + '.jpeg'; // nom de la famille
     }
 
-    if (typeQR == 'atomique') {
+    if (typeQR == 'atomique' || typeQR == 'ensemble') {
       img = $('#affichageqr').find('img')[0];
       nameFile = 'image.jpeg'; // nom du ficher par defaut
     }
@@ -207,7 +211,7 @@ function init_View () {
   facade = new FacadeController();
   typeQR = null;
   tabQRCode = [];
-  $('div.tab-content-qrcode-unique > div:first-child, #affichageqr > div:first-child, ul#sortable, div.tab-content-liste-content').empty();
+  $('div.tab-content-qrcode-unique > div:first-child, #affichageqr > div:first-child, ul#sortable, div.tab-content-liste-content, div#nameproject').empty();
   $('div.tab-content-qrcode-family, div.tab-content-qrcode-unique, #previewFamily, #initView, #nameFamily').css('display', 'none');
   $('#btnExportFile, #preview, #read').attr('disabled', true);
   $('#creer, #import').attr('disabled', false);
@@ -237,7 +241,7 @@ function previewQRCode (famille) {
     if (famille) {
       idActive = $('li.active').attr('id');
       form = $('div#content-item.'+idActive).find($('form#myFormActive'));
-    } else {
+    } else{
       form = $('form#myFormActive');
     }
 

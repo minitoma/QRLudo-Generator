@@ -28,6 +28,37 @@ $(document).ready(function() {
     baseViewQRCodeAtomique(createItemContent);
   }); // création d'un qrcode atomique
 
+  // créer un qrcode ensemble
+  $('a#createQRCodeEnsemble').click(function(){
+    baseViewQRCodeEnsemble(null);
+    /* drag and drop concernant le qrcode ensemble */
+    var holder = $('html')[0];
+
+    holder.ondragover = () => {
+        return false;
+    };
+
+    holder.ondragleave = () => {
+        return false;
+    };
+
+    holder.ondragend = () => {
+        return false;
+    };
+
+    holder.ondrop = (e) => {
+      e.preventDefault();
+
+      for (let f of e.dataTransfer.files) {
+        console.log(f);
+        if (f) { facade.importQRCode(f); }
+      }
+
+      return false;
+    };
+    /* fin drag and drop concernant le qrcode ensemble */
+  }); // création d'un qrcode ensemble
+
   $('#setNameQRCode').click(function(e){
     if ($('#nameQRCode').val()) {
       createItems(false);
@@ -48,13 +79,6 @@ $(document).ready(function() {
 
 });
 
-// fcontion pour créer un label
-function createLabel (fore, texte) {
-  var label = document.createElement('label');
-  if (fore) label.setAttribute('for', fore);
-  if (texte) label.appendChild(document.createTextNode(texte));
-  return label;
-}
 
 // fonction pour une zone de texte
 function createTextarea (classe, id, textcontent) {
@@ -81,17 +105,6 @@ function createInput (type, classe, id, value, src, datatoggle, datatarget, titl
   return input;
 }
 
-// créer un bouton
-function createButton(type, classe, datatoggle, datatarget, texte) {
-  var button = document.createElement('button');
-  if (type) button.setAttribute('type', type);
-  if (classe) button.setAttribute('class', classe);
-  if (datatoggle) button.setAttribute('data-toggle', datatoggle);
-  if (datatarget) button.setAttribute('data-target', datatarget);
-  if (texte) button.appendChild(document.createTextNode(texte));
-  return button;
-}
-
 function createClickableImg (classe, src, title) {
   var a = document.createElement('A');
   var img = document.createElement('IMG');
@@ -106,6 +119,38 @@ function createClickableImg (classe, src, title) {
 
   a.append(img);
   return a;
+}
+
+// créer un élément div
+function createDiv(classe, id, child) {
+  var div = document.createElement('DIV');
+  if (classe) div.setAttribute('class', classe);
+  if (id) div.setAttribute('id', id);
+
+  if (child) {
+    for(var i=0; i<child.length; i++) {
+      div.appendChild(child[i]);
+    }
+  }
+
+  return div;
+}
+
+// Générer un champ pour de la musique
+function createMusicBox () {
+  try {
+    // Load client secrets from a local file.
+    fs.readFile('client_secret.json', function processClientSecrets(err, content) {
+      if (err) {
+        console.log('Error loading client secret file: ' + err);
+        return;
+      }
+      // Authorize a client with the loaded credentials, then call the Drive API.
+      authorize(JSON.parse(content), listFiles);
+    });
+  } catch (e) {
+    alert(e);
+  }
 }
 
 // créer le contenu d'un item à partir de l'id renseigné.
@@ -126,6 +171,7 @@ function createItemContent (idActive, data) {
     var form;
 
     if (typeQR == 'atomique') { form = $('form#myFormActive'); }
+    if (typeQR == 'ensemble') { form = $('form#myFormActive'); }
     if (typeQR == 'famille')  { form = $('div#content-item.'+idActive).find($('form#myFormActive')); }
 
     form.append(div);
@@ -158,52 +204,17 @@ function createItemContent (idActive, data) {
   }
 }
 
-// Générer un champ pour de la musique
-function createMusicBox () {
-  try {
-    // Load client secrets from a local file.
-    fs.readFile('client_secret.json', function processClientSecrets(err, content) {
-      if (err) {
-        console.log('Error loading client secret file: ' + err);
-        return;
-      }
-      // Authorize a client with the loaded credentials, then call the Drive API.
-      authorize(JSON.parse(content), listFiles);
-    });
-  } catch (e) {
-    alert(e);
-  }
-}
-
-// créer un élément div
-function createDiv(classe, id, child) {
-  var div = document.createElement('DIV');
-  if (classe) div.setAttribute('class', classe);
-  if (id) div.setAttribute('id', id);
-
-  if (child) {
-    for(var i=0; i<child.length; i++) {
-      div.appendChild(child[i]);
-    }
-  }
-
-  return div;
-}
-
-// créer une élément img
-function createImg(id, src) {
-  var img = document.createElement('img');
-  if (id) img.setAttribute('id', id);
-  if (src) img.setAttribute('src', src);
-  return img;
-}
-
 /*
  fonction pour créér des items
  si imported = true : cette fonction est appelée pour recréer une famille de qrcode
 */
 function createItems (imported) {
   try {
+
+    if ($('div#nameproject').children().length == 0) {
+      $('div#nameproject').append('<p><h6>Famille de QR-Code</h6></p>');
+    }
+
     typeQR = 'famille';
     $('#nameFamily').css('display', 'block');
     $('div.tab-content-qrcode-family.row').css('display', 'block');
@@ -294,7 +305,7 @@ function preview () {
     }
 
     // pour qrcode atomique, pas de famille
-    if (typeQR == 'atomique') { previewQRCode(false); }
+    if (typeQR == 'atomique' || typeQR == 'ensemble') { previewQRCode(false); }
   } catch (e) {
     alert(e);
   }
@@ -342,7 +353,13 @@ function drawQRCodeFamille (qrcode) {
 // fonction appelée pour faire le view du qrcode atomique
 function drawQRCodeAtomique (qrcode) {
   try {
+    if (typeQR == 'ensemble') {
+      drawQRCodeAtomiqueEnsemble(qrcode);
+      return;
+    }
+
     baseViewQRCodeAtomique(null);
+
     if (qrcode.getTexteBraille() != null && qrcode.getTexteBraille() != "") {
       $('input#colorBraille').val(qrcode.getColorBraille()); // restaurer la couleur du braille
       $('input#braille').val(qrcode.getTexteBraille()); // restaurer le texte en braille
@@ -359,6 +376,41 @@ function drawQRCodeAtomique (qrcode) {
         // appel de selectMusic pour créer un chap input de music
         selectMusic(null, [qrcode.getUrlFichier(i), qrcode.getNomFichier(qrcode.getUrlFichier(i))]);
       }
+
+    }
+  } catch (e) {
+    alert(e);
+  }
+}
+
+// fonction appelée pour créer un qrcode atomique dans un qrcode ensemble
+function drawQRCodeAtomiqueEnsemble (qrcode) {
+  try {
+    //ajout du bouton pour supprimer un qrcode.
+    var inputDel = createInput('image', null, null, null, 'delete.png', null, null, 'Supprimer ce qrcode');
+    inputDel.disabled = false;
+
+    // mettre chaque qrcode atomique dans un div
+    var div = createDiv(null, null, [inputDel, createDiv(null, null, null)]);
+    $('#myFormActive').append(div);
+
+    //supprimer le qrcode sur click du bouton
+    $('form#myFormActive > div > input[title="Supprimer ce qrcode"]').click(function(){
+      $(this).parent().remove();
+      // reinitialiser la vue s'il n'y a plus de qrcode
+      if ($('#myFormActive').children().length == 0) {
+        init_View();
+      }
+    });
+
+    for (var i=0; i<qrcode.getTailleContenu(); i++){
+
+      // importer que les musiques si qrcode ensemble à créer
+      if (qrcode.getTypeContenu(i) == DictionnaireXml.getTagFichier()){
+        // appel de selectMusic pour créer un chap input de music
+        selectMusic(null, [qrcode.getUrlFichier(i), qrcode.getNomFichier(qrcode.getUrlFichier(i))]);
+      }
+
     }
   } catch (e) {
     alert(e);
@@ -368,6 +420,7 @@ function drawQRCodeAtomique (qrcode) {
 // retourne l'architecture html de base pour un qrcode atomique
 function baseViewQRCodeAtomique (callback) {
   typeQR = 'atomique';
+  $('div#nameproject').append('<p><h6>QR-Code Atomique</h6></p>');
   $('div.tab-content-qrcode-unique').css('display', 'block');
   var html =
       '<div class="row" id="content-form">'+
@@ -406,5 +459,49 @@ function baseViewQRCodeAtomique (callback) {
   } catch (e) {
     alert(e);
   }
+}
 
+// retourne l'architecture html de base pour un qrcode ensemble
+function baseViewQRCodeEnsemble () {
+  typeQR = 'ensemble';
+  $('div#nameproject').append('<p><h6>QR-Code Ensemble</h6></p>');
+  $('div.tab-content-qrcode-unique').css('display', 'block');
+
+  var html = '<div class="row text-center" id="temporary"><div class="col-md-12"><p><h4>Glisser/Déposer les qrcodes à ajouter</h4></p></div></div>';
+
+  html +=
+    '<div class="row" id="content-form">'+
+      '<form id="myFormActive"></form>'+
+    '</div>';
+
+  $('.content').append(html);
+
+  // bouton pour fermer annuler la création du qrcode et champ pour braille au milieu du qrcode
+  html =
+    '<div class="row"><div class="col-md-6 text-center"><input type="checkbox" id="checkBraille">Texte en braille</div>'+
+    '<div class="col-md-6 text-center"><input type="color" id="colorQR" title="Couleur du QRCode"/></div></div>'+
+        //'<button type="button" class="btn btn-default" id="closeForm">Annuler</button>'+
+    '<div class="row" style="display:none;"><div class="col-md-3 text-center"><input type="text" id="braille" title="Texte en braille" maxlength="2"></div>'+
+    '<div class="col-md-3 text-center"><input type="color" id="colorBraille" title="Couleur du texte en braille"/></div>'+
+    '<div class="col-md-6 text-center"></div></div>';
+
+  $('.content > #content-form').append(html);
+
+  try {
+    // ajouter un eventlistener au checbox pour afficher ou masquer les options du braille
+      $('input#checkBraille').change(function(){
+      if ($(this).prop('checked')) {
+        $('div#content-form').children('div:last-child').css('display', 'block');
+      } else {
+        $('div#content-form').children('div:last-child').css('display', 'none');
+      }
+    });
+    $('input#nameFamily').css('display', 'none');
+    // activer / désactiver les bouton
+    $('button#preview, button#read').attr('disabled', false);
+    $('button#creer, button#import').attr('disabled', true);
+
+  } catch (e) {
+    alert(e);
+  }
 }

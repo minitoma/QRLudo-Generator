@@ -142,7 +142,7 @@ function getForm (data) {
   } else {
     var form = null;
 
-    if (typeQR == 'atomique') { form = $('form#myFormActive'); }
+    if (typeQR == 'atomique' || typeQR == 'ensemble') { form = $('form#myFormActive'); }
     if (typeQR == 'famille') {
       var idActive = $('li.active').attr('id');
       form = $('div#content-item.'+idActive).find($('form#myFormActive'));
