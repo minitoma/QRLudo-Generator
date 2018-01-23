@@ -402,12 +402,8 @@ function drawQRCodeAtomiqueEnsemble (qrcode, imported) {
 
     if (imported) {
       for (var i=0; i<qrcode.getNbLiens(); i++){
-
-        //if (qrcode.getTypeContenu(i) == DictionnaireXml.getTagFichier()){
-          // appel de selectMusic pour créer un chap input de music
-          selectMusic(null, [qrcode.getLien(i), qrcode.getNomFichier(qrcode.getLien(i))]);
-        //}
-
+        // appel de selectMusic pour créer un chap input de music
+        selectMusic(null, [qrcode.getLien(i), qrcode.getNomFichier(qrcode.getLien(i))]);
       }
     } else {
       for (var i=0; i<qrcode.getTailleContenu(); i++){
