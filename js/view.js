@@ -149,7 +149,7 @@ function createMusicBox () {
       authorize(JSON.parse(content), listFiles);
     });
   } catch (e) {
-    alert(e);
+    alert('Erreur : ' + e.stack);
   }
 }
 
@@ -200,7 +200,7 @@ function createItemContent (idActive, data) {
     $('#closeModal').trigger('click'); // fermer le popup d'ajout d'un nouveau champ
 
   } catch (e) {
-    alert(e);
+    alert('Erreur : ' + e.stack);
   }
 }
 
@@ -287,7 +287,7 @@ function createItems (imported) {
       createItemContent($('li.active').attr('id'), null);
     }
   } catch (e) {
-    alert(e);
+    alert('Erreur : ' + e.stack);
   }
 }
 
@@ -307,7 +307,7 @@ function preview () {
     // pour qrcode atomique, pas de famille
     if (typeQR == 'atomique' || typeQR == 'ensemble') { previewQRCode(false); }
   } catch (e) {
-    alert(e);
+    alert('Erreur : ' + e.stack);
   }
 }
 
@@ -346,15 +346,19 @@ function drawQRCodeFamille (qrcode) {
     $('#creer, #import').attr('disabled', true);
 
   } catch (e) {
-    alert(e);
+    alert('Erreur : ' + e.stack);
   }
 }
 
 // fonction appelée pour faire le view du qrcode atomique
 function drawQRCodeAtomique (qrcode) {
   try {
+    if (qrcode.getTypeQR() == 'ensemble') {
+      drawQRCodeAtomiqueEnsemble(qrcode, true);
+      return;
+    }
     if (typeQR == 'ensemble') {
-      drawQRCodeAtomiqueEnsemble(qrcode);
+      drawQRCodeAtomiqueEnsemble(qrcode, false);
       return;
     }
 
@@ -379,13 +383,14 @@ function drawQRCodeAtomique (qrcode) {
 
     }
   } catch (e) {
-    alert(e);
+    alert('Erreur : ' + e.stack);
   }
 }
 
 // fonction appelée pour créer un qrcode atomique dans un qrcode ensemble
-function drawQRCodeAtomiqueEnsemble (qrcode) {
+function drawQRCodeAtomiqueEnsemble (qrcode, imported) {
   try {
+    if (imported) { baseViewQRCodeEnsemble(); }
     //ajout du bouton pour supprimer un qrcode.
     var inputDel = createInput('image', null, null, null, 'delete.png', null, null, 'Supprimer ce qrcode');
     inputDel.disabled = false;
@@ -393,6 +398,28 @@ function drawQRCodeAtomiqueEnsemble (qrcode) {
     // mettre chaque qrcode atomique dans un div
     var div = createDiv(null, null, [inputDel, createDiv(null, null, null)]);
     $('#myFormActive').append(div);
+
+
+    if (imported) {
+      for (var i=0; i<qrcode.getNbLiens(); i++){
+
+        //if (qrcode.getTypeContenu(i) == DictionnaireXml.getTagFichier()){
+          // appel de selectMusic pour créer un chap input de music
+          selectMusic(null, [qrcode.getLien(i), qrcode.getNomFichier(qrcode.getLien(i))]);
+        //}
+
+      }
+    } else {
+      for (var i=0; i<qrcode.getTailleContenu(); i++){
+
+        // importer que les musiques si qrcode ensemble à créer
+        if (qrcode.getTypeContenu(i) == DictionnaireXml.getTagFichier()){
+          // appel de selectMusic pour créer un chap input de music
+          selectMusic(null, [qrcode.getUrlFichier(i), qrcode.getNomFichier(qrcode.getUrlFichier(i))]);
+        }
+
+      }
+    }
 
     //supprimer le qrcode sur click du bouton
     $('form#myFormActive > div > input[title="Supprimer ce qrcode"]').click(function(){
@@ -403,17 +430,8 @@ function drawQRCodeAtomiqueEnsemble (qrcode) {
       }
     });
 
-    for (var i=0; i<qrcode.getTailleContenu(); i++){
-
-      // importer que les musiques si qrcode ensemble à créer
-      if (qrcode.getTypeContenu(i) == DictionnaireXml.getTagFichier()){
-        // appel de selectMusic pour créer un chap input de music
-        selectMusic(null, [qrcode.getUrlFichier(i), qrcode.getNomFichier(qrcode.getUrlFichier(i))]);
-      }
-
-    }
   } catch (e) {
-    alert(e);
+    alert('Erreur : ' + e.stack);
   }
 }
 
@@ -457,7 +475,7 @@ function baseViewQRCodeAtomique (callback) {
     if (callback) { callback(null, null); }
 
   } catch (e) {
-    alert(e);
+    alert('Erreur : ' + e.stack);
   }
 }
 
@@ -476,11 +494,10 @@ function baseViewQRCodeEnsemble () {
 
   $('.content').append(html);
 
-  // bouton pour fermer annuler la création du qrcode et champ pour braille au milieu du qrcode
+  // champ pour braille au milieu du qrcode
   html =
     '<div class="row"><div class="col-md-6 text-center"><input type="checkbox" id="checkBraille">Texte en braille</div>'+
     '<div class="col-md-6 text-center"><input type="color" id="colorQR" title="Couleur du QRCode"/></div></div>'+
-        //'<button type="button" class="btn btn-default" id="closeForm">Annuler</button>'+
     '<div class="row" style="display:none;"><div class="col-md-3 text-center"><input type="text" id="braille" title="Texte en braille" maxlength="2"></div>'+
     '<div class="col-md-3 text-center"><input type="color" id="colorBraille" title="Couleur du texte en braille"/></div>'+
     '<div class="col-md-6 text-center"></div></div>';
@@ -502,6 +519,6 @@ function baseViewQRCodeEnsemble () {
     $('button#creer, button#import').attr('disabled', true);
 
   } catch (e) {
-    alert(e);
+    alert('Erreur : ' + e.stack);
   }
 }
