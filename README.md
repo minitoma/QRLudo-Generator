@@ -3,9 +3,11 @@ Application pour générer des QR-Codes qui seront lus (synthése vocale), à l'
 Il faut installer le projet et activer l'api googe drive avant de déployer et d'executer le logiciel créé.
 
 ## Pour installer le projet
+L'installation de ce projet nécessite l'installation de [nodejs et npm] (https://doc.ubuntu-fr.org/nodejs).
+
     $ git clone https://github.com/minitoma/QRLudo-Generator.git
     $ cd QRLudo-Generator
-    $ sudo make install
+    $ make install
 
 ## Pour activer l'api de google drive
     $ node quickstart.js
@@ -13,10 +15,10 @@ Il faut installer le projet et activer l'api googe drive avant de déployer et d
     Enfin copier le code généré sur le terminal.
 
 ## Pour déployer l'Application
-    $ sudo make release
+    $ make release
 
 ## Pour executer 
     $ ./QRLudo-Generator
 
 ## Pour supprimer les librairies
-    $ sudo make uninstall
+    $ make uninstall

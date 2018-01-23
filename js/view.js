@@ -1,56 +1,90 @@
-var idInputText = 0; // pour identifier les inputs de façon unique
-var idMenu = 1; // pour identifier de facon unique les menus
 var facade = new FacadeController();
 var tabQRCode = [];
+var typeQR; // rens le type de qrcode
 
 
 $(document).ready(function() {
 
-  document.getElementById('closeModalMusique').addEventListener('click', function(){
-    closeModalMusique(event);
-  }); // sur clic du bouton closeModalMusique
+  // effacer la liste des musiques avant de fermer le popup
+  $('#closeModalMusique').click(function(e){
+    $('#modalMusic').find('div.modal-header.row').empty();
+    e.stopImmediatePropagation();
+  });
 
-  document.getElementsByClassName('set-legende')[0].addEventListener('click', function(){
-    createTextBox('');
-  }); // sur clic du bouton creer champ texte
+  $('button.set-legende').click(function(){ createItemContent($('li.active').attr('id'), null); }); // sur clic du bouton creer champ texte
 
-  document.getElementById('read').addEventListener('click', function(){
-    this.parentNode.parentNode.style.display = 'none';
-    document.getElementById('stop').parentNode.parentNode.style.display = 'block';
+  $('button#read').click(function(){
+    $('div.colRight > form > div:nth-child(2)').css('display', 'none');
+    $('div.colRight > form > div:nth-child(3)').css('display', 'block');
     getForm(null);
   }); // sur clic du bouton Lire pour ecouter les textes saisis
-  document.getElementById('stop').addEventListener('click', function(){
-    this.parentNode.parentNode.style.display = 'none';
-    document.getElementById('read').parentNode.parentNode.style.display = 'block';
+  $('button#stop').click(function(){
+    $('div.colRight > form > div:nth-child(3)').css('display', 'none');
+    $('div.colRight > form > div:nth-child(2)').css('display', 'block');
     stopLecture();
   });
   document.getElementById('preview').addEventListener('click', preview); // prévisualiser le qr-code
-  document.getElementById('createQRCodeAtomique').addEventListener('click', function(){
-    baseViewQRCodeAtomique(createTextBox);
+  $('a#createQRCodeAtomique').click(function(){
+    baseViewQRCodeAtomique(createItemContent);
   }); // création d'un qrcode atomique
-  document.getElementById('setNameQRCode').addEventListener('click', function(){
-    createTabs();
-    document.getElementById('creer').disabled = true;
-    document.getElementById('import').disabled = true;
-    //baseViewQRCodeEnsemble(createTextBox);
+
+  // créer un qrcode ensemble
+  $('a#createQRCodeEnsemble').click(function(){
+    baseViewQRCodeEnsemble(null);
+    /* drag and drop concernant le qrcode ensemble */
+    var holder = $('html')[0];
+
+    holder.ondragover = () => {
+        return false;
+    };
+
+    holder.ondragleave = () => {
+        return false;
+    };
+
+    holder.ondragend = () => {
+        return false;
+    };
+
+    holder.ondrop = (e) => {
+      e.preventDefault();
+
+      for (let f of e.dataTransfer.files) {
+        console.log(f);
+        if (f) { facade.importQRCode(f); }
+      }
+
+      return false;
+    };
+    /* fin drag and drop concernant le qrcode ensemble */
+  }); // création d'un qrcode ensemble
+
+  $('#setNameQRCode').click(function(e){
+    if ($('#nameQRCode').val()) {
+      createItems(false);
+      $('#nameQRCode').val('');
+      $('#creer').attr('disabled', true);
+      $('#import').attr('disabled', true);
+    } else {
+      e.preventDefault();
+    }
   }); // creation d'une famille de qrcode atomique
+
+  $('#nameQRCode').keypress(function(e){
+    var key = e.keyCode;
+    if (!(key >= 65 && key <= 90) && !(key >= 97 && key <= 122)) {
+      e.preventDefault();
+    }
+  });
+
 });
 
-
-// fcontion pour créer un label
-function createLabel (fore, texte) {
-  var label = document.createElement('label');
-  if (fore) label.setAttribute('for', fore);
-  if (texte) label.appendChild(document.createTextNode(texte));
-  return label;
-}
 
 // fonction pour une zone de texte
 function createTextarea (classe, id, textcontent) {
   var textarea = document.createElement('textarea');
   if (classe) textarea.setAttribute('class', classe);
-  idInputText++;
-  if (id) textarea.setAttribute('id', id+idInputText);
+  if (id) textarea.setAttribute('id', id);
   if (textcontent) textarea.appendChild(document.createTextNode(textcontent));
   textarea.setAttribute('placeholder', 'Mettre la légende');
   return textarea;
@@ -61,7 +95,6 @@ function createInput (type, classe, id, value, src, datatoggle, datatarget, titl
   var input = document.createElement('input');
   if (type) input.setAttribute('type', type);
   if (classe) input.setAttribute('class', classe);
-  idInputText++;
   if (id) input.setAttribute('id', id);
   if (value) input.setAttribute('value', value);
   if (src) input.setAttribute('src', __dirname+'/img/'+src);
@@ -72,116 +105,21 @@ function createInput (type, classe, id, value, src, datatoggle, datatarget, titl
   return input;
 }
 
-// créer un bouton
-function createButton(type, classe, datatoggle, datatarget, texte) {
-  var button = document.createElement('button');
-  if (type) button.setAttribute('type', type);
-  if (classe) button.setAttribute('class', classe);
-  if (datatoggle) button.setAttribute('data-toggle', datatoggle);
-  if (datatarget) button.setAttribute('data-target', datatarget);
-  if (texte) button.appendChild(document.createTextNode(texte));
-  return button;
+function createClickableImg (classe, src, title) {
+  var a = document.createElement('A');
+  var img = document.createElement('IMG');
+  img.setAttribute('class', 'clickableImg '+ classe)
+  img.setAttribute('src', __dirname+'/img/'+src);
+  img.setAttribute('title', title);
+
+  if (src == 'add.png') {
+    img.setAttribute('data-toggle', 'modal')
+    img.setAttribute('data-target', '#myModal');
+  }
+
+  a.append(img);
+  return a;
 }
-
-// Générer une zone de texte
-function createTextBox (textContent) {
-  /*
-  '<div class="form-group">'+
-    '<div class="row">'+
-      '<div class="col-md-9">'+
-        '<textarea class="form-control" id="legende1"></textarea>'+
-      '</div>'+
-      '<div class="col-md-3">'+
-        '<button type="button" class="btn btn-default addChamp" data-toggle="modal" data-target="#myModal">Ajouter un champ1</button>'+
-      '</div>'+
-    '</div>'+
-  '</div>'+
-*/
-  var div2 = createDiv('col-md-9', null, [createTextarea('form-control', 'legende', textContent)]);
-  var btnAdd = createButton('button', 'btn btn-default addChamp', 'modal', '#myModal', null);
-  var btnDelete = createButton('button', 'btn btn-default deleteChamp', null, null, null);
-  var btnPlay = createButton('button', 'btn btn-default playChamp', null, null, null);
-  btnAdd.appendChild(createInput('image', null, null, null, 'add.png', null, null, 'Ajouter un nouveau champ'));
-  btnDelete.appendChild(createInput('image', 'deleteChamp', null, null, 'delete.png', null, null, 'Supprimer ce champ'));
-  btnPlay.appendChild(createInput('image', 'playChamp', null, null, 'play.png', null, null, 'Ecouter le contenu du champ'));
-  var div3 = createDiv('col-md-4', null, [btnAdd]);
-  var div4 = createDiv('col-md-4', null, [btnDelete]);
-  var div5 = createDiv('col-md-4', null, [btnPlay]);
-  var div = createDiv('form-group', null, [createDiv('row', null, [div2, createDiv('col-md-3', null, [createDiv('row', null, [div3, div4, div5])])])]);
-  var form = document.getElementsByClassName('in active')[0].childNodes[0].childNodes[0];
-  form.appendChild(div);
-
-  // ajouter un eventlistener sur playChamp pour lire le champ sur click du bouton
-  btnPlay.addEventListener('click', function(event){
-    console.log(event.target);
-    var texte = event.target.parentNode.parentNode.parentNode.parentNode.childNodes[0].childNodes[0].value;
-    getForm(texte);
-  });
-  // ajouter un eventlistener sur deleteChamp pour supprimer le champ sur click du bouton
-  btnDelete.addEventListener('click', function(){
-    form.removeChild(div); // suppression du champ
-    // ajout des btn add et delete au champ précédent si il existe
-    if (form.length != 0) {
-      // recupérer le texte saisi avant de remplacer
-      var textContent = form.childNodes[form.childNodes.length-1].childNodes[0].childNodes[0].childNodes[0].value;
-
-      // recréer le input ou textarea et le div form-group
-      if (form.childNodes[form.childNodes.length-1].childNodes[0].childNodes[0].childNodes[0].tagName == 'INPUT') {
-        div2 = createDiv('col-md-9', null, [createInput('text', 'form-control', null, textContent, null, null, null, null)]);
-      } else {
-        div2 = createDiv('col-md-9', null, [createTextarea('form-control', 'legende', textContent)]);
-      }
-      div = createDiv('form-group', null, [createDiv('row', null, [div2, createDiv('col-md-3', null, [createDiv('row', null, [div3, div4, div5])])])]);
-      // recréer le champ précédent avec les boutons add et delete
-      form.replaceChild(div, form.childNodes[form.childNodes.length-1]);
-    } else {
-      // s'il s'agit d'une famille il faut juste supprimer le tab correspondant
-      if (document.getElementsByClassName('nav-tabs nav')[0].style.display == 'block') {
-        //closeTab();
-        document.getElementsByClassName('nav-tabs nav')[0].removeChild(document.getElementsByClassName('active menu')[0]);
-        document.getElementsByClassName('tab-content')[0].removeChild(document.getElementsByClassName('tab-pane fade active in')[0]);
-        if (document.getElementsByClassName('menu')[0]) {
-          document.getElementsByClassName('menu')[0].childNodes[0].click();
-        } else {
-          init_View();
-        }
-
-      } else {
-        // il n' y a plus de champ on réinitilise l'application
-        init_View();
-      }
-    }
-  });
-
-  // activer les boutons preview et lire
-  document.getElementById('preview').disabled = false;
-  document.getElementById('read').disabled = false;
-
-  document.getElementById('closeModal').click(); // fermer le popup
-  // s'il ya plus d'un champ, on supprime le btn add de l'avant dernie champ
-  if (document.getElementsByClassName('tab-pane fade active in')[0].childNodes[0].childNodes[0].childNodes.length > 1) { deleteAddBtn(); }
-}
-
-// créer un formulaire
-function createForm(id) {
-  var form = document.createElement('form');
-  if (id) form.setAttribute('id', id);
-  return form;
-}
-
-// Générer un champ pour de la musique
-function createMusicBox () {
-  // Load client secrets from a local file.
-  fs.readFile('client_secret.json', function processClientSecrets(err, content) {
-    if (err) {
-      console.log('Error loading client secret file: ' + err);
-      return;
-    }
-    // Authorize a client with the loaded credentials, then call the Drive API.
-    authorize(JSON.parse(content), listFiles);
-  });
-}
-
 
 // créer un élément div
 function createDiv(classe, id, child) {
@@ -198,200 +136,298 @@ function createDiv(classe, id, child) {
   return div;
 }
 
-// créer une élément img
-function createImg(id, src) {
-  var img = document.createElement('img');
-  if (id) img.setAttribute('id', id);
-  if (src) img.setAttribute('src', src);
-  return img;
+// Générer un champ pour de la musique
+function createMusicBox () {
+  try {
+    // Load client secrets from a local file.
+    fs.readFile('client_secret.json', function processClientSecrets(err, content) {
+      if (err) {
+        console.log('Error loading client secret file: ' + err);
+        return;
+      }
+      // Authorize a client with the loaded credentials, then call the Drive API.
+      authorize(JSON.parse(content), listFiles);
+    });
+  } catch (e) {
+    alert(e);
+  }
+}
+
+// créer le contenu d'un item à partir de l'id renseigné.
+function createItemContent (idActive, data) {
+  try {
+    var textarea = createTextarea('form-control', 'legende', data ? data:null);
+    var div2 = createDiv('col-md-12', null, [textarea]);
+
+    var btnAdd    =   createClickableImg('addChamp', 'add.png', 'Ajouter un nouveau champ');
+    var btnDelete =   createClickableImg('deleteChamp', 'delete.png', 'Supprimer ce champ');
+    var btnPlay   =   createClickableImg('playChamp', 'play.png', 'Ecouter le contenu du champ');
+
+    var span = document.createElement('SPAN');
+    span.append(btnAdd, btnDelete, btnPlay);
+    var div3 = createDiv('col-md-12 optButton', null, [span]);
+
+    var div = createDiv('form-group', null, [createDiv('row', null, [div2, div3])]);
+    var form;
+
+    if (typeQR == 'atomique') { form = $('form#myFormActive'); }
+    if (typeQR == 'ensemble') { form = $('form#myFormActive'); }
+    if (typeQR == 'famille')  { form = $('div#content-item.'+idActive).find($('form#myFormActive')); }
+
+    form.append(div);
+
+    // ajout un event sur click du bouton supprimer champ
+    $('img.deleteChamp').click(function(){
+      $(this).parents('div.form-group').remove();
+      // supprimer le qrcode s'il n'y a plus de champs textarea
+      if (form.find('textarea').length == 0) {
+        if (typeQR == 'atomique') { init_View(); }
+        if (typeQR == 'famille')  { $('div#content-item.'+idActive+' > input[title="Supprimer ce qrcode"]').trigger('click'); }
+      }
+    });
+
+    // ajouter un eventlistener sur playChamp pour lire le champ sur click du bouton
+    $('img.playChamp').click(function(event){
+      console.log(event.target);
+      var texte = event.target.parentNode.parentNode.parentNode.parentNode.childNodes[0].childNodes[0].value;
+      getForm(texte);
+    });
+
+    // activer/desactiver les boutons
+    $('#preview, #read').attr('disabled', false);
+    $('#creer, #import').attr('disabled', true);
+
+    $('#closeModal').trigger('click'); // fermer le popup d'ajout d'un nouveau champ
+
+  } catch (e) {
+    alert(e);
+  }
 }
 
 /*
- fonction pour créér des tabs
+ fonction pour créér des items
  si imported = true : cette fonction est appelée pour recréer une famille de qrcode
 */
-function createTabs (imported) {
-  // initialiser le tableau de qrcode
-  tabQRCode = [];
+function createItems (imported) {
+  try {
 
-  document.getElementsByClassName('nav nav-tabs')[0].style.display = 'block';
-  document.getElementById('nameFamily').style.display = 'block';
-  var li = document.createElement('li');
-  li.setAttribute('class', 'menu menu'+idMenu);
-
-  var a = document.createElement('a');
-  a.setAttribute('data-toggle', 'tab');
-  a.setAttribute('href', '#menu'+idMenu);
-
-  // recupérer le nom de famille saisi
-  var family = document.getElementById('nameQRCode').value;
-  var texte = document.createTextNode(family);
-  if (family == "" || family == null) {
-    texte = document.createTextNode('Sans titre');
-  }
-
-  createTabContent(a.getAttribute('href'), idMenu, li, imported);
-
-  a.appendChild(texte);
-
-  li.appendChild(a);
-  li.addEventListener('click', function(){
-    switchTab(event, null);
-  });
-  document.querySelector('.nav-tabs').appendChild(li);
-  idMenu++;
-  switchTab(null, true);
-}
-
-/*
- fonction pour créer le contenu des tabs
- si imported = true : cette fonction est appelée pour recréer une famille de qrcode
- */
-function createTabContent (id, idMenu, li, imported) {
-
-  var button = createButton('button', 'btn btn-default addChamp', 'modal', '#myModal', document.createTextNode('Ajouter un champ'+idMenu));
-
-  var checkbox = createInput('checkbox', null, 'checkBraille', null, null, null, null, null);
-  checkbox.disabled = false;
-
-  var div4 = createDiv('col-md-6 text-center', null, [checkbox, document.createTextNode('Texte en braille')]);
-  // palette de couleur pour la couleur du qrcode
-  var inputColorQR = createInput('color', null, 'colorQR', null, null, null, null, 'Couleur du QRCode');
-  var div5 = createDiv('col-md-6 text-center', null, [inputColorQR]);
-
-  var input = createInput('text', null, 'braille', null, null, null, null, 'Texte en braille');
-  input.setAttribute('maxlength', '2');
-  input.disabled = false;
-
-  var inputColorBraille = createInput('color', null, 'colorBraille', null, null, null, null, 'Couleur du texte en braille');
-  inputColorQR.disabled = false;
-  inputColorBraille.disabled = false;
-  // champ pour braille au milieu du qrcode
-  var div6 = createDiv('col-md-3 text-center', null, [input]);
-  var div7 = createDiv('col-md-3 text-center', null, [inputColorBraille]);
-  var div8 = createDiv('col-md-6', null, null);
-
-  var div3 = createDiv('row', null, [div4, div5]);
-  var div9 = createDiv('row', null, [div6, div7, div8]);
-  div9.style.display = 'none';
-
-  var classe = 'tab-pane fade';
-
-  var div2 = createDiv('row', 'content-form', [createForm('myFormActive'), div3, div9]);
-  var div = createDiv(classe, id.substring(1), [div2]);
-  setActive(div, li);
-  document.getElementsByClassName('tab-content')[0].appendChild(div);
-
-  // ajouter un eventlistener au checbox pour afficher ou masquer les options du braille
-  checkbox.addEventListener('change', function(){
-    if (this.checked) {
-      div9.style.display = 'block';
-    } else {
-      div9.style.display = 'none';
+    if ($('div#nameproject').children().length == 0) {
+      $('div#nameproject').append('<p><h6>Famille de QR-Code</h6></p>');
     }
-  });
 
-  if (!imported) { createTextBox(null); }
+    typeQR = 'famille';
+    $('#nameFamily').css('display', 'block');
+    $('div.tab-content-qrcode-family.row').css('display', 'block');
+    $('div.tab-content-qrcode-unique').css('display', 'none');
 
-}
+    var li = document.createElement('LI');
+    li.setAttribute('id', $('#nameQRCode').val());
+    li.setAttribute('class', 'list-group-item');
+    li.appendChild(document.createTextNode($('#nameQRCode').val()));
+    $('ul#sortable').append(li);
 
-// fonction pour ajouter un champ
-/*
-function addChamp(event) {
-  var element = event.target;
-  if(element.tagName == 'BUTTON' && element.classList.contains("addChamp")){
-    // retourne le formulaire contenu dans le tab active
-    var form = document.getElementsByClassName('in active')[0].childNodes[0].childNodes;
+    $('ul#sortable > li').click(function(){
+      $('.tab-content-liste-content > div').css('display', 'none');
+      $('ul#sortable > li').removeClass('active');
+      $(this).addClass('active');
+      $('.tab-content-liste-content > div.'+this.id).css('display', 'block');
+    });
+
+    // Afficher le nom du qrcode
+    var div = createDiv($('#nameQRCode').val(), 'content-item', [document.createTextNode($('#nameQRCode').val().toUpperCase())]);
+
+    //ajout du bouton pour supprimer un qrcode.
+    var inputDel = createInput('image', null, null, null, 'delete.png', null, null, 'Supprimer ce qrcode');
+    inputDel.disabled = false;
+    div.append(inputDel);
+    $('div.tab-content-liste-content').append(div);
+
+    //supprimer l'item et le content-item
+    $('div#content-item > input[title="Supprimer ce qrcode"]').click(function(){
+      $(this).parent().remove();
+      $('li#'+$(this).parent().attr('class')).remove();
+      $('ul#sortable > li:first-child').click();
+
+      // reinitialiser la vue s'il n'y a plus de qrcode
+      if ($('li.active').length == 0) {
+        init_View();
+      }
+    });
+
+    $('ul#sortable > li:last-child').trigger('click');
+
+    var html =
+        '<div class="row" id="content-form">'+
+          '<form id="myFormActive"></form>'+
+      '</div>';
+
+    $('.tab-content-liste-content > #content-item:last-child').append(html);
+
+    // bouton pour fermer annuler la création du qrcode et champ pour braille au milieu du qrcode
+    html =
+      '<div class="row"><div class="col-md-6 text-center"><input type="checkbox" id="checkBraille">Texte en braille</div>'+
+      '<div class="col-md-6 text-center"><input type="color" id="colorQR" title="Couleur du QRCode"/></div></div>'+
+          //'<button type="button" class="btn btn-default" id="closeForm">Annuler</button>'+
+      '<div class="row" style="display:none;"><div class="col-md-3 text-center"><input type="text" id="braille" title="Texte en braille" maxlength="2"></div>'+
+      '<div class="col-md-3 text-center"><input type="color" id="colorBraille" title="Couleur du texte en braille"/></div>'+
+      '<div class="col-md-6 text-center"></div></div>';
+
+    $('.tab-content-liste-content > #content-item:last-child > #content-form').append(html);
+
+    // ajouter un eventlistener au checbox pour afficher ou masquer les options du braille
+    $('input#checkBraille').change(function(){
+      if ($(this).prop('checked')) {
+        $('div#content-item.'+$('li.active').attr('id')+' > div#content-form > div:nth-child(3)').css('display', 'block');
+      } else {
+        $('div#content-item.'+$('li.active').attr('id')+' > div#content-form > div:nth-child(3)').css('display', 'none');
+      }
+    });
+
+    if (!imported) {
+      createItemContent($('li.active').attr('id'), null);
+    }
+  } catch (e) {
+    alert(e);
   }
 }
-*/
 
 // fonction pour prévisualiser un qrcode
 function preview () {
-  // famille de qrcode
-  if (document.getElementById('nameFamily').style.display == 'block') {
-    if (document.getElementById('nameFamily').value == '') {
-      alert("Veuillez saisir le nom de la famille");
-    } else {
-      document.getElementById('previewFamily').style.display = 'block'; // afficher le bouton exporter famille
-      document.getElementById('initView').style.display = 'block'; // afficher le bouton terminer
-      previewQRCode(true); // true pour famille
+  try {
+    // famille de qrcode
+    if (typeQR == 'famille') {
+      if ($('#nameFamily').val() == '') {
+        alert("Veuillez saisir le nom de la famille");
+      } else {
+        $('#previewFamily, #initView').css('display', 'block'); // afficher le bouton terminer
+        previewQRCode(true); // true pour famille
+      }
     }
-//  } else if (document.getElementById('nameFamily').style.display == 'none' && document.getElementById('nameFamily').value == '') { // qrcode atomique
-  } else {
-    previewQRCode(false); // pour qrcode atomique, pas de famille
+
+    // pour qrcode atomique, pas de famille
+    if (typeQR == 'atomique' || typeQR == 'ensemble') { previewQRCode(false); }
+  } catch (e) {
+    alert(e);
   }
 }
 
 // fonction appelée pour faire le view d'une famille de  qrcode
 function drawQRCodeFamille (qrcode) {
-  for (var i = 0; i < qrcode.length; i++) {
-    var qr = qrcode[i];
+  try {
+    for (var i = 0; i < qrcode.length; i++) {
+      var qr = qrcode[i];
       console.log(qr.getDonneesUtilisateur());
       console.log(qr.getMetadonnees());
-      // appel de createTabs avec true pour recréer une famille importée
-      document.getElementById('nameQRCode').value = qr.getNomQRCode();
-      createTabs(true);
-
+      // appel de createItems avec true pour recréer une famille importée
+      $('#nameQRCode').val(qr.getNomQRCode());
+      createItems(true);
+      var activeItem = $('div#content-item.'+$('li.active').attr('id'));
       // s'il y a du texte en braille
       if (qr.getTexteBraille() != null && qr.getTexteBraille() != "") {
-        var brailleColor = document.getElementsByClassName('tab-pane fade active in')[0].childNodes[0].childNodes[2].childNodes[1].childNodes[0];
-        var brailleText = document.getElementsByClassName('tab-pane fade active in')[0].childNodes[0].childNodes[2].childNodes[0].childNodes[0];
-        var checkBraille = document.getElementsByClassName('tab-pane fade active in')[0].childNodes[0].childNodes[1].childNodes[0].childNodes[0];
-        brailleColor.setAttribute('value', qr.getColorBraille()); // restaurer la couleur du braille
-        brailleText.setAttribute('value', qr.getTexteBraille()); // restaurer le texte en braille
-        checkBraille.click();
+        activeItem.find($('input#colorBraille')).val(qr.getColorBraille()); // restaurer la couleur du braille
+        activeItem.find($('input#braille')).val(qr.getTexteBraille()); // restaurer le texte en braille
+        activeItem.find($('input#checkBraille')).trigger('click');
       }
       // recupérer et restaurer la couleur du qrcode
-      var qrCodeColor = document.getElementsByClassName('tab-pane fade active in')[0].childNodes[0].childNodes[1].childNodes[1].childNodes[0];
-      qrCodeColor.setAttribute('value', qr.getColorQRCode()); // restaurer la couleur du qrcode
+      activeItem.find($('input#colorQR')).val(qr.getColorQRCode()); // restaurer la couleur du qrcode
       for (var j=0; j<qr.getTailleContenu(); j++){
 
         if (qr.getTypeContenu(j) == DictionnaireXml.getTagTexte()) {
-          createTextBox(qr.getTexte(j));
+          createItemContent($('li.active').attr('id'), qr.getTexte(j));
         } else if (qr.getTypeContenu(j) == DictionnaireXml.getTagFichier()) {
            // appel de selectMusic pour créer un champ input de music
-          selectMusic (null, [qr.getUrlFichier(j), qr.getNomFichier(qr.getUrlFichier(j))]);
+          selectMusic(null, [qr.getUrlFichier(j), qr.getNomFichier(qr.getUrlFichier(j))]);
         }
       }
+    }
 
-      document.getElementsByClassName('nav-tabs nav')[0].style.display = 'block';
+    $('#nameFamily').val(qrcode[0].getNomFamille())
+                    .css('display', 'block');
+    $('#creer, #import').attr('disabled', true);
+
+  } catch (e) {
+    alert(e);
   }
-  document.getElementById('nameFamily').setAttribute('value', qrcode[0].getNomFamille());
-  document.getElementById('nameFamily').style.display = 'block';
-  document.getElementById('creer').disabled = true;
-  document.getElementById('import').disabled = true;
 }
 
 // fonction appelée pour faire le view du qrcode atomique
 function drawQRCodeAtomique (qrcode) {
-  baseViewQRCodeAtomique(null);
-  if (qrcode.getTexteBraille() != null && qrcode.getTexteBraille() != "") {
-    document.getElementById('colorBraille').setAttribute('value', qrcode.getColorBraille()); // restaurer la couleur du braille
-    document.getElementById('braille').setAttribute('value', qrcode.getTexteBraille()); // restaurer le texte en braille
-    document.getElementById('checkBraille').click();
-  }
-  document.getElementById('colorQR').setAttribute('value', qrcode.getColorQRCode()); // restaurer la couleur du qrcode
-  for (var i=0; i<qrcode.getTailleContenu(); i++){
-
-    if (qrcode.getTypeContenu(i) == DictionnaireXml.getTagTexte()){
-      createTextBox(qrcode.getTexte(i));
-    } else if (qrcode.getTypeContenu(i) == DictionnaireXml.getTagFichier()){
-      // appel de selectMusic pour créer un chap input de music
-      selectMusic (null, [qrcode.getUrlFichier(i), qrcode.getNomFichier(qrcode.getUrlFichier(i))]);
+  try {
+    if (typeQR == 'ensemble') {
+      drawQRCodeAtomiqueEnsemble(qrcode);
+      return;
     }
+
+    baseViewQRCodeAtomique(null);
+
+    if (qrcode.getTexteBraille() != null && qrcode.getTexteBraille() != "") {
+      $('input#colorBraille').val(qrcode.getColorBraille()); // restaurer la couleur du braille
+      $('input#braille').val(qrcode.getTexteBraille()); // restaurer le texte en braille
+      $('input#checkBraille').trigger('click');
+    }
+
+    $('input#colorQR').val(qrcode.getColorQRCode()); // restaurer la couleur du qrcode
+
+    for (var i=0; i<qrcode.getTailleContenu(); i++){
+
+      if (qrcode.getTypeContenu(i) == DictionnaireXml.getTagTexte()){
+        createItemContent(null, qrcode.getTexte(i));
+      } else if (qrcode.getTypeContenu(i) == DictionnaireXml.getTagFichier()){
+        // appel de selectMusic pour créer un chap input de music
+        selectMusic(null, [qrcode.getUrlFichier(i), qrcode.getNomFichier(qrcode.getUrlFichier(i))]);
+      }
+
+    }
+  } catch (e) {
+    alert(e);
+  }
+}
+
+// fonction appelée pour créer un qrcode atomique dans un qrcode ensemble
+function drawQRCodeAtomiqueEnsemble (qrcode) {
+  try {
+    //ajout du bouton pour supprimer un qrcode.
+    var inputDel = createInput('image', null, null, null, 'delete.png', null, null, 'Supprimer ce qrcode');
+    inputDel.disabled = false;
+
+    // mettre chaque qrcode atomique dans un div
+    var div = createDiv(null, null, [inputDel, createDiv(null, null, null)]);
+    $('#myFormActive').append(div);
+
+    //supprimer le qrcode sur click du bouton
+    $('form#myFormActive > div > input[title="Supprimer ce qrcode"]').click(function(){
+      $(this).parent().remove();
+      // reinitialiser la vue s'il n'y a plus de qrcode
+      if ($('#myFormActive').children().length == 0) {
+        init_View();
+      }
+    });
+
+    for (var i=0; i<qrcode.getTailleContenu(); i++){
+
+      // importer que les musiques si qrcode ensemble à créer
+      if (qrcode.getTypeContenu(i) == DictionnaireXml.getTagFichier()){
+        // appel de selectMusic pour créer un chap input de music
+        selectMusic(null, [qrcode.getUrlFichier(i), qrcode.getNomFichier(qrcode.getUrlFichier(i))]);
+      }
+
+    }
+  } catch (e) {
+    alert(e);
   }
 }
 
 // retourne l'architecture html de base pour un qrcode atomique
 function baseViewQRCodeAtomique (callback) {
+  typeQR = 'atomique';
+  $('div#nameproject').append('<p><h6>QR-Code Atomique</h6></p>');
+  $('div.tab-content-qrcode-unique').css('display', 'block');
   var html =
-      '<div class="tab-pane fade active in" id="menu1">'+
-        '<div class="row" id="content-form">'+
-          '<form id="myFormActive"></form>'+
-      '</div></div>';
+      '<div class="row" id="content-form">'+
+        '<form id="myFormActive"></form>'+
+    '</div>';
 
-  document.getElementsByClassName('tab-content')[0].innerHTML = html;
+  $('.content').append(html);
 
   // bouton pour fermer annuler la création du qrcode et champ pour braille au milieu du qrcode
   html =
@@ -402,44 +438,70 @@ function baseViewQRCodeAtomique (callback) {
     '<div class="col-md-3 text-center"><input type="color" id="colorBraille" title="Couleur du texte en braille"/></div>'+
     '<div class="col-md-6 text-center"></div></div>';
 
-  //document.getElementsByClassName('tab-content')[0].innerHTML += html;
-  document.getElementById('content-form').innerHTML += html;
+  $('.content > #content-form').append(html);
 
-  // ajouter un eventlistener au checbox pour afficher ou masquer les options du braille
-  document.getElementById('checkBraille').addEventListener('change', function(){
-    if (this.checked) {
-      document.getElementById('braille').parentNode.parentNode.style.display = 'block';
-    } else {
-      document.getElementById('braille').parentNode.parentNode.style.display = 'none';
-    }
-  });
+  try {
+    // ajouter un eventlistener au checbox pour afficher ou masquer les options du braille
+      $('input#checkBraille').change(function(){
+      if ($(this).prop('checked')) {
+        $('div#content-form').children('div:last-child').css('display', 'block');
+      } else {
+        $('div#content-form').children('div:last-child').css('display', 'none');
+      }
+    });
+    $('input#nameFamily').css('display', 'none');
+    // activer / désactiver les bouton
+    $('#preview, #read').css('disabled', false);
+    $('#creer, #import').css('disabled', true);
 
-  // appel de la fonction init_View sur clic du bouton
-  //document.getElementById('closeForm').addEventListener('click', init_View);
-  document.getElementsByClassName('nav nav-tabs')[0].style.display = 'none';
-  document.getElementById('nameFamily').style.display = 'none';
-  // activer les boutons lire et preview
-  document.getElementById('preview').disabled = false;
-  document.getElementById('read').disabled = false;
-  // désactiver les bouton import et creer
-  document.getElementById('creer').disabled = true;
-  document.getElementById('import').disabled = true;
-  if (callback) { callback(null); }
+    if (callback) { callback(null, null); }
+
+  } catch (e) {
+    alert(e);
+  }
 }
 
-/*
-// retourne l'architecture html de base pour une famille de qrcode
-function baseViewQRCodeEnsemble (callback) {
-  document.getElementsByClassName('nav nav-tabs')[0].style.display = 'block';
+// retourne l'architecture html de base pour un qrcode ensemble
+function baseViewQRCodeEnsemble () {
+  typeQR = 'ensemble';
+  $('div#nameproject').append('<p><h6>QR-Code Ensemble</h6></p>');
+  $('div.tab-content-qrcode-unique').css('display', 'block');
 
-  var html =
-      '<div class="tab-pane fade active in" id="menu1">'+
-        '<div class="row" id="content-form">'+
-          '<form id="myForm"></form>'+
-        '</div>'+
-      '</div> ';
+  var html = '<div class="row text-center" id="temporary"><div class="col-md-12"><p><h4>Glisser/Déposer les qrcodes à ajouter</h4></p></div></div>';
 
-  document.getElementsByClassName('tab-content')[0].innerHTML = html;
-  if (callback) callback(null);
+  html +=
+    '<div class="row" id="content-form">'+
+      '<form id="myFormActive"></form>'+
+    '</div>';
+
+  $('.content').append(html);
+
+  // bouton pour fermer annuler la création du qrcode et champ pour braille au milieu du qrcode
+  html =
+    '<div class="row"><div class="col-md-6 text-center"><input type="checkbox" id="checkBraille">Texte en braille</div>'+
+    '<div class="col-md-6 text-center"><input type="color" id="colorQR" title="Couleur du QRCode"/></div></div>'+
+        //'<button type="button" class="btn btn-default" id="closeForm">Annuler</button>'+
+    '<div class="row" style="display:none;"><div class="col-md-3 text-center"><input type="text" id="braille" title="Texte en braille" maxlength="2"></div>'+
+    '<div class="col-md-3 text-center"><input type="color" id="colorBraille" title="Couleur du texte en braille"/></div>'+
+    '<div class="col-md-6 text-center"></div></div>';
+
+  $('.content > #content-form').append(html);
+
+  try {
+    // ajouter un eventlistener au checbox pour afficher ou masquer les options du braille
+      $('input#checkBraille').change(function(){
+      if ($(this).prop('checked')) {
+        $('div#content-form').children('div:last-child').css('display', 'block');
+      } else {
+        $('div#content-form').children('div:last-child').css('display', 'none');
+      }
+    });
+    $('input#nameFamily').css('display', 'none');
+    // activer / désactiver les bouton
+    $('button#preview, button#read').attr('disabled', false);
+    $('button#creer, button#import').attr('disabled', true);
+
+  } catch (e) {
+    alert(e);
+  }
 }
-*/

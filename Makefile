@@ -1,25 +1,23 @@
 LIBS=bootstrap \
 	braille \
-	electron --save-dev \
+	electron \
 	electron-debug \
+	electron-packager \
 	file-saver \
-	google-auth-library --save \
-	google-tts-api --save \
-	googleapis --save \
-	jquery --save \
+	googleapis \
+	google-auth-library@0.* \
+	google-tts-api \
+	jquery \
 	jquery-qrcode \
 	piexifjs
 
 install:
 	@echo "Installation / Mise à jour de Node.js"
 
-	sudo apt-get update
-	sudo curl -sL https://deb.nodesource.com/setup_9.x | sudo -E bash -
-	sudo apt-get install -y nodejs
-	sudo apt-get install -y build-essential
-
+	sudo npm init -y
 	@echo "Installation des librairies requises"
-	sudo npm install $(LIBS)
+	sudo npm install $(LIBS) --save
+
 	@# Installation de jquery-qrcode-0.14.0
 	sudo mkdir jquery-qrcode-temp
 	sudo wget -q https://release.larsjung.de/jquery-qrcode/jquery-qrcode-0.14.0.zip
@@ -28,16 +26,13 @@ install:
 	sudo rm -rf jquery-qrcode-temp jquery-qrcode-0.14.0.zip
 
 uninstall:
-	npm uninstall $(LIBS)
+	sudo npm uninstall $(LIBS)
 
 # For building and packaging app
 
 release:
-	@echo "Installation de electron-packager"
-	@sudo npm install electron-packager --save-dev
-	@echo "==================================="
 	@echo "Packaging"
-	@sudo ./node_modules/.bin/electron-packager . QRLudo-Generator
+	@sudo ./node_modules/.bin/electron-packager . QRLudo-Generator --overwrite
 	@echo "\n==================================="
 	@echo "Creation de l'executable : QRLudo-Generator"
 	@sudo ln -s QRLudo-Generator-*/QRLudo-Generator ./QRLudo-Generator
