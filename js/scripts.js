@@ -15,7 +15,7 @@ $(document).ready(function() {
       });
     });
   } catch (e) {
-    alert(e);
+    alert('Erreur : ' + e.stack);
   }
 
   // desactiver les boutons preview et lire s'il y a rien à lire ou preview
@@ -48,7 +48,7 @@ function recognizeFunction (event) {
       createMusicBox();
     }
   } catch (e) {
-    alert(e);
+    alert('Erreur : ' + e.stack);
   }
 }
 
@@ -117,7 +117,7 @@ function selectMusic (event, imported) {
     $('button#closeModalMusique').trigger('click'); // fermer le popup de musique
   } catch (e) {
     console.log(e.message);
-    alert(e.message);
+    alert('Erreur : ' + e.stack);;
   }
 }
 
@@ -129,7 +129,7 @@ function importFile () {
     var importedFile = document.getElementById('importedFile').files[0];
     if (importedFile) { facade.importQRCode(importedFile); }
   } catch (e) {
-    alert(e);
+    alert('Erreur : ' + e.stack);
   }
 }
 
@@ -185,7 +185,7 @@ function exportFile () {
     };
     xhr.send(); //Request is sent
   } catch (e) {
-    alert(e);
+    alert('Erreur : ' + e.stack);
   }
 }
 
@@ -202,7 +202,7 @@ function exportFamily () {
       tabQRCode.push(qrcode);
     });
   } catch (e) {
-    alert(e);
+    alert('Erreur : ' + e.stack);
   }
 }
 
@@ -224,7 +224,7 @@ function previewFamily () {
     var div = $('div#affichageFamille').find('div.col-md-12.text-center')[0];
     facade.genererImageFamilleQRCode(tabQRCode, div);
   } catch (e) {
-    alert(e);
+    alert('Erreur : ' + e.stack);
   }
 }
 
@@ -234,7 +234,13 @@ famille = true : qrcode famille; false : qrcode atomique sans famille
 */
 function previewQRCode (famille) {
   try {
-    var qrcode = facade.creerQRCodeAtomique(); // instancier un objet qrcode
+    var qrcode;
+
+    if (typeQR == 'ensemble') {
+      qrcode = facade.creerQRCodeEnsemble(); // instancier un objet qrcode ensemble
+    } else {
+      qrcode = facade.creerQRCodeAtomique(); // instancier un objet qrcode atomique
+    }
 
     // variable pour recupérer le formulaire
     var idActive, form, tab;
@@ -267,16 +273,19 @@ function previewQRCode (famille) {
       }
     }
   } catch (e) {
-    alert(e);
+    alert('Erreur : ' + e.stack);
   }
 }
 
 // copier le contenu d'un element input
 function copyContentToQRCode (qrcode, input) {
   try {
-    // tester s'il s'agit d'un input de musique
-    if(input.disabled) {
-      qrcode.ajouterFichier(input.id, input.value);
+
+    if(input.disabled) { // tester s'il s'agit d'un input de musique
+
+      if (typeQR == 'ensemble') { qrcode.ajouterLien(input.id, input.value); } // qrcode ensemble
+      else { qrcode.ajouterFichier(input.id, input.value); } // qrcode atomique
+
     } else {
       qrcode.ajouterTexte(input.value);
     }
@@ -316,6 +325,6 @@ function copyContentToQRCode (qrcode, input) {
     }
 
   } catch (e) {
-    alert(e);
+    alert('Erreur : ' + e.stack);
   }
 }
