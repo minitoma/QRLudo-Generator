@@ -3,6 +3,7 @@ Application permettant de générer des QR-Codes qui seront lus (synthése vocal
 Il faut installer le projet et activer l'api googe drive avant de déployer et d'executer le logiciel créé.
 
 ##Installation et dépendances
+
 [nodejs et npm] (https://doc.ubuntu-fr.org/nodejs)
 _Note: il est possible que certains modules aient besoin d'être installé en tant qu'administrateur._
 
