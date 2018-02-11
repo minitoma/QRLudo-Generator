@@ -141,6 +141,10 @@ function exportFile () {
     var img, nameFile;
     if (typeQR == 'famille') { // si on a une famille à enregistrer
       img = $('#affichageFamille').find('img')[0];
+      if(typeof img == "undefined"){
+        previewFamily()
+        img = $('#affichageFamille').find('img')[0];
+      }
       nameFile = $('#nameFamily').val() + '.jpeg'; // nom de la famille
     }
 
