@@ -19,7 +19,8 @@
     "piexifjs": "^1.0.3"
   },
   "scripts": {
-    "install-linux": "electron-packager . qrludo-generator --overwrite --asar --platform=linux --prune=true --out=release-builds"
+    "install-linux": "electron-packager . qrludo-generator --overwrite --asar --platform=linux --out=release-builds",
+    "install-windows": "electron-packager . qrludo-generator --overwrite --asar --platform=win32 --out=release-builds"
   },
   "repository": {
     "type": "git",
