@@ -14,8 +14,12 @@ class CompresseurTexte{
     var fs = require('fs');
 
     //On lit le fichier
-    this.lignes = fs.readFileSync('./txt/chainesCompressiblesV1.txt').toString().split("\n");
-
+    try{
+      this.lignes = fs.readFileSync('./txt/chainesCompressiblesV1.txt').toString().split("\n");
+    }catch(err){
+      this.lignes = fs.readFileSync('./resources/app.asar/txt/chainesCompressiblesV1.txt').toString().split("\n");
+    
+    }
     //On supprime la dernière chaîne vide
     this.lignes.splice(this.lignes.length-1, 1);
 
