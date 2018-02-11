@@ -1,6 +1,7 @@
 const electron = require('electron');
 const app = electron.app;
 const BrowserWindow = electron.BrowserWindow;
+var path = require('path');
 
 require('electron-debug')({showDevTools: true}); // pour debugger
 
@@ -15,7 +16,8 @@ function createWindow () {
     height: 700,
     maximized: true,
     center: true,
-    frame: true // en faire une fenetre
+    frame: true, // en faire une fenetre
+    icon: path.join(__dirname, 'img/qrludo.png')
   });
 
   mainWindow.setResizable(true); // autoriser le redimensionnement
