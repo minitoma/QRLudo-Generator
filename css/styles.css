@@ -221,3 +221,10 @@ ul#sortable > li {
 #myFormActive > div > div:nth-child(2) {
   border: 1px solid #c5c4c4;
 }
+
+.list-group-item.active, .list-group-item.active:focus, .list-group-item.active:hover {
+    z-index: 2;
+    color: #fff;
+    background-color: #00A658;
+    border-color: #00A658;
+}
