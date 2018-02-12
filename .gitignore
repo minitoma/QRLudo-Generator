@@ -5841,4 +5841,6 @@ node_modules/concat-stream/node_modules/isarray/index\.js
 
 node_modules/
 
+release-builds/*
+
 qr-codes-linux-x64/
