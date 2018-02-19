@@ -116,8 +116,8 @@ function selectMusic (event, imported) {
 
     $('button#closeModalMusique').trigger('click'); // fermer le popup de musique
   } catch (e) {
-    console.log(e.message);
-    alert('Erreur : ' + e.stack);;
+    //console.log(e.message);
+    //alert('Erreur : ' + e.stack);;
   }
 }
 
