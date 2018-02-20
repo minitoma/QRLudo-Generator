@@ -1,3 +1,7 @@
+install:
+	@echo "Installation des librairies requises"
+	sudo npm install electron --unsafe-perm=true --allow-root
+	sudo npm install
 
 install-full:
 

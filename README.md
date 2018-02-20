@@ -2,6 +2,16 @@
 Application permettant de générer des QR-Codes qui seront lus (synthése vocale), à l'aide d'une application android.
 Il faut installer le projet et activer l'api googe drive avant de déployer et d'executer le logiciel créé.
 
+## Packages
+
+Des packages sont disponibles directement via le lien suivant, il contiennent deux packages, Linux et Windows, contenant les fichiers nécéssaires au fonctionnement de l'application sans avoir à l'installer au préalable.
+
+Pour lancer l'application il suffit juste de lancer le fichier éxecutable _qrludo-generator_
+
+https://drive.google.com/drive/folders/18ZUcnrlnyoHdr2N4dYcN6fnqtdPE_Ltb?usp=sharing
+
+Vous pouvez créer un raccourci sur le bureau pour y accèder plus rapidement.
+
 ## Installation et dépendances
 
 [nodejs et npm] (https://doc.ubuntu-fr.org/nodejs)
@@ -23,7 +33,7 @@ ou
 - electron-packager
 - bootstrap _la version 4.0 de bootstrap est incompatible, nous conseillons d'installer la version 3.3.7_
 - braille
-- file-sewer
+- file-saver
 - googleapis
 - google-tts-api
 - google-auth-library
