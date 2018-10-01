@@ -2,15 +2,14 @@
 
 var fs = require('fs');
 var readline = require('readline');
-var google = require('googleapis');
+var {
+  google
+} = require('googleapis');
 var googleAuth = require('google-auth-library');
 
-// If modifying these scopes, delete your previously saved credentials
-// at ~/.credentials/drive-nodejs-quickstart.json
-var SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly'];
-var TOKEN_DIR = (process.env.HOME || process.env.HOMEPATH ||
-    process.env.USERPROFILE) + '/.credentials/';
-var TOKEN_PATH = TOKEN_DIR + 'drive-nodejs-quickstart.json';
+// If modifying these scopes, delete token.json.
+const SCOPES = ['https://www.googleapis.com/auth/drive.metadata.readonly'];
+const TOKEN_PATH = 'token.json';
 
 /**
  * Create an OAuth2 client with the given credentials, and then execute the
@@ -117,40 +116,44 @@ function listFiles(auth, callback) {
 
 
 // liste de la musique dispo sur le drive
-function listMusic (content){
+function listMusic(content) {
   var div = document.getElementById('modalMusic').childNodes[1].childNodes[1].childNodes[3];
   for (var i = 0; i < content.length; i++) {
-      if (content[i].name.endsWith(".mp3")){
-        var a = document.createElement('a');
-        a.setAttribute('class', 'hrefMusic');
-        a.setAttribute('href', '#' + content[i].id);
-        a.appendChild(document.createTextNode(content[i].name));
-        div.appendChild(createDiv('col-md-12 text-center', '', [a]));
-      }
+    if (content[i].name.endsWith(".mp3")) {
+      var a = document.createElement('a');
+      a.setAttribute('class', 'hrefMusic');
+      a.setAttribute('href', '#' + content[i].id);
+      a.appendChild(document.createTextNode(content[i].name));
+      div.appendChild(createDiv('col-md-12 text-center', '', [a]));
+    }
   }
 }
 
 /* ============================ API GOOGLE TEXT-TO-SPEECH ========================== */
 
 var googleTTS = require('google-tts-api');
-var texte = "", j = 0, audio = null;
+var texte = "",
+  j = 0,
+  audio = null;
 
 // réupérer le formulaire et tous les champs
-function getForm (data) {
+function getForm(data) {
   if (data) {
     texte = data;
   } else {
     var form = null;
 
-    if (typeQR == 'atomique' || typeQR == 'ensemble') { form = $('form#myFormActive'); }
+    if (typeQR == 'atomique' || typeQR == 'ensemble') {
+      form = $('form#myFormActive');
+    }
     if (typeQR == 'famille') {
       var idActive = $('li.active').attr('id');
-      form = $('div#content-item.'+idActive).find($('form#myFormActive'));
+      form = $('div#content-item.' + idActive).find($('form#myFormActive'));
     }
 
     var tab = form.find('textarea, input');
     // parcourir le formulaire
-    for (var i=0; i<tab.length; i++) {
+    for (var i = 0; i < tab.length; i++) {
       try {
         texte = texte + tab[i].value + ".";
       } catch (err) {
@@ -161,9 +164,11 @@ function getForm (data) {
   }
 
   // transformer le texte en tableau de phrase pour eviter de depasser les 200 caractéres
-  var reg=new RegExp("[.,;?!:]+", "g");
+  var reg = new RegExp("[.,;?!:]+", "g");
   texte = texte.split(reg);
-  if (texte[texte.length-1] == " ") { console.log('oui');}
+  if (texte[texte.length - 1] == " ") {
+    console.log('oui');
+  }
 
   listen(play);
 }
@@ -174,7 +179,7 @@ function listen(callback) {
   console.log(phrase);
 
   // ignorer la derniére phrase s'il s'agit d'un blanc
-  if (j == texte.length-1 && texte[texte.length-1] == " ") {
+  if (j == texte.length - 1 && texte[texte.length - 1] == " ") {
     document.getElementById('stop').click();
     return;
   }
@@ -189,10 +194,10 @@ function listen(callback) {
   callback(phrase, listen);
 }
 
-function play (phrase, callback) {
-    // Play the received speech
-    googleTTS(phrase, 'fr', 1)   // speed normal = 1 (default), slow = 0.24
-    .then(function (url) {
+function play(phrase, callback) {
+  // Play the received speech
+  googleTTS(phrase, 'fr', 1) // speed normal = 1 (default), slow = 0.24
+    .then(function(url) {
       console.log(url); // https://translate.google.com/translate_tts?...
       audio = new Audio(url);
 
@@ -201,9 +206,9 @@ function play (phrase, callback) {
       });
       audio.play();
     })
-    .catch(function (err) {
+    .catch(function(err) {
       console.log(err);
-      if (phrase != null && phrase!="") {
+      if (phrase != null && phrase != "") {
         alert('Pas de connexion internet');
       } else {
         document.getElementById('stop').click();
@@ -211,7 +216,7 @@ function play (phrase, callback) {
     });
 }
 
-function stopLecture () {
+function stopLecture() {
   audio.pause();
   audio = null;
   texte = "";
@@ -225,4 +230,4 @@ function stopLecture () {
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
  * The Software is provided “as is”, without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose and noninfringement. In no event shall the authors or copyright holders X be liable for any claim, damages or other liability, whether in an action of contract, tort or otherwise, arising from, out of or in connection with the software or the use or other dealings in the Software.
  * Except as contained in this notice, the name of the Corentin TALARMAIN, Thomas CALATAYUD, Rahmatou Walet MOHAMEDOUN, Jules LEGUY, David DEMBELE, Alassane DIOP shall not be used in advertising or otherwise to promote the sale, use or other dealings in this Software without prior written authorization from the Corentin TALARMAIN, Thomas CALATAYUD, Rahmatou Walet MOHAMEDOUN, Jules LEGUY, David DEMBELE, Alassane DIOP
-*/
+ */
