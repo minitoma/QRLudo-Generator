@@ -1,0 +1,238 @@
+
+body {
+
+  background: #d8d8d8;
+  /*
+  background-image: url('../img/fern.jpg');
+  */
+  background-repeat: no-repeat;
+
+}
+
+body > div > section.page-header > div > div.col-md-3.imgAngers > img {
+  width: inherit;
+  float: left;
+}
+body > div > section.page-header > div > div.col-md-3.imgQRLudo > img {
+  float: right;
+  width: inherit;
+}
+
+.btn-default {
+  background-color: #5bbd5c;
+}
+
+div.container {
+
+}
+
+div.col-lg-6.colMiddle {
+  margin: 0 10px 0 10px;
+  width: 48%;
+}
+
+div.col-lg-6 {
+  border: 1px solid gray;
+  border-radius: 10px;
+  padding: 30px;
+}
+
+div.col-lg-3.colLeft {
+}
+
+div.col-lg-6.colMiddle {
+}﻿﻿
+
+div.col-lg-3.colRight {
+}
+
+button.btn.btn-default {
+  margin: 0 10px 10px 0;
+  width: inherit;
+  background: #00A658;
+  color:#e0e0d1;
+}
+
+form.col-md-12 {
+  border: 1px solid;
+  border-radius: 10px;
+  padding: 10px 10px 0 10px;
+}
+
+div.row.modal-body {
+  text-align: center;
+}
+
+button.btn.btn-default.btn-popup {
+  width: 100%;
+}
+
+
+ul.nav.nav-tabs {
+  margin-left: -13px;
+}
+
+div.form-group {
+  margin-top: 20px;
+}
+
+button.btn.btn-default.deleteChamp,
+button.btn.btn-default.addChamp,
+button.btn.btn-default.playChamp {
+  width: initial;
+  margin: 0 0 0 -20px;
+  height: 34px;
+}
+
+div.modal-header.row {
+  border-bottom: none;
+}
+
+section.page-header {
+  height: 65px;
+}
+
+#affichageqr > div > canvas {
+  width: inherit;
+}
+
+#affichageqr > div > img {
+  width: inherit;
+  margin-bottom: 10px;
+}
+
+#saveFamily,
+#setNameQRCode,
+#setImportedFile {
+  margin-bottom: 0;
+}
+
+#modalNameQRCode > div > div > div.row.modal-body > div > h6 {
+  font-size: x-small;
+  color: red;
+  font-style: italic;
+}
+
+textarea {
+  resize: vertical;
+}
+textarea.legende-music {
+  resize: none;
+}
+
+body > div > section.row > div > div.col-lg-3.colLeft > form > div:nth-child(1) > div > ul {
+  margin: -10px 0 0 136px;
+}
+
+img.clickableImg,
+input[type="image"] {
+  width: 20px;
+}
+
+div:nth-child(2) > div.col-md-3.text-center > button,
+#nameFamily {
+  width: initial;
+}
+
+#nameFamily {
+  margin: 0 0 13px -13px;
+  display: none;
+}
+
+#content-form > div:nth-child(2) > div:nth-child(1) {
+  color: #080808;
+}
+#braille {
+  text-align: center;
+  width: 30px;
+}
+
+body > div > section.row > div > div.col-lg-6.colMiddle > ul > li.menu > a > input[type="image"] {
+  margin: 0 0 -5px 5px;
+}
+
+li.active {
+  border: 1px solid gray;
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+}
+
+body > div > section.row > div > div.col-lg-6.colMiddle > ul > li.active > a {
+  border-top-left-radius: 5px;
+  border-top-right-radius: 5px;
+  margin: 0;
+}
+
+/* Affichage boutons d'option on mouse hover */
+#myFormActive > div > div:hover div.optButton {
+  display: block;
+}
+
+div.optButton,
+#content-item {
+  display: none;
+}
+div.optButton > span > a {
+  margin: 2px;
+}
+/* fin affichage */
+
+#myFormActive > div > div > div:nth-child(2) > span {
+  float: right;
+}
+
+#myFormActive > div > div > div:nth-child(2) {
+  position: absolute;
+}
+
+div.tab-content-qrcode-unique,
+div.tab-content-qrcode-family.row {
+  display: none;
+}
+div.tab-content-qrcode-family.row > div.tab-content-liste.col-md-3 {
+  width: inherit;
+}
+
+div.tab-content-qrcode-family.row > div.tab-content-liste-content.col-md-9 {
+}
+div.tab-content-qrcode-family.row > div.tab-content-liste-content.col-md-9:after {
+  content: "";
+  background-color: #c5b5b5;
+  position: absolute;
+  width: 1px;
+  height: 100%;
+  top: 0;
+  right: 101%;
+  display: block;
+}
+
+ul#sortable > li > span {
+  margin-left: -10px;
+  display: block;
+}
+ul#sortable > li {
+  width: 100px;
+  margin-bottom: 5%;
+  padding-left: 0;
+  padding-right: 0;
+  text-align: center;
+}
+
+#myFormActive > div > div:nth-child(2) {
+  border: 1px solid #c5c4c4;
+}
+
+.list-group-item.active, .list-group-item.active:focus, .list-group-item.active:hover {
+    z-index: 2;
+    color: #fff;
+    background-color: #00A658;
+    border-color: #00A658;
+}
+
+/**
+ * Copyright © 12/02/2018, Corentin TALARMAIN, Thomas CALATAYUD, Rahmatou Walet MOHAMEDOUN, Jules LEGUY, David DEMBELE, Alassane DIOP
+ * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and associated documentation files (the “Software”), to deal in the Software without restriction, including without limitation the rights to use, copy, modify, merge, publish, distribute, sublicense, and/or sell copies of the Software, and to permit persons to whom the Software is furnished to do so, subject to the following conditions:
+ * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
+ * The Software is provided “as is”, without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose and noninfringement. In no event shall the authors or copyright holders X be liable for any claim, damages or other liability, whether in an action of contract, tort or otherwise, arising from, out of or in connection with the software or the use or other dealings in the Software.
+ * Except as contained in this notice, the name of the Corentin TALARMAIN, Thomas CALATAYUD, Rahmatou Walet MOHAMEDOUN, Jules LEGUY, David DEMBELE, Alassane DIOP shall not be used in advertising or otherwise to promote the sale, use or other dealings in this Software without prior written authorization from the Corentin TALARMAIN, Thomas CALATAYUD, Rahmatou Walet MOHAMEDOUN, Jules LEGUY, David DEMBELE, Alassane DIOP
+*/
