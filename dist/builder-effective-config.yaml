@@ -20,4 +20,4 @@ nsis:
   uninstallDisplayName: Uninstall Qr
   installerHeaderIcon: build/icon.ico
   installerSidebar: build/installerSidebar.bmp
-electronVersion: 3.0.2
+electronVersion: 3.0.3

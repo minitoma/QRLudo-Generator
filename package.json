@@ -6,16 +6,16 @@
   "main": "app/index.js",
   "author": "Corentin TALARMAIN, Thomas CALATAYUD, Rahmatou Walet MOHAMEDOUN, Jules LEGUY, David DEMBELE, Alassane DIOP <Alassane@gmail.com>",
   "license": "MIT",
-  "bugs": {"url": "https://github.com/minitoma/QRLudo-Generator/issues"},
+  "bugs": {
+    "url": "https://github.com/minitoma/QRLudo-Generator/issues"
+  },
   "homepage": "https://github.com/minitoma/QRLudo-Generator#readme",
   "keywords": [],
   "repository": {
     "type": "git",
     "url": "git+https://github.com/minitoma/QRLudo-Generator.git"
   },
-
   "dependencies": {
-    "aws-sdk": "^2.327.0",
     "bootstrap": "^3.3.7",
     "braille": "^1.1.0",
     "electron-debug": "^1.5.0",
@@ -40,28 +40,29 @@
     "dist-win32": "build --win --ia32",
     "dist-win64": "build --win --x64"
   },
-
   "build": {
     "appId": "testelectron",
     "icon": "build/32x32.png",
-   "linux": {
-      "target": ["deb"]
+    "linux": {
+      "target": [
+        "deb"
+      ]
     },
-   "win": {
+    "win": {
       "artifactName": "${productName}_v${version}_${arch}.${ext}",
       "target": "nsis",
       "icon": "build/icon.ico"
-   },
-   "nsis": {
-     "oneClick": false,
-     "allowToChangeInstallationDirectory": true,
-     "deleteAppDataOnUninstall": true,
-     "createDesktopShortcut": true,
-     "installerIcon": "build/icon.ico",
-     "uninstallerIcon": "build/icon.ico",
-     "uninstallDisplayName": "Uninstall Qr",
-     "installerHeaderIcon" : "build/icon.ico",
-     "installerSidebar" : "build/installerSidebar.bmp"
-   }
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true,
+      "deleteAppDataOnUninstall": true,
+      "createDesktopShortcut": true,
+      "installerIcon": "build/icon.ico",
+      "uninstallerIcon": "build/icon.ico",
+      "uninstallDisplayName": "Uninstall Qr",
+      "installerHeaderIcon": "build/icon.ico",
+      "installerSidebar": "build/installerSidebar.bmp"
+    }
   }
 }
