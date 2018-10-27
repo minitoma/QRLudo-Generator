@@ -5,7 +5,8 @@
   "description": "Une application pour générer des Qr-Codes applicatifs utilisable sur l'application mobile QRLudo",
   "main": "index.js",
   "dependencies": {
-    "bootstrap": "^3.3.7",
+    "bootstrap": "^4.0.0",
+    "popper.js": "^1.14.4",
     "braille": "^1.1.0",
     "electron": "^1.8.2",
     "electron-debug": "^1.5.0",

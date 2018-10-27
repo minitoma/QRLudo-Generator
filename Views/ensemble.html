@@ -1,88 +1,4 @@
-
-<!DOCTYPE html>
-<html>
-
-<head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-
-    <title>QRLudo</title>
-
-    <!-- Bootstrap CSS CDN -->
-    <link rel="stylesheet" href="assets/bootstrap/css/bootstrap.min.css">
-    <!-- Our Custom CSS -->
-    <link rel="stylesheet" href="assets/css/qrludo.css">
-
-    <!-- Font Awesome JS -->
-    <script defer src="assets/bootstrap/js/solid.js"></script>
-    <script defer src="assets/bootstrap/js/fontawesome.js"></script>
-
-
-</head>
-
-<body>
-
-    <div class="wrapper">
-        <!-- Sidebar  -->
-        <nav id="sidebar" class="active">
-            <div class="sidebar-header">
-                <span class="navbar-left"><img src="assets/images/logo-qrludo.png"></span>
-            </div>
-
-            <ul class="list-unstyled components">
-                <li>
-                    <a href="unique.html" id="unique-html">
-                        <i class="fa fa-qrcode"></i>
-                        <br>
-                        Unique
-                    </a>
-                </li>
-                <li class="active">
-                    <a href="ensemble.html" id="ensemble-html">
-                        <i class="fa fa-object-group"></i>
-                        <br>
-                        Ensemble
-                    </a>
-                </li>
-                <li>
-                    <a href="quesRep.html" id="quesRep-html">
-                        <i class="fa fa-list"></i>
-                        <br>
-                        Question<br>Réponses
-                    </a>
-                </li>
-                <li>
-                  <a href="#">
-                      <i class="fa fa-plus-square"></i>
-                      <br>
-                      Charger
-                  </a>
-                </li>
-            </ul>
-
-        </nav>
-
-        <!-- Page Content  -->
-        <div id="content">
-
-            <nav class="navbar navbar-light">
-                <div class="container-fluid">
-					<div class="navbar-header">
-						<button type="button" id="sidebarCollapse" class="btn btn-outline-success d-md-none pull-left">
-							<i class="fas fa-bars"></i>
-						</button>
-					</div>
-					<span class="navbar-brand pull-right navbar-right"><img src="assets/images/univers-angers.png" class="logo-qrludo img-circle"></span>
-
-                </div>
-            </nav>
-
-             <!--<h4 style="color:#1f7934;">Famille de QR-Codes</h4>-->
-            <!--<div class="line"></div>-->
-
-            <!-- contenu -->
-            <div class="card-deck">
+              <!-- contenu page ensemble -->
                 <!--Panel-->
                 <div class="col-sm-8 card">
                     <div class="card-body">
@@ -192,52 +108,10 @@
                 <!--/.Panel-->
 
                 <!--Panel -> zone pour afficher le QrCode produit -->
-                <div class="col-sm-4 card">
-                    <div class="card-body">
-                        <h6 class="card-title"></h6>
-                        <div class="col-md-9 qrludo-QR rounded">
-                            <!-- le QrCode produit -->
-                            <!-- <img src="assets/images/QRLudo-def.jpeg" class="img-fluid"></img> -->
-
-                        </div>
-                        <div class="col-md-9 qrludo-QR-colorpicker">
-                        <input type="color" id="html5colorpicker" onchange="clickColor(0, -1, -1, 5)" value="#fff">
-                      </div>
-                    </div>
-                    <div class="card-footer">
-                      <button type="button" class="col-md-3 btn btn-outline-success" disabled>
-                        <i class="fa fa-play"></i>&nbsp;&nbsp;Lire
-                      </button>
-                      <button type="button" class="col-md-4 btn btn-outline-success float-md-right" disabled>
-                        <i class="fa fa-download"></i>&nbsp;&nbsp;Exporter
-                      </button>
-                    </div>
+                <div class="col-sm-4 card" id="qr-zone">
+                  <script>
+                    $("#qr-zone").load("Views/QR-zone.html");
+                  </script>
                 </div>
                 <!--/.Panel-->
-              </div>
-            <!-- end contenu -->
-
-        </div>
-
-
-
-
-    </div>
-
-    <script src="assets/bootstrap/js/jquery-slim.min.js"></script>
-    <!-- Popper.JS -->
-    <script src="assets/bootstrap/js/popper.min.js"></script>
-    <!-- Bootstrap JS -->
-    <script src="assets/bootstrap/js/bootstrap.min.js"></script>
-
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('#sidebarCollapse').on('click', function () {
-                $('#sidebar').toggleClass('active');
-            });
-        });
-    </script>
-
-</body>
-
-</html>
+                <!-- Fin contenu page ensemble -->
