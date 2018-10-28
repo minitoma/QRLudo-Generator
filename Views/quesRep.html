@@ -1,7 +1,7 @@
               <!-- contenu page QuesRep -->
                   <!--Panel-->
                   <div class="col-sm-8 card">
-                    <form id="formulaireQesRep">
+                    <form id="formulaireQesRep"  onsubmit="return false;">
                       <div class="card-body">
                           <h6 class="card-title"></h6>
                           <ul class="nav nav-tabs">
@@ -145,3 +145,22 @@
       document.getElementById('cible').innerHTML = Contenu;
     }
    </script>
+
+   <!-- //pour verifier les champs du formulaire (QesRep) -->
+   <script>
+   window.jquery = window.$ = require("./node_modules/jquery-validation/dist/jquery.validate.min.js");
+   $().ready(function() {
+     // validate formulaireQesRep
+     $("#formulaireQesRep").validate({
+       rules: {
+         Question: {
+           required: true
+         }
+       },
+       messages: {
+         Question: "<label class='error'>Ce champ est obligatoire.</label>"
+       }
+     });
+
+   });
+ </script>

@@ -2,7 +2,7 @@
               <!-- contenu page unique -->
                   <!--Panel-->
                   <div class="col-sm-8 card">
-                    <form id="formulaireUniqueQRCode">
+                    <form id="formulaireUniqueQRCode" onsubmit="return false;">
                       <div class="card-body">
                           <h6 class="card-title"></h6>
                           <ul class="nav nav-tabs">
@@ -31,7 +31,7 @@
                       </div>
                       <div class="card-footer">
                         <button type="reset" class="col-md-2 btn btn-outline-success"><i class="fa fa-eraser"></i>&nbsp;&nbsp;Annuler</button>
-                        <button type="submit" class="col-md-2 btn btn-outline-success"><i class="fa fa-cogs"></i>&nbsp;&nbsp;Générer</button>
+                        <button type="submit" class="col-md-2 btn btn-outline-success" id="preview"><i class="fa fa-cogs"></i>&nbsp;&nbsp;Générer</button>
                       </div>
                     </form>
                   </div>
@@ -70,3 +70,25 @@
                   <!-- Fin Modal-1 -->
 
               <!-- fin contenu page unique -->
+
+              <!--pour verifier les champs du formulaire (qrUnique)-->
+              <script>
+              window.jquery = window.$ = require("./node_modules/jquery-validation/dist/jquery.validate.min.js");
+              $().ready(function() {
+                $("#formulaireUniqueQRCode").validate({
+                  rules: {
+                    LegendeQR: {
+                      required: true
+                    },
+                    NomQR: {
+                      required: true
+                    }
+                  },
+                  messages: {
+                    NomQR: "<label class='error'>Ce champ est obligatoire.</label>",
+                    LegendeQR: "<label class='error'>Ce champ est obligatoire.</label>"
+                  }
+                });
+
+              });
+              </script>
