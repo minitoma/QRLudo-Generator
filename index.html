@@ -100,6 +100,31 @@
     <!-- Bootstrap JS -->
     <script src="./node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
 
+
+    <!-- Menu -> naviguer -->
+    <script>
+      window.jquery = window.$ = require("./node_modules/jquery/dist/jquery.js");
+      $("#unique-html").click(function(){
+        $("#charger-page").load("Views/unique.html");
+      });
+      $("#ensemble-html").click(function(){
+        $("#charger-page").load("Views/ensemble.html");
+      });
+      $("#quesRep-html").click(function(){
+        $("#charger-page").load("Views/quesRep.html");
+      });
+      $("#charger-html").click(function(){
+        $("#charger-page").load("Views/unique.html");
+      });
+
+      $('#menu li').click(function(e) {
+              e.preventDefault();
+              $('li').removeClass('active');
+              $(this).addClass('active');
+          });
+
+    </script>
+
     <script type="text/javascript">
         $(document).ready(function () {
             $('#sidebarCollapse').on('click', function () {
@@ -107,78 +132,6 @@
             });
         });
     </script>
-
-    <script>
-    //pour verifier les champs du formulaire (qrUnique)
-    window.jquery = window.$ = require("./node_modules/jquery-validation/dist/jquery.validate.min.js");
-    $().ready(function() {
-      // validate formulaireUniqueQRCode
-      $(document).on('submit', '#formulaireUniqueQRCode', function() {
-      $("#formulaireUniqueQRCode").validate({
-        rules: {
-          LegendeQR: {
-            required: true
-          },
-          NomQR: {
-            required: true,
-            minlength: 1
-          }
-        },
-        messages: {
-          NomQR: "<label class='error'>Ce champ est obligatoire.</label>",
-          LegendeQR: "<label class='error'>Ce champ est obligatoire.</label>"
-        }
-      });
-
-      return false;
-    });
-
-    });
-
-
-    // pour verifier les champs du formulaire (QuestionReps)
-    $().ready(function() {
-      // validate formulaireQesRep
-      $(document).on('submit', '#formulaireQesRep', function() {
-      $("#formulaireQesRep").validate({
-        rules: {
-          Question: {
-            required: true
-          }
-        },
-        messages: {
-          Question: "<label class='error'>Ce champ est obligatoire.</label>"
-        }
-      });
-
-      return false;
-    });
-
-    });
-  </script>
-
-  <script>
-    //Menu --> naviguer
-    $("#unique-html").click(function(){
-      $("#charger-page").load("Views/unique.html");
-    });
-    $("#ensemble-html").click(function(){
-      $("#charger-page").load("Views/ensemble.html");
-    });
-    $("#quesRep-html").click(function(){
-      $("#charger-page").load("Views/quesRep.html");
-    });
-    $("#charger-html").click(function(){
-      $("#charger-page").load("Views/unique.html");
-    });
-
-    $('#menu li').click(function(e) {
-            e.preventDefault();
-            $('li').removeClass('active');
-            $(this).addClass('active');
-        });
-
-  </script>
 
 </body>
 
