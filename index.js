@@ -17,7 +17,7 @@ function createWindow () {
     maximized: true,
     center: true,
     frame: true, // en faire une fenetre
-    icon: path.join(__dirname, 'img/qrludo.png')
+    icon: path.join(__dirname, 'Views/assets/images/qrludo-icon.png')
   });
 
   mainWindow.setResizable(true); // autoriser le redimensionnement
