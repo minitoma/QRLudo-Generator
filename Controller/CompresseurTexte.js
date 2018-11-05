@@ -18,7 +18,7 @@ class CompresseurTexte{
       this.lignes = fs.readFileSync('./txt/chainesCompressiblesV1.txt').toString().split("\n");
     }catch(err){
       this.lignes = fs.readFileSync('./resources/app.asar/txt/chainesCompressiblesV1.txt').toString().split("\n");
-    
+
     }
     //On supprime la dernière chaîne vide
     this.lignes.splice(this.lignes.length-1, 1);
@@ -40,6 +40,8 @@ class CompresseurTexte{
   * compressées dont le deuxième caractère est "1";
   */
   compresser(texte){
+
+    //alert(texte);
 
     //On initialise la chaîne compressée avec les données initiales du qrcode
     var texteCompresse = texte;

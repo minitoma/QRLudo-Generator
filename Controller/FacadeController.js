@@ -32,6 +32,7 @@ class FacadeController{
         divImg.removeChild(divImg.firstChild);
       }
 
+      console.log("---- ETAPE 3: FacadeController.js");
       return this.imageGenerator.genererQRCode(divImg, qrcode);
     } catch (e) {
       alert(e);

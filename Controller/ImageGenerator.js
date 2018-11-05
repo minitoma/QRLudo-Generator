@@ -22,23 +22,26 @@ class ImageGenerator{
 
      var donneesQR = this.compresseur.compresser(qrcode.getDonneesUtilisateur());
 
-     var texteBraille = qrcode.getTexteBraille();
+     //var texteBraille = qrcode.getTexteBraille();
      var couleurQR = qrcode.getColorQRCode();
-     var couleurBraille = qrcode.getColorBraille();
+     //var couleurBraille = qrcode.getColorBraille();
 
      //On limite la taille du texte en braille central à deux caractères
-     if (texteBraille.length>2){
-       texteBraille=texteBraille.substring(0,2);
-     }
+    // if (texteBraille.length>2){
+    //   texteBraille=texteBraille.substring(0,2);
+    // }
 
      //On convertit le texte central en braille
-     var br = require('braille');
-     var txt = br.toBraille(texteBraille);
+     //var br = require('braille');
+     //var txt = br.toBraille(texteBraille);
 
+
+     console.log(qrcode);
+     console.log(div);
+     console.log("---- ETAPE 4: ImageGenerator.js : debut-canvas");
 
      //On génère le QRCode dans un canvas
      $(div).qrcode( {
-
         // render method: 'canvas', 'image' or 'div'
         render: 'canvas',
 
@@ -83,13 +86,16 @@ class ImageGenerator{
         mPosX: 0.5,
         mPosY: 0.5,
 
-        label: txt,
+        //label: txt,
         fontname: 'sans',
-        fontcolor: couleurBraille,
+        //fontcolor: couleurBraille,
 
         image: null
 
       });
+
+
+      console.log("ImageGenerator.js : fin-canvas");
 
       //On récupère le noeud racine xml (contenant données utilisateur + metadonnées) et on le convertit en tableau de int pour l'insérer dans les métadonnées de l'image
       var donnees = unescape(qrcode.getRacineXml());
