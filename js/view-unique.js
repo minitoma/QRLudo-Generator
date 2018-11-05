@@ -6,7 +6,7 @@ typeQR = 'atomique';
 
 $(document).ready(function() {
 
-  document.getElementById('preview').addEventListener('click', preview); // prévisualiser le qr-code
+  //document.getElementById('preview').addEventListener('click', preview); // prévisualiser le qr-code
   $('#nameQRCode').keypress(function(e){
     var key = e.keyCode;
     if (!(key >= 65 && key <= 90) && !(key >= 97 && key <= 122)) {
