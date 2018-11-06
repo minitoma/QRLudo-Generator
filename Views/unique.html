@@ -1,94 +1,93 @@
+<!-- contenu page unique -->
+<!--Panel-->
+<div class="col-sm-8 card">
+    <form id="formulaireUniqueQRCode" onsubmit="return false;">
+        <div class="card-body">
+            <h6 class="card-title"></h6>
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#texte">QR - Unique</a>
+                </li>
+            </ul>
 
-              <!-- contenu page unique -->
-                  <!--Panel-->
-                  <div class="col-sm-8 card">
-                    <form id="formulaireUniqueQRCode" onsubmit="return false;">
-                      <div class="card-body">
-                          <h6 class="card-title"></h6>
-                          <ul class="nav nav-tabs">
-                              <li class="nav-item">
-                                <a class="nav-link active" data-toggle="tab" href="#texte">QR - Unique</a>
-                              </li>
-                          </ul>
-
-                          <div class="tab-content">
-                            <div id="texte" class="tab-pane fade in active show">
-                              <h3></h3>
-                                <div class="form-group">
-                                        <label class="col-sm-12 control-label" style="color:#28a745;padding-top:10px;">Nom du QR Code</label>
-                                        <div class="col-sm-10">
-                                            <input type="text" id="NomQR" name="NomQR" class="form-control">
-                                        </div>
-                                </div>
-                                <div class="form-group">
-                                  <label class="col-sm-12 control-label" style="color:#28a745;">Mettre la légende</label>
-                                  <div class="col-sm-10">
-                                    <textarea class="form-control" id="LegendeQR" rows="9" name="LegendeQR"></textarea>
-                                  </div>
-                                </div>
-                              </div>
-                          </div>
-                      </div>
-                      <div class="card-footer">
-                        <button type="reset" class="btn btn-outline-success"><i class="fa fa-eraser"></i>&nbsp;&nbsp;Annuler</button>
-                        <button type="submit" class="btn btn-outline-success" id="preview"><i class="fa fa-cogs"></i>&nbsp;&nbsp;Générer</button>
-                      </div>
-                    </form>
-                  </div>
-                  <!--/.Panel-->
-
-                  <!--Panel -> zone pour afficher le QrCode produit -->
-                  <div class="col-sm-4 card" id="qr-zone">
-                    <script>
-                      $("#qr-zone").load("Views/QR-zone.html");
-                    </script>
-                  </div>
-                  <!--/.Panel-->
-
-                  <!-- Modal-1 -> pour generer le fichier .json et le sauvegarder dans un drive -->
-                  <div class="modal fade" id="sauvegarderFichierJson" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h5 class="modal-title" id="exampleModalCenterTitle">QR-Code Unique</h5>
-                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                          </button>
+            <div class="tab-content">
+                <div id="texte" class="tab-pane fade in active show">
+                    <h3></h3>
+                    <div class="form-group">
+                        <label class="col-sm-12 control-label" style="color:#28a745;padding-top:10px;">Nom du QR Code</label>
+                        <div class="col-sm-10">
+                            <input type="text" id="NomQR" name="NomQR" class="form-control">
                         </div>
-                        <div class="modal-body">
-                          <div class="alert alert-danger" role="alert">
-                          La taille "970" de ce QR-Code dépasse le maximum autorisé "500".<br>Vous pouvez le sauvegarder.
-                          </div>
-                        </div>
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Fermer</button>
-                          <button type="button" class="btn btn-outline-success">Sauvegarder</button>
-                        </div>
-                      </div>
                     </div>
-                  </div>
-                  <!-- Fin Modal-1 -->
+                    <div class="form-group">
+                        <label class="col-sm-12 control-label" style="color:#28a745;">Mettre la légende</label>
+                        <div class="col-sm-10">
+                            <textarea class="form-control" id="LegendeQR" rows="9" name="LegendeQR"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="card-footer">
+            <button type="reset" class="btn btn-outline-success"><i class="fa fa-eraser"></i>&nbsp;&nbsp;Annuler</button>
+            <button type="submit" class="btn btn-outline-success" id="preview"><i class="fa fa-cogs"></i>&nbsp;&nbsp;Générer</button>
+        </div>
+    </form>
+</div>
+<!--/.Panel-->
 
-              <!-- fin contenu page unique -->
+<!--Panel -> zone pour afficher le QrCode produit -->
+<div class="col-sm-4 card" id="qr-zone">
+    <script>
+        $("#qr-zone").load("Views/QR-zone.html");
+    </script>
+</div>
+<!--/.Panel-->
 
-              <!--pour verifier les champs du formulaire (qrUnique)-->
-              <script>
-              window.jquery = window.$ = require("./node_modules/jquery-validation/dist/jquery.validate.min.js");
-              $().ready(function() {
-                $("#formulaireUniqueQRCode").validate({
-                  rules: {
-                    LegendeQR: {
-                      required: true
-                    },
-                    NomQR: {
-                      required: true
-                    }
-                  },
-                  messages: {
-                    NomQR: "<label class='error'>Ce champ est obligatoire.</label>",
-                    LegendeQR: "<label class='error'>Ce champ est obligatoire.</label>"
-                  }
-                });
+<!-- Modal-1 -> pour generer le fichier .json et le sauvegarder dans un drive -->
+<div class="modal fade" id="sauvegarderFichierJson" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">QR-Code Unique</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-danger" role="alert">
+                    La taille "970" de ce QR-Code dépasse le maximum autorisé "500".<br>Vous pouvez le sauvegarder.
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Fermer</button>
+                <button type="button" class="btn btn-outline-success">Sauvegarder</button>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Fin Modal-1 -->
 
-              });
-              </script>
+<!-- fin contenu page unique -->
+
+<!--pour verifier les champs du formulaire (qrUnique)-->
+<script>
+    window.jquery = window.$ = require("./node_modules/jquery-validation/dist/jquery.validate.min.js");
+    $().ready(function() {
+        $("#formulaireUniqueQRCode").validate({
+            rules: {
+                LegendeQR: {
+                    required: true
+                },
+                NomQR: {
+                    required: true
+                }
+            },
+            messages: {
+                NomQR: "<label class='error'>Ce champ est obligatoire.</label>",
+                LegendeQR: "<label class='error'>Ce champ est obligatoire.</label>"
+            }
+        });
+
+    });
+</script>

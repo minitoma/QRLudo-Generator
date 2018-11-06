@@ -21,7 +21,8 @@
   },
   "scripts": {
     "install-linux": "electron-packager . qrludo-generator --overwrite --asar --platform=linux --out=release-builds",
-    "install-windows": "electron-packager . qrludo-generator --overwrite --asar --platform=win32 --out=release-builds"
+    "install-windows": "electron-packager . qrludo-generator --overwrite --asar --platform=win32 --out=release-builds",
+    "start": "electron ."
   },
   "repository": {
     "type": "git",
