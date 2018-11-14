@@ -40,75 +40,81 @@ class ImageGenerator{
      console.log(div);
      console.log("---- ETAPE 4: ImageGenerator.js : debut-canvas");
 
-     //On génère le QRCode dans un canvas
-     $(div).qrcode( {
-        // render method: 'canvas', 'image' or 'div'
-        render: 'canvas',
+               //On génère le QRCode dans un canvas
+               $(div).qrcode( {
+                  // render method: 'canvas', 'image' or 'div'
+                  render: 'canvas',
 
-        // version range somewhere in 1 .. 40
-        minVersion: 4, //On force une certaine taille de QRCode pour que l'image centrale n'empêche pas la lecture des QRCodes contenant peu de données
-        maxVersion: 40,
+                  // version range somewhere in 1 .. 40
+                  minVersion: 4, //On force une certaine taille de QRCode pour que l'image centrale n'empêche pas la lecture des QRCodes contenant peu de données
+                  maxVersion: 40,
 
-        // error correction level: 'L', 'M', 'Q' or 'H'
-        ecLevel: "L",
+                  // error correction level: 'L', 'M', 'Q' or 'H'
+                  ecLevel: "L",
 
-        // offset in pixel if drawn onto existing canvas
-        left: 0,
-        top: 0,
+                  // offset in pixel if drawn onto existing canvas
+                  left: 0,
+                  top: 0,
 
-        // size in pixel
-        size: size,
+                  // size in pixel
+                  size: size,
 
-        // code color or image element
-        fill: couleurQR,
+                  // code color or image element
+                  fill: couleurQR,
 
-        // background color or image element, null for transparent background
-        background: '#fff',
+                  // background color or image element, null for transparent background
+                  background: '#fff',
 
-        // content
-        text: donneesQR,
+                  // content
+                  text: donneesQR,
 
-        // corner radius relative to module width: 0.0 .. 0.5
-        radius: 0.3,
+                  // corner radius relative to module width: 0.0 .. 0.5
+                  radius: 0.3,
 
-        // quiet zone in modules
-        quiet: 1,
+                  // quiet zone in modules
+                  quiet: 1,
 
-        // modes
-        // 0: normal
-        // 1: label strip
-        // 2: label box
-        // 3: image strip
-        // 4: image box
-        mode: 2,
+                  // modes
+                  // 0: normal
+                  // 1: label strip
+                  // 2: label box
+                  // 3: image strip
+                  // 4: image box
+                  mode: 0
 
-        mSize: 0.10,
-        mPosX: 0.5,
-        mPosY: 0.5,
+                  //mSize: 0.10,
+                  //mPosX: 0.5,
+                  //mPosY: 0.5
 
-        //label: txt,
-        fontname: 'sans',
-        //fontcolor: couleurBraille,
+                  //label: txt,
+                  //fontname: 'sans',
+                  //fontcolor: couleurBraille,
 
-        image: null
+                  //image: null
 
-      });
+                });
 
 
-      console.log("ImageGenerator.js : fin-canvas");
+      console.log("---- ETAPE 5: fin-canvas");
 
       //On récupère le noeud racine xml (contenant données utilisateur + metadonnées) et on le convertit en tableau de int pour l'insérer dans les métadonnées de l'image
       var donnees = unescape(qrcode.getRacineXml());
+      console.log("---- ETAPE 6:");
 
       var donneesutf8 = this.__donneesToUTF8(donnees) ;
+      console.log("---- ETAPE 7:");
 
       var canvas = div.getElementsByTagName("canvas")[0];
+      console.log("---- ETAPE 8:");
 
       //On génère l'image jpeg dans le div avec l'image du canvas et les métadonnées
       this.__genererJPEG(donneesutf8, canvas, div);
+      console.log("---- ETAPE 9:");
 
       //On supprime le canvas initial
       canvas.parentNode.removeChild(canvas);
+      console.log("---- ETAPE 10:");
+
 
 
     }
@@ -328,6 +334,8 @@ class ImageGenerator{
       //On crée un élément img contenant l'image générée puis on l'insère dans le div
       var image = new Image();
       image.src = exifModified;
+      image.className = "img-fluid"; //class css
+      image.id = "img-QR"
       $(divSortie).prepend(image);
 
       return image;

@@ -13,26 +13,35 @@
                               </li>
                           </ul>
 
-                          <div class="tab-content">
+                          <div class="tab-content scrollbar-success" style="height:370px; overflow-y: scroll; margin-top:15px;">
                             <div id="texte" class="tab-pane fade in active show">
                               <h3></h3>
                                 <div class="form-group">
                                         <label class="col-sm-12 control-label" style="color:#28a745;padding-top:10px;">Nom du QR Code</label>
                                         <div class="col-sm-10">
-                                            <input type="text" id="nameQRCode" name="NomQR" class="form-control">
+                                            <input type="text" id="nameQRCode" name="NomQR" class="form-control" onkeyup="activer_button(this.value);">
                                         </div>
                                 </div>
                                 <div class="form-group">
                                   <label class="col-sm-12 control-label" style="color:#28a745;">Mettre la légende</label>
                                   <div class="col-sm-10">
-                                    <textarea class="form-control" id="LegendeQR" rows="9" name="LegendeQR" placeholder="- texte ou url -"></textarea>
+                                    <textarea class="form-control" id="LegendeQR" rows="2" name="Reponse" name="LegendeQR" placeholder="- texte ou url -" onkeyup="activer_button(this.value);"></textarea>
+                                    <div id="cible">
+
+                                    </div>
+                                    <button type="button" class="btn btn-success" style="margin-top:10px;" name="ajouterReponse" onclick="ajouterChampLegende();">
+                                      <i class="fa fa-plus"></i>
+                                    </button>
                                   </div>
+                                  <div class="col-sm-10 QR-colorpicker">
+                                  <input type="color" id="colorQR" value="#000000">
+                                </div>
                                 </div>
                               </div>
                           </div>
                       </div>
                       <div class="card-footer">
-                        <button type="reset" class="btn btn-outline-success"><i class="fa fa-eraser"></i>&nbsp;&nbsp;Annuler</button>
+                        <button type="reset" class="btn btn-outline-success" id="annuler"><i class="fa fa-eraser"></i>&nbsp;&nbsp;Annuler</button>
                         <button type="submit" class="btn btn-outline-success" id="preview"><i class="fa fa-cogs"></i>&nbsp;&nbsp;Générer</button>
                       </div>
                     </form>
@@ -58,13 +67,13 @@
                           </button>
                         </div>
                         <div class="modal-body">
-                          <div class="alert alert-danger" role="alert">
-                          La taille "970" de ce QR-Code dépasse le maximum autorisé "500".<br>Vous pouvez le sauvegarder.
+                          <div class="alert alert-warning" role="alert" id="alertTaille">
+
                           </div>
                         </div>
                         <div class="modal-footer">
                           <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Fermer</button>
-                          <button type="button" class="btn btn-outline-success">Sauvegarder</button>
+                          <button type="button" class="btn btn-outline-success" id="sauvegarderQRcode">Sauvegarder</button>
                         </div>
                       </div>
                     </div>
@@ -73,25 +82,71 @@
 
               <!-- fin contenu page unique -->
 
-              <!--pour verifier les champs du formulaire (qrUnique)-->
               <script>
-              window.jquery = window.$ = require("./node_modules/jquery-validation/dist/jquery.validate.min.js");
               $().ready(function() {
-                $("#myFormActive").validate({
-                  rules: {
-                    LegendeQR: {
-                      required: true
-                    },
-                    NomQR: {
-                      required: true
-                    }
-                  },
-                  messages: {
-                    NomQR: "<label class='error'>Ce champ est obligatoire.</label>",
-                    LegendeQR: "<label class='error'>Ce champ est obligatoire.</label>"
-                  }
-                });
+
+                  // prévisualiser le qr-code
+                  document.getElementById('preview').addEventListener('click', preview);
+
+                  // desactiver les boutons exporter et lire s'il y a rien à lire ou preview
+                  $('#btnExportFile, #read, #stop, #preview, #annuler').attr('disabled', true);
+
+                  document.getElementById("stop").style.display = "none";
+
+                  //exporter
+                  $('#btnExportFile').click(function(){ exportFile(); });
+
+                  //btn annulation
+                  $('#annuler').click(function(){
+                    document.getElementById("img-QR").style.display = "none";
+                    document.getElementById('myFormActive').reset();
+                    $('#btnExportFile, #read, #stop, #preview, #annuler').attr('disabled', true); });
+
+
+                    // sur clic du bouton Lire pour ecouter les textes saisis
+                    $('button#read').click(function(){
+                      document.getElementById("read").style.display = "none";
+                      document.getElementById("stop").style.display = "";
+                      getForm(null);
+                    });
+
+                    // sur clic du bouton Stop
+                    $('button#stop').click(function(){
+                      document.getElementById("stop").style.display = "none";
+                      document.getElementById("read").style.display = "";
+                      stopLecture();
+                    });
+
+                    // sur clic du bouton sauvegarderQRcode
+                    $('button#sauvegarderQRcode').click(function(){
+                      var nomQR = document.getElementById("nameQRCode").value;
+                      var contenuQR = document.getElementById("LegendeQR").value;
+                      var colorQR = document.getElementById("colorQR").value;
+
+                      sauvegarderFichierJsonUnique(nomQR,contenuQR,colorQR);
+
+                      $('#sauvegarderFichierJson').modal('hide');
+                      document.getElementById("nameQRCode").value = "";
+                      document.getElementById("LegendeQR").value = "";
+                    });
 
               });
-              document.getElementById('preview').addEventListener('click', preview); // prévisualiser le qr-code
+
+              //verifier les champs du formulaire (qrUnique) myFormActive puis activer les buttons
+              function activer_button()
+                {
+                  if ( (document.getElementById('nameQRCode').value.length > 0) && (document.getElementById('LegendeQR').value.length > 0 ))
+                  {
+                      $('#preview').attr('disabled', false);
+                  }
+                }
+
+                //pour ajouter une nvlle legende
+                function ajouterChampLegende()
+                {
+                  var Contenu = document.getElementById('cible').innerHTML;
+                  Contenu = Contenu + "<textarea class='form-control' id='LegendeQR' rows='2' name='legende' style='margin-top:10px;'></textarea>";
+                  document.getElementById('cible').innerHTML = Contenu;
+                }
+
               </script>

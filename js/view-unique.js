@@ -73,11 +73,60 @@ function preview () {
 function drawQRCodeAtomique (qrcode) {
   try {
 
+    baseViewQRCodeAtomique(null);
+
     $('input#colorQR').val(qrcode.getColorQRCode()); // restaurer la couleur du qrcode
+    //$('textarea#LegendeQR').val(qrcode.getTexte(0)); //test
+
+    for (var i=0; i<qrcode.getTailleContenu(); i++){
+
+      if (qrcode.getTypeContenu(i) == DictionnaireXml.getTagTexte()){
+        createItemContent(null, qrcode.getTexte(i));
+      }
+
+    }
 
   } catch (e) {
     alert('Erreur : ' + e.stack);
   }
+}
+
+
+// retourne l'architecture html de base pour un qrcode atomique
+function baseViewQRCodeAtomique (callback) {
+  typeQR = 'atomique';
+
+  try {
+    // activer / désactiver les bouton
+    //$('#preview, #read').css('disabled', false);
+    //$('#creer, #import').css('disabled', true);
+
+    if (callback) { callback(null, null); }
+
+  } catch (e) {
+    alert('Erreur : ' + e.stack);
+  }
+}
+
+//creer+sauvegarder le fichier json correspond à un qrcode qui depasse la taille 500
+function sauvegarderFichierJsonUnique(nomQR,contenuQR,colorQR){
+
+  var qrUniqueJson = {
+      type: typeQR,
+      nom_qrcode: nomQR,
+      contenu: contenuQR,
+      qrColor: colorQR
+  };
+
+  var now = new Date();
+  var path = "./JSON-QRCode-Atomique/QR-Atomique-"+now.getDay()+"-"+now.getMonth()+"-"+now.getFullYear()+"-"+now.getHours()+":"+now.getMinutes()+":"+now.getSeconds()+".json";
+  fs.writeFile(path, JSON.stringify(qrUniqueJson), (err) => {
+      if (err) {
+          console.error(err);
+          return;
+      };
+      console.log("fichier .json bien sauvegardé");
+  });
 }
 
 

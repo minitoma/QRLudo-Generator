@@ -4,12 +4,18 @@ $(document).ready(function() {
   // desactiver les boutons preview et lire s'il y a rien à lire ou preview
   // desactiver exporter, faut preview avant de pouvoir exporter
   // désactiver le bouton créer s'il s'agit de qrcode unique
-  $('#btnExportFile, #read').attr('disabled', true);
+  $('#btnExportFile, #read, #stop').attr('disabled', true);
+  $('#btnExportFile').click(function(){ exportFile(); });
+
+
 
   // fonction pour dispatcher
   document.addEventListener('click', function(){
     recognizeFunction(event);
   });
+
+  $('#setImportedFile').click(function(){ importFile(); });
+  $('#annuler').click(function(){ init_View(); });
 
 
 });
@@ -21,6 +27,7 @@ function recognizeFunction (event) {
     var element = event.target;
     if (element.tagName == 'BUTTON' && element.classList.contains("set-music")){
       $('#closeModal').trigger('click');
+
       createMusicBox();
     }
   } catch (e) {
@@ -34,7 +41,7 @@ function importFile () {
     $('#closeModalImport').trigger('click'); // fermer le popup d'import
     // recupérer le fichier
     var importedFile = document.getElementById('importedFile').files[0];
-    if (importedFile) { facade.importQRCode(importedFile); }
+    if (importedFile) { facade.importQRCode(importedFile);}
   } catch (e) {
     alert('Erreur : ' + e.stack);
   }
@@ -67,6 +74,7 @@ function exportFile () {
 
       }
     };
+
     xhr.send(); //Request is sent
   } catch (e) {
     alert('Erreur : ' + e.stack);
@@ -106,13 +114,16 @@ function previewQRCode (famille) {
       }
 
       if (facade.getTailleReelleQRCode(qrcode) > 500 ) {
-        alert ("La taille de ce qr code dépasse le maximum autorisé (500).\nTaille = "+ facade.getTailleReelleQRCode(qrcode));
+        //alert ("La taille de ce qr code dépasse le maximum autorisé (500).\nTaille = "+ facade.getTailleReelleQRCode(qrcode));
+        $('#alertTaille').html("La taille '"+facade.getTailleReelleQRCode(qrcode)+"' de ce QR-Code dépasse le maximum autorisé '500'.<br>Vous pouvez le sauvegarder.");
+        $('#sauvegarderFichierJson').modal({ show: true })
+
         qrcode = null;
       } else {
         console.log("---- ETAPE 2: QR-unique.js : <500");
-        console.log($('#affichageqr').children()[0], qrcode); // générer le qrcode
+        console.log($('#affichageqr').children()[0], qrcode);
         facade.genererQRCode($('#affichageqr').children()[0], qrcode); // générer le qrcode
-        $('#btnExportFile, #read').attr('disabled', false); // activer le bouton exporter
+        $('#btnExportFile, #read, #stop, #annuler').attr('disabled', false); // activer le bouton exporter
 
       }
     }
@@ -132,7 +143,6 @@ function copyContentToQRCode (qrcode, input) {
     }
 
     // recupérer la couleur du qrcode
-    var idActive;
     // copier la couleur du qrcode
       qrcode.setColorQR($('input#colorQR').val());
 

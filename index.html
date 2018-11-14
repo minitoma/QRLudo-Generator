@@ -11,11 +11,15 @@
     <script src="./node_modules/jquery/dist/jquery.min.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
 
+    <script src="./node_modules/jquery-qrcode/jquery.qrcode.min.js"></script>
 
     <!-- Bootstrap CSS CDN -->
     <link rel="stylesheet" href="./Views/assets/css/bootstrap.min.css">
     <!-- Our Custom CSS -->
     <link rel="stylesheet" href="Views/assets/css/qrludo.css">
+
+    <!-- Bootstrap JS -->
+    <script src="./Views/assets/js/bootstrap.min.js"></script>
 
 
 
@@ -52,7 +56,7 @@
             </div>
 
             <ul class="list-unstyled components" id="menu">
-                <li id="unique">
+                <li id="unique" class="active">
                     <a href="#" id="unique-html">
                         <i class="fa fa-qrcode"></i>
                         <br>
@@ -73,8 +77,8 @@
                         Question<br>Réponses
                     </a>
                 </li>
-                <li id="charger">
-                  <a href="#" id="charger-html">
+                <li data-toggle="modal" data-target="#modalImport" id="import">
+                  <a href="" id="charger-html">
                       <i class="fa fa-plus-square"></i>
                       <br>
                       Charger
@@ -110,6 +114,28 @@
             <!-- end contenu -->
         </div>
 
+        <!-- Popup pour charger un qrcode -->
+        <div class="modal fade" id="modalImport" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered" role="document">
+            <div class="modal-content">
+              <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Choisir un fichier</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                  <span aria-hidden="true">&times;</span>
+                </button>
+              </div>
+              <div class="modal-body">
+                <input type="file" class="form-control" id="importedFile" accept=".jpg, .jpeg, .png">
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" id="closeModalImport">Annuler</button>
+                <button type="button" class="btn btn-outline-success" data-dismiss="modal" id="setImportedFile">Valider</button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- fin Popup pour charger un qrcode -->
+
 
 
 
@@ -118,8 +144,7 @@
     <script src="./node_modules/jquery/dist/jquery.slim.min.js"></script>
     <!-- Popper.JS -->
     <script src="./node_modules/popper.js/dist/umd/popper.min.js"></script>
-    <!-- Bootstrap JS -->
-    <script src="./Views/assets/js/bootstrap.min.js"></script>
+
 
 
     <!-- Menu -> naviguer -->
@@ -134,9 +159,8 @@
       $("#quesRep-html").click(function(){
         $("#charger-page").load("Views/quesRep.html");
       });
-      $("#charger-html").click(function(){
-        $("#charger-page").load("Views/unique.html");
-      });
+
+      $("#charger-page").load("Views/unique.html");
 
       $('#menu li').click(function(e) {
               e.preventDefault();
