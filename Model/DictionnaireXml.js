@@ -1,111 +1,123 @@
 /**
-* Jules Leguy
-* 2017
-**/
+ * @Author: alassane
+ * @Date:   2018-11-09T18:42:04+01:00
+ * @Last modified by:   alassane
+ * @Last modified time: 2018-11-14T11:24:01+01:00
+ */
+
+
+
+/**
+ * Jules Leguy
+ * 2017
+ **/
 
 /*s
-* Classe stockant les chaines de caractères des tags et attributs pouvant être contenus dans le xml représentant un QRCode
-* Permet de changer globalement la chaîne représentant un tag ou un attribut
-*/
-class DictionnaireXml{
+ * Classe stockant les chaines de caractères des tags et attributs pouvant être contenus dans le xml représentant un QRCode
+ * Permet de changer globalement la chaîne représentant un tag ou un attribut
+ */
+class DictionnaireXml {
 
 
   //Noeuds
-  static getTagRacine(){
+  static getTagRacine() {
     return "qrcode";
   }
 
-  static getTagMetaDonnees(){
+  static getTagMetaDonnees() {
     return "metadonnees";
   }
 
-  static getTagDonneesUtilisateur(){
+  static getTagDonneesUtilisateur() {
     return "donneesutilisateur";
   }
 
-  static getTagContenu(){
+  static getTagContenu() {
     return "contenu";
   }
 
-  static getTagFichier(){
+  static getTagFichier() {
     return "fichier";
   }
 
-  static getTagTexte(){
+  static getTagTexte() {
     return "texte";
   }
 
-  static getTagTextearea(){
+  static getTagTextearea() {
     return "textarea";
   }
 
-  static getTagFamille(){
+  static getTagFamille() {
     return "famille";
   }
 
-  static getTagColorBraille () {
+  static getTagColorBraille() {
     return "colorbraille";
   }
 
-  static getTagColorQRCode(){
+  static getTagColorQRCode() {
     return "colorqrcode";
   }
 
-  static getTagTexteBraille(){
+  static getTagTexteBraille() {
     return "textebraille";
   }
 
-  static getTagNomQRCode(){
+  static getTagNomQRCode() {
     return "valeur";
   }
 
-  static getTagEnsembleFichiers(){
+  static getTagEnsembleFichiers() {
     return "fichiers";
   }
 
 
   //Attributs
-  static getAttTypeQRCode(){
+  static getAttTypeQRCode() {
     return "type";
   }
 
-  static getValTypeAtomique(){
+  static getValTypeAtomique() {
     return "atomique";
   }
 
-  static getValTypeEnsemble(){
+  static getValTypeEnsemble() {
     return "ensemble";
   }
 
-  static getAttUrlFichier(){
+  static getAttUrlFichier() {
     return "url";
   }
 
-  static getAttNomFichier(){
+  static getAttNomFichier() {
     return "nom";
   }
 
-  static getAttNomFamille(){
+  static getAttNomFamille() {
     return "nom";
   }
 
-  static getAttOrdreFamille(){
+  static getAttOrdreFamille() {
     return "ordre";
   }
 
-  static getAttNomQRCode(){
+  static getAttNomQRCode() {
     return "valeur";
   }
 
-  static getAttCouleur(){
+  static getAttCouleur() {
     return "color";
   }
 
-  static getAttTexteBraille(){
+  static getAttTexteBraille() {
     return "texte";
   }
 }
 
+module.exports = {
+  DictionnaireXml
+};
 
 /**
  * Copyright © 12/02/2018, Corentin TALARMAIN, Thomas CALATAYUD, Rahmatou Walet MOHAMEDOUN, Jules LEGUY, David DEMBELE, Alassane DIOP
@@ -113,4 +125,4 @@ class DictionnaireXml{
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
  * The Software is provided “as is”, without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose and noninfringement. In no event shall the authors or copyright holders X be liable for any claim, damages or other liability, whether in an action of contract, tort or otherwise, arising from, out of or in connection with the software or the use or other dealings in the Software.
  * Except as contained in this notice, the name of the Corentin TALARMAIN, Thomas CALATAYUD, Rahmatou Walet MOHAMEDOUN, Jules LEGUY, David DEMBELE, Alassane DIOP shall not be used in advertising or otherwise to promote the sale, use or other dealings in this Software without prior written authorization from the Corentin TALARMAIN, Thomas CALATAYUD, Rahmatou Walet MOHAMEDOUN, Jules LEGUY, David DEMBELE, Alassane DIOP
-*/
+ */
