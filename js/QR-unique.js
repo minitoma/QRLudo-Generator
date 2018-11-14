@@ -4,19 +4,26 @@ $(document).ready(function() {
   // desactiver les boutons preview et lire s'il y a rien à lire ou preview
   // desactiver exporter, faut preview avant de pouvoir exporter
   // désactiver le bouton créer s'il s'agit de qrcode unique
+<<<<<<< HEAD
   $('#btnExportFile, #read, #stop').attr('disabled', true);
   $('#btnExportFile').click(function(){ exportFile(); });
 
 
+=======
+  $('#btnExportFile, #read').attr('disabled', true);
+>>>>>>> ec68ad49a3b386a106054a6fabf7114c9921ae0b
 
   // fonction pour dispatcher
   document.addEventListener('click', function(){
     recognizeFunction(event);
   });
 
+<<<<<<< HEAD
   $('#setImportedFile').click(function(){ importFile(); });
   $('#annuler').click(function(){ init_View(); });
 
+=======
+>>>>>>> ec68ad49a3b386a106054a6fabf7114c9921ae0b
 
 });
 
@@ -27,7 +34,10 @@ function recognizeFunction (event) {
     var element = event.target;
     if (element.tagName == 'BUTTON' && element.classList.contains("set-music")){
       $('#closeModal').trigger('click');
+<<<<<<< HEAD
 
+=======
+>>>>>>> ec68ad49a3b386a106054a6fabf7114c9921ae0b
       createMusicBox();
     }
   } catch (e) {
@@ -41,7 +51,11 @@ function importFile () {
     $('#closeModalImport').trigger('click'); // fermer le popup d'import
     // recupérer le fichier
     var importedFile = document.getElementById('importedFile').files[0];
+<<<<<<< HEAD
     if (importedFile) { facade.importQRCode(importedFile);}
+=======
+    if (importedFile) { facade.importQRCode(importedFile); }
+>>>>>>> ec68ad49a3b386a106054a6fabf7114c9921ae0b
   } catch (e) {
     alert('Erreur : ' + e.stack);
   }
@@ -74,7 +88,10 @@ function exportFile () {
 
       }
     };
+<<<<<<< HEAD
 
+=======
+>>>>>>> ec68ad49a3b386a106054a6fabf7114c9921ae0b
     xhr.send(); //Request is sent
   } catch (e) {
     alert('Erreur : ' + e.stack);
@@ -114,6 +131,7 @@ function previewQRCode (famille) {
       }
 
       if (facade.getTailleReelleQRCode(qrcode) > 500 ) {
+<<<<<<< HEAD
         //alert ("La taille de ce qr code dépasse le maximum autorisé (500).\nTaille = "+ facade.getTailleReelleQRCode(qrcode));
         $('#alertTaille').html("La taille '"+facade.getTailleReelleQRCode(qrcode)+"' de ce QR-Code dépasse le maximum autorisé '500'.<br>Vous pouvez le sauvegarder.");
         $('#sauvegarderFichierJson').modal({ show: true })
@@ -124,6 +142,15 @@ function previewQRCode (famille) {
         console.log($('#affichageqr').children()[0], qrcode);
         facade.genererQRCode($('#affichageqr').children()[0], qrcode); // générer le qrcode
         $('#btnExportFile, #read, #stop, #annuler').attr('disabled', false); // activer le bouton exporter
+=======
+        alert ("La taille de ce qr code dépasse le maximum autorisé (500).\nTaille = "+ facade.getTailleReelleQRCode(qrcode));
+        qrcode = null;
+      } else {
+        console.log("---- ETAPE 2: QR-unique.js : <500");
+        console.log($('#affichageqr').children()[0], qrcode); // générer le qrcode
+        facade.genererQRCode($('#affichageqr').children()[0], qrcode); // générer le qrcode
+        $('#btnExportFile, #read').attr('disabled', false); // activer le bouton exporter
+>>>>>>> ec68ad49a3b386a106054a6fabf7114c9921ae0b
 
       }
     }
@@ -143,6 +170,10 @@ function copyContentToQRCode (qrcode, input) {
     }
 
     // recupérer la couleur du qrcode
+<<<<<<< HEAD
+=======
+    var idActive;
+>>>>>>> ec68ad49a3b386a106054a6fabf7114c9921ae0b
     // copier la couleur du qrcode
       qrcode.setColorQR($('input#colorQR').val());
 

@@ -40,10 +40,10 @@ class ImageGenerator{
      console.log(div);
      console.log("---- ETAPE 4: ImageGenerator.js : debut-canvas");
 
-               //On génère le QRCode dans un canvas
-               $(div).qrcode( {
-                  // render method: 'canvas', 'image' or 'div'
-                  render: 'canvas',
+     //On génère le QRCode dans un canvas
+     $(div).qrcode( {
+        // render method: 'canvas', 'image' or 'div'
+        render: 'canvas',
 
                   // version range somewhere in 1 .. 40
                   minVersion: 4, //On force une certaine taille de QRCode pour que l'image centrale n'empêche pas la lecture des QRCodes contenant peu de données
@@ -86,9 +86,15 @@ class ImageGenerator{
                   //mPosX: 0.5,
                   //mPosY: 0.5
 
+<<<<<<< HEAD
                   //label: txt,
                   //fontname: 'sans',
                   //fontcolor: couleurBraille,
+=======
+        //label: txt,
+        fontname: 'sans',
+        //fontcolor: couleurBraille,
+>>>>>>> ec68ad49a3b386a106054a6fabf7114c9921ae0b
 
                   //image: null
 
@@ -96,6 +102,9 @@ class ImageGenerator{
 
 
       console.log("---- ETAPE 5: fin-canvas");
+
+
+      console.log("ImageGenerator.js : fin-canvas");
 
       //On récupère le noeud racine xml (contenant données utilisateur + metadonnées) et on le convertit en tableau de int pour l'insérer dans les métadonnées de l'image
       var donnees = unescape(qrcode.getRacineXml());
