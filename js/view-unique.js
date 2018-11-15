@@ -73,7 +73,6 @@ function preview () {
 function drawQRCodeAtomique (qrcode) {
   try {
 
-<<<<<<< HEAD
     baseViewQRCodeAtomique(null);
 
     $('input#colorQR').val(qrcode.getColorQRCode()); // restaurer la couleur du qrcode
@@ -103,16 +102,12 @@ function baseViewQRCodeAtomique (callback) {
     //$('#creer, #import').css('disabled', true);
 
     if (callback) { callback(null, null); }
-=======
-    $('input#colorQR').val(qrcode.getColorQRCode()); // restaurer la couleur du qrcode
->>>>>>> ec68ad49a3b386a106054a6fabf7114c9921ae0b
 
   } catch (e) {
     alert('Erreur : ' + e.stack);
   }
 }
 
-<<<<<<< HEAD
 //creer+sauvegarder le fichier json correspond à un qrcode qui depasse la taille 500
 function sauvegarderFichierJsonUnique(nomQR,contenuQR,colorQR){
 
@@ -134,8 +129,6 @@ function sauvegarderFichierJsonUnique(nomQR,contenuQR,colorQR){
   });
 }
 
-=======
->>>>>>> ec68ad49a3b386a106054a6fabf7114c9921ae0b
 
 /**
  * Copyright © 12/02/2018, Corentin TALARMAIN, Thomas CALATAYUD, Rahmatou Walet MOHAMEDOUN, Jules LEGUY, David DEMBELE, Alassane DIOP

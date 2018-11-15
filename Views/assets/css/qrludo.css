@@ -224,19 +224,13 @@ label.error{color:#EC5E69;font-weight:500;margin-top:0px;font-size:12px}
 label.qrludo{color:#28a745;padding-top:10px;}
 
 .qrludo-QR{
-<<<<<<< HEAD
   /* /background:#39ca5a; */
   height:auto;
   margin:auto;
   margin-top:50px;
-  padding: 10px;}
-=======
-  background:#000;
-  height:auto;
-  margin:auto;
-  margin-top:50px;
-  padding: 20px;}
->>>>>>> ec68ad49a3b386a106054a6fabf7114c9921ae0b
+  padding: 10px;
+}
+
 
   .qrludo-QR-img{
     opacity: 0.1;
@@ -249,13 +243,10 @@ label.qrludo{color:#28a745;padding-top:10px;}
     padding:0;
   }
 
-<<<<<<< HEAD
   .QR-colorpicker{
     margin-top:10px;
   }
 
-=======
->>>>>>> ec68ad49a3b386a106054a6fabf7114c9921ae0b
 
 .liste-QR{
   position:relative;

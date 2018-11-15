@@ -86,15 +86,9 @@ class ImageGenerator{
                   //mPosX: 0.5,
                   //mPosY: 0.5
 
-<<<<<<< HEAD
                   //label: txt,
                   //fontname: 'sans',
                   //fontcolor: couleurBraille,
-=======
-        //label: txt,
-        fontname: 'sans',
-        //fontcolor: couleurBraille,
->>>>>>> ec68ad49a3b386a106054a6fabf7114c9921ae0b
 
                   //image: null
 
