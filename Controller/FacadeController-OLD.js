@@ -1,114 +1,69 @@
 /**
- * @Author: alassane
- * @Date:   2018-11-10T20:58:49+01:00
- * @Last modified by:   alassane
- * @Last modified time: 2018-11-14T13:08:01+01:00
- */
-
-
-
-/**
- * Jules Leguy, Alassane Diop
- * 2017
- **/
+* Jules Leguy, Alassane Diop
+* 2017
+**/
 
 /*
- * Classe permettant à la vue d'interagir avec le controller.
- * La vue instancie cette classe une seule fois à son initialisation et fait systématiquement appel à cette instance quand elle a besoin d'un traitement du controller.
- */
+* Classe permettant à la vue d'interagir avec le controller.
+* La vue instancie cette classe une seule fois à son initialisation et fait systématiquement appel à cette instance quand elle a besoin d'un traitement du controller.
+*/
+class FacadeController{
 
-const {
-  ImageGeneratorJson
-} = require(`./ImageGeneratorJson`);
-
-const {
-  CompresseurTexte
-} = require('./CompresseurTexte');
-const {
-  ImageGenerator
-} = require('./ImageGenerator');
-
-class FacadeController {
-
-  constructor() {
+  constructor(){
     this.compresseurXml = new CompresseurTexte();
     this.imageGenerator = new ImageGenerator(this.compresseurXml);
-    // this.imageGenerator = new ImageGenerator();
+
   }
 
   //Renvoie un nouveau QRCodeAtomique
-  creerQRCodeAtomique() {
+  creerQRCodeAtomique(){
     return new QRCodeAtomique();
   }
 
   //Renvoie un nouveau QRCodeEnsemble
-  creerQRCodeEnsemble() {
+  creerQRCodeEnsemble(){
     return new QRCodeEnsemble();
   }
 
   //Génère une image QRCode à partir d'un objet QRCode dans le div passé en paramètre
-  genererQRCode(divImg, qrcode) {
-    const {
-      JsonCompressor
-    } = require('./JsonCompressor');
-
+  genererQRCode(divImg, qrcode){
     try {
       while (divImg.hasChildNodes()) {
         divImg.removeChild(divImg.firstChild);
       }
 
-      let qrcodeJson = JSON.stringify(qrcode);
-      let args = [qrcode, divImg];
-      JsonCompressor.compress(qrcodeJson, ImageGeneratorJson.genererQRCode, args);
-
+      console.log("---- ETAPE 3: FacadeController.js");
+      return this.imageGenerator.genererQRCode(divImg, qrcode);
     } catch (e) {
-      console.log(e);
+      alert(e);
     }
   }
 
   //Génère une image contenant une famille de QRCodes dans les metadonnees
-  genererImageFamilleQRCode(tableauQRCodes, divImg) {
+  genererImageFamilleQRCode(tableauQRCodes, divImg){
     while (divImg.hasChildNodes()) {
-      divImg.removeChild(divImg.firstChild);
+        divImg.removeChild(divImg.firstChild);
     }
     this.imageGenerator.genererImageFamilleQRCode(tableauQRCodes, divImg);
   }
 
-  //Fonction appelée pour importer un qrcode json
-  importQRCodeJson(file) {
-    var qrcode;
-
-    const {
-      QRCodeLoaderJson
-    } = require('./QRCodeLoaderJson');
-    QRCodeLoaderJson.loadImage(file, drawQRCode);
-  }
-
   //Fonction appelée pour importer un qrcode
-  importQRCode(file) {
+  importQRCode (file) {
     var qrcode;
+    QRCodeLoader.loadImage(file, function(qrcode, callback){
+      console.log("-----ImportFile: ");
+      console.log(qrcode);
+      callback(qrcode); // faire le view du qrcode
+    });
 
-    const {
-      QRCodeLoader
-    } = require('./QRCodeLoader');
-
-    // QRCodeLoader.loadImage(file, function(qrcode, drawQRCode) {
-    //   console.log(qrcode);
-    //   callback(qrcode); // faire le view du qrcode
-    // });
-    QRCodeLoader.loadImage(file, drawQRCode);
   }
 
   //Renvoie la taille réelle du qrcode après compression
-  getTailleReelleQRCode(qrcode) {
-    return this.compresseurXml.compresser(qrcode.getDonneesUtilisateur()).length;
+  getTailleReelleQRCode(qrcode){
+      return this.compresseurXml.compresser(qrcode.getDonneesUtilisateur()).length;
   }
 
 }
-
-module.exports = {
-  FacadeController
-};
 
 /**
  * Copyright © 12/02/2018, Corentin TALARMAIN, Thomas CALATAYUD, Rahmatou Walet MOHAMEDOUN, Jules LEGUY, David DEMBELE, Alassane DIOP
@@ -116,4 +71,4 @@ module.exports = {
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
  * The Software is provided “as is”, without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose and noninfringement. In no event shall the authors or copyright holders X be liable for any claim, damages or other liability, whether in an action of contract, tort or otherwise, arising from, out of or in connection with the software or the use or other dealings in the Software.
  * Except as contained in this notice, the name of the Corentin TALARMAIN, Thomas CALATAYUD, Rahmatou Walet MOHAMEDOUN, Jules LEGUY, David DEMBELE, Alassane DIOP shall not be used in advertising or otherwise to promote the sale, use or other dealings in this Software without prior written authorization from the Corentin TALARMAIN, Thomas CALATAYUD, Rahmatou Walet MOHAMEDOUN, Jules LEGUY, David DEMBELE, Alassane DIOP
- */
+*/
