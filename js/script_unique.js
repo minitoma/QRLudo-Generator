@@ -2,25 +2,26 @@
  * @Author: alassane
  * @Date:   2018-11-10T17:59:11+01:00
  * @Last modified by:   alassane
- * @Last modified time: 2018-11-14T13:27:02+01:00
+ * @Last modified time: 2018-11-16T00:51:32+01:00
  */
+
+// fichier script concernant les qr codes uniques
+
 const path = require('path');
 const root = path.dirname(require.main.filename); // project home path
 
 const {
   FacadeController
-} = require(`${__dirname}/Controller/FacadeController`);
+} = require(`${root}/Controller/FacadeController`);
 
 const {
   QRCodeUnique
-} = require(`${__dirname}/Model/QRCodeJson`);
+} = require(`${root}/Model/QRCodeJson`);
 
-
+let qrcode;
 
 // trigger preview qrcode action
 $('#preview').click(e => {
-  console.log('script');
-
   let inputArray = $('input, textarea');
 
   if (validateForm(inputArray)) { // all fields are filled
@@ -33,19 +34,9 @@ $('#preview').click(e => {
       qrData.push($(data).val());
     }
 
-    // instanciate a qrcode unique object
-    qrcode = new QRCodeUnique(qrName, qrData, qrColor);
-
     // Generate in a div, the qrcode image for qrcode object
     let div = $('#qrView')[0];
-
-    const {
-      FacadeController
-    } = require(`${__dirname}/Controller/FacadeController`);
-    let facade = new FacadeController();
-
-
-    facade.genererQRCode(div, qrcode);
+    previewQRCode(qrName, qrData, qrColor, div);
 
     $('#listenField, #saveQRCode').attr('disabled', false);
   }
@@ -56,9 +47,6 @@ $('#saveQRCode').click(e => {
   console.log(e);
   console.log(qrcode.getName());
   saveQRCodeImage();
-  // importQRCode('./j.jpeg');
-  // importQRCode(`${root}/imagexml.jpeg`);
-
 });
 
 // form validation return true if all fields are filled
@@ -74,6 +62,15 @@ function validateForm(inputArray) {
   return true;
 }
 
+// generate and print qr code
+function previewQRCode(name, data, color, div) {
+  // instanciate a qrcode unique object
+  qrcode = new QRCodeUnique(name, data, color);
+
+  let facade = new FacadeController();
+  facade.genererQRCode(div, qrcode);
+}
+
 // save image qr code
 function saveQRCodeImage() {
   const fs = require('fs');
@@ -82,7 +79,7 @@ function saveQRCodeImage() {
 
   var data = img.replace(/^data:image\/\w+;base64,/, '');
 
-  fs.writeFile(`${__dirname}/${qrcode.getName()}.jpeg`, data, {
+  fs.writeFile(`${root}/${qrcode.getName()}.jpeg`, data, {
     encoding: 'base64'
   }, (err) => {
     if (err) throw err;
@@ -91,8 +88,8 @@ function saveQRCodeImage() {
 
 }
 
+// fonction permettant de charger, importer un qr code
 function importQRCode(filename) {
-
   let facade = new FacadeController();
 
   let blob = null;
@@ -101,12 +98,12 @@ function importQRCode(filename) {
   xhr.responseType = "blob"; //force the HTTP response, response-type header to be blob
   xhr.onload = function() {
     blob = xhr.response; //xhr.response is now a blob object
-    // facade.importQRCodeJson(blob);
-    facade.importQRCode(blob);
+    facade.importQRCode(blob, drawQRCode);
   }
   xhr.send();
 }
 
-function drawQRCode(qrcode){
+// fonction permettant de recréer visuellement un qr code unique
+function drawQRCode(qrcode) {
   console.log("qr code to be drawn : ", qrcode);
 }

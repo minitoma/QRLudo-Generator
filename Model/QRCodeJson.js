@@ -2,7 +2,7 @@
  * @Author: alassane
  * @Date:   2018-11-09T20:33:38+01:00
  * @Last modified by:   alassane
- * @Last modified time: 2018-11-14T01:05:45+01:00
+ * @Last modified time: 2018-11-15T23:10:33+01:00
  */
 
 // This class is a representation of QRCode unique in JSON format
@@ -21,13 +21,13 @@ class QRCodeUnique {
   //   if element is a music
   //   {
   //     type: "music",
-  //     value: "music url",
+  //     url: "music url",
   //     name: "music name"
   //   },
   //   if element is a file case qr code xl
   //   {
   //     type: "file",
-  //     value: "file url"
+  //     url: "file url"
   //   }
   // ]
   // color = the qrcode color
@@ -80,11 +80,7 @@ class QRCodeUnique {
 
   // return qr code data which will be interpreted by phone
   getDataString() {
-    let string = '';
-    for (var i = 0; i < this.getData().length; i++) {
-      string += `[${this.getData()[i]}]`;
-    }
-    return string;
+    return JSON.stringify(this.qrcode);
   }
 
 }
@@ -98,7 +94,7 @@ class QRCodeXL extends QRCodeUnique {
   // data = [
   //   {
   //     type: "file",
-  //     value: "file url"
+  //     url: "file url"
   //   }
   // ]
   // color = the qrcode color
