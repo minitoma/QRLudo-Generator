@@ -2,7 +2,7 @@
  * @Author: alassane
  * @Date:   2018-11-09T18:42:04+01:00
  * @Last modified by:   alassane
- * @Last modified time: 2018-11-11T22:19:31+01:00
+ * @Last modified time: 2018-11-16T16:16:36+01:00
  */
 
 
@@ -231,10 +231,29 @@ label.error {
   font-size: 12px
 }
 
+
 label.qrludo {
   color: #28a745;
   padding-top: 10px;
 }
+
+label.error{color:#EC5E69;font-weight:500;margin-top:0px;font-size:12px}
+
+label.qrludo{color:#28a745;padding-top:10px;}
+
+.qrludo-QR{
+  /* /background:#39ca5a; */
+  height:auto;
+  margin:auto;
+  margin-top:50px;
+  padding: 10px;
+}
+
+
+  .qrludo-QR-img{
+    opacity: 0.1;
+  }
+
 
 .qrludo-QR {
   /*background: #000;*/
@@ -248,11 +267,18 @@ label.qrludo {
   opacity: 0.1;
 }
 
+
 .qrludo-QR-colorpicker {
   margin: auto;
   margin-top: 5px;
   padding: 0;
 }
+
+  .QR-colorpicker{
+    margin-top:10px;
+  }
+
+
 
 .liste-QR {
   position: relative;

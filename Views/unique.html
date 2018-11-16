@@ -50,10 +50,12 @@
   <div class="card-body">
     <h6 class="card-title"></h6>
 
+
     <!-- ici le QrCode a afficher -->
     <div class="col-md-9 qrludo-QR rounded" id="qrView">
       <!-- <img src="Views/assets/images/QRLudo-def.jpeg" class="img-fluid"></img> -->
     </div>
+
 
     <div class="col-md-9 qrludo-QR-colorpicker">
       <input type="color" id="qrColor">
@@ -126,4 +128,74 @@
   //     });
   //
   // }); -->
+</script>
+
+
+<!-- fin contenu page unique -->
+<script>
+  $().ready(function() {
+
+    // prévisualiser le qr-code
+    document.getElementById('preview').addEventListener('click', preview);
+
+    // desactiver les boutons exporter et lire s'il y a rien à lire ou preview
+    $('#btnExportFile, #read, #stop, #preview, #annuler').attr('disabled', true);
+
+    document.getElementById("stop").style.display = "none";
+
+    //exporter
+    $('#btnExportFile').click(function() {
+      exportFile();
+    });
+
+    //btn annulation
+    $('#annuler').click(function() {
+      document.getElementById("img-QR").style.display = "none";
+      document.getElementById('myFormActive').reset();
+      $('#btnExportFile, #read, #stop, #preview, #annuler').attr('disabled', true);
+    });
+
+
+    // sur clic du bouton Lire pour ecouter les textes saisis
+    $('button#read').click(function() {
+      document.getElementById("read").style.display = "none";
+      document.getElementById("stop").style.display = "";
+      getForm(null);
+    });
+
+    // sur clic du bouton Stop
+    $('button#stop').click(function() {
+      document.getElementById("stop").style.display = "none";
+      document.getElementById("read").style.display = "";
+      stopLecture();
+    });
+
+    // sur clic du bouton sauvegarderQRcode
+    $('button#sauvegarderQRcode').click(function() {
+      var nomQR = document.getElementById("nameQRCode").value;
+      var contenuQR = document.getElementById("LegendeQR").value;
+      var colorQR = document.getElementById("colorQR").value;
+
+      sauvegarderFichierJsonUnique(nomQR, contenuQR, colorQR);
+
+      $('#sauvegarderFichierJson').modal('hide');
+      document.getElementById("nameQRCode").value = "";
+      document.getElementById("LegendeQR").value = "";
+    });
+
+  });
+
+  //verifier les champs du formulaire (qrUnique) myFormActive puis activer les buttons
+  function activer_button() {
+    if ((document.getElementById('nameQRCode').value.length > 0) && (document.getElementById('LegendeQR').value.length > 0)) {
+      $('#preview').attr('disabled', false);
+    }
+  }
+
+  //pour ajouter une nvlle legende
+  function ajouterChampLegende() {
+    var Contenu = document.getElementById('cible').innerHTML;
+    Contenu = Contenu + "<textarea class='form-control' id='LegendeQR' rows='2' name='legende' style='margin-top:10px;'></textarea>";
+    document.getElementById('cible').innerHTML = Contenu;
+  }
 </script>
