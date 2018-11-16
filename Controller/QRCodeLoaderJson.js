@@ -2,7 +2,7 @@
  * @Author: alassane
  * @Date:   2018-11-14T00:46:15+01:00
  * @Last modified by:   alassane
- * @Last modified time: 2018-11-14T13:24:50+01:00
+ * @Last modified time: 2018-11-16T00:37:50+01:00
  */
 
 
@@ -20,22 +20,62 @@ class QRCodeLoaderJson {
 
     // `onload` as listener
     fileReader.addEventListener('load', function(ev) {
-      // console.log("dataUrl:", ev.target.result);
+      const path = require('path');
+      const piexif = require('piexifjs');
 
-      QRCodeLoaderJson.traiterImage(ev.target.result);
-      // let qrcode = QRCodeLoaderJson.traiterImage(ev.target.result);
-      // console.log(qrcode);
-      // if (callback)
-      //   callback(qrcode);
-      // callback(qrcode);
-      // renvoyer le qrcode créé avec la méthode en conséquence pour recréer la vue
-      // if (callback) {
-      //   if (Array.isArray(qrcode)) {
-      //     callback(qrcode, drawQRCodeFamille);
-      //   } else {
-      //     callback(qrcode, drawQRCodeAtomique);
-      //   }
-      // }
+      let root = path.dirname(require.main.filename);
+      let data = ev.target.result;
+
+
+      //On récupère les données exif de l'image
+      let exifObj = piexif.load(data);
+      let dataUtf8 = exifObj["0th"][700];
+
+      if (!dataUtf8) {
+        throw "L'image est invalide (ne contient pas de métadonnées)";
+      }
+
+      let qrcodeString = QRCodeLoaderJson.UTF8ArraytoString(dataUtf8);
+
+      let qrcode;
+      let qr = JSON.parse(qrcodeString);
+
+      switch (JSON.parse(qrcodeString).type) {
+        case "unique":
+          const {
+            QRCodeUnique
+          } = require(`${root}/Model/QRCodeJson`);
+          qrcode = new QRCodeUnique(qr.name, qr.data, qr.color);
+          break;
+
+        case "xl":
+          const {
+            QRCodeXL
+          } = require(`${root}/Model/QRCodeJson`);
+          qrcode = new QRCodeXL(qr.name, qr.data, qr.color);
+          break;
+
+        case "ensemble":
+          const {
+            QRCodeEnsemble
+          } = require(`${root}/Model/QRCodeEnsembleJson`);
+          qrcode = new QRCodeEnsemble(qr.name, qr.data, qr.color);
+          break;
+
+        case "questionReponse":
+          console.log("Créer un qr code question réponse");
+          break;
+
+        default:
+          throw "QR Code invalide";
+          break;
+      }
+
+      console.log("restored qr code : ", qrcode);
+
+      if (callback)
+        callback(qrcode);
+
     });
 
   }
@@ -44,40 +84,53 @@ class QRCodeLoaderJson {
   /*
    * Lit le contenu des métadonnées de l'image passée en paramètre et détecte s'il s'agit d'un qrcode ou d'une famille de qrcodes, puis fait l'appel à la sous fonction en conséquence
    */
-  static traiterImage(data) {
-    const piexif = require('piexifjs');
-    const {
-      JsonCompressor
-    } = require('./JsonCompressor');
-    //On récupère les données exif de l'image
-    let exifObj = piexif.load(data);
-    let dataUtf8 = exifObj["0th"][700];
-
-    if (!dataUtf8) {
-      throw "L'image est invalide (ne contient pas de métadonnées)";
-    }
-
-    let buffer = Buffer.from(dataUtf8);
-
-    // decompress buffer
-    JsonCompressor.decompress(buffer, QRCodeLoaderJson.creerQRCode);
-    console.log(qrcode);
-  }
+  // static traiterImage(data) {
+  //   const piexif = require('piexifjs');
+  //   const {
+  //     JsonCompressor
+  //   } = require('./JsonCompressor');
+  //   //On récupère les données exif de l'image
+  //   let exifObj = piexif.load(data);
+  //   let dataUtf8 = exifObj["0th"][700];
+  //
+  //   if (!dataUtf8) {
+  //     throw "L'image est invalide (ne contient pas de métadonnées)";
+  //   }
+  //
+  //   let qrcodeString = QRCodeLoaderJson.UTF8ArraytoString(dataUtf8);
+  //   console.log(qrcodeString);
+  //   console.log(JSON.parse(qrcodeString));
+  //   // let buffer = Buffer.from(dataUtf8);
+  //
+  //   // decompress buffer
+  //   // JsonCompressor.decompress(buffer, QRCodeLoaderJson.creerQRCode);
+  //   // console.log(qrcode);
+  // }
 
   //On crée un objet QRCode à partir d'un json recréé
-  static creerQRCode(qrcodeJson) {
-    const path = require('path');
-    let root = path.dirname(require.main.filename);
-    const {
-      QRCodeUnique
-    } = require(`${root}/Model/QRCodeJson`);
+  // static creerQRCode(qrcodeJson) {
+  //   const path = require('path');
+  //   let root = path.dirname(require.main.filename);
+  //   const {
+  //     QRCodeUnique
+  //   } = require(`${root}/Model/QRCodeJson`);
+  //
+  //   let qr = JSON.parse(qrcodeJson).qrcode;
+  //
+  //   let qrcode = new QRCodeUnique(qr.name, qr.data, qr.color);
+  //   console.log(qrcode);
+  //   // if (qrcode != undefined)
+  //   drawQRCode(qrcode);
+  // }
 
-    let qr = JSON.parse(qrcodeJson).qrcode;
+  // from utf8 array return string
+  static UTF8ArraytoString(array) {
+    let result = "";
 
-    let qrcode = new QRCodeUnique(qr.name, qr.data, qr.color);
-    console.log(qrcode);
-    // if (qrcode != undefined)
-    drawQRCode(qrcode);
+    for (let i = 0; i < array.length; i++)
+      result += String.fromCharCode(array[i]);
+
+    return result;
   }
 
 }

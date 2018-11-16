@@ -2,7 +2,7 @@
  * @Author: alassane
  * @Date:   2018-11-14T00:45:25+01:00
  * @Last modified by:   alassane
- * @Last modified time: 2018-11-14T13:07:52+01:00
+ * @Last modified time: 2018-11-16T00:48:01+01:00
  */
 
 
@@ -42,9 +42,10 @@ class QRCodeLoader {
     fileReader.addEventListener('load', function(ev) {
       console.log("dataUrlSize:", ev.target.result.length);
 
+      // it's not a qr code xml, so load json qr code
       if (QRCodeLoader.__traiterImage(ev.target.result) == false) {
         let facade = new FacadeController();
-        facade.importQRCodeJson(file);
+        facade.importQRCodeJson(file, callback);
         return;
       } else
         qrcode = QRCodeLoader.__traiterImage(ev.target.result);

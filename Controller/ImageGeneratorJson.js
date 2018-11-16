@@ -2,7 +2,7 @@
  * @Author: alassane
  * @Date:   2018-11-09T18:42:04+01:00
  * @Last modified by:   alassane
- * @Last modified time: 2018-11-14T10:25:15+01:00
+ * @Last modified time: 2018-11-15T23:54:01+01:00
  */
 
 /**
@@ -20,6 +20,7 @@ class ImageGeneratorJson {
     let div = arg[1];
     let data = arg[2];
 
+    console.log("data stored in qrcode : ", data);
     //On génère le QRCode dans un canvas
     $(div).qrcode({
       text: qrcode.getDataString(), // text must be string
@@ -27,9 +28,9 @@ class ImageGeneratorJson {
       fill: qrcode.getColor()
     });
 
-    // var canvas = document.createElement('canvas');
+    // let canvas = document.createElement('canvas');
     let canvas = $('#qrView canvas')[0];
-    let arrayData = [...data];
+    let arrayData = ImageGeneratorJson.stringtoUTF8Array(qrcode.getDataString());
     ImageGeneratorJson.genererJPEGJson(arrayData, canvas, div);
 
     //On supprime le canvas initial
@@ -40,21 +41,31 @@ class ImageGeneratorJson {
 
     const piexif = require('piexifjs');
     //On génère une image jpg à partir du canvas et contenant les données du qrcode dans l'attribut XMLPacket
-    var zerothIfd = {};
+    let zerothIfd = {};
     zerothIfd[piexif.ImageIFD.XMLPacket] = data;
-    var exifObj = {
+    let exifObj = {
       "0th": zerothIfd
     };
-    var exifBytes = piexif.dump(exifObj);
-    var jpegData = canvas.toDataURL("image/jpeg");
-    var exifModified = piexif.insert(exifBytes, jpegData);
+    let exifBytes = piexif.dump(exifObj);
+    let jpegData = canvas.toDataURL("image/jpeg");
+    let exifModified = piexif.insert(exifBytes, jpegData);
 
     //On crée un élément img contenant l'image générée puis on l'insère dans le div
-    var image = new Image();
+    let image = new Image();
     image.src = exifModified;
     $(divSortie).prepend(image);
 
     return image;
+  }
+
+  // from string return utf8 array
+  static stringtoUTF8Array(donnees) {
+    let donneesutf8 = [];
+
+    for (let i = 0; i < donnees.length; i++)
+      donneesutf8.push(donnees.charCodeAt(i));
+
+    return donneesutf8;
   }
 
 }
