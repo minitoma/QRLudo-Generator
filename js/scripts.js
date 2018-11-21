@@ -164,6 +164,7 @@ function importFile() {
     }
   } catch (e) {
     alert('Erreur : ' + e.stack);
+
   }
 }
 

@@ -20,6 +20,15 @@ const {
 
 let qrcode;
 
+     $('#importedFile').on('change',function ()
+     {
+         // var filePath = $(this).val();
+         var nomfichier = document.getElementById("importedFile").files[0].name;
+
+         console.log(nomfichier);
+         importQRCode(nomfichier);
+     });
+
 // trigger preview qrcode action
 $('#preview').click(e => {
   let inputArray = $('input, textarea');
@@ -101,6 +110,7 @@ function importQRCode(filename) {
     facade.importQRCode(blob, drawQRCode);
   }
   xhr.send();
+  console.log('xhr');
 }
 
 // fonction permettant de recréer visuellement un qr code unique
