@@ -5,6 +5,8 @@ var typeQR; // rens le type de qrcode
 
 $(document).ready(function() {
 
+
+
   // effacer la liste des musiques avant de fermer le popup
   $('#closeModalMusique').click(function(e){
     $('#modalMusic').find('div.modal-header.row').empty();
