@@ -34,9 +34,11 @@
 <!-- Fin contenu page ensemble -->
 
 <script>
+
     const {
         QRCodeUnique
     } = require(`${__dirname}/Model/QRCodeJson`);
+
 
     var dropper = document.getElementById('dropZone');
     var txtZone = document.getElementById('txtZone');
@@ -44,11 +46,11 @@
     var qrCodes = [];
 
     dropper.ondragenter = function(e){
-        console.log("dragenter");
     };
+
     dropper.ondragleave = function(e){
-        console.log("dragleave");
     };
+
     dropper.ondragover = function(e){
         e.preventDefault();
     };
@@ -56,34 +58,64 @@
     dropper.ondrop = function(e){
         e.preventDefault();
 
-        var bool = false;
+        var occurenceDeFichier = false;
+        var afficherPopUp = false;
+        var nomFichierIdentique = "";
 
+        /*
+        ** Parcours le ou les fichiers drop dans la zone
+        */
         for(var i = 0; i < e.dataTransfer.files.length; i++){
 
-                for(var j = 0; j < files.length; j++){
-                    if(e.dataTransfer.files[i].name == files[j].name){
-                        bool = true;
-                    }
+            /*
+            ** Parcours le ou les fichiers existant
+            ** Si une occurence est trouvé : afficherPopUp = vrai et occurenceDeFichier = vrai
+            */
+            for(var j = 0; j < files.length; j++){
+                if(e.dataTransfer.files[i].name == files[j].name){
+                    occurenceDeFichier = true;
+                    afficherPopUp = true;
+                    nomFichierIdentique += "\t" + e.dataTransfer.files[i].name + "\n";
                 }
+            }
 
-                if(bool){
-                    console.log("Fichier de même nom");
-                    bool = false;
-                } else {
-                    files.push(e.dataTransfer.files[i]);
-                    var div = document.createElement("DIV");
-                    var textDiv = document.createTextNode(files[i].name);
-                    var button = document.createElement("BUTTON");
+            /*
+            ** Si une occurence de fichiers est trouvé creation de chaque ligne de ma zone de drag and drop si le fichier n'est pas present
+            ** Chaque ligne est clickable pour affichier le qrCode unique
+            ** Chaque ligne a un bouton pour supprimer la ligne
+            */
+            if(occurenceDeFichier == false){
+                var div = document.createElement("DIV");
+                var textDiv = document.createTextNode(e.dataTransfer.files[i].name);
+                var button = document.createElement("BUTTON");
 
-                    div.id = files[i].name;
-                    button.addEventListener("click", clickFunction);
-                    div.appendChild(button);
-                    div.appendChild(textDiv);
-                    txtZone.appendChild(div);
-                }
+                button.addEventListener("click", clickFunctionErase);
+
+                div.id = e.dataTransfer.files[i].name;
+                div.addEventListener("click", afficheQrCode);
+                div.appendChild(button);
+                div.appendChild(textDiv);
+
+                txtZone.appendChild(div);
+
+                files.push(e.dataTransfer.files[i]);
+            }
+
+            occurenceDeFichier = false;
         }
 
-        console.log(files);
+        /*
+        ** Affiche un popup avec le nom des fichiers qui n'ont pu être ajouté
+        */
+        if(afficherPopUp){
+            window.alert("Un ou plusieurs fichiers ont le même nom : \n" + nomFichierIdentique);
+        }
+
+        lireFichier();
+    };
+
+    function lireFichier(){
+        qrCodes = [];
 
         for(var i = 0; i < files.length; i++){
 
@@ -92,26 +124,37 @@
             fileReader.readAsDataURL(files[i]);
 
             fileReader.addEventListener('load', function (e) {
-                console.log("dataUrlSize:", e.target.result.length);
-                var qrCodeXml = QRCodeLoader.__traiterImage(e.target.result);
-                var qrCodeJson = QRCodeLoader.parseXMLtoJson(qrCodeXml);
-                qrCodes.push(qrCodeJson);
+
+                /*
+                ** Si le QrCode est deja au format Json il n'est pas necessaire de le convertire
+                */
+                if (QRCodeLoader.__traiterImage(e.target.result) == false) {
+                    QRCodeLoaderJson.loadImage(file, function (qrCode) {qrCodes.push(qrCode);} );
+                }else{
+                    var qrCodeXml = QRCodeLoader.__traiterImage(e.target.result);
+                    var qrCodeJson = QRCodeLoader.parseXMLtoJson(qrCodeXml);
+                    qrCodes.push(qrCodeJson);
+                }
             });
         }
-    };
+    }
 
-    function clickFunction(){
+    function clickFunctionErase(){
         var id = this.parentNode;
         var arrayTmp = [];
-        console.log(id.id);
-        console.log(txtZone.childElementCount);
 
+        /*
+        ** Supprime la ligne html lie au fichier
+        */
         for(var i = 1; i <= txtZone.childElementCount; i++){
             if(txtZone.childNodes[i].id == id.id){
                 txtZone.removeChild(txtZone.childNodes[i]);
             }
         }
 
+        /*
+        ** Supprime le fichier dans le tableau files
+        */
         for(var i = 0; i < files.length; i++){
             if(files[i].name != id.id){
                 arrayTmp.push(files[i]);
@@ -119,38 +162,41 @@
         }
 
         files = arrayTmp;
+        lireFichier();
+    }
+
+    function afficheQrCode(){
+        var id = this.id;
+
+        /*
+        ** Affiche le qrCode que l'on vien de selectionner
+        */
+        for(var i = 0; i < files.length; i++){
+            if(files[i].name == id){
+                let facade = new FacadeController();
+                facade.genererQRCode($('#qrView')[0], qrCodes[i]);
+            }
+        }
     }
 
     $("#preview").click(function () {
 
-        for(var i = 0; i < qrCodes.length; i++){
-            console.log(qrCodes[i].getData());
-        }
+        var tmp = [];
 
-        var qrCodeEnsemble = new QRCodeEnsemble();
+        var qrCodeEnsemble = new QRCodeEnsemble("", tmp,"#000000");
 
         for(var i = 0; i < qrCodes.length; i++){
-            qrCodeEnsemble.ajouterQrCode(qrCodes[i]);
+            /*console.log(qrCodes[i].getData());
+            tmp.push(qrCodes[i].getData());*/
+            qrCodeEnsemble.ajouterQrCode(qrCodes[i].getData()[1]);
         }
 
-        /*var facade = new FacadeController();
-        let div = $('#qrView')[0];
-        facade.genererQRCode(div,qrCodeEnsemble);*/
-        //qrCodeEnsemble.ajouterLiensContenus()
-        /*for(var i = 0; i < qrCodes[0].getTailleContenu(); i++){
-            if (qrCodes[0].getTypeContenu(i) == DictionnaireXml.getTagTexte()){
-                //createItemContent(null, qrCodes[0].getTexte(i));
-                console.log(qrCodes[0].getTexte(i));
-            } else if (qrCodes[0].getTypeContenu(i) == DictionnaireXml.getTagFichier()){
-                // appel de selectMusic pour créer un chap input de music
-                //selectMusic(null, [qrcode.getUrlFichier(i), qrcode.getNomFichier(qrcode.getUrlFichier(i))]);
-                console.log(qrCodes[0].getUrlFichier(i));
-                console.log(qrCodes[0].getNomFichier(qrCodes[0].getUrlFichier(i)));
-            }
-        }*/
+        var facade = new FacadeController();
+        facade.genererQRCode($('#qrView')[0],qrCodeEnsemble);
     });
 
     $("#empty").click(function () {
+        qrCodes = [];
         for(var i = txtZone.childElementCount; i > 0; i--){
             txtZone.removeChild(txtZone.firstElementChild);
             files.pop();
