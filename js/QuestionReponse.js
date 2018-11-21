@@ -1,4 +1,5 @@
 var quesrepcontroller = new QuesRepController();
+var facade = new facadeController();
 var fs = require('fs');
 var pathname = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
 var repnum = 1;
@@ -73,6 +74,29 @@ $(document).ready(function() {
   $("#save").click(function() {
     projet.nom = $("#projectId").val();
     console.log(projet);
+    let qrCodes_Generes = [];
+    qrCodes_Generes.push({
+      "name": projet.nom,
+      "type": "qrprojet",
+      "data": [projet.questions, projet.reponses]
+    });
+    for (quesqr of projet.questions){
+      qrCodes_Generes.push({
+        "name": quesqr.title,
+        "type": "qrquestion",
+        "data": quesqr.reponsesUIDs
+      });
+    }
+    for (repqr of projet.reponses){
+      qrCodes_Generes.push({
+        "name": repqr.title,
+        "type": "qrreponse",
+        "data": []
+      });
+    }
+    console.log(qrCodes_Generes);
+
+    //{"name":"dodo","type":"unique","data":["sisi","likl"],"color":"#000000"}
   });
 
   //Evenement quand la liste deroulante de la question change
