@@ -1,7 +1,7 @@
 /**
  * @Author: alassane
  * @Date:   2018-11-10T17:59:11+01:00
- * @Last modified by:   alassane
+ * @Last modified by:   alassaneloadImage
  * @Last modified time: 2018-11-16T00:51:32+01:00
  */
 
@@ -25,7 +25,6 @@ let qrcode;
          // var filePath = $(this).val();
          var nomfichier = document.getElementById("importedFile").files[0].name;
 
-         console.log(nomfichier);
          importQRCode(nomfichier);
      });
 
@@ -110,10 +109,22 @@ function importQRCode(filename) {
     facade.importQRCode(blob, drawQRCode);
   }
   xhr.send();
-  console.log('xhr');
+  //console.log(qrcode);
 }
 
 // fonction permettant de recréer visuellement un qr code unique
 function drawQRCode(qrcode) {
   console.log("qr code to be drawn : ", qrcode);
+
+    if (qrcode.getType() == 'unique') {
+      $('input#qrColor').val(qrcode.getColor()); // restaurer la couleur du qrcode
+      $('input#qrName').val(qrcode.getName());  //restaurer le nom du qrcode
+    }
+    if (qrcode.getType() == 'xl') {
+      $('input#qrColor').val(qrcode.getColor()); // restaurer la couleur du qrcode
+      $('input#qrName').val(qrcode.getName()); }
+    
+
+
+
 }
