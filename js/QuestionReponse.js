@@ -111,7 +111,8 @@ $(document).ready(function() {
           for (let repUid_item of ques_item.reponsesUIDs) {
             for (let rep of projet.reponses) {
               if (repUid_item == rep.id) {
-                $("#reponsesDivLabelsId").append("<label class='control-label col-md-12' style='padding-top:10px;'>" + rep.title + "</label>");
+                $("#reponsesDivLabelsId").append("<div class='form-inline>'><label class='control-label col-md-12' style='padding-top:10px;'>" + rep.title + "</label>"+
+                  "<button id='removeRepFromQuesBtnId' type='button' class='btn btn-outline-success'><i class='fa fa-trash-alt'></i></button></div>");
               }
             }
           }
