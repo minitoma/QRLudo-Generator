@@ -1,5 +1,5 @@
 var quesrepcontroller = new QuesRepController();
-var facade = new facadeController();
+//var facade = new facadeController();
 var fs = require('fs');
 var pathname = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
 var repnum = 1;
@@ -66,7 +66,8 @@ $(document).ready(function() {
         projet.questions[i].reponsesUIDs.push($("#reponsesChooseSelectId option:selected").val());
       }
     }
-    $("#reponsesDivLabelsId").append("<label class='control-label col-md-12' style='padding-top:10px;'>" + $("#reponsesChooseSelectId option:selected").text() + "</label>");
+    $("#reponsesDivLabelsId").append("<label class='control-label col-md-12' style='padding-top:10px;'>" + $("#reponsesChooseSelectId option:selected").text() + "</label>" +
+      "<button id='removeRepFromQuesBtnId' type='button' class='btn btn-outline-success'><i class='fa fa-trash-alt'></i></button>");
     $("#chooseReponseModalId .close").click();
     console.log(projet);
   });
@@ -80,14 +81,14 @@ $(document).ready(function() {
       "type": "qrprojet",
       "data": [projet.questions, projet.reponses]
     });
-    for (quesqr of projet.questions){
+    for (quesqr of projet.questions) {
       qrCodes_Generes.push({
         "name": quesqr.title,
         "type": "qrquestion",
         "data": quesqr.reponsesUIDs
       });
     }
-    for (repqr of projet.reponses){
+    for (repqr of projet.reponses) {
       qrCodes_Generes.push({
         "name": repqr.title,
         "type": "qrreponse",
