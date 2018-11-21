@@ -2,7 +2,7 @@
  * @Author: alassane
  * @Date:   2018-11-09T20:33:38+01:00
  * @Last modified by:   alassane
- * @Last modified time: 2018-11-10T19:51:26+01:00
+ * @Last modified time: 2018-11-15T23:12:11+01:00
  */
 
 // This class is a representation oj QRCode in JSON format
@@ -15,7 +15,7 @@ class QRCodeEnsemble {
   // data = [
   //   {
   //     type: "music",
-  //     value: "music url",
+  //     url: "music url",
   //     name: "music name"
   //   }
   // ]
@@ -73,6 +73,10 @@ class QRCodeEnsemble {
 
   addData(element) {
     this.qrcode.data.push(element);
+  }
+
+  getDataString() {
+    return JSON.stringify(this.qrcode);
   }
 
 }

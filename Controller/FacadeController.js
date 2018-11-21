@@ -2,7 +2,7 @@
  * @Author: alassane
  * @Date:   2018-11-10T20:58:49+01:00
  * @Last modified by:   alassane
- * @Last modified time: 2018-11-14T13:08:01+01:00
+ * @Last modified time: 2018-11-16T00:38:28+01:00
  */
 
 
@@ -57,9 +57,16 @@ class FacadeController {
         divImg.removeChild(divImg.firstChild);
       }
 
-      let qrcodeJson = JSON.stringify(qrcode);
       let args = [qrcode, divImg];
-      JsonCompressor.compress(qrcodeJson, ImageGeneratorJson.genererQRCode, args);
+
+      // compress qrcode when length reaches more than 117
+      // compression is interesting only when qrcode reaches more than 117 car
+      if (qrcode.getDataString().length > 117) {
+        JsonCompressor.compress(qrcode.getDataString(), ImageGeneratorJson.genererQRCode, args);
+      } else {
+        args.push(qrcode.getDataString());
+        ImageGeneratorJson.genererQRCode(args);
+      }
 
     } catch (e) {
       console.log(e);
@@ -75,18 +82,18 @@ class FacadeController {
   }
 
   //Fonction appelée pour importer un qrcode json
-  importQRCodeJson(file) {
-    var qrcode;
+  importQRCodeJson(file, callback) {
+    let qrcode;
 
     const {
       QRCodeLoaderJson
     } = require('./QRCodeLoaderJson');
-    QRCodeLoaderJson.loadImage(file, drawQRCode);
+    QRCodeLoaderJson.loadImage(file, callback);
   }
 
   //Fonction appelée pour importer un qrcode
-  importQRCode(file) {
-    var qrcode;
+  importQRCode(file, callback) {
+    let qrcode;
 
     const {
       QRCodeLoader
@@ -96,7 +103,7 @@ class FacadeController {
     //   console.log(qrcode);
     //   callback(qrcode); // faire le view du qrcode
     // });
-    QRCodeLoader.loadImage(file, drawQRCode);
+    QRCodeLoader.loadImage(file, callback);
   }
 
   //Renvoie la taille réelle du qrcode après compression
