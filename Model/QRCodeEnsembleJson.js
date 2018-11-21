@@ -20,7 +20,8 @@ class QRCodeEnsemble {
   //   }
   // ]
   // color = the qrcode color
-  constructor(name = "", data = [], color = "") {
+    /*name = "", data = [], color = ""*/
+  constructor() {
     this.qrcode = {
       name: name,
       type: "ensemble",
@@ -28,6 +29,15 @@ class QRCodeEnsemble {
       color: color
     };
   }
+
+  ajouterQrCode(qrCode){
+    this.qrcode.data.push(qrCode);
+  }
+
+    getDataString() {
+        let string = JSON.stringify(this.qrcode);
+        return string;
+    }
 
   getQRCode() {
     return this.qrcode;
