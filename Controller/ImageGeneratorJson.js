@@ -2,11 +2,7 @@
  * @Author: alassane
  * @Date:   2018-11-09T18:42:04+01:00
  * @Last modified by:   alassane
-<<<<<<< 42ec5cc2951a0d11f55f6caeadc3e9907cd0cbdd
- * @Last modified time: 2018-11-16T16:20:18+01:00
-=======
  * @Last modified time: 2018-11-22T16:36:16+01:00
->>>>>>> Compression updated
  */
 
 /**
