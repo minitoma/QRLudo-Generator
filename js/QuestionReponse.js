@@ -1,13 +1,31 @@
+/**
+ * @Author: alassane
+ * @Date:   2018-11-23T11:47:00+01:00
+ * @Last modified by:   alassane
+ * @Last modified time: 2018-11-23T12:56:20+01:00
+ */
+
+
+
 var quesrepcontroller = new QuesRepController();
 var fs = require('fs');
 var pathname = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
-var projet = quesrepcontroller.creerprojet("", [], []);
-
 
 const path = require('path');
 let root = path.dirname(require.main.filename);
 
-const {FacadeController} = require(`${root}/Controller/FacadeController`);
+const {
+  FacadeController
+} = require(`${root}/Controller/FacadeController`);
+const {
+  QuestionReponse
+} = require(`${root}/Model/QuestionReponse`);
+
+let projet = new Projet("projet1");
+// var projet = quesrepcontroller.creerprojet("", [], []);
+
+
+
 
 $(document).ready(function() {
 
@@ -23,6 +41,7 @@ $(document).ready(function() {
   $("#addNewRepBtnId").click(function() {
     quesrepcontroller.clearModalForm('newReponseModalId');
   });
+  $('#questionTextAreaId').val()
 
   //Clear Choose Reponse form then load the combobox with all the reponses in the project.
   $("#addNewChooseRepBtnId").click(function() {
@@ -42,16 +61,20 @@ $(document).ready(function() {
   //Ajout d'une nouvelle question
   $("#addQuestionBtnId").click(function() {
     //quesrepcontroller.clearModalForm('newQuestionModalId');
-    if (quesrepcontroller.addNewValueToComboBox($('#questionTextAreaId').val(), 'questionsId', 'newQuestionModalId', projet.questions)) {
-      $('#reponsesDivId').show();
-    }
+    let question = new Question($('#questionTextAreaId').val(), [1, 2], '#00000');
+    projet.addQuestion(question);
+    // if (quesrepcontroller.addNewValueToComboBox($('#questionTextAreaId').val(), 'questionsId', 'newQuestionModalId', projet.questions)) {
+    $('#reponsesDivId').show();
+    // }
     console.log(projet);
   });
 
   //Ajout d'une nouvelle reponse
   $("#addReponseBtnId").click(function() {
     //quesrepcontroller.clearModalForm('newReponseModalId');
-    quesrepcontroller.addNewValueToArray($('#reponseTextAreaId').val(), projet.reponses, 'newReponseModalId');
+    let reponse = new Reponse("reponse 1", "#00000");
+    projet.addReponse(reponse);
+    // quesrepcontroller.addNewValueToArray($('#reponseTextAreaId').val(), projet.reponses, 'newReponseModalId');
     console.log(projet);
   });
 
@@ -101,26 +124,34 @@ $(document).ready(function() {
 
   $("#save").click(function() {
     var facade = new FacadeController();
-
-    projet.nom = $("#projectId").val();
-    let qrCodes_Generes = quesrepcontroller.dataToQRCodeJsonArray(projet);
     console.log(projet);
-    console.log(qrCodes_Generes);
-    for (qrcode of qrCodes_Generes) {
+    // projet.nom = $("#projectId").val();
+    // let qrCodes_Generes = quesrepcontroller.dataToQRCodeJsonArray(projet);
+    // console.log(projet);
+    // console.log(qrCodes_Generes);
+    for (question of projet.getQuestions()) {
+
+      let dir = './directname';
+      if (!fs.existsSync(dir)) {
+        fs.mkdirSync(dir);
+      }
+
       let div = document.createElement('div');
-      facade.genererQRCode(div,qrcode);
-      saveQRCodeImage(div,qrcode,"directname");
+      facade.genererQRCode($(div)[0], question);
+      saveQRCodeImage(div, question, "directname");
     }
 
-    let dir = './my_test';
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir);
+    for (reponse of projet.getReponses()) {
+      let div = document.createElement('div');
+      facade.genererQRCode(div, reponse);
+      saveQRCodeImage(div, reponse, "directname");
     }
+
   });
 
-  function saveQRCodeImage(div,qrcode,directoryName) {
+  function saveQRCodeImage(div, qrcode, directoryName) {
 
-    let img = $(`${div} img`)[0].src;
+    let img = $(div).children()[0].src;
 
     var data = img.replace(/^data:image\/\w+;base64,/, '');
 
