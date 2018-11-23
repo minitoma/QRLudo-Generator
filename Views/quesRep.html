@@ -1,166 +1,185 @@
-              <!-- contenu page QuesRep -->
-                  <!--Panel-->
-                  <div class="col-sm-8 card">
-                    <form id="formulaireQesRep"  onsubmit="return false;">
-                      <div class="card-body">
-                          <h6 class="card-title"></h6>
-                          <ul class="nav nav-tabs">
-                              <li class="nav-item">
-                                <a class="nav-link active" data-toggle="tab" href="#texte">Question - Réponses</a>
-                              </li>
-                          </ul>
+<script src="js/QuestionReponse.js"></script>
+<!-- contenu page QuesRep -->
+<!--Panel-->
 
-                          <div class="tab-content scrollbar-success" style="height:370px; overflow-y: scroll; margin-top:15px;">
-                            <div id="texte" class="tab-pane fade in active show">
-                              <h3></h3>
+<div class="col-sm-12 card">
+  <form id="formulaireQesRep" onsubmit="return false;">
+    <div class="card-body">
+      <h6 class="card-title"></h6>
+      <ul class="nav nav-tabs">
+        <li class="nav-item">
+          <a class="nav-link active" data-toggle="tab" href="#newProject">Nouveau Projet</a>
+        </li>
 
-                                <div class="form-group">
-                                        <label class="col-sm-12 control-label" style="color:#28a745;padding-top:10px;">
-                                          Projet
-                                        </label>
-                                        <div class="col-sm-10 form-inline">
-                                          <select class="form-control form-select-options col-md-6" style="margin-right:10px;">
-                                                  <option>Projet 1</option>
-                                                  <option>Projet 2</option>
-                                                  <option>Projet 3</option>
-                                                  <option>Projet 4</option>
-                                                  <option>Projet 5</option>
-                                          </select>
-                                          <button type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#nouveauprojet">
-                                            <i class="fa fa-plus"></i>
-                                          </button>
-                                        </div>
-                                </div>
-                                <div class="form-group">
-                                        <label class="col-sm-12 control-label" style="color:#28a745;padding-top:10px;">
-                                          Question
-                                        </label>
-                                        <div class="col-sm-10">
-                                          <textarea class="form-control" id="Question" rows="2" name="Question"></textarea>
-                                        </div>
-                                </div>
+      </ul>
 
-                                <div class="form-group">
-                                  <label class="col-sm-12 control-label" style="color:#28a745;">Réponse</label>
-                                  <div class="col-sm-10">
-                                    <textarea class="form-control" id="Reponse" rows="2" name="Reponse"></textarea>
-                                    <div id="cible">
-
-                                    </div>
-                                    <button type="button" class="btn btn-success" style="margin-top:10px;" name="ajouterReponse" onclick="ajouterChampReponse();">
-                                      <i class="fa fa-plus"></i>
-                                    </button>
-                                  </div>
-                                </div>
-
-                              </div>
-                          </div>
-                      </div>
-                      <div class="card-footer">
-                        <button type="reset" class="btn btn-outline-success"><i class="fa fa-eraser"></i>&nbsp;&nbsp;Annuler</button>
-                        <button type="submit" class="btn btn-outline-success"><i class="fa fa-cogs"></i>&nbsp;&nbsp;Générer</button>
-                      </div>
-                    </form>
-                  </div>
-                  <!--/.Panel-->
-
-                  <!--Panel -> zone pour afficher le QrCode produit -->
-                  <div class="col-sm-4 card" id="qr-zone">
-                    <script>
-                      $("#qr-zone").load("Views/QR-zone.html");
-                    </script>
-                  </div>
-                  <!--/.Panel-->
-
-                  <!-- Modal-1 -> pour generer le fichier .json et le sauvegarder dans un drive -->
-                  <div class="modal fade" id="sauvegarderFichierJson" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h5 class="modal-title" id="exampleModalCenterTitle">Question Réponses</h5>
-                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                          </button>
-                        </div>
-                        <div class="modal-body">
-                          <div class="alert alert-danger" role="alert">
-                          La taille "970" de ce QR-Code dépasse le maximum autorisé "500".<br>Vous pouvez le sauvegarder.
-                          </div>
-                        </div>
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Fermer</button>
-                          <button type="button" class="btn btn-outline-success">Sauvegarder</button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <!-- Fin Modal-1 -->
-
-              <!-- fin contenu page QuesRep -->
+      <div class="tab-content scrollbar-success" style="height:600px; overflow-y: scroll; margin-top:15px;">
+        <div id="newProject" class="tab-pane fade in active show">
+          <div class="form-group">
+            <label class="control-label" style="color:#28a745;padding-top:10px;">Projet</label>
+            <div class="form-inline">
+              <textarea class="form-control col-sm-6" id="projectId" rows="2" name="nomprojet" placeholder="Nom Du Projet"></textarea>
             </div>
-            <!-- end contenu -->
-        </div>
-
-
-
-
-    </div>
-
-
-    <!-- pour ajouter nouveau projet -->
-    <div class="modal fade" id="nouveauprojet" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
-      <div class="modal-dialog" role="document">
-        <div class="modal-content">
-          <div class="modal-header">
-            <h5 class="modal-title" id="exampleModalLabel">Nouveau projet</h5>
-            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-              <span aria-hidden="true">&times;</span>
-            </button>
           </div>
-          <div class="modal-body">
-            <form>
-              <div class="form-group">
-                <label for="recipient-name" class="col-form-label">Nom de projet</label>
-                <input type="text" class="form-control" id="nomprojet">
-              </div>
-            </form>
+          <div class="form-group">
+            <label class="control-label" style="color:#28a745;padding-top:10px;">Questions</label>
+            <div class="form-inline">
+              <select id="questionsId" name="questionsName" class="form-control form-select-options col-md-6" style="margin-right:10px;">
+                <option value="noquest">---Selectionner Une Question---</option>
+              </select>
+              <button id="addNewQuesBtnId" type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#newQuestionModalId">
+                <i class="fa fa-plus"></i>
+              </button>
+            </div>
           </div>
-          <div class="modal-footer">
-            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Fermer</button>
-            <button type="button" class="btn btn-outline-success">Ajouter</button>
+          <div id="reponsesDivId" class="form-group">
+            <label class="control-label col-md-12" style="color:#28a745;padding-top:10px;">Reponses</label>
+            <button id="addNewChooseRepBtnId" type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#chooseReponseModalId">Ajouter Une Reponse</button>
+            <div id="reponsesDivLabelsId" class="form-group">
+            </div>
           </div>
         </div>
+
       </div>
     </div>
-    <!-- end nouveau projet -->
+    <div class="card-footer">
+      <button type="reset" class="btn btn-outline-success"><i class="fa fa-eraser"></i>&nbsp;&nbsp;Annuler</button>
+      <button id="save" type="submit" class="btn btn-outline-success"><i class="fa fa-cogs"></i>&nbsp;&nbsp;Générer</button>
+      <button id="addNewRepBtnId" type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#newReponseModalId">Ajouter Une Nouvelle Reponse</button>
+      <button id="importProjectBtnId" type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#importProjectModalId">Importer Un Projet Existant</button>
+
+    </div>
+  </form>
+</div>
+<!--/.Panel-->
+
+<!--Panel -> zone pour afficher le QrCode produit -->
+<div class="col-sm-4 card" id="qr-zone">
+  <script>
+    $("#qr-zone").load("Views/QR-zone.html");
+  </script>
+</div>
+<!--/.Panel-->
 
 
-    <script>
-    //pour ajouter une nvlle reponse
-    function ajouterChampReponse()
-    {
-      var Contenu = document.getElementById('cible').innerHTML;
-      Contenu = Contenu + "<label class='col-sm-12 control-label' style='color:#28a745;margin-top:10px;margin-left:-16px'>Réponse</label>"
-          + "<textarea class='form-control' id='rep1' rows='2' name='rep'></textarea>";
-      document.getElementById('cible').innerHTML = Contenu;
-    }
-   </script>
+<!-- pour ajouter une nouvelle question -->
+<div class="modal fade" id="newQuestionModalId" tabindex="-1" role="dialog" aria-labelledby="questionModalTitleId" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="questionModalTitleId">Nouvelle Question</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="questionAddFormId">
+          <div class="form-group">
+            <label class="col-sm-12 control-label" style="color:#28a745;padding-top:10px;">
+              Question
+            </label>
+            <div class="col-sm-10">
+              <textarea class="form-control" id="questionTextAreaId" rows="2" name="Question"></textarea>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Fermer</button>
+        <button id="addQuestionBtnId" type="button" class="btn btn-outline-success">Ajouter</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- end nouvelle question -->
+<!-- pour ajouter une nouvelle reponse -->
+<div class="modal fade" id="newReponseModalId" tabindex="-1" role="dialog" aria-labelledby="reponseModalTitleId" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="reponseModalTitleId">Nouvelle Question</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="reponseAddFormId">
+          <div class="form-group">
+            <label class="col-sm-12 control-label" style="color:#28a745;padding-top:10px;">
+              Reponse
+            </label>
+            <div class="col-sm-10">
+              <textarea class="form-control" id="reponseTextAreaId" rows="2" name="Reponse"></textarea>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Fermer</button>
+        <button id="addReponseBtnId" type="button" class="btn btn-outline-success">Ajouter</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- end nouvelle reponse -->
+<!-- pour choisir une reponse -->
+<div class="modal fade" id="chooseReponseModalId" tabindex="-1" role="dialog" aria-labelledby="reponseModalTitleId" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="reponseModalTitleId">Choisir Une Question</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="reponseChooseFormId">
+          <div class="form-group">
+            <div class="col-sm-10">
+              <select id='reponsesChooseSelectId' name='reponsesName' class='form-control form-select-options col-md-6' style='margin-right:10px;'>
+                <!-- <option value='norep'>-Selectionner Une Reponse-</option> -->
+              </select>
+            </div>
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Fermer</button>
+        <button id="chooseReponseBtnId" type="button" class="btn btn-outline-success">Ajouter</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- end choix reponse -->
+<!-- pour choisir une reponse -->
+<div class="modal fade" id="importProjectModalId" tabindex="-1" role="dialog" aria-labelledby="importProjectModalTitleId" aria-hidden="true">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="importProjectModalTitleId">Importer Un Projet</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <form id="importProjectFormId">
+          <div class="form-group">
+            <label for="importProjectInputFileId">Importer Un Projet</label>
+            <input type="file" class="form-control-file" id="importProjectInputFileId">
+          </div>
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Fermer</button>
+        <button id="importFileValidateBtnId" type="button" class="btn btn-outline-success">Valider</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- end choix reponse -->
+<!-- <script>
+$().ready(function(){
+  $('#project').click(chargerProjects("QA_ProjectNames_File.json"));
 
-   <!-- //pour verifier les champs du formulaire (QesRep) -->
-   <script>
-   window.jquery = window.$ = require("./node_modules/jquery-validation/dist/jquery.validate.min.js");
-   $().ready(function() {
-     // validate formulaireQesRep
-     $("#formulaireQesRep").validate({
-       rules: {
-         Question: {
-           required: true
-         }
-       },
-       messages: {
-         Question: "<label class='error'>Ce champ est obligatoire.</label>"
-       }
-     });
-
-   });
- </script>
+});
+</script> -->
