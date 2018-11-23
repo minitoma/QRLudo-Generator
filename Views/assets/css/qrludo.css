@@ -1,17 +1,12 @@
 /**
- * @Author: alassane
- * @Date:   2018-11-09T18:42:04+01:00
- * @Last modified by:   alassane
- * @Last modified time: 2018-11-16T16:16:36+01:00
+ * @Author: SALIM
+ * @Date:   2018-Oct
  */
-
-
 
 @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
 
 body {
   font-family: 'Poppins', sans-serif;
-  background: #fafafa;
 }
 
 p {
@@ -275,7 +270,7 @@ label.qrludo{color:#28a745;padding-top:10px;}
 }
 
   .QR-colorpicker{
-    margin-top:10px;
+    margin-top:25px;
   }
 
 
@@ -317,6 +312,36 @@ label.qrludo{color:#28a745;padding-top:10px;}
   border-radius: 10px;
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.1);
   background-color: #39ca5a;
+}
+
+
+input[type="color"] {
+	-webkit-appearance: none;
+	/* border: none; */
+	width: 60px;
+	height: 38px;
+  border: 1px solid #28a745;
+  border-radius: .0rem .25rem .25rem .0rem;
+  cursor: pointer;
+}
+input[type="color"]::-webkit-color-swatch-wrapper {
+	padding: 0;
+}
+input[type="color"]::-webkit-color-swatch {
+	border: none;
+}
+
+
+.legendeQR{
+  margin-top: 10px;
+}
+
+.legendeQR-close-btn{
+  margin-left: 10px;
+}
+
+.btn-unique-xl{
+  margin-right: 5px;
 }
 
 /* ---------------------------------------------------
@@ -382,7 +407,7 @@ label.qrludo{color:#28a745;padding-top:10px;}
   }
 }
 
-/*CSS FOR QR VIEW*/
-#qrView>img {
-  width: inherit;
+.qrludo-QR img{
+  max-width: 100%;
+  height: auto
 }

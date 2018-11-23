@@ -1,201 +1,125 @@
-<!-- contenu page unique -->
-<!--Panel-->
-<div class="col-sm-8 card">
-  <form id="formulaireUniqueQRCode" onsubmit="return false;">
-    <div class="card-body">
-      <h6 class="card-title"></h6>
-      <ul class="nav nav-tabs">
-        <li class="nav-item">
-          <a class="nav-link active" data-toggle="tab" href="#texte">QR - Unique</a>
-        </li>
-      </ul>
 
-      <div class="tab-content">
-        <div id="texte" class="tab-pane fade in active show">
-          <h3></h3>
-          <div class="form-group">
-            <label class="col-sm-12 control-label" style="color:#28a745;padding-top:10px;">Nom du QR Code</label>
-            <div class="col-sm-10">
-              <input type="text" id="qrName" name="NomQR" class="form-control">
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-12 control-label" style="color:#28a745;">Mettre la légende</label>
-            <div class="col-sm-10">
-              <textarea class="form-control qrData" rows="3" name=""></textarea>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-12 control-label" style="color:#28a745;">Mettre la légende</label>
-            <div class="col-sm-10">
-              <textarea class="form-control qrData" rows="3" name=""></textarea>
-            </div>
-          </div>
-          <div class="form-group">
-            <label class="col-sm-12 control-label" id="errorMessage" style="color: #ec0c0c;"></label>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="card-footer">
-      <button type="reset" class="btn btn-outline-success"><i class="fa fa-eraser"></i>&nbsp;&nbsp;Annuler</button>
-      <button type="submit" class="btn btn-outline-success" id="preview"><i class="fa fa-cogs"></i>&nbsp;&nbsp;Générer</button>
-    </div>
-  </form>
-</div>
-<!--/.Panel-->
+              <!-- contenu page unique -->
+                  <!--Panel-->
+                  <div class="col-sm-8 card">
+                    <form id="myFormActive" onsubmit="return false;">
+                      <div class="card-body">
+                        <!-- message a afficher au cas d'erreur -->
+                        <div class="alert alert-danger fade show" role="alert" id="errorMessage" style="display:none;">
+                          Veuillez renseigner tous les champs
+                          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        </div>
+                        <!-- message a afficher lors de sauvegarde d'un QR -->
+                        <div class="alert alert-success fade show" role="alert" id="successMessage" style="display:none;">
+                          votre QR est bien sauvegardé
+                          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        </div>
+                          <h6 class="card-title"></h6>
+                          <ul class="nav nav-tabs">
+                              <li class="nav-item">
+                                <a class="nav-link active" data-toggle="tab" href="#texte">QR - Unique</a>
+                              </li>
+                          </ul>
 
-<!--Panel -> zone pour afficher le QrCode produit -->
-<div class="col-sm-4 card" id="qr-zone">
-  <div class="card-body">
-    <h6 class="card-title"></h6>
+                          <div class="tab-content scrollbar-success" style="height:370px; overflow-y: scroll; margin-top:15px;">
+                            <div id="texte" class="tab-pane fade in active show">
+                              <h3></h3>
+                                <div class="form-group">
+                                        <label class="col-sm-12 control-label" style="color:#28a745;padding-top:10px;">Nom du QR Code</label>
+                                        <div class="col-sm-7">
+                                            <input type="text" id="qrName" name="NomQR" class="form-control" onkeyup="activer_button(this.value);">
+                                        </div>
+                                        <!-- le type du QRCode, ici -> XL -->
+                                        <input id="typeQRCode" name="typeQRCode" type="hidden" value="xl">
+                                </div>
+                                <div class="form-group">
+                                  <div class="col-sm-10">
+                                    <div id="cible">
 
+                                    </div>
+                                  </div>
+                                </div>
+                              </div>
+                          </div>
 
-    <!-- ici le QrCode a afficher -->
-    <div class="col-md-9 qrludo-QR rounded" id="qrView">
-      <!-- <img src="Views/assets/images/QRLudo-def.jpeg" class="img-fluid"></img> -->
-    </div>
+                      </div>
+                      <div class="card-footer form-inline">
+                        <button type="button" class="btn btn-outline-success btn-unique-xl" name="ajouterTexte" onclick="ajouterChampLegende();">
+                          <i class="fa fa-file-alt"></i>&nbsp;&nbsp;Texte
+                        </button>
+                        <button type="button" id="showMusic" class="btn btn-outline-success btn-unique-xl" name="ajouterSon" data-toggle="modal" data-target="#listeMusic">
+                          <i class="fa fa-music"></i>&nbsp;&nbsp;Music
+                        </button>
+                          <div class="input-group  btn-unique-xl">
+                            <div class="input-group-prepend">
+                              <div class="input-group-text"><i class="fa fa-palette"></i></div>
+                            </div>
+                            <input type="color" id="qrColor" value="#000000">
+                          </div>
+                          <button type="reset" class="btn btn-outline-success btn-unique-xl" id="annuler"><i class="fa fa-eraser"></i>&nbsp;&nbsp;Annuler</button>
+                          <button type="submit" class="btn btn-outline-success" id="preview"><i class="fa fa-cogs"></i>&nbsp;&nbsp;Générer</button>
+                      </div>
+                    </form>
+                  </div>
+                  <!--/.Panel-->
 
+                  <!--Panel -> zone pour afficher le QrCode produit -->
+                  <div class="col-sm-4 card" id="qr-zone">
+                    <script>
+                      $("#qr-zone").load("Views/QR-zone.html");
+                    </script>
+                  </div>
+                  <!--/.Panel-->
 
-    <div class="col-md-9 qrludo-QR-colorpicker">
-      <input type="color" id="qrColor">
-      <!-- <input type="color" id="qrColor" onchange="clickColor(0, -1, -1, 5)" value="#000000"> -->
-    </div>
-  </div>
-  <div class="card-footer">
+                  <!-- Modal-1 -> pour generer le fichier .json et le sauvegarder dans un drive -->
+                  <div class="modal fade" id="sauvegarderFichierJson" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalCenterTitle">QR-Code Unique</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <div class="alert alert-warning" role="alert" id="alertTaille">
 
-    <button type="button" class="btn btn-outline-success" id="listenField" disabled>
-      <i class="fa fa-play"></i>&nbsp;&nbsp;Lire
-    </button>
-
-    <button type="button" id="saveQRCode" class="btn btn-outline-success float-lg-right" onclick="saveQRCodeImage" disabled>
-      <i class="fa fa-download"></i>&nbsp;&nbsp;Exporter
-    </button>
-  </div>
-
-  <!-- <script>
-    $("#qr-zone").load("Views/QR-zone.html");
-    </script> -->
-</div>
-<!--/.Panel-->
-
-<!-- Modal-1 -> pour generer le fichier .json et le sauvegarder dans un drive -->
-<div class="modal fade" id="sauvegarderFichierJson" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalCenterTitle">QR-Code Unique</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <div class="alert alert-danger" role="alert">
-          La taille "970" de ce QR-Code dépasse le maximum autorisé "500".<br>Vous pouvez le sauvegarder.
-        </div>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Fermer</button>
-        <button type="button" class="btn btn-outline-success">Sauvegarder</button>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- Fin Modal-1 -->
-
-<!-- fin contenu page unique -->
-
-<!--pour verifier les champs du formulaire (qrUnique)-->
-<script type="text/javascript" src="./js/script_unique.js"></script>
-
-<script>
-  // require(`${__dirname}/js/script_unique`);
-  <!-- // window.jquery = window.$ = require("jquery-validation");
-  // $().ready(function() {
-  //     $("#formulaireUniqueQRCode").validate({
-  //         rules: {
-  //             LegendeQR: {
-  //                 required: true
-  //             },
-  //             NomQR: {
-  //                 required: true
-  //             }
-  //         },
-  //         messages: {
-  //             NomQR: "<label class='error'>Ce champ est obligatoire.</label>",
-  //             LegendeQR: "<label class='error'>Ce champ est obligatoire.</label>"
-  //         }
-  //     });
-  //
-  // }); -->
-</script>
+                          </div>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Fermer</button>
+                          <button type="button" class="btn btn-outline-success" id="sauvegarderQRcode">Sauvegarder</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Fin Modal-1 -->
 
 
-<!-- fin contenu page unique -->
-<script>
-  $().ready(function() {
+                  <!-- Modal-2 -> Fichier audio -->
+                  <div class="modal fade" id="listeMusic" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalCenterTitle">Liste de fichiers son</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body">
+                          <div class="list-group" id="elementsAudio">
+                            <!-- <button type="button" class="list-group-item list-group-item-action" onclick="ajouterChampSon('nom','url');">Fichier test</button> -->
 
-    // prévisualiser le qr-code
-    document.getElementById('preview').addEventListener('click', preview);
+                          </div>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Fermer</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <!-- Fin Modal-2 -->
 
-    // desactiver les boutons exporter et lire s'il y a rien à lire ou preview
-    $('#btnExportFile, #read, #stop, #preview, #annuler').attr('disabled', true);
-
-    document.getElementById("stop").style.display = "none";
-
-    //exporter
-    $('#btnExportFile').click(function() {
-      exportFile();
-    });
-
-    //btn annulation
-    $('#annuler').click(function() {
-      document.getElementById("img-QR").style.display = "none";
-      document.getElementById('myFormActive').reset();
-      $('#btnExportFile, #read, #stop, #preview, #annuler').attr('disabled', true);
-    });
-
-
-    // sur clic du bouton Lire pour ecouter les textes saisis
-    $('button#read').click(function() {
-      document.getElementById("read").style.display = "none";
-      document.getElementById("stop").style.display = "";
-      getForm(null);
-    });
-
-    // sur clic du bouton Stop
-    $('button#stop').click(function() {
-      document.getElementById("stop").style.display = "none";
-      document.getElementById("read").style.display = "";
-      stopLecture();
-    });
-
-    // sur clic du bouton sauvegarderQRcode
-    $('button#sauvegarderQRcode').click(function() {
-      var nomQR = document.getElementById("nameQRCode").value;
-      var contenuQR = document.getElementById("LegendeQR").value;
-      var colorQR = document.getElementById("colorQR").value;
-
-      sauvegarderFichierJsonUnique(nomQR, contenuQR, colorQR);
-
-      $('#sauvegarderFichierJson').modal('hide');
-      document.getElementById("nameQRCode").value = "";
-      document.getElementById("LegendeQR").value = "";
-    });
-
-  });
-
-  //verifier les champs du formulaire (qrUnique) myFormActive puis activer les buttons
-  function activer_button() {
-    if ((document.getElementById('nameQRCode').value.length > 0) && (document.getElementById('LegendeQR').value.length > 0)) {
-      $('#preview').attr('disabled', false);
-    }
-  }
-
-  //pour ajouter une nvlle legende
-  function ajouterChampLegende() {
-    var Contenu = document.getElementById('cible').innerHTML;
-    Contenu = Contenu + "<textarea class='form-control' id='LegendeQR' rows='2' name='legende' style='margin-top:10px;'></textarea>";
-    document.getElementById('cible').innerHTML = Contenu;
-  }
-</script>
+              <!-- fin contenu page unique -->
+              <script type="text/javascript" src="./js/script_unique.js"></script>
+              <script type="text/javascript" src="./js/scripts_xl.js"></script>

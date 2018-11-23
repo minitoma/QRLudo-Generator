@@ -61,8 +61,13 @@ class FacadeController {
 
       // compress qrcode when length reaches more than 117
       // compression is interesting only when qrcode reaches more than 117 car
+      console.log("Taille (qrcode) : "+ qrcode.getDataString().length);
+      console.log(qrcode);
       if (qrcode.getDataString().length > 117) {
         JsonCompressor.compress(qrcode.getDataString(), ImageGeneratorJson.genererQRCode, args);
+        //si la taille depasse 500
+        // $('#alertTaille').html("La taille '"+qrcode.getDataString().length+"' de ce QR-Code dépasse le maximum autorisé '500'.<br>Vous pouvez le sauvegarder.");
+        // $('#sauvegarderFichierJson').modal('show');
       } else {
         args.push(qrcode.getDataString());
         ImageGeneratorJson.genererQRCode(args);

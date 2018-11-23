@@ -108,27 +108,6 @@ function baseViewQRCodeAtomique (callback) {
   }
 }
 
-//creer+sauvegarder le fichier json correspond à un qrcode qui depasse la taille 500
-function sauvegarderFichierJsonUnique(nomQR,contenuQR,colorQR){
-
-  var qrUniqueJson = {
-      type: typeQR,
-      nom_qrcode: nomQR,
-      contenu: contenuQR,
-      qrColor: colorQR
-  };
-
-  var now = new Date();
-  var path = "./JSON-QRCode-Atomique/QR-Atomique-"+now.getDay()+"-"+now.getMonth()+"-"+now.getFullYear()+"-"+now.getHours()+":"+now.getMinutes()+":"+now.getSeconds()+".json";
-  fs.writeFile(path, JSON.stringify(qrUniqueJson), (err) => {
-      if (err) {
-          console.error(err);
-          return;
-      };
-      console.log("fichier .json bien sauvegardé");
-  });
-}
-
 
 /**
  * Copyright © 12/02/2018, Corentin TALARMAIN, Thomas CALATAYUD, Rahmatou Walet MOHAMEDOUN, Jules LEGUY, David DEMBELE, Alassane DIOP

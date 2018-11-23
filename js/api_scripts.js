@@ -101,12 +101,12 @@ function listFiles(auth, callback) {
     if (err) {
       console.log('The API returned an error: ' + err);
       alert('Pas de connexion internet');
-      $('#closeModalMusique').click();
+      // $('#closeModalMusique').click();
       return;
     } else if (response.files.length == 0) {
       console.log('No files found.');
       alert('Aucun fichier trouvé');
-      $('#closeModalMusique').click();
+      // $('#closeModalMusique').click();
       return;
     } else {
       callback(response.files);
@@ -117,14 +117,17 @@ function listFiles(auth, callback) {
 
 // liste de la musique dispo sur le drive
 function listMusic(content) {
-  var div = document.getElementById('modalMusic').childNodes[1].childNodes[1].childNodes[3];
+  // var div = document.getElementById('listeMusic').childNodes[1].childNodes[1].childNodes[3];
+  var div = document.getElementById('elementsAudio');
+  // return false;
   for (var i = 0; i < content.length; i++) {
     if (content[i].name.endsWith(".mp3")) {
-      var a = document.createElement('a');
-      a.setAttribute('class', 'hrefMusic');
-      a.setAttribute('href', '#' + content[i].id);
-      a.appendChild(document.createTextNode(content[i].name));
-      div.appendChild(createDiv('col-md-12 text-center', '', [a]));
+      var b = document.createElement('button');
+      b.setAttribute('type', 'button');
+      b.setAttribute('class', 'list-group-item list-group-item-action');
+      b.setAttribute('onclick', 'ajouterChampSon("'+content[i].name+'","'+content[i].id+'");');
+      b.appendChild(document.createTextNode(content[i].name));
+      div.appendChild(b);
     }
   }
 }

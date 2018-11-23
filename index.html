@@ -7,6 +7,7 @@
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
   <title>QRLudo</title>
+  <!-- <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script> -->
 
   <!-- qr code image -->
   <script type="text/javascript" src="./node_modules/jquery-qrcode/jquery.qrcode.min.js"></script>
@@ -23,7 +24,8 @@
   <script type="text/javascript" src="Views/assets/js/fontawesome.js"></script>
 
 
-  <!-- <script src="/home/alassane/Documents/projet_m1_m2/QRLudo-Generator/js/scripts.js"></script> -->
+  <script src="./js/api_scripts.js"></script>
+
 
 
 </head>
@@ -58,8 +60,8 @@
             Question<br>Réponses
           </a>
         </li>
-        <li id="charger">
-          <a href="#" id="charger-html">
+        <li data-toggle="modal" data-target="#modalImport" id="import">
+          <a href="" id="charger-html">
             <i class="fa fa-plus-square"></i>
             <br>
             Charger
@@ -94,6 +96,29 @@
       </div>
       <!-- end contenu -->
     </div>
+
+    <!-- Popup pour charger un qrcode -->
+    <div class="modal fade" id="modalImport" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="exampleModalCenterTitle">Choisir un fichier</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body">
+            <input type="file" class="form-control" id="importedFile" accept=".jpg, .jpeg, .png">
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" id="closeModalImport">Annuler</button>
+            <button type="button" class="btn btn-outline-success" data-dismiss="modal" id="setImportedFile">Valider</button>
+          </div>
+        </div>
+      </div>
+    </div>
+    <!-- fin Popup pour charger un qrcode -->
+
   </div>
 
   <script src="./node_modules/jquery/dist/jquery.slim.min.js"></script>
@@ -102,36 +127,9 @@
   <!-- Bootstrap JS -->
   <script src="./Views/assets/js/bootstrap.min.js"></script>
 
-
   <!-- Menu -> naviguer -->
-  <script>
-    window.jquery = window.$ = require("jquery");
-    $("#unique-html").click(function() {
-      $("#charger-page").load("Views/unique.html");
-    });
-    $("#ensemble-html").click(function() {
-      $("#charger-page").load("Views/ensemble.html");
-    });
-    $("#quesRep-html").click(function() {
-      $("#charger-page").load("Views/quesRep.html");
-    });
-    $("#charger-html").click(function() {
-      $("#charger-page").load("Views/unique.html");
-    });
+  <script src="./Views/assets/js/naviguer.js"></script>
 
-    $('#menu li').click(function(e) {
-      e.preventDefault();
-      $('li').removeClass('active');
-      $(this).addClass('active');
-    });
-  </script>
-
-  <script type="text/javascript">
-    $(document).ready(function() {
-      $('#sidebarCollapse').on('click', function() {
-        $('#sidebar').toggleClass('active');
-      });
-    });
-  </script>
 </body>
+
 </html>
