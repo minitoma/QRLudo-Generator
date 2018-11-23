@@ -1,16 +1,15 @@
 var quesrepcontroller = new QuesRepController();
-//var facade = new facadeController();
 var fs = require('fs');
 var pathname = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
-var repnum = 1;
+var projet = quesrepcontroller.creerprojet("", [], []);
+
+
+const path = require('path');
+let root = path.dirname(require.main.filename);
+
+const {FacadeController} = require(`${root}/Controller/FacadeController`);
 
 $(document).ready(function() {
-
-  var final_json = {};
-  var projet = quesrepcontroller.creerprojet("", [], []);
-  //console.log(projet);
-
-
 
   //Cacher le div des reponses par default
   $('#reponsesDivId').hide();
@@ -42,6 +41,7 @@ $(document).ready(function() {
 
   //Ajout d'une nouvelle question
   $("#addQuestionBtnId").click(function() {
+    //quesrepcontroller.clearModalForm('newQuestionModalId');
     if (quesrepcontroller.addNewValueToComboBox($('#questionTextAreaId').val(), 'questionsId', 'newQuestionModalId', projet.questions)) {
       $('#reponsesDivId').show();
     }
@@ -50,6 +50,7 @@ $(document).ready(function() {
 
   //Ajout d'une nouvelle reponse
   $("#addReponseBtnId").click(function() {
+    //quesrepcontroller.clearModalForm('newReponseModalId');
     quesrepcontroller.addNewValueToArray($('#reponseTextAreaId').val(), projet.reponses, 'newReponseModalId');
     console.log(projet);
   });
@@ -66,39 +67,13 @@ $(document).ready(function() {
         projet.questions[i].reponsesUIDs.push($("#reponsesChooseSelectId option:selected").val());
       }
     }
-    $("#reponsesDivLabelsId").append("<label class='control-label col-md-12' style='padding-top:10px;'>" + $("#reponsesChooseSelectId option:selected").text() + "</label>" +
-      "<button id='removeRepFromQuesBtnId' type='button' class='btn btn-outline-success'><i class='fa fa-trash-alt'></i></button>");
+    $("#reponsesDivLabelsId").append("<div class='form-inline'><label class='form-control control-label col-md-6' style='padding-top:10px;'>" + $("#reponsesChooseSelectId option:selected").text() + "</label>" +
+      "<button id='" + $("#reponsesChooseSelectId option:selected").val() + "' type='button' name='rep[]' class='btn btn-outline-success' onclick='deleteReponse($(this));'><i class='fa fa-trash-alt'></i></button></div>");
     $("#chooseReponseModalId .close").click();
     console.log(projet);
   });
 
-  $("#save").click(function() {
-    projet.nom = $("#projectId").val();
-    console.log(projet);
-    let qrCodes_Generes = [];
-    qrCodes_Generes.push({
-      "name": projet.nom,
-      "type": "qrprojet",
-      "data": [projet.questions, projet.reponses]
-    });
-    for (quesqr of projet.questions) {
-      qrCodes_Generes.push({
-        "name": quesqr.title,
-        "type": "qrquestion",
-        "data": quesqr.reponsesUIDs
-      });
-    }
-    for (repqr of projet.reponses) {
-      qrCodes_Generes.push({
-        "name": repqr.title,
-        "type": "qrreponse",
-        "data": []
-      });
-    }
-    console.log(qrCodes_Generes);
 
-    //{"name":"dodo","type":"unique","data":["sisi","likl"],"color":"#000000"}
-  });
 
   //Evenement quand la liste deroulante de la question change
   $("#questionsId").change(function() {
@@ -111,8 +86,8 @@ $(document).ready(function() {
           for (let repUid_item of ques_item.reponsesUIDs) {
             for (let rep of projet.reponses) {
               if (repUid_item == rep.id) {
-                $("#reponsesDivLabelsId").append("<div class='form-inline>'><label class='control-label col-md-12' style='padding-top:10px;'>" + rep.title + "</label>"+
-                  "<button id='removeRepFromQuesBtnId' type='button' class='btn btn-outline-success'><i class='fa fa-trash-alt'></i></button></div>");
+                $("#reponsesDivLabelsId").append("<div class='form-inline'><label class='form-control control-label col-md-6' style='padding-top:10px;'>" + rep.title + "</label>" +
+                  "<button id='" + rep.id + "' type='button' name='rep[]' class='btn btn-outline-success' onclick='deleteReponse($(this));'><i class='fa fa-trash-alt'></i></button></div>");
               }
             }
           }
@@ -121,21 +96,50 @@ $(document).ready(function() {
     }
   });
 
-  //Evenement quand une liste deroulante d'une des reponses change
-  $('#reponsesId').change(function() {
-    console.log("heyo");
+
+
+
+  $("#save").click(function() {
+    var facade = new FacadeController();
+
+    projet.nom = $("#projectId").val();
+    let qrCodes_Generes = quesrepcontroller.dataToQRCodeJsonArray(projet);
+    console.log(projet);
+    console.log(qrCodes_Generes);
+    for (qrcode of qrCodes_Generes) {
+      let div = document.createElement('div');
+      facade.genererQRCode(div,qrcode);
+      saveQRCodeImage(div,qrcode,"directname");
+    }
+
+    let dir = './my_test';
+    if (!fs.existsSync(dir)) {
+      fs.mkdirSync(dir);
+    }
   });
 
+  function saveQRCodeImage(div,qrcode,directoryName) {
+
+    let img = $(`${div} img`)[0].src;
+
+    var data = img.replace(/^data:image\/\w+;base64,/, '');
+
+    fs.writeFile(`${root}/${directoryName}/${qrcode.getName()}.jpeg`, data, {
+      encoding: 'base64'
+    }, (err) => {
+      if (err) throw err;
+      console.log('The file has been saved!');
+    });
+
+  }
 
 
-
-
-
-  console.log(pathname);
-  var nameFileProjects = "QA_ProjectNames_File.json";
 
 
   //----------------------------------------------------------------------------
+  console.log(pathname);
+  var nameFileProjects = "QA_ProjectNames_File.json";
+
   $("#addQuestion").click(function() {
     var myProject = new Projet(1, $('#project option:selected').text());
     data = $('#formAddQuestion').serializeObject();
@@ -205,14 +209,12 @@ $(document).ready(function() {
         });
       }
     }));
-
   });
 });
 
 
 function chargerProjects(nameFileProjects) {
   if (fs.existsSync(pathname + nameFileProjects)) {
-
     var jsonl = JSON.parse(fs.readFileSync(nameFileProjects).toString());
     $("#project").append($.map(jsonl, function(o) {
 
@@ -250,3 +252,17 @@ $.fn.serializeObject = function() {
   });
   return o;
 };
+
+//Cette Fonction Supprime Une reponse a une question
+function deleteReponse(todelete) {
+  for (q of projet.questions) {
+    if (q.id == $("#questionsId option:selected").val()) {
+      for (i = 0; i < q.reponsesUIDs.length; i++) {
+        if (q.reponsesUIDs[i] == todelete.attr('id')) {
+          q.reponsesUIDs.splice(i, 1);
+        }
+      }
+    }
+  }
+  todelete.parent('div').remove();
+}

@@ -42,3 +42,22 @@ class Reponse {
     this.title = title;
   }
 }
+
+class QRCodeQuestionReponse {
+
+  // type = unique, xl
+  // name = name of qrcode
+  // data = an array which contains input (url file) provided from form
+  // data = [
+  //   {
+  //     type: "file",
+  //     url: "file url"
+  //   }
+  // ]
+  // color = the qrcode color
+  constructor(name = "", data = [], color = "") {
+    super(name, data, color);
+    this.qrcode.type = "questionre";
+  }
+
+}

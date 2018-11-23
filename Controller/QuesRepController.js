@@ -26,6 +26,29 @@ class QuesRepController {
     return new Reponse(title);
   }
 
+  //Renvoie Un QrCode 'qa(question answer)'
+  creer_qa_qrcode(nom, type, data, color) {
+    return {
+      "name": nom,
+      "type": type,
+      "data": data || [],
+      "color": color
+    };
+  }
+
+  //Construire un Array des QrCode Question reponses
+  dataToQRCodeJsonArray(projetJson){
+    let qrCodes_Generes = [];
+    qrCodes_Generes.push(this.creer_qa_qrcode(projetJson.nom, "qrprojet", [projetJson.questions, projetJson.reponses], "#000000"));
+    for (let quesqr of projetJson.questions) {
+      qrCodes_Generes.push(this.creer_qa_qrcode(quesqr.title, "qrquestion", quesqr.reponsesUIDs, "#000000"));
+    }
+    for (let repqr of projetJson.reponses) {
+      qrCodes_Generes.push(this.creer_qa_qrcode(repqr.title, "qrreponse", [], "#000000"));
+    }
+    return qrCodes_Generes;
+  }
+
   //Ajouter une nouvelle valeur a la liste deroulante
   addNewValueToComboBox(new_val, selectid, modalIdToClose, array) {
     if (new_val === "") return false; // si le champ est vide on sort
@@ -78,7 +101,6 @@ class QuesRepController {
     });
     return resArray;
   }
-
   clearModalForm(modal_id) {
     $('#' + modal_id).find('form')[0].reset();
   }
