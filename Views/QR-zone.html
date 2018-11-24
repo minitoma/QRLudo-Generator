@@ -1,19 +1,22 @@
-<div class="card-body">
+<div class="card-body" id="affichage_qr">
     <h6 class="card-title"></h6>
-    <div class="col-md-9 qrludo-QR rounded">
+    <div class="col-md-9 qrludo-QR rounded" id="qrView">
       <!-- ici le QrCode a afficher -->
-        <!-- <img src="Views/assets/images/QRLudo-def.jpeg" class="img-fluid"></img> -->
+        <div>
 
+        </div>
     </div>
-    <div class="col-md-9 qrludo-QR-colorpicker">
-    <input type="color" id="html5colorpicker" onchange="clickColor(0, -1, -1, 5)" value="#000000">
-  </div>
 </div>
-<div class="card-footer">
-  <button type="button" class="btn btn-outline-success" disabled>
+<div class="card-footer" id="affichage_qr_footer">
+  <form>
+  <button type="button" class="btn btn-outline-success" id="listenField" disabled>
     <i class="fa fa-play"></i>&nbsp;&nbsp;Lire
   </button>
-  <button type="button" class="btn btn-outline-success float-lg-right" disabled>
+  <button type="button" class="btn btn-outline-success" id="stop">
+    <i class="fa fa-pause"></i>&nbsp;&nbsp;Stop
+  </button>
+  <button type="button" class="btn btn-outline-success float-lg-right" id="saveQRCode" onclick="saveQRCodeImage" disabled>
     <i class="fa fa-download"></i>&nbsp;&nbsp;Exporter
   </button>
+</form>
 </div>

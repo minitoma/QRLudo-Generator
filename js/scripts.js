@@ -1,3 +1,17 @@
+/**
+ * @Author: alassane
+ * @Date:   2018-11-10T17:52:40+01:00
+ * @Last modified by:   alassane
+ * @Last modified time: 2018-11-10T20:06:25+01:00
+ */
+
+
+
+const {
+  QRCodeUnique
+} = require(`${__dirname}/Model/QRCodeJson`);
+let qr = new QRCodeUnique();
+console.log(qr);
 
 $(document).ready(function() {
 
@@ -8,10 +22,10 @@ $(document).ready(function() {
       $("#sortable").disableSelection();
     });
 
-    $(function(){
-      $('#sortable > li').click(function(event){
+    $(function() {
+      $('#sortable > li').click(function(event) {
         $('.tab-content-liste-content > div').css('display', 'none');
-        $('.tab-content-liste-content > div.'+event.target.id).css('display', 'block');
+        $('.tab-content-liste-content > div.' + event.target.id).css('display', 'block');
       });
     });
   } catch (e) {
@@ -24,26 +38,36 @@ $(document).ready(function() {
   $('#btnExportFile, #preview, #read').attr('disabled', true);
 
   // fonction pour dispatcher
-  document.addEventListener('click', function(){
+  document.addEventListener('click', function() {
     recognizeFunction(event);
   });
 
-  $('#modalMusic').click(function(){ selectMusic(event, null); }); // sur clic d'un lien de musique
+  $('#modalMusic').click(function() {
+    selectMusic(event, null);
+  }); // sur clic d'un lien de musique
 
-  $('#setImportedFile').click(function(){ importFile(); });
+  $('#setImportedFile').click(function() {
+    importFile();
+  });
 
-  $('#btnExportFile, #saveFamily').click(function(){ exportFile(); });
+  $('#btnExportFile, #saveFamily').click(function() {
+    exportFile();
+  });
 
-  $('#previewFamily').click(function(){ previewFamily(); });
-  $('#initView').click(function(){ init_View(); });
+  $('#previewFamily').click(function() {
+    previewFamily();
+  });
+  $('#initView').click(function() {
+    init_View();
+  });
 
 });
 
 // fonction pour appeler la foncton sollicitée
-function recognizeFunction (event) {
+function recognizeFunction(event) {
   try {
     var element = event.target;
-    if (element.tagName == 'BUTTON' && element.classList.contains("set-music")){
+    if (element.tagName == 'BUTTON' && element.classList.contains("set-music")) {
       $('#closeModal').trigger('click');
       createMusicBox();
     }
@@ -53,13 +77,13 @@ function recognizeFunction (event) {
 }
 
 // renseigner la musique sur un champ texte et l'afficher
-function selectMusic (event, imported) {
+function selectMusic(event, imported) {
   try {
     var div2, textarea;
     if (event && imported == null) {
       var element = event.target;
 
-      if(element.tagName == 'A') {
+      if (element.tagName == 'A') {
         textarea = createTextarea('form-control legende-music', element.getAttribute('href').substring(1), element.textContent);
         textarea.setAttribute('disabled', true);
       }
@@ -70,9 +94,9 @@ function selectMusic (event, imported) {
 
     div2 = createDiv('col-md-12', null, [textarea]);
 
-    var btnAdd    =   createClickableImg('addChamp', 'add.png', 'Ajouter un nouveau champ');
-    var btnDelete =   createClickableImg('deleteChamp', 'delete.png', 'Supprimer ce champ');
-    var btnPlay   =   createClickableImg('playChamp', 'play.png', 'Ecouter le contenu du champ');
+    var btnAdd = createClickableImg('addChamp', 'add.png', 'Ajouter un nouveau champ');
+    var btnDelete = createClickableImg('deleteChamp', 'delete.png', 'Supprimer ce champ');
+    var btnPlay = createClickableImg('playChamp', 'play.png', 'Ecouter le contenu du champ');
 
     var span = document.createElement('SPAN');
 
@@ -88,27 +112,35 @@ function selectMusic (event, imported) {
 
     var idActive, form = null;
 
-    if (typeQR == 'atomique') { form = $('form#myFormActive'); }
-    if (typeQR == 'ensemble') { form = $('form#myFormActive > div:last-child'); }
+    if (typeQR == 'atomique') {
+      form = $('form#myFormActive');
+    }
+    if (typeQR == 'ensemble') {
+      form = $('form#myFormActive > div:last-child');
+    }
     if (typeQR == 'famille') {
       idActive = $('li.active').attr('id');
-      form = $('div#content-item.'+idActive).find($('form#myFormActive'));
+      form = $('div#content-item.' + idActive).find($('form#myFormActive'));
     }
 
     form.append(div);
 
     // ajout un event sur click du bouton supprimer champ
-    $('img.deleteChamp').click(function(){
+    $('img.deleteChamp').click(function() {
       $(this).parents('div.form-group').remove();
       // supprimer le qrcode s'il n'y a plus de champs textarea
       if (form.find('textarea').length == 0) {
-        if (typeQR == 'atomique' || typeQR == 'ensemble') { init_View(); }
-        if (typeQR == 'famille') { $('div#content-item.'+idActive+' > input[title="Supprimer ce qrcode"]').trigger('click'); }
+        if (typeQR == 'atomique' || typeQR == 'ensemble') {
+          init_View();
+        }
+        if (typeQR == 'famille') {
+          $('div#content-item.' + idActive + ' > input[title="Supprimer ce qrcode"]').trigger('click');
+        }
       }
     });
 
     // ajouter un eventlistener sur playChamp pour lire le champ sur click du bouton
-    $('img.playChamp').click(function(event){
+    $('img.playChamp').click(function(event) {
       console.log(event.target);
       var texte = event.target.parentNode.parentNode.parentNode.parentNode.childNodes[0].childNodes[0].value;
       getForm(texte);
@@ -122,12 +154,14 @@ function selectMusic (event, imported) {
 }
 
 // fonction pour charger un QRCode
-function importFile () {
+function importFile() {
   try {
     $('#closeModalImport').trigger('click'); // fermer le popup d'import
     // recupérer le fichier
     var importedFile = document.getElementById('importedFile').files[0];
-    if (importedFile) { facade.importQRCode(importedFile); }
+    if (importedFile) {
+      facade.importQRCode(importedFile);
+    }
   } catch (e) {
     alert('Erreur : ' + e.stack);
   }
@@ -136,12 +170,12 @@ function importFile () {
 /*
  fonction pour enregistrer une image de qrcode si famille = false sinon une image de famille
 */
-function exportFile () {
+function exportFile() {
   try {
     var img, nameFile;
     if (typeQR == 'famille') { // si on a une famille à enregistrer
       img = $('#affichageFamille').find('img')[0];
-      if(typeof img == "undefined"){
+      if (typeof img == "undefined") {
         previewFamily()
         img = $('#affichageFamille').find('img')[0];
       }
@@ -157,9 +191,9 @@ function exportFile () {
     var xhr = new XMLHttpRequest();
 
     xhr.responseType = 'blob'; //Set the response type to blob so xhr.response returns a blob
-    xhr.open('GET', url , true);
+    xhr.open('GET', url, true);
 
-    xhr.onreadystatechange = function () {
+    xhr.onreadystatechange = function() {
       if (xhr.readyState == xhr.DONE) {
         //When request is done
         //xhr.response will be a Blob ready to save
@@ -168,7 +202,7 @@ function exportFile () {
 
         if (typeQR == 'famille') {
           // simuler un click sur chaque item et generer le qrcode du item actif et le mettre dans le tableau de qrcode
-          $('ul#sortable > li').each(function(){
+          $('ul#sortable > li').each(function() {
             $(this).trigger('click');
             previewQRCode(true);
 
@@ -177,7 +211,9 @@ function exportFile () {
             var imgData = $('#affichageqr').find('img').attr('src');
 
             var data = imgData.replace(/^data:image\/\w+;base64,/, '');
-            fs.writeFile(filename, data, {encoding: 'base64'}, function(err) {
+            fs.writeFile(filename, data, {
+              encoding: 'base64'
+            }, function(err) {
               if (err) {
                 console.log('err', err);
               }
@@ -194,13 +230,13 @@ function exportFile () {
 }
 
 // fonction pour sauvegarder les qrcodes d'une meme famille en même temps
-function exportFamily () {
+function exportFamily() {
   try {
     // on prend chaque item, on génére son qrcode, on l'enregistre
     tabQRCode = [];
 
     // simuler un click sur chaque item et generer le qrcode du item actif et le mettre dans le tableau de qrcode
-    $('ul#sortable > li').each(function(){
+    $('ul#sortable > li').each(function() {
       $(this).trigger('click');
       var qrcode = previewQRCode(true);
       tabQRCode.push(qrcode);
@@ -211,7 +247,7 @@ function exportFamily () {
 }
 
 // function appelée aprés chaque export pour réinitialiser la vue
-function init_View () {
+function init_View() {
   facade = new FacadeController();
   typeQR = null;
   tabQRCode = [];
@@ -222,7 +258,7 @@ function init_View () {
 }
 
 //fonction pour générer une famille de qrcode
-function previewFamily () {
+function previewFamily() {
   try {
     exportFamily();
     var div = $('div#affichageFamille').find('div.col-md-12.text-center')[0];
@@ -236,7 +272,7 @@ function previewFamily () {
 fonction pour générer un qrcode atomique, famille est un parametre booléen
 famille = true : qrcode famille; false : qrcode atomique sans famille
 */
-function previewQRCode (famille) {
+function previewQRCode(famille) {
   try {
     var qrcode;
 
@@ -250,8 +286,8 @@ function previewQRCode (famille) {
     var idActive, form, tab;
     if (famille) {
       idActive = $('li.active').attr('id');
-      form = $('div#content-item.'+idActive).find($('form#myFormActive'));
-    } else{
+      form = $('div#content-item.' + idActive).find($('form#myFormActive'));
+    } else {
       form = $('form#myFormActive');
     }
 
@@ -259,21 +295,25 @@ function previewQRCode (famille) {
 
     /* copier les données du formulaire dans le qrcode */
     if (form != null) {
-      for(var i=0; i<tab.length; i++) {
+      for (var i = 0; i < tab.length; i++) {
         var element = tab[i];
 
-        if (element.tagName == "TEXTAREA") { copyContentToQRCode(qrcode, element); }
+        if (element.tagName == "TEXTAREA") {
+          copyContentToQRCode(qrcode, element);
+        }
       }
 
-      if (facade.getTailleReelleQRCode(qrcode) > 500 ) {
-        alert ("La taille de ce qr code dépasse le maximum autorisé (500).\nTaille = "+ facade.getTailleReelleQRCode(qrcode));
+      if (facade.getTailleReelleQRCode(qrcode) > 500) {
+        alert("La taille de ce qr code dépasse le maximum autorisé (500).\nTaille = " + facade.getTailleReelleQRCode(qrcode));
         qrcode = null;
       } else {
         facade.genererQRCode($('#affichageqr').children()[0], qrcode); // générer le qrcode
         $('#btnExportFile').attr('disabled', false); // activer le bouton exporter
         $('#initView').css('display', 'block'); // afficher le bouton terminer
 
-        if (famille) { return qrcode; }
+        if (famille) {
+          return qrcode;
+        }
       }
     }
   } catch (e) {
@@ -282,13 +322,17 @@ function previewQRCode (famille) {
 }
 
 // copier le contenu d'un element input
-function copyContentToQRCode (qrcode, input) {
+function copyContentToQRCode(qrcode, input) {
   try {
 
-    if(input.disabled) { // tester s'il s'agit d'un input de musique
+    if (input.disabled) { // tester s'il s'agit d'un input de musique
 
-      if (typeQR == 'ensemble') { qrcode.ajouterLien(input.id, input.value); } // qrcode ensemble
-      else { qrcode.ajouterFichier(input.id, input.value); } // qrcode atomique
+      if (typeQR == 'ensemble') {
+        qrcode.ajouterLien(input.id, input.value);
+      } // qrcode ensemble
+      else {
+        qrcode.ajouterFichier(input.id, input.value);
+      } // qrcode atomique
 
     } else {
       qrcode.ajouterTexte(input.value);
@@ -299,17 +343,17 @@ function copyContentToQRCode (qrcode, input) {
     // copier la couleur du qrcode et du braille
     if ($('input#nameFamily').css('display') == 'block') { // famille de qrcode
       idActive = $('li.active').attr('id');
-      qrcode.setColorQR($('div#content-item.'+idActive).find('input#colorQR').val());
+      qrcode.setColorQR($('div#content-item.' + idActive).find('input#colorQR').val());
       // tester si le checkbox pour les options du braille est checked
-      if ($('div#content-item.'+idActive).find('input#checkBraille').prop('checked')) {
+      if ($('div#content-item.' + idActive).find('input#checkBraille').prop('checked')) {
         // mettre la couleur et le texte en braille dans le qrcode
-        qrcode.setTexteBraille($('div#content-item.'+idActive).find('input#braille').val());
-        qrcode.setColorBraille($('div#content-item.'+idActive).find('input#colorBraille').val());
+        qrcode.setTexteBraille($('div#content-item.' + idActive).find('input#braille').val());
+        qrcode.setColorBraille($('div#content-item.' + idActive).find('input#colorBraille').val());
       } else {
         qrcode.setTexteBraille('');
         qrcode.setColorBraille('');
       }
-    } else {// qrcode atomique
+    } else { // qrcode atomique
       qrcode.setColorQR($('input#colorQR').val());
       // tester si le checkbox pour les options du braille est checked
       if ($('input#checkBraille').prop('checked')) {
@@ -325,7 +369,7 @@ function copyContentToQRCode (qrcode, input) {
     // mettre le nom de l'onglet si on a une famille
     if (typeQR == 'famille') {
       qrcode.setNomQRCode(idActive);
-      qrcode.ajouterAFamille($('#nameFamily').val(), $('#'+idActive).index()+1);
+      qrcode.ajouterAFamille($('#nameFamily').val(), $('#' + idActive).index() + 1);
     }
 
   } catch (e) {
@@ -339,4 +383,4 @@ function copyContentToQRCode (qrcode, input) {
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
  * The Software is provided “as is”, without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose and noninfringement. In no event shall the authors or copyright holders X be liable for any claim, damages or other liability, whether in an action of contract, tort or otherwise, arising from, out of or in connection with the software or the use or other dealings in the Software.
  * Except as contained in this notice, the name of the Corentin TALARMAIN, Thomas CALATAYUD, Rahmatou Walet MOHAMEDOUN, Jules LEGUY, David DEMBELE, Alassane DIOP shall not be used in advertising or otherwise to promote the sale, use or other dealings in this Software without prior written authorization from the Corentin TALARMAIN, Thomas CALATAYUD, Rahmatou Walet MOHAMEDOUN, Jules LEGUY, David DEMBELE, Alassane DIOP
-*/
+ */
