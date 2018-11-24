@@ -59,19 +59,27 @@ class FacadeController {
 
       let args = [qrcode, divImg];
 
-      // compress qrcode when length reaches more than 117
-      // compression is interesting only when qrcode reaches more than 117 car
-      console.log("Taille (qrcode) : "+ qrcode.getDataString().length);
-      console.log(qrcode);
-      if (qrcode.getDataString().length > 117) {
-        JsonCompressor.compress(qrcode.getDataString(), ImageGeneratorJson.genererQRCode, args);
-        //si la taille depasse 500
-        // $('#alertTaille').html("La taille '"+qrcode.getDataString().length+"' de ce QR-Code dépasse le maximum autorisé '500'.<br>Vous pouvez le sauvegarder.");
-        // $('#sauvegarderFichierJson').modal('show');
-      } else {
-        args.push(qrcode.getDataString());
-        ImageGeneratorJson.genererQRCode(args);
+      //si la taille depasse 500 -> generer un fichier json et le sauvegarder via un click sur le button sauvegarder
+      if(qrcode.getDataString().length > 500){
+        // $('#errorTaille').append("La taille '"+qrcode.getDataString().length+"' de ce QR-Code dépasse le maximum autorisé '500'.&nbsp;&nbsp;&nbsp;<button type='button' class='btn btn-outline-success' id='sauvegarderQRcode' onclick='sauvegarderFichierJsonUnique();'>Sauvegarder</button>");
+        let msg = "La taille '"+qrcode.getDataString().length+"' de ce QR-Code dépasse le maximum autorisé '500'.&nbsp;&nbsp;&nbsp;<button type='button' class='btn btn-outline-success' id='sauvegarderQRcode' onclick='sauvegarderFichierJsonUnique();'>Sauvegarder</button>";
+        messageInfos(msg,"warning");
+        
+        $('#saveQRCode, #listenField, #stop').attr('disabled', true);
       }
+      else{
+            // compress qrcode when length reaches more than 117
+            // compression is interesting only when qrcode reaches more than 117 car
+            if (qrcode.getDataString().length > 117) {
+              JsonCompressor.compress(qrcode.getDataString(), ImageGeneratorJson.genererQRCode, args);
+            } else {
+              args.push(qrcode.getDataString());
+              ImageGeneratorJson.genererQRCode(args);
+            }
+
+            $('#saveQRCode, #listenField').attr('disabled', false);
+
+          }
 
     } catch (e) {
       console.log(e);

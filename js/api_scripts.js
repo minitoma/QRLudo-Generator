@@ -91,7 +91,6 @@ function storeToken(token) {
  * @param {google.auth.OAuth2} auth An authorized OAuth2 client.
  */
 function listFiles(auth, callback) {
-
   var service = google.drive('v3');
   service.files.list({
     auth: auth,
@@ -120,6 +119,7 @@ function listMusic(content) {
   // var div = document.getElementById('listeMusic').childNodes[1].childNodes[1].childNodes[3];
   var div = document.getElementById('elementsAudio');
   // return false;
+
   for (var i = 0; i < content.length; i++) {
     if (content[i].name.endsWith(".mp3")) {
       var b = document.createElement('button');

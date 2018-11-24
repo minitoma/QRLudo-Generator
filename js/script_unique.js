@@ -28,9 +28,8 @@ let qrType;
 // trigger preview qrcode action
 $('#preview').click(e => {
 
-  //enlever le messade de success s'il existe
-  document.getElementById('successMessage').style.display = "none";
-
+  //enlever les messages en haut de page
+  initMessages();
   let inputArray = $('input, textarea');
 
   if (validateForm(inputArray)) { // all fields are filled
@@ -40,7 +39,19 @@ $('#preview').click(e => {
     let qrData = [];
 
     for (data of $('.qrData')) {
-      qrData.push($(data).val());
+      if(data.name == 'AudioName'){
+        let dataAudio = {
+                      type: 'music',
+                      url: data.id,
+                      name: data.value
+                    }
+
+        let jsonAudio = JSON.stringify(dataAudio);
+        qrData.push(JSON.parse(jsonAudio));
+      }
+      else
+        qrData.push($(data).val());
+
     }
 
     qrType = $('#typeQRCode').val();
@@ -50,22 +61,21 @@ $('#preview').click(e => {
 
     previewQRCode(qrName, qrData, qrColor, div);
 
-    $('#listenField, #saveQRCode, #annuler').attr('disabled', false);
+    $('#annuler').attr('disabled', false);
   }
 });
 
 
 // form validation return true if all fields are filled
 function validateForm(inputArray) {
-  console.log(inputArray);
   //cet index pour enlever un input de type file
   let index = 0;
-  document.getElementById('successMessage').style.display = "none";
+  initMessages();
   for (input of inputArray) {
     // eliminer les input de type file
     if($(input).attr('type') != 'file'){
       if (!$(input).val() || $(input).val() == "") {
-        document.getElementById('errorMessage').style.display = "";
+        messageInfos("Veuillez renseigner tous les champs","danger");//message a afficher en haut de la page
         return false;
       }
     }else{
@@ -75,10 +85,6 @@ function validateForm(inputArray) {
 
     ++index;
   }
-
-  console.log(inputArray);
-  // $('#errorMessage').text("");
-  document.getElementById('errorMessage').style.display = "none";
 
   return true;
 }
@@ -116,9 +122,7 @@ function saveQRCodeImage() {
     encoding: 'base64'
   }, (err) => {
     if (err) throw err;
-    console.log('The file has been saved!');
-    document.getElementById('errorMessage').style.display = "none";
-    document.getElementById('successMessage').style.display = "";
+    messageInfos("votre QR est bien sauvegardé","success");
   });
 
 }

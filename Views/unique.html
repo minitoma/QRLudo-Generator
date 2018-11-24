@@ -4,16 +4,12 @@
                   <div class="col-sm-8 card">
                     <form id="myFormActive" onsubmit="return false;">
                       <div class="card-body">
-                        <!-- message a afficher au cas d'erreur -->
-                        <div class="alert alert-danger fade show" role="alert" id="errorMessage" style="display:none;">
-                          Veuillez renseigner tous les champs
-                          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                        <!-- Messages Infos -->
+                        <div id="messages">
+
                         </div>
-                        <!-- message a afficher lors de sauvegarde d'un QR -->
-                        <div class="alert alert-success fade show" role="alert" id="successMessage" style="display:none;">
-                          votre QR est bien sauvegardé
-                          <button type="button" class="close" data-dismiss="alert" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                        </div>
+                        <!-- Fin Messages -->
+
                           <h6 class="card-title"></h6>
                           <ul class="nav nav-tabs">
                               <li class="nav-item">
@@ -44,11 +40,11 @@
 
                       </div>
                       <div class="card-footer form-inline">
-                        <button type="button" class="btn btn-outline-success btn-unique-xl" name="ajouterTexte" onclick="ajouterChampLegende();">
+                        <button type="button" class="btn btn-outline-success btn-unique-xl" name="ajouterTexte" id="ajouterTexte" onclick="ajouterChampLegende();">
                           <i class="fa fa-file-alt"></i>&nbsp;&nbsp;Texte
                         </button>
-                        <button type="button" id="showMusic" class="btn btn-outline-success btn-unique-xl" name="ajouterSon" data-toggle="modal" data-target="#listeMusic">
-                          <i class="fa fa-music"></i>&nbsp;&nbsp;Music
+                        <button type="button" id="showAudio" class="btn btn-outline-success btn-unique-xl" name="ajouterSon" data-toggle="modal" data-target="#listeMusic">
+                          <i class="fa fa-music"></i>&nbsp;&nbsp;Audio
                         </button>
                           <div class="input-group  btn-unique-xl">
                             <div class="input-group-prepend">
@@ -56,7 +52,7 @@
                             </div>
                             <input type="color" id="qrColor" value="#000000">
                           </div>
-                          <button type="reset" class="btn btn-outline-success btn-unique-xl" id="annuler"><i class="fa fa-eraser"></i>&nbsp;&nbsp;Annuler</button>
+                          <button type="reset" class="btn btn-outline-success btn-unique-xl" id="annuler"><i class="fa fa-sync"></i>&nbsp;&nbsp;Réinitialiser</button>
                           <button type="submit" class="btn btn-outline-success" id="preview"><i class="fa fa-cogs"></i>&nbsp;&nbsp;Générer</button>
                       </div>
                     </form>
@@ -101,14 +97,13 @@
                     <div class="modal-dialog modal-dialog-centered" role="document">
                       <div class="modal-content">
                         <div class="modal-header">
-                          <h5 class="modal-title" id="exampleModalCenterTitle">Liste de fichiers son</h5>
+                          <h5 class="modal-title" id="exampleModalCenterTitle">Les fichiers Audio</h5>
                           <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                           </button>
                         </div>
-                        <div class="modal-body">
+                        <div class="modal-body scrollbar-success" style="height:170px; overflow-y: scroll;">
                           <div class="list-group" id="elementsAudio">
-                            <!-- <button type="button" class="list-group-item list-group-item-action" onclick="ajouterChampSon('nom','url');">Fichier test</button> -->
 
                           </div>
                         </div>
