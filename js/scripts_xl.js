@@ -16,6 +16,50 @@
      //caché le button stop
      document.getElementById("stop").style.display = "none";
 
+     //debut Preview
+         // trigger preview qrcode action
+         $('#preview').click(e => {
+
+           //enlever les messages en haut de page
+           initMessages();
+           let inputArray = $('input, textarea');
+
+           if (validateForm(inputArray)) { // all fields are filled
+             // get all required attributes for qrcode
+             let qrColor = $('#qrColor').val();
+             let qrName = $('#qrName').val();
+             let qrData = [];
+
+             for (data of $('.qrData')) {
+
+               //le cas d'un fichier audio
+               if(data.name == 'AudioName'){
+                 let dataAudio = {
+                               type: 'music',
+                               url: 'https://drive.google.com/open?id='+data.id,
+                               name: data.value
+                             }
+
+                 let jsonAudio = JSON.stringify(dataAudio);
+                 qrData.push(JSON.parse(jsonAudio));
+               }
+               else
+                 qrData.push($(data).val());
+
+             }
+
+             qrType = $('#typeQRCode').val();
+
+             // Generate in a div, the qrcode image for qrcode object
+             let div = $('#qrView')[0];
+
+             previewQRCode(qrName, qrData, qrColor, div);
+
+             $('#annuler').attr('disabled', false);
+           }
+         });
+     //Fin Preview
+
      //exporter le QR
      $('#saveQRCode').click(function(){ saveQRCodeImage(); });
 
