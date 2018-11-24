@@ -63,6 +63,13 @@
      //exporter le QR
      $('#saveQRCode').click(function(){ saveQRCodeImage(); });
 
+     // trigger save qr code image action
+     // $('#saveQRCode').click(e => {
+     //   console.log(e);
+     //   console.log(qrcode.getName());
+     //   saveQRCodeImage();
+     // });
+
      //debut annuler
        //btn annuler -> reinitialiser l'affichage
        $('#annuler').click(function(){

@@ -48,13 +48,6 @@ function validateForm(inputArray) {
   return true;
 }
 
-// trigger save qr code image action
-$('#saveQRCode').click(e => {
-  console.log(e);
-  console.log(qrcode.getName());
-  saveQRCodeImage();
-});
-
 
 // generate and print qr code
 function previewQRCode(name, data, color, div) {
