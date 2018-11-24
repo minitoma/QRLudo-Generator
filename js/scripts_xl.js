@@ -19,36 +19,38 @@
      //exporter le QR
      $('#saveQRCode').click(function(){ saveQRCodeImage(); });
 
-     //btn annuler -> reinitialiser l'affichage
-     $('#annuler').click(function(){
-       document.getElementById('myFormActive').reset();
+     //debut annuler
+       //btn annuler -> reinitialiser l'affichage
+       $('#annuler').click(function(){
 
-       //initialiser l'affichage de messages en haut de page
-       initMessages();
+         document.getElementById('myFormActive').reset();
 
-       //supprimer l'image du QR
-       var divImgQr = document.getElementById('qrView');
-       //tester si le qr existe
-       if (divImgQr.hasChildNodes()) {
-         divImgQr.removeChild(divImgQr.firstChild);
-        }
+         //initialiser l'affichage de messages en haut de page
+         initMessages();
 
-       //supprimer les textarea, inputs ..
-       var divChamps = document.getElementById('cible');
-        while (divChamps.firstChild) {
-          divChamps.removeChild(divChamps.firstChild);
-        }
+         //supprimer l'image QR
+         var divImgQr = document.getElementById('qrView');
+         //tester si le QR existe
+         if (divImgQr.hasChildNodes()) {
+           divImgQr.removeChild(divImgQr.firstChild);
+          }
 
-        //desactiver les buttons
-        $('#saveQRCode, #listenField, #stop, #preview, #annuler, #ajouterTexte, #showAudio').attr('disabled', true);
-     });
+         //supprimer les textarea, inputs ..
+         var divChamps = document.getElementById('cible');
+          while (divChamps.firstChild) {
+            divChamps.removeChild(divChamps.firstChild);
+          }
 
+          //desactiver les buttons
+          $('#saveQRCode, #listenField, #stop, #preview, #annuler, #ajouterTexte, #showAudio').attr('disabled', true);
+       });
+     //fin annuler
 
        // sur clic du bouton Lire pour ecouter les textes saisis
        $('button#listenField').click(function(){
          document.getElementById("listenField").style.display = "none";
          document.getElementById("stop").style.display = "";
-         // getForm(null);
+         getForm(null);
        });
 
        // sur clic du bouton Stop
@@ -123,7 +125,7 @@
     }
 
 
-    //message a afficher lors d'un : sauvegarde d'un QR | Champ vide | Exporter
+    //message a afficher lors d'un : sauvegarde | Champ vide | Export
     //type: success | danger | warning
     function messageInfos(message,type){
       initMessages();
