@@ -5,8 +5,12 @@
  * @Last modified time: 2018-11-23T12:56:20+01:00
  */
 
+ /**
+  * Abdessabour HARBOUL
+  * 2018
+  */
+
 var fs = require('fs');
-var pathname = window.location.pathname.substring(0, window.location.pathname.lastIndexOf('/') + 1);
 const path = require('path');
 let root = path.dirname(require.main.filename);
 const {
@@ -17,14 +21,14 @@ const {
 } = require(`${root}/Model/QuestionReponse`);
 
 let quesrepcontroller = new QuesRepController();
-let projet = new Projet("No_Name");
+let projet = new Projet();
 
 
 
 
 $(document).ready(function() {
 
-  console.log("PathName : " + pathname);
+  //console.log("PathName : " + pathname);
   console.log("Root : " + root);
 
   //Cacher le div des reponses par default
@@ -142,20 +146,22 @@ $(document).ready(function() {
     }
   });
 
-  function saveQRCodeImage(div, qrcode, directoryName) {
-    //console.log("The DIV : " + div);
-    let img = $(div).children()[0].src;
-    //console.log("The IMG : " + img);
-    let data = img.replace(/^data:image\/\w+;base64,/, '');
-    //console.log("The DATA : " + data);
-    fs.writeFile(`${root}/${directoryName}/${qrcode.getName()}.jpeg`, data, {
-      encoding: 'base64'
-    }, (err) => {
-      if (err) throw err;
-      console.log('The file has been saved!');
-    });
-  }
+
 });
+
+function saveQRCodeImage(div, qrcode, directoryName) {
+  //console.log("The DIV : " + div);
+  let img = $(div).children()[0].src;
+  //console.log("The IMG : " + img);
+  let data = img.replace(/^data:image\/\w+;base64,/, '');
+  //console.log("The DATA : " + data);
+  fs.writeFile(`${root}/${directoryName}/${qrcode.getName()}.jpeg`, data, {
+    encoding: 'base64'
+  }, (err) => {
+    if (err) throw err;
+    console.log('The file has been saved!');
+  });
+}
 
 //Cette Fonction Supprime Une reponse a une question
 function deleteReponse(todelete) {

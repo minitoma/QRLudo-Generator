@@ -17,7 +17,7 @@
  */
 class Projet {
   //Constructeur d'un Projet
-  constructor(nom = "", questions = [], reponses = []) {
+  constructor(nom = "No_Name", questions = [], reponses = []) {
     this.projet = {
       id: new Date().getTime(),
       nom: nom,
