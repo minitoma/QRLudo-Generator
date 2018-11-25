@@ -3,7 +3,7 @@
 
 
 
-/*!
+/*
  * @Author: SALIM Youssef
  * @Date:   2018-Nov
  */
@@ -22,8 +22,8 @@
 
            //enlever les messages en haut de page
            initMessages();
-           let inputArray = $('input, textarea');
 
+           let inputArray = $('input, textarea');
            if (validateForm(inputArray)) { // all fields are filled
              // get all required attributes for qrcode
              let qrColor = $('#qrColor').val();
@@ -86,6 +86,10 @@
            divImgQr.removeChild(divImgQr.firstChild);
           }
 
+        //buttons: play + stop -> zone QR
+        document.getElementById("listenField").style.display = "";
+        document.getElementById("stop").style.display = "none";
+
          //supprimer les textarea, inputs ..
          var divChamps = document.getElementById('cible');
           while (divChamps.firstChild) {
@@ -100,23 +104,31 @@
        // sur clic du bouton Lire pour ecouter les textes saisis
        $('button#listenField').click(function(){
          document.getElementById("listenField").style.display = "none";
+         $('#stop').attr('disabled', false);
          document.getElementById("stop").style.display = "";
-         getForm(null);
+         //getForm(null);
        });
 
        // sur clic du bouton Stop
        $('button#stop').click(function(){
          document.getElementById("stop").style.display = "none";
          document.getElementById("listenField").style.display = "";
-         stopLecture();
+         //stopLecture();
        });
+
+       // ajouter un eventlistener sur playChamp pour lire le champ sur click du bouton
+      $('button.playChamp').click(function(event){
+        console.log(event.target);
+        var texte = event.target.parentNode.parentNode.parentNode.parentNode.childNodes[0].childNodes[0].value;
+        getForm(texte);
+      });
 
        //charger les fichiers audio dans le Modal 'listeMusic'
        remplirListeMusic();
 
  });
 
- //verifier les champs du formulaire myFormActive puis activer le button generer
+ //verifier le champ qrName du formulaire myFormActive puis activer le button generer
  function activer_button(){
      if (document.getElementById('qrName').value.length > 0)
      {
@@ -124,26 +136,27 @@
      }
    }
 
-   //ajouter une nvlle legende (textarea) a chaque click sur button Texte (pour chaque textarea il faut rajouter à l'attribut class la valeur qrData)
+   //ajouter une nvlle legende (textarea) a chaque click sur button Texte (pour chaque textarea il faut rajouter à l'attribut class la valeur qrData class="... qrData")
    function ajouterChampLegende(){
      var textareaLegende = document.createElement('div');
      textareaLegende.innerHTML = "<textarea class='form-control qrData' rows='3' name='legendeQR' placeholder='Mettre la légende'></textarea>"
                        +"<button type='button' class='btn btn-outline-success legendeQR-close-btn' onclick='supprimerChampLegende(this);'>"
                        +"<i class='fa fa-trash-alt'></i>"
                        +"</button>"
-                       +"<button type='button' class='btn btn-outline-success legendeQR-close-btn'>"
+                       +"<button type='button' class='btn btn-outline-success legendeQR-close-btn playChamp'>"
                        +"<i class='fa fa-play'></i>"
                        +"</button>";
      textareaLegende.setAttribute("class", "d-flex align-items-start legendeQR");
      textareaLegende.setAttribute("id", "legendeTexarea");
      document.getElementById('cible').appendChild(textareaLegende);
+
    }
 
    function supprimerChampLegende(e){
        $(e).parents('div#legendeTexarea').remove();
      }
 
-     //generer un input 'pour un fichier audio' -> nom de fichier + url (pour chaque input il faut rajouter à l'attribut class la valeur qrData)
+     //generer un input 'pour un fichier audio' -> nom de fichier + url (pour chaque input il faut rajouter à l'attribut class la valeur qrData class=".. qrData")
      function ajouterChampSon(nom,url){
 
        var inputSon = document.createElement('div');
