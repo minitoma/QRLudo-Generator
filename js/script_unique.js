@@ -99,7 +99,10 @@ function importQRCode(filename) {
   xhr.onload = function() {
     blob = xhr.response; //xhr.response is now a blob object
     facade.importQRCode(blob, drawQRCode);
-  }
+  };
+  xhr.onerror = function (e) {
+  console.error(xhr.statusText);
+};
   xhr.send();
 }
 
