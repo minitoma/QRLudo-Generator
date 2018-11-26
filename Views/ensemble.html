@@ -9,7 +9,7 @@
             </li>
         </ul>
         <div class="tab-content scrollbar-success" id="dropZone" style="height:300px; overflow-y: scroll; margin-top:15px;">
-            <div id="txtZone" class="tab-pane fade in active show">
+            <div id="txtZone" class="tab-pane fade in active show ">
             </div>
         </div>
     </div>
@@ -39,7 +39,7 @@
         QRCodeUnique
     } = require(`${__dirname}/Model/QRCodeJson`);
 
-
+    var divTmp;
     var dropper = document.getElementById('dropZone');
     var txtZone = document.getElementById('txtZone');
     var files = [];
@@ -87,10 +87,19 @@
             if(occurenceDeFichier == false){
                 var div = document.createElement("DIV");
                 var textDiv = document.createTextNode(e.dataTransfer.files[i].name);
+                var p = document.createElement("P");
                 var button = document.createElement("BUTTON");
+                var I = document.createElement("I");
 
+                I.setAttribute("class", "fa fa-eraser");
+                I.setAttribute("style", "height:12px; width:12px;");
+
+                button.setAttribute("style", "margin-right:2%");
+                button.setAttribute("class", "btn btn-outline-success");
                 button.addEventListener("click", clickFunctionErase);
+                button.appendChild(I);
 
+                div.setAttribute("style", "margin:2%;");
                 div.id = e.dataTransfer.files[i].name;
                 div.addEventListener("click", afficheQrCode);
                 div.appendChild(button);
@@ -168,6 +177,11 @@
     function afficheQrCode(){
         var id = this.id;
 
+        divTmp.removeAttribute("style");
+
+        divTmp = this;
+
+        this.setAttribute("style", "background-color:#99cc00;");
         /*
         ** Affiche le qrCode que l'on vien de selectionner
         */
@@ -186,8 +200,6 @@
         var qrCodeEnsemble = new QRCodeEnsemble("", tmp,"#000000");
 
         for(var i = 0; i < qrCodes.length; i++){
-            /*console.log(qrCodes[i].getData());
-            tmp.push(qrCodes[i].getData());*/
             qrCodeEnsemble.ajouterQrCode(qrCodes[i].getData()[1]);
         }
 
