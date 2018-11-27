@@ -20,13 +20,7 @@ const {
 
 let qrcode;
 
-     $('#importedFile').on('change',function ()
-     {
-         // var filePath = $(this).val();
-         var nomfichier = document.getElementById("importedFile").files[0].name;
 
-         importQRCode(nomfichier);
-     });
 
 // trigger preview qrcode action
 $('#preview').click(e => {
@@ -109,22 +103,41 @@ function importQRCode(filename) {
     facade.importQRCode(blob, drawQRCode);
   }
   xhr.send();
-  //console.log(qrcode);
 }
 
 // fonction permettant de recréer visuellement un qr code unique
 function drawQRCode(qrcode) {
   console.log("qr code to be drawn : ", qrcode);
+  if (qrcode.getType() == 'unique' || qrcode.getType() == 'xl') {
 
-    if (qrcode.getType() == 'unique') {
+    $("#charger-page").load("Views/unique.html", function() {
       $('input#qrColor').val(qrcode.getColor()); // restaurer la couleur du qrcode
-      $('input#qrName').val(qrcode.getName());  //restaurer le nom du qrcode
-    }
-    if (qrcode.getType() == 'xl') {
+      $('input#qrName').val(qrcode.getName()); //restaurer le nom du qrcode
+      console.log(qrcode);
+      for (var data in qrcode.getData()) {
+        ajouterChampLegende();
+        // appelle fonction qui crée un champ dynamiquement
+        // à chaque itération tu lui donne data
+        // remplir le champ avec data
+      }
+    });
+
+  } else if (qrcode.getType() == 'ensemble') {
+    $("#charger-page").load("Views/ensemble.html", function() {
       $('input#qrColor').val(qrcode.getColor()); // restaurer la couleur du qrcode
-      $('input#qrName').val(qrcode.getName()); }
-    
-
-
+      $('input#qrName').val(qrcode.getName());
+    });
+  }
 
 }
+$('#setImportedFile').click(function(){
+//$('#importedFile').on('change', function() {
+  // var filePath = $(this).val();
+  console.log("");
+  var nomfichier = document.getElementById("importedFile").files[0].name;
+
+  importQRCode(nomfichier);
+
+
+
+});
