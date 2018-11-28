@@ -65,7 +65,7 @@ function messageInfos(message,type){
 function sauvegarderFichierJsonUnique(nomFichier,path){
 
   path += nomFichier+".json";
-  fs.writeFile(path, JSON.stringify(qrcode), (err) => {
+  fs.writeFile(path, JSON.stringify(nomFichier), (err) => {
       if (err) {
           console.error(err);
           return;

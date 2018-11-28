@@ -211,7 +211,7 @@
 
         var tmp = [];
 
-        var qrCodeEnsemble = new QRCodeEnsemble("", tmp,"#000000");
+        var qrCodeEnsemble = new QRCodeEnsemble(document.getElementById('qrName').value, tmp,"#000000");
 
         for(var i = 0; i < qrCodes.length; i++){
             console.log(qrCodes[i].getQRCode().data.length);
@@ -224,6 +224,8 @@
 
         let facade = new FacadeController();
         facade.genererQRCode($('#qrView')[0],qrCodeEnsemble);
+
+        $('#saveQRCode').attr('disabled', false);
     });
 
     $("#empty").click(function () {
@@ -233,4 +235,19 @@
             files.pop();
         }
     });
+
+    $("#saveQRCode").click(function () {
+        sauvegarderFichierJsonUnique(document.getElementById('qrName').value, "QR-Unique/QR");
+    });
+
+    $('#preview ,#empty').attr('disabled', true);
+
+
+    function activer_button(){
+        if (document.getElementById('qrName').value.length > 0)
+        {
+            $('#preview ,#empty').attr('disabled', false);
+        }
+    }
+
 </script>
