@@ -9,7 +9,6 @@
     "electron-debug": "^1.5.0",
     "electron-packager": "^11.0.0",
     "google-auth-library": "^0.12.0",
-    "google-tts-api": "0.0.2",
     "googleapis": "^27.0.0",
     "jquery": "^3.3.1",
     "jquery-qrcode": "^1.0.0",
