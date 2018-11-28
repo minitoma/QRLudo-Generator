@@ -141,7 +141,6 @@
         ** Affiche un popup avec le nom des fichiers qui n'ont pu être ajouté
         */
         if(afficherPopUp){
-//            window.alert("Un ou plusieurs fichiers ont le même nom : \n" + nomFichierIdentique);
             messageInfos("Un ou plusieurs fichiers ont le même nom : " + nomFichierIdentique,"warning");
         }
 
@@ -237,7 +236,7 @@
     });
 
     $("#saveQRCode").click(function () {
-        sauvegarderFichierJsonUnique(document.getElementById('qrName').value, "QR-Unique/QR");
+        saveQRCodeImage();
     });
 
     $('#preview ,#empty').attr('disabled', true);
