@@ -61,7 +61,7 @@
      //Fin Preview
 
      //exporter le QR
-     $('#saveQRCode').click(function(){ saveQRCodeImage(); });
+     $('#saveQRCode').click(function(){ saveQRCodeImage("/QR-Unique/QR/"); });
 
 
      //debut annuler
