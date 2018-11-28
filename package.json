@@ -5,17 +5,16 @@
   "description": "Une application pour générer des Qr-Codes applicatifs utilisable sur l'application mobile QRLudo",
   "main": "index.js",
   "dependencies": {
-    "popper.js": "^1.14.4",
     "electron": "^1.8.2",
     "electron-debug": "^1.5.0",
     "electron-packager": "^11.0.0",
-    "zlib": "^1.0.5",
     "google-auth-library": "^0.12.0",
-    "google-tts-api": "0.0.2",
     "googleapis": "^27.0.0",
     "jquery": "^3.3.1",
     "jquery-qrcode": "^1.0.0",
-    "piexifjs": "^1.0.3"
+    "piexifjs": "^1.0.3",
+    "popper.js": "^1.14.4",
+    "zlib": "^1.0.5"
   },
   "scripts": {
     "install-linux": "electron-packager . qrludo-generator --overwrite --asar --platform=linux --out=release-builds",

@@ -25,47 +25,6 @@ QRCodeXL
 let qrcode;
 let qrType;
 
-// trigger preview qrcode action
-$('#preview').click(e => {
-
-  //enlever les messages en haut de page
-  initMessages();
-  let inputArray = $('input, textarea');
-
-  if (validateForm(inputArray)) { // all fields are filled
-    // get all required attributes for qrcode
-    let qrColor = $('#qrColor').val();
-    let qrName = $('#qrName').val();
-    let qrData = [];
-
-    for (data of $('.qrData')) {
-      if(data.name == 'AudioName'){
-        let dataAudio = {
-                      type: 'music',
-                      url: data.id,
-                      name: data.value
-                    }
-
-        let jsonAudio = JSON.stringify(dataAudio);
-        qrData.push(JSON.parse(jsonAudio));
-      }
-      else
-        qrData.push($(data).val());
-
-    }
-
-    qrType = $('#typeQRCode').val();
-
-    // Generate in a div, the qrcode image for qrcode object
-    let div = $('#qrView')[0];
-
-    previewQRCode(qrName, qrData, qrColor, div);
-
-    $('#annuler').attr('disabled', false);
-  }
-});
-
-
 // form validation return true if all fields are filled
 function validateForm(inputArray) {
   //cet index pour enlever un input de type file
@@ -89,13 +48,6 @@ function validateForm(inputArray) {
   return true;
 }
 
-// trigger save qr code image action
-$('#saveQRCode').click(e => {
-  console.log(e);
-  console.log(qrcode.getName());
-  saveQRCodeImage();
-});
-
 
 // generate and print qr code
 function previewQRCode(name, data, color, div) {
@@ -110,22 +62,6 @@ function previewQRCode(name, data, color, div) {
   facade.genererQRCode(div, qrcode);
 }
 
-// save image qr code
-function saveQRCodeImage() {
-  const fs = require('fs');
-
-  let img = $('#qrView img')[0].src;
-
-  var data = img.replace(/^data:image\/\w+;base64,/, '');
-
-  fs.writeFile(`${root}/QR-Unique/QR/${qrcode.getName()}.jpeg`, data, {
-    encoding: 'base64'
-  }, (err) => {
-    if (err) throw err;
-    messageInfos("votre QR est bien sauvegardé","success");
-  });
-
-}
 
 // fonction permettant de charger, importer un qr code
 function importQRCode(filename) {
