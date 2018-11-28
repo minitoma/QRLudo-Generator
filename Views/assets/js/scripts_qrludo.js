@@ -8,6 +8,7 @@
  * @Date:   2018-Oct
  */
 
+ //ce fichier regroupe toutes les fonctions et scripts en commun avec les autres les pages
  $().ready(function() {
    window.jquery = window.$ = require("./node_modules/jquery/dist/jquery.js");
 
@@ -57,4 +58,18 @@ function messageInfos(message,type){
   msg.setAttribute("role", "alert");
   document.getElementById('messages').appendChild(msg);
 
+}
+
+
+//creer+sauvegarder le fichier json correspond à un qrcode qui depasse la taille 500
+function sauvegarderFichierJsonUnique(nomFichier,path){
+
+  path += nomFichier+".json";
+  fs.writeFile(path, JSON.stringify(qrcode), (err) => {
+      if (err) {
+          console.error(err);
+          return;
+      };
+      messageInfos("votre fichier json est bien sauvegardé","success");
+  });
 }
