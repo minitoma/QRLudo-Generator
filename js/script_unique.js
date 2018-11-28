@@ -62,22 +62,6 @@ function previewQRCode(name, data, color, div) {
   facade.genererQRCode(div, qrcode);
 }
 
-// save image qr code
-function saveQRCodeImage() {
-  const fs = require('fs');
-
-  let img = $('#qrView img')[0].src;
-
-  var data = img.replace(/^data:image\/\w+;base64,/, '');
-
-  fs.writeFile(`${root}/QR-Unique/QR/${qrcode.getName()}.jpeg`, data, {
-    encoding: 'base64'
-  }, (err) => {
-    if (err) throw err;
-    messageInfos("votre QR est bien sauvegardé","success");
-  });
-
-}
 
 // fonction permettant de charger, importer un qr code
 function importQRCode(filename) {
