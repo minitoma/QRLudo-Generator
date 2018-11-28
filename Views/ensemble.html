@@ -1,7 +1,11 @@
+<script src="Controller/QRCodeLoaderJson.js"></script>
+<script src="Controller/QRCodeLoader.js"></script>
+
 <!-- contenu page ensemble -->
 <!--Panel-->
 <div class="col-sm-8 card">
     <div class="card-body">
+        <div id="messages"></div>
         <h6 class="card-title"></h6>
         <ul class="nav nav-tabs">
             <li class="nav-item">
@@ -34,28 +38,27 @@
 <!-- Fin contenu page ensemble -->
 
 <script>
-
     const {
         QRCodeUnique
     } = require(`${__dirname}/Model/QRCodeJson`);
 
     var divTmp;
-    var dropper = document.getElementById('dropZone');
+    var dropZone = document.getElementById('dropZone');
     var txtZone = document.getElementById('txtZone');
     var files = [];
     var qrCodes = [];
 
-    dropper.ondragenter = function(e){
+    dropZone.ondragenter = function(e){
     };
 
-    dropper.ondragleave = function(e){
+    dropZone.ondragleave = function(e){
     };
 
-    dropper.ondragover = function(e){
+    dropZone.ondragover = function(e){
         e.preventDefault();
     };
 
-    dropper.ondrop = function(e){
+    dropZone.ondrop = function(e){
         e.preventDefault();
 
         var occurenceDeFichier = false;
@@ -80,30 +83,31 @@
             }
 
             /*
-            ** Si une occurence de fichiers est trouvé creation de chaque ligne de ma zone de drag and drop si le fichier n'est pas present
+            ** Si une occurence de fichiers est trouvé creation de chaque ligne de la zone de drag and drop si le fichier n'est pas present
             ** Chaque ligne est clickable pour affichier le qrCode unique
             ** Chaque ligne a un bouton pour supprimer la ligne
             */
             if(occurenceDeFichier == false){
                 var div = document.createElement("DIV");
-                var textDiv = document.createTextNode(e.dataTransfer.files[i].name);
-                var p = document.createElement("P");
+                var span = document.createElement("SPAN");
                 var button = document.createElement("BUTTON");
-                var I = document.createElement("I");
+                var baliseI = document.createElement("I");
+                var textDiv = document.createTextNode(e.dataTransfer.files[i].name);
 
-                I.setAttribute("class", "fa fa-eraser");
-                I.setAttribute("style", "height:12px; width:12px;");
+                baliseI.setAttribute("class", "fa fa-eraser");
+                baliseI.setAttribute("style", "height:12px; width:12px;");
 
-                button.setAttribute("style", "margin-right:2%");
-                button.setAttribute("class", "btn btn-outline-success");
                 button.addEventListener("click", clickFunctionErase);
-                button.appendChild(I);
+                button.setAttribute("class", "btn btn-outline-success");
+                button.appendChild(baliseI);
 
-                div.setAttribute("style", "margin:2%;");
-                div.id = e.dataTransfer.files[i].name;
-                div.addEventListener("click", afficheQrCode);
+                span.appendChild(textDiv);
+                span.setAttribute("style", "white-space: nowrap; padding:5px; font-size:0.7em;");
+
+                div.addEventListener("click", afficherQrCode);
                 div.appendChild(button);
-                div.appendChild(textDiv);
+                div.appendChild(span);
+                div.id = e.dataTransfer.files[i].name;
 
                 txtZone.appendChild(div);
 
@@ -117,7 +121,8 @@
         ** Affiche un popup avec le nom des fichiers qui n'ont pu être ajouté
         */
         if(afficherPopUp){
-            window.alert("Un ou plusieurs fichiers ont le même nom : \n" + nomFichierIdentique);
+//            window.alert("Un ou plusieurs fichiers ont le même nom : \n" + nomFichierIdentique);
+            messageInfos("Un ou plusieurs fichiers ont le même nom : " + nomFichierIdentique,"warning");
         }
 
         lireFichier();
@@ -174,19 +179,23 @@
         lireFichier();
     }
 
-    function afficheQrCode(){
-        var id = this.id;
+    function afficherQrCode(){
 
-        divTmp.removeAttribute("style");
+        if(divTmp != null){
+            if(divTmp.querySelector("span").hasAttribute("style")){
+                divTmp.querySelector("span").setAttribute("style", "white-space: nowrap; padding:5px; font-size:0.7em;");
+            }
+        }
 
         divTmp = this;
 
-        this.setAttribute("style", "background-color:#99cc00;");
+        this.querySelector("span").setAttribute("style", "white-space: nowrap; padding:5px; font-size:0.7em; background-color:#99cc00;");
+
         /*
         ** Affiche le qrCode que l'on vien de selectionner
         */
         for(var i = 0; i < files.length; i++){
-            if(files[i].name == id){
+            if(files[i].name == this.id){
                 let facade = new FacadeController();
                 facade.genererQRCode($('#qrView')[0], qrCodes[i]);
             }
@@ -200,7 +209,8 @@
         var qrCodeEnsemble = new QRCodeEnsemble("", tmp,"#000000");
 
         for(var i = 0; i < qrCodes.length; i++){
-            qrCodeEnsemble.ajouterQrCode(qrCodes[i].getData()[1]);
+            //qrCodeEnsemble.ajouterQrCode(qrCodes[i].getData()[1]);
+            qrCodeEnsemble.ajouterQrCode(qrCodes[i].getDataString());
         }
 
         var facade = new FacadeController();
@@ -214,4 +224,25 @@
             files.pop();
         }
     });
+
+
+    //message a afficher lors d'un : sauvegarde | Champ vide | Export
+    //type: success | danger | warning
+    function messageInfos(message,type){
+        initMessages();
+        var msg = document.createElement('div');
+        msg.innerHTML = message
+            +"<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>";
+        msg.setAttribute("class", "alert alert-"+type+" fade show");
+        msg.setAttribute("role", "alert");
+        document.getElementById('messages').appendChild(msg);
+
+    }
+
+    //supprimer les messages d'infos en haut de page
+    function initMessages(){
+        var divMsg = document.getElementById('messages');
+        if(divMsg.firstChild)
+            divMsg.removeChild(divMsg.firstChild);
+    }
 </script>
