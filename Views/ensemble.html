@@ -132,25 +132,10 @@
     function lireFichier(){
         qrCodes = [];
 
+        let facade = new FacadeController();
+
         for(var i = 0; i < files.length; i++){
-
-            var fileReader = new FileReader();
-
-            fileReader.readAsDataURL(files[i]);
-
-            fileReader.addEventListener('load', function (e) {
-
-                /*
-                ** Si le QrCode est deja au format Json il n'est pas necessaire de le convertire
-                */
-                if (QRCodeLoader.__traiterImage(e.target.result) == false) {
-                    QRCodeLoaderJson.loadImage(file, function (qrCode) {qrCodes.push(qrCode);} );
-                }else{
-                    var qrCodeXml = QRCodeLoader.__traiterImage(e.target.result);
-                    var qrCodeJson = QRCodeLoader.parseXMLtoJson(qrCodeXml);
-                    qrCodes.push(qrCodeJson);
-                }
-            });
+            facade.importQRCode(files[i], function (qrCode) {qrCodes.push(qrCode);});
         }
     }
 
@@ -210,11 +195,15 @@
         var qrCodeEnsemble = new QRCodeEnsemble("", tmp,"#000000");
 
         for(var i = 0; i < qrCodes.length; i++){
-            //qrCodeEnsemble.ajouterQrCode(qrCodes[i].getData()[1]);
-            qrCodeEnsemble.ajouterQrCode(qrCodes[i].getDataString());
+            console.log(qrCodes[i].getQRCode().data.length);
+            for(var j = 0; j < qrCodes[i].getQRCode().data.length; j++){
+                if((typeof qrCodes[i].getQRCode().data[j] === "object") && (qrCodes[i].getQRCode().data[j] !== null)){
+                    qrCodeEnsemble.ajouterQrCode(qrCodes[i].getQRCode().data[j]);
+                }
+            }
         }
 
-        var facade = new FacadeController();
+        let facade = new FacadeController();
         facade.genererQRCode($('#qrView')[0],qrCodeEnsemble);
     });
 
