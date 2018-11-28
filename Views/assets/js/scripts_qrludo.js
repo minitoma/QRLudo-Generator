@@ -60,7 +60,8 @@ function messageInfos(message,type){
 
 }
 
-// path = /QR-Unique/QR/
+// save image qr code
+// ex: path = /QR-Unique/QR/
 function saveQRCodeImage(path) {
   const fs = require('fs');
 
