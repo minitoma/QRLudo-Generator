@@ -36,3 +36,25 @@
     });
 
 });
+
+
+//supprimer les messages d'infos en haut de page
+function initMessages(){
+  var divMsg = document.getElementById('messages');
+   if(divMsg.firstChild)
+        divMsg.removeChild(divMsg.firstChild);
+}
+
+
+//message a afficher lors d'un : sauvegarde | Champ vide | Export ...
+//type: success | danger | warning
+function messageInfos(message,type){
+  initMessages();
+  var msg = document.createElement('div');
+  msg.innerHTML = message
+                    +"<button type='button' class='close' data-dismiss='alert' aria-label='Close'><span aria-hidden='true'>&times;</span></button>";
+  msg.setAttribute("class", "alert alert-"+type+" fade show");
+  msg.setAttribute("role", "alert");
+  document.getElementById('messages').appendChild(msg);
+
+}
