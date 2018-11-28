@@ -7,42 +7,91 @@
 
 // fichier script concernant les qr codes uniques
 
-const path = require('path');
-const root = path.dirname(require.main.filename); // project home path
+// const path = new require('path');
+// const root = path.dirname(require.main.filename); // project home path
 
-const {
+/*const {
   FacadeController
 } = require(`${root}/Controller/FacadeController`);
-
+*/
 const {
   QRCodeUnique
 } = require(`${root}/Model/QRCodeJson`);
 
+const{
+QRCodeXL
+} = require(`${root}/Model/QRCodeJson`);
+
 let qrcode;
+let qrType;
+
+
 
 
 
 // trigger preview qrcode action
 $('#preview').click(e => {
+
+  //enlever les messages en haut de page
+  initMessages();
   let inputArray = $('input, textarea');
 
   if (validateForm(inputArray)) { // all fields are filled
-
     // get all required attributes for qrcode
-    let qrName = $('#qrName').val();
     let qrColor = $('#qrColor').val();
+    let qrName = $('#qrName').val();
     let qrData = [];
+
     for (data of $('.qrData')) {
-      qrData.push($(data).val());
+      if(data.name == 'AudioName'){
+        let dataAudio = {
+                      type: 'music',
+                      url: data.id,
+                      name: data.value
+                    }
+
+        let jsonAudio = JSON.stringify(dataAudio);
+        qrData.push(JSON.parse(jsonAudio));
+      }
+      else
+        qrData.push($(data).val());
+
     }
+
+    qrType = $('#typeQRCode').val();
 
     // Generate in a div, the qrcode image for qrcode object
     let div = $('#qrView')[0];
+
     previewQRCode(qrName, qrData, qrColor, div);
 
-    $('#listenField, #saveQRCode').attr('disabled', false);
+    $('#annuler').attr('disabled', false);
   }
 });
+
+
+// form validation return true if all fields are filled
+function validateForm(inputArray) {
+  //cet index pour enlever un input de type file
+  let index = 0;
+  initMessages();
+  for (input of inputArray) {
+    // eliminer les input de type file
+    if($(input).attr('type') != 'file'){
+      if (!$(input).val() || $(input).val() == "") {
+        messageInfos("Veuillez renseigner tous les champs","danger");//message a afficher en haut de la page
+        return false;
+      }
+    }else{
+        //enlever l'element input de type file
+        inputArray.splice(index,1);
+        }
+
+    ++index;
+  }
+
+  return true;
+}
 
 // trigger save qr code image action
 $('#saveQRCode').click(e => {
@@ -51,23 +100,15 @@ $('#saveQRCode').click(e => {
   saveQRCodeImage();
 });
 
-// form validation return true if all fields are filled
-function validateForm(inputArray) {
-
-  for (input of inputArray) {
-    if (!$(input).val() || $(input).val() == "") {
-      $('#errorMessage').text("* Veuillez renseigner tous les champs");
-      return false;
-    }
-  }
-  $('#errorMessage').text("");
-  return true;
-}
 
 // generate and print qr code
 function previewQRCode(name, data, color, div) {
+
   // instanciate a qrcode unique object
-  qrcode = new QRCodeUnique(name, data, color);
+  if(qrType == 'xl')
+    qrcode = new QRCodeXL(name, data, color);
+  else
+    qrcode = new QRCodeUnique(name, data, color);
 
   let facade = new FacadeController();
   facade.genererQRCode(div, qrcode);
@@ -81,11 +122,11 @@ function saveQRCodeImage() {
 
   var data = img.replace(/^data:image\/\w+;base64,/, '');
 
-  fs.writeFile(`${root}/${qrcode.getName()}.jpeg`, data, {
+  fs.writeFile(`${root}/QR-Unique/QR/${qrcode.getName()}.jpeg`, data, {
     encoding: 'base64'
   }, (err) => {
     if (err) throw err;
-    console.log('The file has been saved!');
+    messageInfos("votre QR est bien sauvegardé","success");
   });
 
 }

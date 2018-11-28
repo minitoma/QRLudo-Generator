@@ -2,7 +2,7 @@
  * @Author: alassane
  * @Date:   2018-11-09T20:33:38+01:00
  * @Last modified by:   alassane
- * @Last modified time: 2018-11-15T23:12:11+01:00
+ * @Last modified time: 2018-11-16T16:18:10+01:00
  */
 
 // This class is a representation oj QRCode in JSON format
