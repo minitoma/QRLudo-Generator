@@ -13,7 +13,26 @@
                 <a class="nav-link active" data-toggle="tab" href="#qrCodes">QR - Ensemble</a>
             </li>
         </ul>
+
         <div class="tab-content scrollbar-success" id="dropZone" style="height:300px; overflow-y: scroll; margin-top:15px;">
+            <div id="texte" class="tab-pane fade in active show">
+                <h3></h3>
+                <div class="form-group">
+                    <label class="col-sm-12 control-label" style="color:#28a745;padding-top:10px;">Nom du QR Code</label>
+                    <div class="col-sm-7">
+                        <input type="text" id="qrName" name="NomQR" class="form-control" onkeyup="activer_button(this.value);">
+                    </div>
+                    <!-- le type du QRCode, ici -> XL -->
+                    <input id="typeQRCode" name="typeQRCode" type="hidden" value="xl">
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-10">
+                        <div id="cible">
+
+                        </div>
+                    </div>
+                </div>
+            </div>
             <div id="txtZone" class="tab-pane fade in active show ">
             </div>
         </div>
