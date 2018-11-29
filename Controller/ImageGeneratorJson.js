@@ -2,7 +2,7 @@
  * @Author: alassane
  * @Date:   2018-11-09T18:42:04+01:00
  * @Last modified by:   alassane
- * @Last modified time: 2018-11-22T16:36:16+01:00
+ * @Last modified time: 2018-11-23T12:37:29+01:00
  */
 
 /**
@@ -19,7 +19,7 @@ class ImageGeneratorJson {
     let qrcode = arg[0];
     let div = arg[1];
     let data = arg[2];
-
+    //console.log("THE QRCODE : ", qrcode);
     console.log("data stored in qrcode : ", data);
     //On génère le QRCode dans un canvas
     $(div).qrcode({
@@ -29,8 +29,13 @@ class ImageGeneratorJson {
     });
 
     // let canvas = document.createElement('canvas');
-    let canvas = $('#qrView canvas')[0];
+    // let canvas = $('#qrView canvas')[0];
+    console.log($(div).children()[0]);
+    // console.log($(`${div} canvas`)[0]);
+    let canvas = $(div).children()[0];
     let arrayData = ImageGeneratorJson.stringtoUTF8Array(qrcode.getDataString());
+    console.log("arrayData stored in qrcode : ", arrayData);
+
     ImageGeneratorJson.genererJPEGJson(arrayData, canvas, div);
 
     //On supprime le canvas initial

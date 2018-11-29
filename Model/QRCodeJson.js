@@ -106,6 +106,8 @@ class QRCodeXL extends QRCodeUnique {
 }
 
 
+
+
 module.exports = {
   QRCodeUnique,
   QRCodeXL

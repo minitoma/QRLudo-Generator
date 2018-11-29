@@ -18,15 +18,21 @@ class JsonCompressor {
     console.log('qrcode to compress');
     console.log(qrcode);
 
-    zlib.gzip(qrcode, (err, zippedData) => {
-      if (err)
-        console.log("error in gzip compression using zlib module", err);
 
-      console.log("compress result");
-      console.log(zippedData.toString('base64'));
-      arg.push(zippedData);
-      callback(arg);
-    });
+    let gzipped = zlib.gzipSync(qrcode);
+    console.log("zipped data --- : "+gzipped.toString('base64'));
+    arg.push(gzipped);
+    callback(arg);
+
+    // zlib.gzip(qrcode, (err, zippedData) => {
+    //   if (err)
+    //     console.log("error in gzip compression using zlib module", err);
+    //
+    //   console.log("compress result");
+    //   console.log(zippedData.toString('base64'));
+    //   arg.push(zippedData);
+    //   callback(arg);
+    // });
   }
 
 
