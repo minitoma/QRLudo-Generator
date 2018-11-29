@@ -107,58 +107,19 @@ function previewQRCode(name, data, color, div) {
   facade.genererQRCode(div, qrcode);
 }
 
+// save image qr code
+function saveQRCodeImage() {
+  const fs = require('fs');
 
-// fonction permettant de charger, importer un qr code
-function importQRCode(filename) {
-  let facade = new FacadeController();
+  let img = $('#qrView img')[0].src;
 
-  let blob = null;
-  let xhr = new XMLHttpRequest();
-  xhr.open("GET", filename);
-  xhr.responseType = "blob"; //force the HTTP response, response-type header to be blob
-  xhr.onload = function() {
-    blob = xhr.response; //xhr.response is now a blob object
-    facade.importQRCode(blob, drawQRCode);
-  };
-  xhr.onerror = function (e) {
-  console.error(xhr.statusText);
-};
-  xhr.send();
-}
+  var data = img.replace(/^data:image\/\w+;base64,/, '');
 
-// fonction permettant de recréer visuellement un qr code unique
-function drawQRCode(qrcode) {
-  console.log("qr code to be drawn : ", qrcode);
-  if (qrcode.getType() == 'unique' || qrcode.getType() == 'xl') {
-
-    $("#charger-page").load("Views/unique.html", function() {
-      $('input#qrColor').val(qrcode.getColor()); // restaurer la couleur du qrcode
-      $('input#qrName').val(qrcode.getName()); //restaurer le nom du qrcode
-      console.log(qrcode);
-      for (var data in qrcode.getData()) {
-        ajouterChampLegende();
-        // appelle fonction qui crée un champ dynamiquement
-        // à chaque itération tu lui donne data
-        // remplir le champ avec data
-      }
-    });
-
-  } else if (qrcode.getType() == 'ensemble') {
-    $("#charger-page").load("Views/ensemble.html", function() {
-      $('input#qrColor').val(qrcode.getColor()); // restaurer la couleur du qrcode
-      $('input#qrName').val(qrcode.getName());
-    });
-  }
+  fs.writeFile(`${root}/QR-Unique/QR/${qrcode.getName()}.jpeg`, data, {
+    encoding: 'base64'
+  }, (err) => {
+    if (err) throw err;
+    messageInfos("votre QR est bien sauvegardé","success");
+  });
 
 }
-$('#setImportedFile').click(function(){
-//$('#importedFile').on('change', function() {
-  // var filePath = $(this).val();
-  console.log("");
-  var nomfichier = document.getElementById("importedFile").files[0].name;
-
-  importQRCode(nomfichier);
-
-
-
-});
