@@ -1,19 +1,19 @@
 /**
  * @Author: alassane
  * @Date:   2018-11-10T17:59:11+01:00
- * @Last modified by:   alassane
+ * @Last modified by:   alassaneloadImage
  * @Last modified time: 2018-11-16T00:51:32+01:00
  */
 
 // fichier script concernant les qr codes uniques
 
-const path = new require('path');
-const root = path.dirname(require.main.filename); // project home path
+// const path = new require('path');
+// const root = path.dirname(require.main.filename); // project home path
 
-const {
+/*const {
   FacadeController
 } = require(`${root}/Controller/FacadeController`);
-
+*/
 const {
   QRCodeUnique
 } = require(`${root}/Model/QRCodeJson`);
@@ -24,6 +24,51 @@ QRCodeXL
 
 let qrcode;
 let qrType;
+
+
+
+
+
+// trigger preview qrcode action
+$('#preview').click(e => {
+
+  //enlever les messages en haut de page
+  initMessages();
+  let inputArray = $('input, textarea');
+
+  if (validateForm(inputArray)) { // all fields are filled
+    // get all required attributes for qrcode
+    let qrColor = $('#qrColor').val();
+    let qrName = $('#qrName').val();
+    let qrData = [];
+
+    for (data of $('.qrData')) {
+      if(data.name == 'AudioName'){
+        let dataAudio = {
+                      type: 'music',
+                      url: data.id,
+                      name: data.value
+                    }
+
+        let jsonAudio = JSON.stringify(dataAudio);
+        qrData.push(JSON.parse(jsonAudio));
+      }
+      else
+        qrData.push($(data).val());
+
+    }
+
+    qrType = $('#typeQRCode').val();
+
+    // Generate in a div, the qrcode image for qrcode object
+    let div = $('#qrView')[0];
+
+    previewQRCode(qrName, qrData, qrColor, div);
+
+    $('#annuler').attr('disabled', false);
+  }
+});
+
 
 // form validation return true if all fields are filled
 function validateForm(inputArray) {
@@ -84,4 +129,36 @@ function importQRCode(filename) {
 // fonction permettant de recréer visuellement un qr code unique
 function drawQRCode(qrcode) {
   console.log("qr code to be drawn : ", qrcode);
+  if (qrcode.getType() == 'unique' || qrcode.getType() == 'xl') {
+
+    $("#charger-page").load("Views/unique.html", function() {
+      $('input#qrColor').val(qrcode.getColor()); // restaurer la couleur du qrcode
+      $('input#qrName').val(qrcode.getName()); //restaurer le nom du qrcode
+      console.log(qrcode);
+      for (var data in qrcode.getData()) {
+        ajouterChampLegende();
+        // appelle fonction qui crée un champ dynamiquement
+        // à chaque itération tu lui donne data
+        // remplir le champ avec data
+      }
+    });
+
+  } else if (qrcode.getType() == 'ensemble') {
+    $("#charger-page").load("Views/ensemble.html", function() {
+      $('input#qrColor').val(qrcode.getColor()); // restaurer la couleur du qrcode
+      $('input#qrName').val(qrcode.getName());
+    });
+  }
+
 }
+$('#setImportedFile').click(function(){
+//$('#importedFile').on('change', function() {
+  // var filePath = $(this).val();
+  console.log("");
+  var nomfichier = document.getElementById("importedFile").files[0].name;
+
+  importQRCode(nomfichier);
+
+
+
+});

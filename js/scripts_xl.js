@@ -134,7 +134,7 @@
    function ajouterChampLegende(valeur=null){
 
      var textareaLegende = document.createElement('div');
-     textareaLegende.innerHTML = "<textarea class='form-control qrData' rows='3' name='legendeQR' placeholder='Mettre la légende'></textarea>"
+     textareaLegende.innerHTML = "<textarea id='testtexxtarea' class='form-control qrData' rows='3' name='legendeQR' placeholder='Mettre la légende'></textarea>"
                        +"<button type='button' class='btn btn-outline-success legendeQR-close-btn' onclick='supprimerChampLegende(this);'>"
                        +"<i class='fa fa-trash-alt'></i>"
                        +"</button>";
