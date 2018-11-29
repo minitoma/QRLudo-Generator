@@ -11,7 +11,9 @@
  $().ready(function() {
 
      // desactiver les boutons s'il y a rien à lire ou generer
-     $('#saveQRCode, #listenField, #stop, #preview, #annuler, #ajouterTexte, #showAudio').attr('disabled', true);
+     if(document.getElementById('qrName').value.length == 0){
+       $('#saveQRCode, #listenField, #stop, #preview, #annuler, #ajouterTexte, #showAudio').attr('disabled', true);
+     }
 
      //caché le button stop
      document.getElementById("stop").style.display = "none";
