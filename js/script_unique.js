@@ -113,13 +113,31 @@ function saveQRCodeImage() {
 
   let img = $('#qrView img')[0].src;
 
-  var data = img.replace(/^data:image\/\w+;base64,/, '');
+  // var data = img.replace(/^data:image\/\w+;base64,/, '');
 
-  fs.writeFile(`${root}/QR-Unique/QR/${qrcode.getName()}.jpeg`, data, {
-    encoding: 'base64'
-  }, (err) => {
-    if (err) throw err;
-    messageInfos("votre QR est bien sauvegardé","success");
-  });
+  var data = img.replace(/^data:image\/[^;]/, 'data:application/octet-stream');
+
+  var xhr = new XMLHttpRequest();
+  xhr.responseType = 'blob';
+  console.log(data);
+  xhr.open('GET', data, true);
+
+  xhr.onreadystatechange = function(){
+    if(xhr.readyState == xhr.DONE){
+      var filesaver = require('file-saver');
+      console.log(xhr.response);
+      filesaver.saveAs(xhr.response, qrcode.getName() + '.jpeg');
+    }
+  }
+
+  xhr.send();
+
+
+  // fs.writeFile(`${root}/QR-Unique/QR/${qrcode.getName()}.jpeg`, data, {
+  //   encoding: 'base64'
+  // }, (err) => {
+  //   if (err) throw err;
+  //   messageInfos("votre QR est bien sauvegardé","success");
+  // });
 
 }
