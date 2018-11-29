@@ -96,6 +96,10 @@ class Question {
     };
   }
 
+  setId(id){
+    this.qrcode.id = id;
+  }
+
   getName() {
     return this.qrcode.id;
   }
@@ -141,6 +145,10 @@ class Reponse {
       type: "reponse",
       color: color
     };
+  }
+
+  setId(id){
+    this.qrcode.id = id;
   }
 
   getName() {

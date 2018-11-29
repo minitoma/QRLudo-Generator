@@ -103,6 +103,7 @@ $(document).ready(function() {
       $('#previwQuesQRCodeId').show();
       $('#reponsesDivId').show(); // Si une autre valeur le div des reponses sera affiché
       $('#reponsesDivLabelsId').html('');
+      console.log(projet);
       for (let ques_item of projet.getQuestions()) {
         if ($(this).val() == ques_item.getId()) {
           for (let repUid_item of ques_item.getReponsesUIDs()) {
@@ -159,7 +160,39 @@ $(document).ready(function() {
   });
 
 
+  $('#importFileValidateBtnId').click(function() {
+    let loaded = $.ajax({
+      url: document.getElementById("importProjectInputFileId").files[0].path,
+      dataType: 'json',
+      async: false,
+      success: function(data) {
+        // console.log("success");
+      }
+    }).responseJSON;
+    projet.projet.id = loaded.id;
+    projet.projet.nom = loaded.nom;
+    console.log(loaded);
+    for (let ques of loaded.questions) {
+      let current_ques = new Question(ques.qrcode.title, ques.qrcode.reponsesUIDs);
+      current_ques.setId(ques.qrcode.id);
+      projet.addQuestion(current_ques);
+    }
+    for (let rep of loaded.reponses) {
+      let current_rep = new Reponse(rep.qrcode.title);
+      current_rep.setId(rep.qrcode.id);
+      projet.addReponse(current_rep);
+    }
+    $('#projectId').val(projet.getName());
+    for (let question of projet.getQuestions()) {
+      $('#questionsId').append($('<option>', {
+        val: question.getId(),
+        text: question.getTitle()
+      }));
+    }
+    $("#importProjectModalId .close").click();
+  });
 });
+
 
 function saveQRCodeImage(div, qrcode, directoryName) {
   //console.log("The DIV : " + div);
