@@ -58,12 +58,17 @@ class FacadeController {
       }
 
       let args = [qrcode, divImg];
+      // console.log("MY DIVIMG " : );
+
+
 
       // compress qrcode when length reaches more than 117
       // compression is interesting only when qrcode reaches more than 117 car
       if (qrcode.getDataString().length > 117) {
+        console.log("je suis dans le Compressor : ");
         JsonCompressor.compress(qrcode.getDataString(), ImageGeneratorJson.genererQRCode, args);
       } else {
+        console.log("je suis dans le Normal : ");
         args.push(qrcode.getDataString());
         ImageGeneratorJson.genererQRCode(args);
       }

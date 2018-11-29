@@ -5,10 +5,10 @@
  * @Last modified time: 2018-11-23T12:56:20+01:00
  */
 
- /**
-  * Abdessabour HARBOUL
-  * 2018
-  */
+/**
+ * Abdessabour HARBOUL
+ * 2018
+ */
 
 var fs = require('fs');
 const path = require('path');
@@ -23,13 +23,12 @@ const {
 let quesrepcontroller = new QuesRepController();
 let projet = new Projet();
 
-
-
-
 $(document).ready(function() {
 
-  //console.log("PathName : " + pathname);
   console.log("Root : " + root);
+
+  // Cacher le boutton de previsualisation du qrCode Question par default
+  $('#previwQuesQRCodeId').hide();
 
   //Cacher le div des reponses par default
   $('#reponsesDivId').hide();
@@ -87,7 +86,8 @@ $(document).ready(function() {
       }
     }
     $("#reponsesDivLabelsId").append("<div class='form-inline'><label class='form-control control-label col-md-6' style='padding-top:10px;'>" + $("#reponsesChooseSelectId option:selected").text() + "</label>" +
-      "<button id='" + $("#reponsesChooseSelectId option:selected").val() + "' type='button' name='rep[]' class='btn btn-outline-success' onclick='deleteReponse($(this));'><i class='fa fa-trash-alt'></i></button></div>");
+      "<button id='" + $("#reponsesChooseSelectId option:selected").val() + "' type='button' name='rep[]' class='btn btn-outline-success' onclick='deleteReponse($(this));'><i class='fa fa-trash-alt'></i></button>" +
+      "<button type='button' name='previwRepQRCodeName' class='btn btn-outline-success' onclick='previewRep($(this));'><i class='fa fa-qrcode'></i></button></div>");
     $("#chooseReponseModalId .close").click();
     console.log(projet);
   });
@@ -96,8 +96,11 @@ $(document).ready(function() {
 
   //Evenement quand la liste deroulante de la question change
   $("#questionsId").change(function() {
-    if ($(this).val() === "noquest") $('#reponsesDivId').hide(); // le div se cache quand l'option "Selectionner une question est selectionné"
-    else {
+    if ($(this).val() === "noquest") {
+      $('#reponsesDivId').hide(); // le div se cache quand l'option "Selectionner une question est selectionné"
+      $('#previwQuesQRCodeId').hide();
+    } else {
+      $('#previwQuesQRCodeId').show();
       $('#reponsesDivId').show(); // Si une autre valeur le div des reponses sera affiché
       $('#reponsesDivLabelsId').html('');
       for (let ques_item of projet.getQuestions()) {
@@ -106,16 +109,25 @@ $(document).ready(function() {
             for (let rep of projet.getReponses()) {
               if (repUid_item == rep.getId()) {
                 $("#reponsesDivLabelsId").append("<div class='form-inline'><label class='form-control control-label col-md-6' style='padding-top:10px;'>" + rep.getTitle() + "</label>" +
-                  "<button id='" + rep.getId() + "' type='button' name='rep[]' class='btn btn-outline-success' onclick='deleteReponse($(this));'><i class='fa fa-trash-alt'></i></button></div>");
+                  "<button id='" + rep.getId() + "' type='button' name='rep[]' class='btn btn-outline-success' onclick='deleteReponse($(this));'><i class='fa fa-trash-alt'></i></button>" +
+                  "<button type='button' name='previwRepQRCodeName' class='btn btn-outline-success' onclick='previewRep($(this));'><i class='fa fa-qrcode'></i></button></div>");
               }
             }
           }
+          break;
         }
       }
     }
   });
 
-
+  $("#previwQuesQRCodeId").click(function() {
+    for (let ques_item of projet.getQuestions()) {
+      if ($("#questionsId").val() == ques_item.getId()) {
+        previewQRCode(ques_item.getName(), ques_item.getReponsesUIDs(), $('#qrView')[0], "type_question");
+        break;
+      }
+    }
+  });
 
   /* Methode qui genere un dossier avec un fichier json comportant tous les informations
    sur les questions et reponse du projets ainsi que les qrcodes de ces questions_reponses*/
@@ -151,8 +163,11 @@ $(document).ready(function() {
 
 function saveQRCodeImage(div, qrcode, directoryName) {
   //console.log("The DIV : " + div);
+  //console.log("sans src      "+  Object.keys($(div).children()));
+
   let img = $(div).children()[0].src;
-  //console.log("The IMG : " + img);
+
+  // console.log("The IMG : " + img);
   let data = img.replace(/^data:image\/\w+;base64,/, '');
   //console.log("The DATA : " + data);
   fs.writeFile(`${root}/${directoryName}/${qrcode.getName()}.jpeg`, data, {
@@ -175,4 +190,19 @@ function deleteReponse(todelete) {
     }
   }
   todelete.parent('div').remove();
+}
+
+function previewRep(topreview) {
+  let rep = projet.getReponsesById(topreview.prev().attr("id"));
+  previewQRCode(rep.getName(), [], $('#qrView')[0], "type_reponse");
+}
+
+// generate and print qr code
+function previewQRCode(name, data, div, type) {
+  let facade = new FacadeController();
+  if (type == "type_question")
+    facade.genererQRCode(div, new Question(name, data));
+  else if ((type == "type_reponse")) {
+    facade.genererQRCode(div, new Reponse(name));
+  }
 }

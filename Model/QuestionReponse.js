@@ -58,6 +58,24 @@ class Projet {
     return this.projet.reponses[indice];
   }
 
+  getQuestionById(id) {
+    for (let q of this.projet.questions) {
+      if (q.getId() == id) {
+        return q;
+      }
+    }
+    return null;
+  }
+
+  getReponsesById(id) {
+    for (let q of this.projet.reponses) {
+      if (q.getId() == id) {
+        return q;
+      }
+    }
+    return null;
+  }
+
   getDataString() {
     return JSON.stringify(this.projet);
   }
@@ -218,10 +236,10 @@ class QuesRepController {
 }
 
 
-
+/*
 module.exports = {
   Projet,
   Reponse,
   Question,
   QuesRepController
-};
+};*/
