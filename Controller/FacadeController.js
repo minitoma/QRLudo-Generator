@@ -61,13 +61,13 @@ class FacadeController {
 
       //si la taille depasse 500 -> generer un fichier json et le sauvegarder via un click sur le button sauvegarder
       if(qrcode.getDataString().length > 500){
-        // $('#errorTaille').append("La taille '"+qrcode.getDataString().length+"' de ce QR-Code dépasse le maximum autorisé '500'.&nbsp;&nbsp;&nbsp;<button type='button' class='btn btn-outline-success' id='sauvegarderQRcode' onclick='sauvegarderFichierJsonUnique();'>Sauvegarder</button>");
 
         //sauvegarder le fichier json
         //definir le nom du fichier + path
         let now = new Date();
         let nomFichier = now.getDay()+"-"+now.getMonth()+"-"+now.getFullYear()+"-"+now.getHours()+":"+now.getMinutes()+":"+now.getSeconds();
         let path = "./QR-Unique/json/";
+
         let msg = "La taille '"+qrcode.getDataString().length+"' de ce QR-Code dépasse le maximum autorisé '500'.&nbsp;&nbsp;&nbsp;<button type='button' class='btn btn-outline-success' id='sauvegarderQRcode' onclick='sauvegarderFichierJsonUnique(\""+nomFichier+"\",\""+path+"\");'>Sauvegarder</button>";
 
         //message a afficher apres le sauvegarde du fichier json
