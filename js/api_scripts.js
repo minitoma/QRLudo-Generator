@@ -113,6 +113,35 @@ function listFiles(auth, callback) {
   });
 }
 
+//upload file in specific folder
+// function sauvegarderFichierJsonDansDrive(auth){
+//
+//   var drive = google.drive('v3');
+//
+//   var fileMetadata = {
+//     mimeType: 'application/json',
+//     name: 'test'
+//   };
+//   var media = {
+//     mimeType: 'application/json',
+//     body: fs.createReadStream('test_youssef.json')
+//   };
+//   drive.files.create({
+//      auth: auth,
+//      resource: fileMetadata,
+//      media: media,
+//      fields: 'id'
+//   }, function(err, file) {
+//     if(err) {
+//       // Handle error
+//       console.log(err);
+//     } else {
+//       console.log('File Id: ', file.id);
+//     }
+//   });
+//
+// }
+
 
 // liste de la musique dispo sur le drive
 function listMusic(content) {

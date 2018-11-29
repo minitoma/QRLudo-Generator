@@ -64,8 +64,8 @@
      $('#saveQRCode').click(function(){ saveQRCodeImage("/QR-Unique/QR/"); });
 
 
-     //debut annuler
-       //btn annuler -> reinitialiser l'affichage
+     //debut reinitialiser
+       //btn reinitialiser l'affichage
        $('#annuler').click(function(){
 
          document.getElementById('myFormActive').reset();
@@ -93,7 +93,7 @@
           //desactiver les buttons
           $('#saveQRCode, #preview, #annuler, #ajouterTexte, #showAudio').attr('disabled', true);
        });
-     //fin annuler
+     //fin reinitialiser
 
        // sur clic du bouton Lire pour ecouter les textes saisis
        // $('button#listenField').click(function(){
@@ -192,3 +192,38 @@
       }
 
     }
+
+
+    //creer+sauvegarder le fichier json correspond à un qrcode qui depasse la taille 500
+    function sauvegarderFichierJsonUnique(nomFichier,path){
+
+      path += nomFichier+".json";
+      fs.writeFile(path, JSON.stringify(qrcode), (err) => {
+          if (err) {
+              console.error(err);
+              return;
+          };
+          messageInfos("votre fichier json est bien sauvegardé","success");
+      });
+    }
+
+
+    //remplir le Modal 'listeMusic' par des fichiers audio depuis le drive
+    // function uploadFileToDrive(){
+    //
+    //   try {
+    //     // Load client secrets from a local file.
+    //     fs.readFile('credentials.json', function processClientSecrets(err, content) {
+    //       if (err) {
+    //         console.log('Error loading client secret file: ' + err);
+    //         return;
+    //       }
+    //       // Authorize a client with the loaded credentials, then call the Drive API.
+    //       authorize(JSON.parse(content), sauvegarderFichierJsonDansDrive);
+    //     //  console.log(listFiles);
+    //     });
+    //   } catch (e) {
+    //     alert('Erreur : ' + e.stack);
+    //   }
+    //
+    // }
