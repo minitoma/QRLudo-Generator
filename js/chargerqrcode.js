@@ -10,7 +10,7 @@ $().ready(function() {
   //require("./js/script_unique.js");
 
   $('#setImportedFile').click(function() {
-    var nomfichier = document.getElementById("importedFile").files[0].name;
+    var nomfichier = document.getElementById("importedFile").files[0].path;
     importQRCode(nomfichier);
 
   });
@@ -60,7 +60,7 @@ function drawQRCode(qrcode) {
     });
   } else if (qrcode.getType() == 'quesRep') {
     $("#charger-page").load("Views/quesRep.html", function() {
-      
+
 
 
     });
