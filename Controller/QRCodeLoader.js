@@ -18,7 +18,7 @@ const {
 } = require(`${root}/Model/DictionnaireXml`);
 const {
   QRCodeEnsemble
-} = require(`${root}/Model/QRCodeEnsemble`);
+} = require(`${root}/Model/QRCodeEnsembleJson`);
 const {
   QRCodeAtomique
 } = require(`${root}/Model/QRCodeAtomique`);

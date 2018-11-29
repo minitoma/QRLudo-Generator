@@ -10,67 +10,77 @@
 
 // type = ensemble
 class QRCodeEnsemble {
-  // name = name of qrcode
-  // data = an array which contains all input music provided from form
-  // data = [
-  //   {
-  //     type: "music",
-  //     url: "music url",
-  //     name: "music name"
-  //   }
-  // ]
-  // color = the qrcode color
-  constructor(name = "", data = [], color = "") {
-    this.qrcode = {
-      name: name,
-      type: "ensemble",
-      data: data,
-      color: color
-    };
-  }
+    // name = name of qrcode
+    // data = an array which contains all input music provided from form
+    // data = [
+    //   {
+    //     type: "music",
+    //     url: "music url",
+    //     name: "music name"
+    //   }
+    // ]
+    // color = the qrcode color
 
-  getQRCode() {
-    return this.qrcode;
-  }
+    constructor(name = "", data = [], color = "") {
+        this.qrcode = {
+            name: name,
+            type: "ensemble",
+            data: data,
+            color: color
+        };
+    }
 
-  getName() {
-    return this.qrcode.name;
-  }
+    ajouterQrCode(qrCode){
+        this.qrcode.data.push(qrCode);
+    }
 
-  setName(name) {
-    this.qrcode.name = name;
-  }
+    getDataString() {
+        let string = JSON.stringify(this.qrcode);
+        return string;
+    }
 
-  getType() {
-    return this.qrcode.type;
-  }
+    getQRCode() {
+        return this.qrcode;
+    }
 
-  getColor() {
-    return this.qrcode.color;
-  }
+    getName() {
+        return this.qrcode.name;
+    }
 
-  setColor(color) {
-    this.qrcode.color = color;
-  }
+    setName(name) {
+        this.qrcode.name = name;
+    }
 
-  getData() {
-    return this.qrcode.data;
-  }
+    getType() {
+        return this.qrcode.type;
+    }
 
-  setData(data) {
-    this.qrcode.data = data;
-  }
+    getColor() {
+        return this.qrcode.color;
+    }
 
-  addData(element) {
-    this.qrcode.data.push(element);
-  }
+    setColor(color) {
+        this.qrcode.color = color;
+    }
 
-  getDataString() {
-    return JSON.stringify(this.qrcode);
-  }
+    getData() {
+        return this.qrcode.data;
+    }
+
+    setData(data) {
+        this.qrcode.data = data;
+    }
+
+    addData(element) {
+        this.qrcode.data.push(element);
+    }
+
+    getDataString() {
+        return JSON.stringify(this.qrcode);
+    }
 
 }
 
 module.exports = {
-  QRCodeEnsemble
+    QRCodeEnsemble
 };
