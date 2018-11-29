@@ -124,7 +124,7 @@ $(document).ready(function() {
   $("#previwQuesQRCodeId").click(function() {
     for (let ques_item of projet.getQuestions()) {
       if ($("#questionsId").val() == ques_item.getId()) {
-        previewQRCode(ques_item.getName(), ques_item.getReponsesUIDs(), $('#qrView')[0], "type_question");
+        previewQRCode(ques_item, $('#qrView')[0], "type_question");
         break;
       }
     }
@@ -227,15 +227,15 @@ function deleteReponse(todelete) {
 
 function previewRep(topreview) {
   let rep = projet.getReponsesById(topreview.prev().attr("id"));
-  previewQRCode(rep.getName(), [], $('#qrView')[0], "type_reponse");
+  previewQRCode(rep, $('#qrView')[0], "type_reponse");
 }
 
 // generate and print qr code
-function previewQRCode(name, data, div, type) {
+function previewQRCode(qrcode, div, type) {
   let facade = new FacadeController();
   if (type == "type_question")
-    facade.genererQRCode(div, new Question(name, data));
+    facade.genererQRCode(div, qrcode);
   else if ((type == "type_reponse")) {
-    facade.genererQRCode(div, new Reponse(name));
+    facade.genererQRCode(div, qrcode);
   }
 }
