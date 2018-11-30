@@ -86,39 +86,34 @@ class Projet {
  */
 class Question {
   //Constructeur d'une Question
-  constructor(title, reponsesUIDs = [], color = '#00000') {
+  constructor(name, reponsesUIDs = [], color = '#00000') {
     this.qrcode = {
       id: new Date().getTime(),
-      title: title,
-      reponsesUIDs: reponsesUIDs,
+      name: name,
+      data: reponsesUIDs,
       type: "question",
       color: color
     };
   }
 
-  setId(id){
+  setId(id) {
     this.qrcode.id = id;
-  }
-
-  getName() {
-    return this.qrcode.title;
-    // return this.qrcode.id;
   }
 
   getId() {
     return this.qrcode.id;
   }
 
-  getTitle() {
-    return this.qrcode.title;
+  getName() {
+    return this.qrcode.name;
   }
 
   getReponsesUIDs() {
-    return this.qrcode.reponsesUIDs;
+    return this.qrcode.data;
   }
 
   getReponseUIDByIndex(indice) {
-    return this.qrcode.reponsesUIDs[indice];
+    return this.qrcode.data[indice];
   }
 
   getColor() {
@@ -126,7 +121,7 @@ class Question {
   }
 
   addReponse(reponseUid) {
-    this.qrcode.reponsesUIDs.push(reponseUid);
+    this.qrcode.data.push(reponseUid);
   }
 
   getDataString() {
@@ -142,26 +137,22 @@ class Reponse {
   constructor(title, color = '#00000') {
     this.qrcode = {
       id: new Date().getTime(),
-      title: title,
+      name: title,
       type: "reponse",
       color: color
     };
   }
 
-  setId(id){
+  setId(id) {
     this.qrcode.id = id;
-  }
-
-  getName() {
-    return this.qrcode.id;
   }
 
   getId() {
     return this.qrcode.id;
   }
 
-  getTitle() {
-    return this.qrcode.title;
+  getName() {
+    return this.qrcode.name;
   }
 
   getColor() {
@@ -214,7 +205,7 @@ class QuesRepController {
     //sortir de la fonction si le champ entré existe deja
     let existe = false;
     $.each(my_array, function(i, val) {
-      if (val.getTitle() === new_val) {
+      if (val.getName() === new_val) {
         existe = true;
         return;
       }

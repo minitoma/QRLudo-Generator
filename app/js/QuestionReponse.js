@@ -53,7 +53,7 @@ $(document).ready(function() {
     $.each(projet.getReponses(), function(i, val) {
       $('#reponsesChooseSelectId').append($('<option>', {
         val: val.getId(),
-        text: val.getTitle()
+        text: val.getName()
       }));
     });
   });
@@ -75,7 +75,7 @@ $(document).ready(function() {
   //cet evenement permet l'affectation d'une reponse a la question selectionnée
   $("#chooseReponseBtnId").click(function() {
     for (let ques_item of projet.getQuestions()) {
-      if (ques_item.getTitle() === $("#questionsId option:selected").text()) {
+      if (ques_item.getName() === $("#questionsId option:selected").text()) {
         for (let rep_itemUid of ques_item.getReponsesUIDs()) {
           if (rep_itemUid === $("#reponsesChooseSelectId option:selected").val()) {
             return;
@@ -109,7 +109,7 @@ $(document).ready(function() {
           for (let repUid_item of ques_item.getReponsesUIDs()) {
             for (let rep of projet.getReponses()) {
               if (repUid_item == rep.getId()) {
-                $("#reponsesDivLabelsId").append("<div class='form-inline'><label class='form-control control-label col-md-6' style='padding-top:10px;'>" + rep.getTitle() + "</label>" +
+                $("#reponsesDivLabelsId").append("<div class='form-inline'><label class='form-control control-label col-md-6' style='padding-top:10px;'>" + rep.getName() + "</label>" +
                   "<button id='" + rep.getId() + "' type='button' name='rep[]' class='btn btn-outline-success' onclick='deleteReponse($(this));'><i class='fa fa-trash-alt'></i></button>" +
                   "<button type='button' name='previwRepQRCodeName' class='btn btn-outline-success' onclick='previewRep($(this));'><i class='fa fa-qrcode'></i></button></div>");
               }
@@ -137,8 +137,8 @@ $(document).ready(function() {
     projet.setName($("#projectId").val());
     console.log(projet);
     let dir = projet.getName();
-    if (!fs.existsSync(dir)) {
-      fs.mkdirSync(dir);
+    if (!fs.existsSync(`${root}/${dir}`)) {
+      fs.mkdirSync(`${root}/${dir}`);
     }
     fs.writeFile(`${root}/${dir}/data.json`, projet.getDataString(), function(err) {
       if (err) {
@@ -149,13 +149,11 @@ $(document).ready(function() {
       let div = document.createElement('div');
       facade.genererQRCode(div, question);
       saveQRCodeImage(div, question, projet.getName());
-      //element.parentNode.removeChild(div);
     }
     for (reponse of projet.getReponses()) {
       let div = document.createElement('div');
       facade.genererQRCode(div, reponse);
       saveQRCodeImage(div, reponse, projet.getName());
-      //element.parentNode.removeChild(div);
     }
   });
 
@@ -169,24 +167,26 @@ $(document).ready(function() {
         // console.log("success");
       }
     }).responseJSON;
+    projet = new Projet();
     projet.projet.id = loaded.id;
     projet.projet.nom = loaded.nom;
     console.log(loaded);
     for (let ques of loaded.questions) {
-      let current_ques = new Question(ques.qrcode.title, ques.qrcode.reponsesUIDs);
+      let current_ques = new Question(ques.qrcode.name, ques.qrcode.data);
       current_ques.setId(ques.qrcode.id);
       projet.addQuestion(current_ques);
     }
     for (let rep of loaded.reponses) {
-      let current_rep = new Reponse(rep.qrcode.title);
+      let current_rep = new Reponse(rep.qrcode.name);
       current_rep.setId(rep.qrcode.id);
       projet.addReponse(current_rep);
     }
     $('#projectId').val(projet.getName());
+    $('#questionsId').html('');
     for (let question of projet.getQuestions()) {
       $('#questionsId').append($('<option>', {
         val: question.getId(),
-        text: question.getTitle()
+        text: question.getName()
       }));
     }
     $("#importProjectModalId .close").click();
@@ -195,14 +195,8 @@ $(document).ready(function() {
 
 
 function saveQRCodeImage(div, qrcode, directoryName) {
-  //console.log("The DIV : " + div);
-  //console.log("sans src      "+  Object.keys($(div).children()));
-
   let img = $(div).children()[0].src;
-
-  // console.log("The IMG : " + img);
   let data = img.replace(/^data:image\/\w+;base64,/, '');
-  //console.log("The DATA : " + data);
   fs.writeFile(`${root}/${directoryName}/${qrcode.getName()}.jpeg`, data, {
     encoding: 'base64'
   }, (err) => {
