@@ -183,6 +183,10 @@ $(document).ready(function() {
     }
     $('#projectId').val(projet.getName());
     $('#questionsId').html('');
+    $('#questionsId').append($('<option>', {
+      val: "noquest",
+      text: "---Selectionner Une Question---"
+    }));
     for (let question of projet.getQuestions()) {
       $('#questionsId').append($('<option>', {
         val: question.getId(),
