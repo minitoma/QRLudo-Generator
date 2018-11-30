@@ -2,10 +2,10 @@ Arguments:
   /usr/local/bin/node /usr/local/bin/yarn install
 
 PATH: 
-  /usr/local/cuda-7.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
+  /usr/local/cuda-7.0/bin:/home/etudiant/.local/bin:/usr/local/cuda-7.0/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/games:/usr/local/games:/snap/bin
 
 Yarn version: 
-  1.10.1
+  1.12.3
 
 Node version: 
   6.11.4
@@ -14,7 +14,7 @@ Platform:
   linux x64
 
 Trace: 
-  Error: EACCES: permission denied, unlink '/home/etudiant/QRLudo-Generator/node_modules/@types/node/LICENSE'
+  Error: EACCES: permission denied, mkdir '/home/etudiant/Bureau/installateur/QRLudo-Generator-installeur/node_modules/app-builder-lib/node_modules/ms'
       at Error (native)
 
 npm manifest: 
@@ -31,11 +31,10 @@ npm manifest:
     },
     "homepage": "https://github.com/minitoma/QRLudo-Generator#readme",
     "keywords": [],
-    "repository": {
-      "type": "git",
-      "url": "git+https://github.com/minitoma/QRLudo-Generator.git"
-    },
+    "repository": "git+https://github.com/minitoma/QRLudo-Generator.git",
     "dependencies": {
+      "popper.js": "^1.14.4",
+      "zlib": "^1.0.5",
       "bootstrap": "^3.3.7",
       "braille": "^1.1.0",
       "electron-debug": "^1.5.0",
@@ -1698,6 +1697,11 @@ Lockfile:
     version "2.1.0"
     resolved "https://registry.yarnpkg.com/performance-now/-/performance-now-2.1.0.tgz#6309f4e0e5fa913ec1c69307ae364b4b377c9e7b"
     integrity sha1-Ywn04OX6kT7BxpMHrjZLSzd8nns=
+  
+  piexifjs@^1.0.3:
+    version "1.0.4"
+    resolved "https://registry.yarnpkg.com/piexifjs/-/piexifjs-1.0.4.tgz#6f61e85511fd57eb75591cfb7290688e0abab3fd"
+    integrity sha512-va6FOuTVWC2bbiC4WiKus8scuAWoqgM4XwnmtttKe3YkwakyqTvsYMyctkTZv9Ra/uK7EdjTlyIA2U8rSDuwOw==
   
   pify@^2.0.0:
     version "2.3.0"

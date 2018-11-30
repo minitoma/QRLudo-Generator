@@ -17,13 +17,13 @@ function createWindow () {
     maximized: true,
     center: true,
     frame: true, // en faire une fenetre
-    icon: path.join(__dirname, 'img/qrludo.png')
+    icon: path.join(__dirname, 'Views/assets/images/qrludo-icon.png')
   });
 
   mainWindow.setResizable(true); // autoriser le redimensionnement
 
   mainWindow.loadURL(`file://${__dirname}/index.html`); // on doit charger un chemin absolu
-//  mainWindow.openDevTools();
+  mainWindow.openDevTools();
 
   mainWindow.on('closed', () => {
     mainWindow = null;

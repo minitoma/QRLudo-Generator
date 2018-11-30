@@ -1,0 +1,102 @@
+<!-- contenu page ensemble -->
+<!--Panel-->
+<div class="col-sm-8 card">
+    <div class="card-body">
+        <h6 class="card-title"></h6>
+        <ul class="nav nav-tabs">
+            <li class="nav-item">
+                <a class="nav-link active" data-toggle="tab" href="#qrCodes">QR - Ensemble</a>
+            </li>
+        </ul>
+        <div class="tab-content scrollbar-success" id="dropper" style="height:300px; overflow-y: scroll; margin-top:15px;">
+            <div id="qrCodes" class="tab-pane fade in active show">
+                <!--<div class="alert alert-success alert-dismissible fade show col-md-10 liste-QR" role="alert">
+                    <a href="#" class="alert-link">1-Lorem ipsum dolor sit amet</a>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>-->
+
+                <!--<div class="alert alert-success alert-dismissible fade show col-md-10 liste-QR" role="alert">
+                    <strong><a href="#" class="alert-link">2-Lorem dolor sit amet</a></strong>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="alert alert-success alert-dismissible fade show col-md-10 liste-QR" role="alert">
+                    <strong><a href="#" class="alert-link">3-Lorem ipsum dolor sit</a></strong>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="alert alert-success alert-dismissible fade show col-md-10 liste-QR" role="alert">
+                    <strong><a href="#" class="alert-link">4-Lorem ipsum dolor sit</a></strong>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+
+                <div class="alert alert-success alert-dismissible fade show col-md-10 liste-QR" role="alert">
+                    <strong><a href="#" class="alert-link">5-Lorem ipsum dolor sit</a></strong>
+                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>-->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        var dropper = document.querySelector('#dropper');
+
+        dropper.ondragenter = function(e){
+            console.log("dragenter");
+        };
+
+        dropper.ondragleave = function(e){
+            console.log("dragleave");
+        };
+
+        dropper.ondragover = function(e){
+            e.preventDefault();
+        };
+
+        dropper.ondrop = function(e){
+            console.log("drop");
+            var element = document.querySelector('#qrCodes');
+
+            var files = e.dataTransfer.files,
+                filesLen = files.length;
+
+            for(var i = 0; i < filesLen; i++){
+                 var html = '<div class="alert alert-success alert-dismissible fade show col-md-10 liste-QR" role="alert">' +
+                                '<a href="#" class="alert-link">'+files[i].name+'</a>' +
+                                '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
+                                '<span aria-hidden="true">&times;</span>' +
+                                '</button>' +
+                            '</div>';
+
+                element.innerHTML += html;
+            }
+        };
+    </script>
+
+    <div class="card-footer">
+        <!--<label class="btn btn-outline-success">-->
+            <!--Parcourir&hellip; <input type="file" style="display: none;"> -->
+        <!--</label>-->
+        <button type="submit" class="btn btn-outline-success" id="preview"><i class="fa fa-cogs"></i>&nbsp;&nbsp;Générer</button>
+    </div>
+</div>
+<!--/.Panel-->
+
+<!--Panel -> zone pour afficher le QrCode produit -->
+<div class="col-sm-4 card" id="qr-zone">
+    <script>
+        $("#qr-zone").load("Views/QR-zone.html");
+    </script>
+</div>
+<!--/.Panel-->
+<!-- Fin contenu page ensemble -->

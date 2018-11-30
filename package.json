@@ -11,11 +11,10 @@
   },
   "homepage": "https://github.com/minitoma/QRLudo-Generator#readme",
   "keywords": [],
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/minitoma/QRLudo-Generator.git"
-  },
+  "repository": "git+https://github.com/minitoma/QRLudo-Generator.git",
   "dependencies": {
+    "popper.js": "^1.14.4",
+    "zlib": "^1.0.5",
     "bootstrap": "^3.3.7",
     "braille": "^1.1.0",
     "electron-debug": "^1.5.0",
@@ -66,3 +65,4 @@
     }
   }
 }
+
