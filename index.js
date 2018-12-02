@@ -1,5 +1,6 @@
 const electron = require('electron');
 const app = electron.app;
+app.commandLine.appendSwitch('enable-speech-dispatcher');
 const BrowserWindow = electron.BrowserWindow;
 var path = require('path');
 
