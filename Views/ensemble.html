@@ -38,11 +38,17 @@
         </div>
     </div>
 
-    <div class="card-footer">
+    <div class="card-footer form-inline">
         <!--<label class="btn btn-outline-success">-->
         <!--Parcourir&hellip; <input type="file" style="display: none;"> -->
         <!--</label>-->
         <button type="submit" class="btn btn-outline-success" id="empty"><i class="fa fa-eraser"></i>Vider</button>
+        <div class="input-group  btn-unique-xl">
+          <div class="input-group-prepend">
+            <div class="input-group-text"><i class="fa fa-palette"></i></div>
+          </div>
+          <input type="color" id="qrColor" value="#000000">
+        </div>
         <button type="submit" class="btn btn-outline-success" id="preview"><i class="fa fa-cogs"></i>&nbsp;&nbsp;Générer</button>
     </div>
 </div>
@@ -65,6 +71,14 @@
     const {
       QRCodeEnsemble
     } = require(`${__dirname}/Model/QRCodeEnsembleJson`);
+
+    $(document).ready(function(){
+      var settings = require("electron-settings");
+
+      if(settings.has("defaultColor")){
+        $("#qrColor").val(settings.get("defaultColor"));
+      }
+    });
 
     var divTmp;
     var dropZone = document.getElementById('dropZone');
@@ -214,7 +228,8 @@
 
         var tmp = [];
 
-        var qrCodeEnsemble = new QRCodeEnsemble(document.getElementById('qrName').value, tmp,"#000000");
+        var color = $("#qrColor").val();
+        var qrCodeEnsemble = new QRCodeEnsemble(document.getElementById('qrName').value, tmp,color);
 
         for(var i = 0; i < qrCodes.length; i++){
             console.log(qrCodes[i].getQRCode().data.length);

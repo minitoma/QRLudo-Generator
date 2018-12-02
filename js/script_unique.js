@@ -26,6 +26,13 @@ let qrcode;
 let qrType;
 
 
+$(document).ready(function(){
+  var settings = require("electron-settings");
+
+  if(settings.has("defaultColor")){
+    $("#qrColor").val(settings.get("defaultColor"));
+  }
+});
 
 
 

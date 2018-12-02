@@ -22,6 +22,10 @@
    $("#quesRep-html").click(function() {
      $("#charger-page").load("Views/quesRep.html");
    });
+   $("#parametres-html").click(function(){
+     console.log("parametre click");
+     $("#charger-page").load("Views/parametres.html");
+   });
 
 
    //l'element du menu courant -> class="... active"
