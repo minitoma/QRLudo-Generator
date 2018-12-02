@@ -1,0 +1,25 @@
+<div class="input-group  btn-unique-xl">
+  <label class="col-sm-12 control-label" style="color:#28a745;padding-top:10px;">Couleur par défaut des QR codes</label>
+  <div class="input-group-prepend">
+    <div class="input-group-text"><i class="fa fa-palette"></i></div>
+  </div>
+  <input type="color" id="defaultColor" value="#000000">
+</div>
+
+
+<script>
+  var settings = require("electron-settings");
+
+  settings.set('name', {
+    first: 'Cosmo',
+    last: 'Kramer'
+  });
+
+  if(settings.has('defaultColor')){
+    $("#defaultColor").val(settings.get("defaultColor"));
+  }
+
+  $("#defaultColor").on("change", function(){
+    settings.set("defaultColor", $(this).val());
+  });
+</script>
