@@ -21,6 +21,7 @@
 </form>
 </div>
 
+<script src="./index.js"></script>
 <script>
 
   $("#listenField").on("click", function(){
@@ -30,11 +31,34 @@
         var utter = new SpeechSynthesisUtterance();
         utter.text = data.value;
         utter.onend = function(event) { console.log('Speech complete'); }
+        console.log(speechSynthesis.getVoices());
         utter.voice = speechSynthesis.getVoices()[26];
         speechSynthesis.speak(utter);
       }
-      else{}
+      else if(data.name == 'AudioName'){
+        window.AudioContext = window.AudioContext || window.webkitAudioContext;
+        var context = new AudioContext();
+        var request = new XMLHttpRequest();
+        var source = context.createBufferSource(); // creates a sound source
+
+        request.open('GET', 'https://drive.google.com/uc?export=download&id=' + data.id, true);
+        request.responseType = 'arraybuffer';
+
+        // Decode asynchronously
+        request.onload = function() {
+          context.decodeAudioData(request.response, function(buffer) {
+
+            source.buffer = buffer;                    // tell the source which sound to play
+            source.connect(context.destination);       // connect the source to the context's destination (the speakers)
+            source.start(0);
+          }, function(error){
+            console.log(error);
+          });
+        }
+        request.send();
+
     }
+  }
   });
 
   $("#stopSpeech").on("click", function(){
