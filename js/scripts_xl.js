@@ -11,10 +11,8 @@
  $().ready(function() {
 
      // desactiver les boutons s'il y a rien à lire ou generer
-     $('#saveQRCode,#preview, #annuler, #ajouterTexte, #showAudio').attr('disabled', true);
+     $('#saveQRCode,#preview, #annuler, #ajouterTexte, #showAudio, #showJson').attr('disabled', true);
 
-     //caché le button stop
-     // document.getElementById("stop").style.display = "none";
 
      //debut Preview
          // trigger preview qrcode action
@@ -42,6 +40,15 @@
 
                  let jsonAudio = JSON.stringify(dataAudio);
                  qrData.push(JSON.parse(jsonAudio));
+               }else if(data.name == 'JsonName'){ //le cas d'un fichier json
+                 let dataJson = {
+                               type: 'json',
+                               url: 'https://drive.google.com/uc?export=download&id='+data.id,
+                               name: data.value
+                             }
+
+                 let json = JSON.stringify(dataJson);
+                 qrData.push(JSON.parse(json));
                }
                else
                  qrData.push($(data).val());
@@ -80,10 +87,6 @@
            divImgQr.removeChild(divImgQr.firstChild);
           }
 
-        //buttons: play + stop -> zone QR
-        // document.getElementById("listenField").style.display = "";
-        // document.getElementById("stop").style.display = "none";
-
          //supprimer les textarea, inputs ..
          var divChamps = document.getElementById('cible');
           while (divChamps.firstChild) {
@@ -91,34 +94,13 @@
           }
 
           //desactiver les buttons
-          $('#saveQRCode, #preview, #annuler, #ajouterTexte, #showAudio').attr('disabled', true);
+          $('#saveQRCode, #preview, #annuler, #ajouterTexte, #showAudio, #showJson').attr('disabled', true);
        });
      //fin reinitialiser
 
-       // sur clic du bouton Lire pour ecouter les textes saisis
-       // $('button#listenField').click(function(){
-       //   document.getElementById("listenField").style.display = "none";
-       //   $('#stop').attr('disabled', false);
-       //   document.getElementById("stop").style.display = "";
-       //   getForm(null);
-       // });
 
-       // sur clic du bouton Stop
-       // $('button#stop').click(function(){
-       //   document.getElementById("stop").style.display = "none";
-       //   document.getElementById("listenField").style.display = "";
-       //   stopLecture();
-       // });
-
-       // ajouter un eventlistener sur playChamp pour lire le champ sur click du bouton
-      // $('button.playChamp').click(function(event){
-      //   console.log(event.target);
-      //   var texte = event.target.parentNode.parentNode.parentNode.parentNode.childNodes[0].childNodes[0].value;
-      //   getForm(texte);
-      // });
-
-       //charger les fichiers audio dans le Modal 'listeMusic'
-       remplirListeMusic();
+       //charger les fichiers audio dans le Modal 'listeMusic', et les fichiers json dans le Modal 'listeJson'
+       remplirUnModalParDesFichiers();
 
  });
 
@@ -126,7 +108,7 @@
  function activer_button(){
      if (document.getElementById('qrName').value.length > 0)
      {
-         $('#preview, #annuler, #ajouterTexte, #showAudio').attr('disabled', false);
+         $('#preview, #annuler, #ajouterTexte, #showAudio, #showJson').attr('disabled', false);
      }
    }
 
@@ -147,6 +129,7 @@
 
    }
 
+   //supprimer la legende selectionnée -> event onclick
    function supprimerChampLegende(e){
        $(e).parents('div#legendeTexarea').remove();
      }
@@ -167,14 +150,37 @@
 
      }
 
-     //supprimer un champ Audio -> event onclick
+     //supprimer le champ Audio selectionné -> event onclick
      function supprimerChampSon(e){
          $(e).parents('div#inputAudio').remove();
        }
 
 
-    //remplir le Modal 'listeMusic' par des fichiers audio depuis le drive
-    function remplirListeMusic(){
+       //generer un input 'pour un fichier json' -> nom de fichier + url (pour chaque input il faut rajouter à l'attribut class la valeur qrData class=".. qrData")
+       function ajouterChampJson(nom,url){
+
+         var inputJson = document.createElement('div');
+         inputJson.innerHTML = "<input type='text' id='"+url+"' name='JsonName' class='form-control qrData' value='"+nom+"' readonly>"
+                           +"<button type='button' class='btn btn-outline-success legendeQR-close-btn' onclick='supprimerChampJson(this);'>"
+                           +"<i class='fa fa-trash-alt'></i>"
+                           +"</button>";
+         inputJson.setAttribute("class", "d-flex align-items-start legendeQR");
+         inputJson.setAttribute("id", "inputJson");
+         document.getElementById('cible').appendChild(inputJson);
+
+         $('#listeJson .close').click();
+
+       }
+
+       //supprimer le champ Json selectionné -> event onclick
+       function supprimerChampJson(e){
+           $(e).parents('div#inputJson').remove();
+         }
+
+
+    //remplir le Modal 'listeMusic' par des fichiers audio, et le Modal 'listeJson' par des fichiers json, depuis le drive
+    //dans quickstart.js, il faut preciser la/les liste(s) a charger depuis la fonction listFiles() -> exemple de type d'une liste : listMusic() , listJson() ...
+    function remplirUnModalParDesFichiers(){
 
       try {
         // Load client secrets from a local file.
@@ -195,35 +201,65 @@
 
 
     //creer+sauvegarder le fichier json correspond à un qrcode qui depasse la taille 500
+    //voir FacadeController.js -> fonction genererQRCode -> dans le message msg -> onclick='sauvegarderFichierJsonUnique(...)
     function sauvegarderFichierJsonUnique(nomFichier,path){
 
-      path += nomFichier+".json";
-      fs.writeFile(path, JSON.stringify(qrcode), (err) => {
+      let nouveauNomduFichier = $('#qrName').val()+'-'+nomFichier;
+
+      path += nouveauNomduFichier+".json";
+
+      const zlib = require('zlib');
+
+      fs.writeFile(path, zlib.gzipSync(JSON.stringify(qrcode)).toString('base64'), (err) => {
           if (err) {
               console.error(err);
               return;
           };
+
+          // console.log("********** zlib **********\n");
+          // console.log(zlib.gzipSync(JSON.stringify(qrcode)));
+          // console.log("zipped data --- : "+zlib.gzipSync(JSON.stringify(qrcode)).toString('base64'));
+
+          //upload le fichier json vers le drive on donnant le nom du fichier géneré dans le dossier QR-Unique/json/
+          uploadFileToDrive(nouveauNomduFichier);
           messageInfos("votre fichier json est bien sauvegardé","success");
+
       });
+
     }
 
 
-    //remplir le Modal 'listeMusic' par des fichiers audio depuis le drive
-    // function uploadFileToDrive(){
-    //
-    //   try {
-    //     // Load client secrets from a local file.
-    //     fs.readFile('credentials.json', function processClientSecrets(err, content) {
-    //       if (err) {
-    //         console.log('Error loading client secret file: ' + err);
-    //         return;
-    //       }
-    //       // Authorize a client with the loaded credentials, then call the Drive API.
-    //       authorize(JSON.parse(content), sauvegarderFichierJsonDansDrive);
-    //     //  console.log(listFiles);
-    //     });
-    //   } catch (e) {
-    //     alert('Erreur : ' + e.stack);
-    //   }
-    //
-    // }
+    //variable contient le nom du fichier json a sauvegarder dans le drive
+    //modifiée par la fonction uploadFileToDrive()
+    //retournée par la fonction getNomFichierJsonToUpload()
+    let nomDeFichierJsonToUpload;
+
+    //upload file to drive -> si la taille du qr-code depasse 500
+    function uploadFileToDrive(nomDeFichier){
+
+      try {
+        // Load client secrets from a local file.
+        fs.readFile('credentials.json', function processClientSecrets(err, content) {
+          if (err) {
+            console.log('Error loading client secret file: ' + err);
+            return;
+          }
+          //enregistrer le nom du fichier json sauvegardé
+          nomDeFichierJsonToUpload = nomDeFichier;
+
+          // Authorize a client with the loaded credentials, then call the Drive API.
+          authorize(JSON.parse(content), insertFile);
+        //  console.log(listFiles);
+
+        });
+      } catch (e) {
+        alert('Erreur : ' + e.stack);
+      }
+
+    }
+
+    //retourne le nom du fichier json a sauvegarder dans le drive
+    //cette fonction est utilisée dans quickstart.js --> fonction insertFile()
+    function getNomFichierJsonToUpload(){
+      return nomDeFichierJsonToUpload;
+    }
