@@ -15,7 +15,9 @@
     "piexifjs": "^1.0.3",
     "popper.js": "^1.14.4",
     "zlib": "^1.0.5",
-    "electron-settings":"^3.2.0"
+    "electron-settings":"^3.2.0",
+    "request":"^2.88.0",
+    "play-sound":"^1.1.2"
   },
   "scripts": {
     "install-linux": "electron-packager . qrludo-generator --overwrite --asar --platform=linux --out=release-builds",
