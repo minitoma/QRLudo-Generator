@@ -22,7 +22,9 @@
    $("#quesRep-html").click(function() {
      $("#charger-page").load("Views/quesRep.html");
    });
-   $("#parametres-html").click(function(){
+
+   $("#parametres").click(function(e){
+     e.preventDefault();
      console.log("parametre click");
      $("#charger-page").load("Views/parametres.html");
    });
