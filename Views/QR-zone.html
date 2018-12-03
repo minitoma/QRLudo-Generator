@@ -9,11 +9,20 @@
 </div>
 <div class="card-footer" id="affichage_qr_footer">
   <form>
-  <button type="button" class="btn btn-outline-success" id="listenField" disabled>
+    <button type="button" class="btn btn-outline-success" id="prevLecture">
+      <i class="fa fa-step-backward"></i>
+    </button>
+  <button type="button" class="btn btn-outline-success" id="playLecture">
     <i class="fa fa-play"></i>&nbsp;&nbsp;Lire
   </button>
-  <button type="button" class="btn btn-outline-success" id="stopSpeech">
-    <i class="fa fa-pause"></i>&nbsp;&nbsp;Stop
+  <button type="button" class="btn btn-outline-success" id="nextLecture">
+    <i class="fa fa-step-forward"></i>
+  </button>
+  <button type="button" class="btn btn-outline-success" id="pauseLecture">
+    <i class="fa fa-pause"></i>&nbsp;&nbsp;Pause
+  </button>
+  <button type="button" class="btn btn-outline-success" id="stopLecture">
+    <i class="fa fa-stop"></i>&nbsp;&nbsp;Stop
   </button>
   <button type="button" class="btn btn-outline-success float-lg-right" id="saveQRCode" disabled>
     <i class="fa fa-download"></i>&nbsp;&nbsp;Exporter
@@ -24,51 +33,113 @@
 <script src="./index.js"></script>
 <script>
 
-  $("#listenField").on("click", function(){
-    console.log("click");
-    for (data of $('.qrData')) {
-      if(data.name == 'legendeQR'){
-        var utter = new SpeechSynthesisUtterance();
-        utter.text = data.value;
-        utter.onend = function(event) { console.log('Speech complete'); }
-        console.log(speechSynthesis.getVoices());
-        utter.voice = speechSynthesis.getVoices()[26];
-        speechSynthesis.speak(utter);
+  window.AudioContext = window.AudioContext || window.webkitAudioContext;
+  var context = new AudioContext();
+  var request = new XMLHttpRequest();
+  var source = context.createBufferSource();
+
+  var startedAt;
+  var pausedAt;
+  var paused;
+
+  var currentRead = 0;
+
+  $(document).ready(function(){
+    speechSynthesis.getVoices();
+  });
+
+  function play(){
+
+    paused = false;
+
+    var data = $(".qrData")[currentRead];
+
+    if(data.name == 'legendeQR'){
+      var utter = new SpeechSynthesisUtterance();
+      utter.text = data.value;
+      utter.onend = function(event) { console.log('Speech complete'); }
+      utter.voice = speechSynthesis.getVoices()[26];
+      speechSynthesis.speak(utter);
+    }
+    else if(data.name == 'AudioName'){
+
+
+      request.open('GET', 'https://drive.google.com/uc?export=download&id=' + data.id, true);
+      request.responseType = 'arraybuffer';
+
+      source = context.createBufferSource(); // creates a sound source
+
+
+      // Decode asynchronously
+      request.onload = function() {
+        context.decodeAudioData(request.response, function(buffer) {
+
+          source.connect(context.destination);
+          source.buffer = buffer;
+          if (pausedAt) {
+              startedAt = Date.now() - pausedAt;
+              source.start(0, pausedAt / 1000);
+          }
+          else {
+              startedAt = Date.now();
+              source.start(0);
+          }
+        }, function(error){
+          console.log(error);
+        });
       }
-      else if(data.name == 'AudioName'){
-        window.AudioContext = window.AudioContext || window.webkitAudioContext;
-        var context = new AudioContext();
-        var request = new XMLHttpRequest();
-        var source = context.createBufferSource(); // creates a sound source
-
-        request.open('GET', 'https://drive.google.com/uc?export=download&id=' + data.id, true);
-        request.responseType = 'arraybuffer';
-
-        // Decode asynchronously
-        request.onload = function() {
-          context.decodeAudioData(request.response, function(buffer) {
-
-            source.buffer = buffer;                    // tell the source which sound to play
-            source.connect(context.destination);       // connect the source to the context's destination (the speakers)
-            source.start(0);
-          }, function(error){
-            console.log(error);
-          });
-        }
-        request.send();
-
-    }
+      request.send();
   }
+
+  }
+
+  function stop() {
+    pausedAt = 0;
+    currentRead = 0;
+    source.stop(0);
+  }
+
+
+  $("#playLecture").attr("disabled", false);
+
+  $("#playLecture").on("click", function(){
+    play();
   });
 
-  $("#stopSpeech").on("click", function(){
-    if(speechSynthesis.speaking){
-      speechSynthesis.pause();
-    }
-    else if(speechSynthesis.paused){
-      speechSynthesis.resume();
+  $("#stopLecture").on("click", function(){
+    stop();
+    speechSynthesis.cancel();
+  });
+
+  $("#pauseLecture").on("click", function(){
+    if (paused) play();
+    else{
+      source.stop(0);
+      pausedAt = Date.now() - startedAt;
+      paused = true;
     }
   });
 
+  $("#nextLecture").on("click", function(){
+    currentRead++;
+    if(currentRead==$(".qrData").length){
+      currentRead=0;
+    }
+
+    source.stop(0);
+    pausedAt = 0;
+    play();
+  });
+
+  $("#prevLecture").on("click", function(){
+    currentRead--;
+    if(currentRead<0){
+      currentRead = $(".qrData").length-1;
+    }
+
+    source.stop(0);
+    pausedAt = 0;
+    play();
+  });
 
 </script>
