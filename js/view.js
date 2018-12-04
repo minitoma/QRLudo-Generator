@@ -1,11 +1,18 @@
+/**
+ * @Author: alassane
+ * @Date:   2018-12-04T08:24:59+01:00
+ * @Last modified by:   alassane
+ * @Last modified time: 2018-12-04T20:31:08+01:00
+ */
+
+
+
 var facade = new FacadeController();
 var tabQRCode = [];
 var typeQR; // rens le type de qrcode
 
 
 $(document).ready(function() {
-
-
 
   // effacer la liste des musiques avant de fermer le popup
   $('#closeModalMusique').click(function(e){

@@ -1,8 +1,7 @@
 /**
- * @Author: alassane
  * @Date:   2018-11-23T11:47:00+01:00
  * @Last modified by:   alassane
- * @Last modified time: 2018-11-23T12:56:20+01:00
+ * @Last modified time: 2018-12-04T21:15:05+01:00
  */
 
 /**
@@ -10,18 +9,7 @@
  * 2018
  */
 
-var fs = require('fs');
-const path = require('path');
-let root = path.dirname(require.main.filename);
-const {
-  FacadeController
-} = require(`${root}/Controller/FacadeController`);
-const {
-  QuestionReponse
-} = require(`${root}/Model/QuestionReponse`);
-
-let quesrepcontroller = new QuesRepController();
-let projet = new Projet();
+var projet = new Projet();
 
 $(document).ready(function() {
 
@@ -35,12 +23,12 @@ $(document).ready(function() {
 
   //Clear Question Form
   $("#addNewQuesBtnId").click(function() {
-    quesrepcontroller.clearModalForm('newQuestionModalId');
+    QuesRepController.clearModalForm('newQuestionModalId');
   });
 
   //Clear Reponse Form
   $("#addNewRepBtnId").click(function() {
-    quesrepcontroller.clearModalForm('newReponseModalId');
+    QuesRepController.clearModalForm('newReponseModalId');
   });
 
   //Clear Choose Reponse form then load the combobox with all the reponses in the project.
@@ -60,7 +48,10 @@ $(document).ready(function() {
 
   //Ajout d'une nouvelle question
   $("#addQuestionBtnId").click(function() {
-    if (quesrepcontroller.addNewValueToComboBox($('#questionTextAreaId').val(), 'questionsId', 'newQuestionModalId', projet.getQuestions())) {
+    if (projet == null)
+      projet = new Projet();
+
+    if (QuesRepController.addNewValueToComboBox($('#questionTextAreaId').val(), 'questionsId', 'newQuestionModalId', projet.getQuestions())) {
       $('#reponsesDivId').show();
     }
     console.log(projet);
@@ -68,7 +59,7 @@ $(document).ready(function() {
 
   //Ajout d'une nouvelle reponse
   $("#addReponseBtnId").click(function() {
-    quesrepcontroller.addNewValueToArray($('#reponseTextAreaId').val(), projet.getReponses(), 'newReponseModalId');
+    QuesRepController.addNewValueToArray($('#reponseTextAreaId').val(), projet.getReponses(), 'newReponseModalId');
     console.log(projet);
   });
 
@@ -133,10 +124,11 @@ $(document).ready(function() {
   /* Methode qui genere un dossier avec un fichier json comportant tous les informations
    sur les questions et reponse du projets ainsi que les qrcodes de ces questions_reponses*/
   $("#save").click(function() {
-    var facade = new FacadeController();
+    let facade = new FacadeController();
     projet.setName($("#projectId").val());
     console.log(projet);
     let dir = projet.getName();
+    const fs = require('fs');
     if (!fs.existsSync(dir)) {
       fs.mkdirSync(dir);
     }
@@ -203,6 +195,7 @@ function saveQRCodeImage(div, qrcode, directoryName) {
   // console.log("The IMG : " + img);
   let data = img.replace(/^data:image\/\w+;base64,/, '');
   //console.log("The DATA : " + data);
+  const fs = require('fs');
   fs.writeFile(`${root}/${directoryName}/${qrcode.getName()}.jpeg`, data, {
     encoding: 'base64'
   }, (err) => {
