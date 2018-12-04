@@ -116,7 +116,7 @@ $().ready(function() {
   // });
 
   //charger les fichiers audio dans le Modal 'listeMusic'
-  remplirListeMusic();
+  // remplirListeMusic();
 
 });
 
@@ -167,21 +167,21 @@ function supprimerChampSon(e) {
 
 
 //remplir le Modal 'listeMusic' par des fichiers audio depuis le drive
-function remplirListeMusic() {
-  const fs = require('fs');
-  try {
-    // Load client secrets from a local file.
-    fs.readFile('credentials.json', function processClientSecrets(err, content) {
-      if (err) {
-        console.log('Error loading client secret file: ' + err);
-        return;
-      }
-      // Authorize a client with the loaded credentials, then call the Drive API.
-      authorize(JSON.parse(content), listFiles);
-      //  console.log(listFiles);
-    });
-  } catch (e) {
-    alert('Erreur : ' + e.stack);
-  }
-
-}
+// function remplirListeMusic() {
+//   const fs = require('fs');
+//   try {
+//     // Load client secrets from a local file.
+//     fs.readFile('credentials.json', function processClientSecrets(err, content) {
+//       if (err) {
+//         console.log('Error loading client secret file: ' + err);
+//         return;
+//       }
+//       // Authorize a client with the loaded credentials, then call the Drive API.
+//       authorize(JSON.parse(content), listFiles);
+//       //  console.log(listFiles);
+//     });
+//   } catch (e) {
+//     alert('Erreur : ' + e.stack);
+//   }
+//
+// }
