@@ -119,7 +119,7 @@ class Question {
   }
 
   addReponse(reponseUid) {
-    this.qrcode.data.push(reponseUid);
+    this.qrcode.data.push({"id": reponseUid, "message":"Oui, c'est bien ça"});
   }
 
   getDataString() {
