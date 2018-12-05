@@ -166,6 +166,5 @@ class Reponse {
 module.exports = {
   Projet,
   Reponse,
-  Question,
-  QuesRepController
+  Question
 };
