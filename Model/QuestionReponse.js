@@ -1,10 +1,8 @@
 /**
- * @Author: alassane
  * @Date:   2018-11-23T11:47:00+01:00
  * @Last modified by:   alassane
- * @Last modified time: 2018-11-23T12:42:12+01:00
+ * @Last modified time: 2018-12-04T21:01:33+01:00
  */
-
 
 
 /**
@@ -96,7 +94,7 @@ class Question {
     };
   }
 
-  setId(id){
+  setId(id) {
     this.qrcode.id = id;
   }
 
@@ -147,7 +145,7 @@ class Reponse {
     };
   }
 
-  setId(id){
+  setId(id) {
     this.qrcode.id = id;
   }
 
@@ -179,11 +177,11 @@ class Reponse {
  */
 class QuesRepController {
 
-  constructor() {}
+  // constructor() {}
 
 
   //Ajouter une nouvelle valeur a la liste deroulante
-  addNewValueToComboBox(new_val, selectid, modalIdToClose, array) {
+  static addNewValueToComboBox(new_val, selectid, modalIdToClose, array) {
     if (new_val === "") return false; // si le champ est vide on sort
     //sortir de la fonction si le champ entré existe deja
     let existe = false;
@@ -208,7 +206,7 @@ class QuesRepController {
   }
 
   //Ajouter une nouvelle valeur a un tableau
-  addNewValueToArray(new_val, my_array, modalIdToClose) {
+  static addNewValueToArray(new_val, my_array, modalIdToClose) {
     if (new_val === "") return false; // si le champ est vide on sort
     //sortir de la fonction si le champ entré existe deja
     let existe = false;
@@ -228,7 +226,7 @@ class QuesRepController {
   }
 
   //Renvoie un Array des valeur d'une liste deroulante
-  selectOptionsValuesAsArray(selectId) {
+  static selectOptionsValuesAsArray(selectId) {
     let resArray = [];
     $('select#' + selectId).find('option').each(function() {
       resArray.push($(this).val());
@@ -236,18 +234,16 @@ class QuesRepController {
     return resArray;
   }
 
-  clearModalForm(modal_id) {
+  static clearModalForm(modal_id) {
     $('#' + modal_id).find('form')[0].reset();
   }
 
 
 }
 
-
-/*
 module.exports = {
   Projet,
   Reponse,
   Question,
   QuesRepController
-};*/
+};
