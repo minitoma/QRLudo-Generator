@@ -2,7 +2,7 @@
  * @Author: alassane
  * @Date:   2018-11-10T17:59:11+01:00
  * @Last modified by:   alassane
- * @Last modified time: 2018-12-05T16:00:26+01:00
+ * @Last modified time: 2018-12-06T00:32:30+01:00
  */
 
 // fichier script concernant les qr codes uniques
@@ -133,6 +133,10 @@ function saveQRCodeImage() {
 
 
 function getMusicFromUrl() {
+  let modal = $('#listeMusic').find('div.modal-body.scrollbar-success');
+  let loader = document.createElement('div');
+  let errorMsg = document.createElement('label');
+
   const {
     clipboard
   } = require('electron');
@@ -140,38 +144,61 @@ function getMusicFromUrl() {
   url = url.replace('/open?', '/uc?');
   url += '&authuser=0&export=download';
 
-  var xhr = new XMLHttpRequest();
-  xhr.open('GET', url, true);
+  let xhr = new XMLHttpRequest();
+  try {
+    xhr.open('GET', url, true);
+  } catch (e) {
+    console.log('error ');
+    $(errorMsg).text("Veuillez coller un lien de fichier téléchargeable. Reportez vous à la rubrique Aide pour plus d'informations.");
+    $(errorMsg).css('color', '#f35b6a');
+    $(errorMsg).addClass('errorLoader');
+    $(modal).prepend(errorMsg); // add error message
+  }
   xhr.responseType = 'blob';
-
   xhr.onload = function(e) {
+
     if (this.status == 200) {
-      // get binary data as a response
-      var blob = this.response;
+      let blob = this.response; // get binary data as a response
 
       // get filename
       let filename = xhr.getResponseHeader("content-disposition").split(";")[1];
       filename = filename.replace('filename="', '');
       filename = filename.replace('.mp3"', '.mp3');
 
-      $('#musicUrl').val('');
-
       // save file in folder projet/download
-      var fileReader = new FileReader();
+      let fileReader = new FileReader();
       fileReader.onload = function() {
         fs.writeFileSync(`${root}/Download/${filename}`, Buffer(new Uint8Array(this.result)));
+
+        $(loader, errorMsg).remove();
+        $('#musicUrl').val('');
+        $('#closeModalListeMusic').click(); // close modal add music
       };
       fileReader.readAsArrayBuffer(blob);
 
       ajouterChampSon(filename, clipboard.readText());
-      $('#closeModalListeMusic').click();
     } else {
       // request failed
     }
   };
 
-  xhr.send();
+  xhr.onloadstart = function(e) {
+    console.log('load start');
+    $(loader).addClass('loader');
+    $(modal).find('.errorLoader').remove();
+    $(modal).prepend(loader); // show loader when request progress
+  };
 
+  xhr.onerror = function(e) {
+    console.log('error ');
+    $(modal).find('.loader').remove();
+    $(errorMsg).text("Veuillez coller un lien de fichier téléchargeable. Reportez vous à la rubrique Aide pour plus d'informations.");
+    $(errorMsg).css('color', '#f35b6a');
+    $(errorMsg).addClass('errorLoader');
+    $(modal).prepend(errorMsg); // add error message
+  };
+
+  xhr.send();
 }
 
 //verifier le champ qrName du formulaire myFormActive puis activer le button generer
