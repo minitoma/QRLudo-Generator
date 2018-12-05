@@ -20,7 +20,6 @@ var qrCodes = [];
 var qrCodeEnsemble;
 var qrCodesUniqueSelectionne;
 
-/*<p id="txtDragAndDrop" class="col-sm-7" style="text-align: center; margin-top: 15%">Deposer vos fichier ici</p>*/
 var txtDragAndDrop = document.createElement("P");
 
 txtDragAndDrop.setAttribute("id", "txtDragAndDrop");
