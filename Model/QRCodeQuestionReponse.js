@@ -98,15 +98,11 @@ class Question {
     this.qrcode.id = id;
   }
 
-  getName() {
-    return this.qrcode.name;
-  }
-
   getId() {
     return this.qrcode.id;
   }
 
-  getTitle() {
+  getName() {
     return this.qrcode.name;
   }
 
@@ -114,12 +110,12 @@ class Question {
     return this.qrcode.data;
   }
 
-  getReponseUIDByIndex(indice) {
-    return this.qrcode.data[indice];
-  }
-
   getColor() {
     this.qrcode.color;
+  }
+
+  getReponseUIDByIndex(indice) {
+    return this.qrcode.data[indice];
   }
 
   addReponse(reponseUid) {
@@ -136,11 +132,11 @@ class Question {
  */
 class Reponse {
   //Constructeur d'une Reponse
-  constructor(title, color = '#00000') {
+  constructor(name, color = '#00000') {
     this.qrcode = {
       id: new Date().getTime(),
-      name: title,
-      data: [title],
+      name: name,
+      data: [],
       type: "reponse",
       color: color
     };
@@ -150,15 +146,11 @@ class Reponse {
     this.qrcode.id = id;
   }
 
-  getName() {
-    return this.qrcode.name;
-  }
-
   getId() {
     return this.qrcode.id;
   }
 
-  getTitle() {
+  getName() {
     return this.qrcode.name;
   }
 
@@ -169,77 +161,6 @@ class Reponse {
   getDataString() {
     return JSON.stringify(this.qrcode);
   }
-}
-
-
-/*
- * Classe permettant à la vue d'interagir avec le controller.
- * La vue instancie cette classe une seule fois à son initialisation et fait systématiquement appel à cette instance quand elle a besoin d'un traitement du controller.
- */
-class QuesRepController {
-
-  // constructor() {}
-
-
-  //Ajouter une nouvelle valeur a la liste deroulante
-  static addNewValueToComboBox(new_val, selectid, modalIdToClose, array) {
-    if (new_val === "") return false; // si le champ est vide on sort
-    //sortir de la fonction si le champ entré existe deja
-    let existe = false;
-    $('select#' + selectid).find('option').each(function() {
-      if ($(this).text() === new_val) {
-        existe = true;
-        return;
-      }
-    });
-    if (existe) return false;
-    //Ajouter a la liste deroulante la nouvelle valeur
-    let nouvques = new Question(new_val);
-    array.push(nouvques);
-    $('#' + selectid).append($('<option>', {
-      val: nouvques.getId(),
-      text: new_val
-    }));
-    //fermer la pop-up
-    $("#" + selectid).val(nouvques.getId()).change();
-    $("#" + modalIdToClose + " .close").click();
-    return true;
-  }
-
-  //Ajouter une nouvelle valeur a un tableau
-  static addNewValueToArray(new_val, my_array, modalIdToClose) {
-    if (new_val === "") return false; // si le champ est vide on sort
-    //sortir de la fonction si le champ entré existe deja
-    let existe = false;
-    $.each(my_array, function(i, val) {
-      if (val.getTitle() === new_val) {
-        existe = true;
-        return;
-      }
-    });
-    if (existe) return false;
-    //Ajouter au tableau la nouvelle valeur
-    my_array.push(new Reponse(new_val));
-
-    //fermer la pop-up
-    $("#" + modalIdToClose + " .close").click();
-    return true;
-  }
-
-  //Renvoie un Array des valeur d'une liste deroulante
-  static selectOptionsValuesAsArray(selectId) {
-    let resArray = [];
-    $('select#' + selectId).find('option').each(function() {
-      resArray.push($(this).val());
-    });
-    return resArray;
-  }
-
-  static clearModalForm(modal_id) {
-    $('#' + modal_id).find('form')[0].reset();
-  }
-
-
 }
 
 module.exports = {
