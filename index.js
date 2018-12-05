@@ -1,15 +1,26 @@
+/**
+ * @Author: alassane
+ * @Date:   2018-12-05T17:35:22+01:00
+ * @Last modified by:   alassane
+ * @Last modified time: 2018-12-06T00:51:06+01:00
+ */
+
+
+
 const electron = require('electron');
 const app = electron.app;
 app.commandLine.appendSwitch('enable-speech-dispatcher');
 const BrowserWindow = electron.BrowserWindow;
 var path = require('path');
 
-require('electron-debug')({showDevTools: true}); // pour debugger
+require('electron-debug')({
+  showDevTools: true
+}); // pour debugger
 
 let mainWindow;
 
 
-function createWindow () {
+function createWindow() {
 
 
   mainWindow = new BrowserWindow({
@@ -24,7 +35,7 @@ function createWindow () {
   mainWindow.setResizable(true); // autoriser le redimensionnement
 
   mainWindow.loadURL(`file://${__dirname}/index.html`); // on doit charger un chemin absolu
-//  mainWindow.openDevTools();
+  //  mainWindow.openDevTools();
 
   mainWindow.on('closed', () => {
     mainWindow = null;
@@ -40,7 +51,20 @@ app.on('window-all-closed', () => {
     app.quit();
   }
 
+  // delete all music in folder Download
+  const fs = require('fs');
+  const path = require('path');
+  let directory = path.join(__dirname, 'Download');
 
+  fs.readdir(directory, (err, files) => {
+    if (err) throw err;
+
+    for (const file of files) {
+      fs.unlink(path.join(directory, file), err => {
+        if (err) throw err;
+      });
+    }
+  });
 
 });
 
@@ -56,4 +80,4 @@ app.on('activate', () => {
  * The above copyright notice and this permission notice shall be included in all copies or substantial portions of the Software.
  * The Software is provided “as is”, without warranty of any kind, express or implied, including but not limited to the warranties of merchantability, fitness for a particular purpose and noninfringement. In no event shall the authors or copyright holders X be liable for any claim, damages or other liability, whether in an action of contract, tort or otherwise, arising from, out of or in connection with the software or the use or other dealings in the Software.
  * Except as contained in this notice, the name of the Corentin TALARMAIN, Thomas CALATAYUD, Rahmatou Walet MOHAMEDOUN, Jules LEGUY, David DEMBELE, Alassane DIOP shall not be used in advertising or otherwise to promote the sale, use or other dealings in this Software without prior written authorization from the Corentin TALARMAIN, Thomas CALATAYUD, Rahmatou Walet MOHAMEDOUN, Jules LEGUY, David DEMBELE, Alassane DIOP
-*/
+ */
