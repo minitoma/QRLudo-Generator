@@ -9,7 +9,7 @@
 
 
 // type = ensemble
-class QRCodeEnsemble {
+class QRCodeEnsembleJson {
     // name = name of qrcode
     // data = an array which contains all input music provided from form
     // data = [
@@ -82,5 +82,5 @@ class QRCodeEnsemble {
 }
 
 module.exports = {
-    QRCodeEnsemble
+    QRCodeEnsembleJson
 };

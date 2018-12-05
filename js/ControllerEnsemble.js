@@ -1,21 +1,7 @@
-
-const {
-    QRCodeUnique
-} = require(`${__dirname}/Model/QRCodeJson`);
-
-const {
-    QRCodeEnsemble
-} = require(`${__dirname}/Model/QRCodeEnsembleJson`);
-
-const {
-    FacadeController
-} = require(`${__dirname}/Controller/FacadeController`);
-
 $('#preview ,#empty').attr('disabled', true);
 
 var dropZone = document.getElementById('dropZone');
 var txtZone = document.getElementById('txtZone');
-var txtDragAndDrop = document.getElementById('txtDragAndDrop');
 var qrCodes = [];
 var qrCodeEnsemble;
 var qrCodesUniqueSelectionne;
@@ -240,22 +226,23 @@ $().ready(function() {
 
         affichageLigneParDefault();
 
-        let qrCodeEnsemble = new QRCodeEnsemble(document.getElementById('qrName').value, [],"#000000");
+        var qrColor = $("#qrColor").val();
+        let qrCodeEnsemble = new QRCodeEnsembleJson(document.getElementById('qrName').value, [],qrColor);
 
-        /*
-         * Ajoute les donnees json de chaque qrCode unique dans le qrCode ensemble
-         */
+        // /*
+        //  * Ajoute les donnees json de chaque qrCode unique dans le qrCode ensemble
+        //  */
+        // for(let i = 0; i < qrCodes.length; i++){
+        //     for(let j = 0; j < qrCodes[i].getQRCode().data.length; j++){
+        //         if((typeof qrCodes[i].getQRCode().data[j] === "object") && (qrCodes[i].getQRCode().data[j] !== null)){
+        //             qrCodeEnsemble.ajouterQrCode(qrCodes[i].getQRCode().data[j]);
+        //         }
+        //     }
+        // }
+
         for(let i = 0; i < qrCodes.length; i++){
-            for(let j = 0; j < qrCodes[i].getQRCode().data.length; j++){
-                if((typeof qrCodes[i].getQRCode().data[j] === "object") && (qrCodes[i].getQRCode().data[j] !== null)){
-                    qrCodeEnsemble.ajouterQrCode(qrCodes[i].getQRCode().data[j]);
-                }
-            }
-        }
-
-        /*for(let i = 0; i < qrCodes.length; i++){
             qrCodeEnsemble.ajouterQrCode(qrCodes[i]);
-        }*/
+        }
 
         let facade = new FacadeController();
         facade.genererQRCode($('#qrView')[0],qrCodeEnsemble);
