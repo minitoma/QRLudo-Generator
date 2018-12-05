@@ -92,31 +92,33 @@
 
 
 <!-- Modal-2 -> Fichier audio -->
-<div class="modal fade" id="listeMusic" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="listeMusic" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-keyboard="false">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalCenterTitle">Les fichiers Audio</h5>
+        <h5 class="modal-title" id="exampleModalCenterTitle">Ajouter un fichier audio</h5>
         <button type="button" class="close" id="closeModalListeMusic" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
-      <div class="modal-body scrollbar-success" style="height:170px; overflow-y: scroll;">
+      <div class="modal-body scrollbar-success">
         <div class="list-group" id="elementsAudio">
           <div class="form-group">
+            <label class="col-sm-12 control-label" style="color:#28a745;padding-top:10px;">Veuillez copier et coller le lien téléchargeable du fichier audio</label>
             <div class="col-sm-12">
               <input type="text" id="musicUrl" name="musicUrl" class="form-control" onpaste="getMusicFromUrl()">
             </div>
           </div>
         </div>
       </div>
-      <div class="modal-footer">
-        <!-- <button type="button" class="btn btn-outline-success" id="addMusic">Valider</button> -->
-      </div>
+      <!-- <div class="modal-footer">
+        <button type="button" class="btn btn-outline-success" id="addMusic">Valider</button>
+      </div> -->
     </div>
   </div>
 </div>
 <!-- Fin Modal-2 -->
+
 
 <!-- fin contenu page unique -->
 
