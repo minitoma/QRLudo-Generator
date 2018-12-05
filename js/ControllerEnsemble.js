@@ -11,7 +11,7 @@ var txtDragAndDrop = document.createElement("P");
 txtDragAndDrop.setAttribute("id", "txtDragAndDrop");
 txtDragAndDrop.setAttribute("class", "col-sm-7");
 txtDragAndDrop.setAttribute("style", "text-align: center; margin-top: 15%");
-txtDragAndDrop.innerText = "Deposer vos fichier ici";
+txtDragAndDrop.innerText = "Déposez vos fichiers ici";
 
 txtZone.appendChild(txtDragAndDrop);
 /*
@@ -269,8 +269,42 @@ $().ready(function() {
         txtZone.appendChild(txtDragAndDrop);
     });
 
-    $("#saveQRCode").click(function () {
-        console.log("save");
-        saveQRCodeImage("/QR-Ensemble/QR/");
+    $("#saveQRCode").on("click", function(){
+      saveQRCodeImage();
     });
+
+    // save image qr code
+    function saveQRCodeImage() {
+      const fs = require('fs');
+
+      let img = $('#qrView img')[0].src;
+
+      // var data = img.replace(/^data:image\/\w+;base64,/, '');
+
+      var data = img.replace(/^data:image\/[^;]/, 'data:application/octet-stream');
+
+      var xhr = new XMLHttpRequest();
+      xhr.responseType = 'blob';
+      console.log(data);
+      xhr.open('GET', data, true);
+
+      xhr.onreadystatechange = function() {
+        if (xhr.readyState == xhr.DONE) {
+          var filesaver = require('file-saver');
+          console.log(xhr.response);
+          filesaver.saveAs(xhr.response, qrcode.getName() + '.jpeg');
+        }
+      }
+
+      xhr.send();
+
+
+      // fs.writeFile(`${root}/QR-Unique/QR/${qrcode.getName()}.jpeg`, data, {
+      //   encoding: 'base64'
+      // }, (err) => {
+      //   if (err) throw err;
+      //   messageInfos("votre QR est bien sauvegardé","success");
+      // });
+
+    }
 });

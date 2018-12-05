@@ -55,6 +55,9 @@ $('#preview').click(e => {
 
     $('#annuler').attr('disabled', false);
   }
+  $("#saveQRCode").on("click", function(){
+    saveQRCodeImage();
+  });
 });
 
 

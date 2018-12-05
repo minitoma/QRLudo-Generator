@@ -64,24 +64,6 @@ function messageInfos(message,type){
 
 }
 
-// save image qr code
-// ex: path = /QR-Unique/QR/
-function saveQRCodeImage(path) {
-  const fs = require('fs');
-
-  let img = $('#qrView img')[0].src;
-
-  var data = img.replace(/^data:image\/\w+;base64,/, '');
-
-  fs.writeFile(`${root}`+path+`${qrcode.getName()}.jpeg`, data, {
-    encoding: 'base64'
-  }, (err) => {
-    if (err) throw err;
-    messageInfos("votre QR est bien sauvegardé","success");
-  });
-
-}
-
 //creer+sauvegarder le fichier json correspond à un qrcode qui depasse la taille 500
 function sauvegarderFichierJsonUnique(nomFichier,path){
 
