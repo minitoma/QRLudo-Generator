@@ -9,14 +9,42 @@
 </div>
 <div class="card-footer" id="affichage_qr_footer">
   <form>
-  <!-- <button type="button" class="btn btn-outline-success" id="listenField" disabled>
+  <button type="button" class="btn btn-outline-success" id="listenField" disabled>
     <i class="fa fa-play"></i>&nbsp;&nbsp;Lire
   </button>
-  <button type="button" class="btn btn-outline-success" id="stop">
+  <button type="button" class="btn btn-outline-success" id="stopSpeech">
     <i class="fa fa-pause"></i>&nbsp;&nbsp;Stop
-  </button> -->
+  </button>
   <button type="button" class="btn btn-outline-success float-lg-right" id="saveQRCode" onclick="saveQRCodeImage" disabled>
     <i class="fa fa-download"></i>&nbsp;&nbsp;Exporter
   </button>
 </form>
 </div>
+
+<script>
+
+  $("#listenField").on("click", function(){
+    console.log("click");
+    for (data of $('.qrData')) {
+      if(data.name == 'legendeQR'){
+        var utter = new SpeechSynthesisUtterance();
+        utter.text = data.value;
+        utter.onend = function(event) { console.log('Speech complete'); }
+        utter.voice = speechSynthesis.getVoices()[26];
+        speechSynthesis.speak(utter);
+      }
+      else{}
+    }
+  });
+
+  $("#stopSpeech").on("click", function(){
+    if(speechSynthesis.speaking){
+      speechSynthesis.pause();
+    }
+    else if(speechSynthesis.paused){
+      speechSynthesis.resume();
+    }
+  });
+
+
+</script>

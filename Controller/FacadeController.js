@@ -58,6 +58,9 @@ class FacadeController {
       }
 
       let args = [qrcode, divImg];
+      // console.log("MY DIVIMG " : );
+
+
 
       //si la taille depasse 500 -> generer un fichier json et le sauvegarder via un click sur le button sauvegarder
       if(qrcode.getDataString().length > 500){

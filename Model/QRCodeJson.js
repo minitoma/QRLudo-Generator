@@ -65,8 +65,15 @@ class QRCodeUnique {
   }
 
   getData(index = null) {
-    if (index)
+    if(index === 0){
+      // console.log("le zero");
+      return this.qrcode.data[0]; // return data at index
+    }
+    if (index) {
+      // console.log("reste");
       return this.qrcode.data[index]; // return data at index
+    }
+    // console.log("tous");
     return this.qrcode.data; // return all data
   }
 
@@ -104,6 +111,8 @@ class QRCodeXL extends QRCodeUnique {
   }
 
 }
+
+
 
 
 module.exports = {

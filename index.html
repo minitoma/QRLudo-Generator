@@ -1,41 +1,72 @@
 <!-- <!DOCTYPE html> -->
+
 <html>
 
+
+
 <head>
+
   <meta charset="utf-8">
+
   <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
 
+
+
   <title>QRLudo</title>
+
+
 
   <!-- qr code image -->
   <script type="text/javascript" src="./node_modules/jquery-qrcode/jquery.qrcode.min.js"></script>
   <script type="text/javascript" src="./node_modules/jquery/jquery-qrcode-0.14.0.min.js"></script>
   <script type="text/javascript" src="./node_modules/jquery/jquery-qrcode-0.14.0.js"></script>
 
+
   <script type="text/javascript" src="./node_modules/jquery/dist/jquery.min.js"></script>
 
   <!-- Bootstrap CSS CDN -->
-  <link rel="stylesheet" href="./Views/assets/css/bootstrap.min.css">
-  <!-- Our Custom CSS -->
-  <link rel="stylesheet" href="Views/assets/css/qrludo.css">
-  <!-- Font Awesome JS -->
-  <script type="text/javascript" src="Views/assets/js/solid.js"></script>
-  <script type="text/javascript" src="Views/assets/js/fontawesome.js"></script>
 
+  <link rel="stylesheet" href="./Views/assets/css/bootstrap.min.css">
+
+  <!-- Our Custom CSS -->
+
+  <link rel="stylesheet" href="Views/assets/css/qrludo.css">
+
+  <!-- include script from Controller and Model-->
+  <script src="./js/script_loader.js"></script>
 
   <script src="./js/api_scripts.js"></script>
+  <script src="./js/chargerqrcode.js"></script>
 
+
+
+
+
+  <!-- Font Awesome JS -->
+  <script src="Views/assets/js/solid.js"></script>
+  <script src="Views/assets/js/fontawesome.js"></script>
 
 </head>
 
+
+
 <body>
+
   <div class="wrapper">
+
     <!-- Sidebar  -->
+
     <nav id="sidebar" class="active">
+
       <div class="sidebar-header">
+
         <span class="navbar-left"><img src="Views/assets/images/logo-qrludo.png"></span>
+
       </div>
+
+
 
       <ul class="list-unstyled components" id="menu">
         <li id="unique">
@@ -66,33 +97,64 @@
             Charger
           </a>
         </li>
+        <li id="parametres">
+          <a href="#" id="parametres-html">
+            <i class="fa fa-list"></i>
+            <br>
+            Paramètres
+          </a>
+        </li>
       </ul>
+
 
     </nav>
 
+
+
     <!-- Page Content  -->
+
     <div id="content">
 
+
+
       <nav class="navbar navbar-light">
+
         <div class="container-fluid">
+
           <div class="navbar-header">
+
             <button type="button" id="sidebarCollapse" class="btn btn-outline-success d-md-none pull-left">
+
               <i class="fas fa-bars"></i>
+
             </button>
+
           </div>
+
           <span class="navbar-brand pull-right navbar-right"><img src="Views/assets/images/univers-angers.png" class="logo-qrludo img-circle"></span>
 
+
+
         </div>
+
       </nav>
 
+
+
       <!--Pour afficher le titre de chaque page <h4 style="color:#1f7934;">QR-Codes Unique</h4>-->
+
       <!--<div class="line"></div>-->
 
+
+
       <!-- contenu du Page a afficher depuis le menu gauche -->
+
       <div class="card-deck" id="charger-page">
 
       </div>
+
       <!-- end contenu -->
+
     </div>
 
     <!-- Popup pour charger un qrcode -->
@@ -107,6 +169,7 @@
           </div>
           <div class="modal-body">
             <input type="file" class="form-control" id="importedFile" accept=".jpg, .jpeg, .png">
+            <input id="prodId" name="prodId" type="hidden" value="xm234jq">
           </div>
           <div class="modal-footer">
             <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" id="closeModalImport">Annuler</button>
@@ -119,10 +182,16 @@
 
   </div>
 
+
+
   <script src="./node_modules/jquery/dist/jquery.slim.min.js"></script>
+
   <!-- Popper.JS -->
+
   <script src="./node_modules/popper.js/dist/umd/popper.min.js"></script>
+
   <!-- Bootstrap JS -->
+
   <script src="./Views/assets/js/bootstrap.min.js"></script>
 
   <!-- Gestion -> Menu | Gestion -> Messages Infos | Fonctions -->

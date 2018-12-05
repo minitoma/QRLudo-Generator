@@ -2,28 +2,61 @@
  * @Author: alassane
  * @Date:   2018-11-10T17:59:11+01:00
  * @Last modified by:   alassane
- * @Last modified time: 2018-11-16T00:51:32+01:00
+ * @Last modified time: 2018-12-04T14:56:50+01:00
  */
 
 // fichier script concernant les qr codes uniques
 
-const path = new require('path');
-const root = path.dirname(require.main.filename); // project home path
+var qrcode;
+var qrType;
 
-const {
-  FacadeController
-} = require(`${root}/Controller/FacadeController`);
+$(document).ready(function() {
+  var settings = require("electron-settings");
 
-const {
-  QRCodeUnique
-} = require(`${root}/Model/QRCodeJson`);
+  if (settings.has("defaultColor")) {
+    $("#qrColor").val(settings.get("defaultColor"));
+  }
+});
 
-const{
-QRCodeXL
-} = require(`${root}/Model/QRCodeJson`);
+// trigger preview qrcode action
+$('#preview').click(e => {
 
-let qrcode;
-let qrType;
+  //enlever les messages en haut de page
+  initMessages();
+  let inputArray = $('input, textarea');
+
+  if (validateForm(inputArray)) { // all fields are filled
+    // get all required attributes for qrcode
+    let qrColor = $('#qrColor').val();
+    let qrName = $('#qrName').val();
+    let qrData = [];
+
+    for (data of $('.qrData')) {
+      if (data.name == 'AudioName') {
+        let dataAudio = {
+          type: 'music',
+          url: data.id,
+          name: data.value
+        }
+
+        let jsonAudio = JSON.stringify(dataAudio);
+        qrData.push(JSON.parse(jsonAudio));
+      } else
+        qrData.push($(data).val());
+
+    }
+
+    qrType = $('#typeQRCode').val();
+
+    // Generate in a div, the qrcode image for qrcode object
+    let div = $('#qrView')[0];
+
+    previewQRCode(qrName, qrData, qrColor, div);
+
+    $('#annuler').attr('disabled', false);
+  }
+});
+
 
 // form validation return true if all fields are filled
 function validateForm(inputArray) {
@@ -32,15 +65,15 @@ function validateForm(inputArray) {
   initMessages();
   for (input of inputArray) {
     // eliminer les input de type file
-    if($(input).attr('type') != 'file'){
+    if ($(input).attr('type') != 'file') {
       if (!$(input).val() || $(input).val() == "") {
-        messageInfos("Veuillez renseigner tous les champs","danger");//message a afficher en haut de la page
+        messageInfos("Veuillez renseigner tous les champs", "danger"); //message a afficher en haut de la page
         return false;
       }
-    }else{
-        //enlever l'element input de type file
-        inputArray.splice(index,1);
-        }
+    } else {
+      //enlever l'element input de type file
+      inputArray.splice(index, 1);
+    }
 
     ++index;
   }
@@ -53,7 +86,7 @@ function validateForm(inputArray) {
 function previewQRCode(name, data, color, div) {
 
   // instanciate a qrcode unique object
-  if(qrType == 'xl')
+  if (qrType == 'xl')
     qrcode = new QRCodeXL(name, data, color);
   else
     qrcode = new QRCodeUnique(name, data, color);
@@ -62,23 +95,37 @@ function previewQRCode(name, data, color, div) {
   facade.genererQRCode(div, qrcode);
 }
 
+// save image qr code
+function saveQRCodeImage() {
+  const fs = require('fs');
 
-// fonction permettant de charger, importer un qr code
-function importQRCode(filename) {
-  let facade = new FacadeController();
+  let img = $('#qrView img')[0].src;
 
-  let blob = null;
-  let xhr = new XMLHttpRequest();
-  xhr.open("GET", filename);
-  xhr.responseType = "blob"; //force the HTTP response, response-type header to be blob
-  xhr.onload = function() {
-    blob = xhr.response; //xhr.response is now a blob object
-    facade.importQRCode(blob, drawQRCode);
+  // var data = img.replace(/^data:image\/\w+;base64,/, '');
+
+  var data = img.replace(/^data:image\/[^;]/, 'data:application/octet-stream');
+
+  var xhr = new XMLHttpRequest();
+  xhr.responseType = 'blob';
+  console.log(data);
+  xhr.open('GET', data, true);
+
+  xhr.onreadystatechange = function() {
+    if (xhr.readyState == xhr.DONE) {
+      var filesaver = require('file-saver');
+      console.log(xhr.response);
+      filesaver.saveAs(xhr.response, qrcode.getName() + '.jpeg');
+    }
   }
-  xhr.send();
-}
 
-// fonction permettant de recréer visuellement un qr code unique
-function drawQRCode(qrcode) {
-  console.log("qr code to be drawn : ", qrcode);
+  xhr.send();
+
+
+  // fs.writeFile(`${root}/QR-Unique/QR/${qrcode.getName()}.jpeg`, data, {
+  //   encoding: 'base64'
+  // }, (err) => {
+  //   if (err) throw err;
+  //   messageInfos("votre QR est bien sauvegardé","success");
+  // });
+
 }

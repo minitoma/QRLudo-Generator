@@ -23,6 +23,10 @@
    $("#quesRep-html").click(function() {
      $("#charger-page").load("Views/quesRep.html");
    });
+   $("#parametres-html").click(function(){
+     console.log("parametre click");
+     $("#charger-page").load("Views/parametres.html");
+   });
 
 
    //l'element du menu courant -> class="... active"
@@ -79,4 +83,17 @@ function saveQRCodeImage(path) {
     messageInfos("votre QR est bien sauvegardé","success");
   });
 
+}
+
+//creer+sauvegarder le fichier json correspond à un qrcode qui depasse la taille 500
+function sauvegarderFichierJsonUnique(nomFichier,path){
+
+  path += nomFichier+".json";
+  fs.writeFile(path, JSON.stringify(nomFichier), (err) => {
+      if (err) {
+          console.error(err);
+          return;
+      };
+      messageInfos("votre fichier json est bien sauvegardé","success");
+  });
 }

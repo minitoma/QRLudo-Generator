@@ -1,97 +1,56 @@
+
 <!-- contenu page ensemble -->
 <!--Panel-->
 <div class="col-sm-8 card">
     <div class="card-body">
+        <div id="messages"></div>
         <h6 class="card-title"></h6>
         <ul class="nav nav-tabs">
             <li class="nav-item">
                 <a class="nav-link active" data-toggle="tab" href="#qrCodes">QR - Ensemble</a>
             </li>
         </ul>
-        <div class="tab-content scrollbar-success" id="dropper" style="height:300px; overflow-y: scroll; margin-top:15px;">
-            <div id="qrCodes" class="tab-pane fade in active show">
-                <!--<div class="alert alert-success alert-dismissible fade show col-md-10 liste-QR" role="alert">
-                    <a href="#" class="alert-link">1-Lorem ipsum dolor sit amet</a>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>-->
 
-                <!--<div class="alert alert-success alert-dismissible fade show col-md-10 liste-QR" role="alert">
-                    <strong><a href="#" class="alert-link">2-Lorem dolor sit amet</a></strong>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+        <div class="tab-content scrollbar-success" id="dropZone" style="height:300px; overflow-y: scroll; margin-top:15px;">
+            <div id="texte" class="tab-pane fade in active show">
+                <h3></h3>
+                <div class="form-group">
+                    <label class="col-sm-12 control-label" style="color:#28a745;padding-top:10px;">Nom du QR Code</label>
+                    <div class="col-sm-7">
+                        <input type="text" id="qrName" name="NomQR" class="form-control" onkeyup="activer_button(this.value);">
+                    </div>
+                    <!-- le type du QRCode, ici -> XL -->
+                    <input id="typeQRCode" name="typeQRCode" type="hidden" value="xl">
                 </div>
+                <div class="form-group">
+                    <div class="col-sm-10">
+                        <div id="cible">
 
-                <div class="alert alert-success alert-dismissible fade show col-md-10 liste-QR" role="alert">
-                    <strong><a href="#" class="alert-link">3-Lorem ipsum dolor sit</a></strong>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
+                        </div>
+                    </div>
                 </div>
-
-                <div class="alert alert-success alert-dismissible fade show col-md-10 liste-QR" role="alert">
-                    <strong><a href="#" class="alert-link">4-Lorem ipsum dolor sit</a></strong>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>
-
-                <div class="alert alert-success alert-dismissible fade show col-md-10 liste-QR" role="alert">
-                    <strong><a href="#" class="alert-link">5-Lorem ipsum dolor sit</a></strong>
-                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">
-                        <span aria-hidden="true">&times;</span>
-                    </button>
-                </div>-->
+            </div>
+            <div id="txtZone" class="tab-pane fade in active show ">
             </div>
         </div>
     </div>
 
-    <script>
-        var dropper = document.querySelector('#dropper');
-
-        dropper.ondragenter = function(e){
-            console.log("dragenter");
-        };
-
-        dropper.ondragleave = function(e){
-            console.log("dragleave");
-        };
-
-        dropper.ondragover = function(e){
-            e.preventDefault();
-        };
-
-        dropper.ondrop = function(e){
-            console.log("drop");
-            var element = document.querySelector('#qrCodes');
-
-            var files = e.dataTransfer.files,
-                filesLen = files.length;
-
-            for(var i = 0; i < filesLen; i++){
-                 var html = '<div class="alert alert-success alert-dismissible fade show col-md-10 liste-QR" role="alert">' +
-                                '<a href="#" class="alert-link">'+files[i].name+'</a>' +
-                                '<button type="button" class="close" data-dismiss="alert" aria-label="Close">' +
-                                '<span aria-hidden="true">&times;</span>' +
-                                '</button>' +
-                            '</div>';
-
-                element.innerHTML += html;
-            }
-        };
-    </script>
-
-    <div class="card-footer">
+    <div class="card-footer form-inline">
         <!--<label class="btn btn-outline-success">-->
-            <!--Parcourir&hellip; <input type="file" style="display: none;"> -->
+        <!--Parcourir&hellip; <input type="file" style="display: none;"> -->
         <!--</label>-->
+        <button type="submit" class="btn btn-outline-success" id="empty"><i class="fa fa-eraser"></i>Vider</button>
+        <div class="input-group  btn-unique-xl">
+          <div class="input-group-prepend">
+            <div class="input-group-text"><i class="fa fa-palette"></i></div>
+          </div>
+          <input type="color" id="qrColor" value="#000000">
+        </div>
         <button type="submit" class="btn btn-outline-success" id="preview"><i class="fa fa-cogs"></i>&nbsp;&nbsp;Générer</button>
     </div>
 </div>
-<!--/.Panel-->
 
+<!--/.Panel-->
 <!--Panel -> zone pour afficher le QrCode produit -->
 <div class="col-sm-4 card" id="qr-zone">
     <script>
@@ -100,3 +59,203 @@
 </div>
 <!--/.Panel-->
 <!-- Fin contenu page ensemble -->
+
+<script>
+
+    $(document).ready(function(){
+      var settings = require("electron-settings");
+
+      if(settings.has("defaultColor")){
+        $("#qrColor").val(settings.get("defaultColor"));
+      }
+    });
+
+    var divTmp;
+    var dropZone = document.getElementById('dropZone');
+    var txtZone = document.getElementById('txtZone');
+    var files = [];
+    var qrCodes = [];
+
+    dropZone.ondragenter = function(e){
+    };
+
+    dropZone.ondragleave = function(e){
+    };
+
+    dropZone.ondragover = function(e){
+        e.preventDefault();
+    };
+
+    dropZone.ondrop = function(e){
+        e.preventDefault();
+
+        var occurenceDeFichier = false;
+        var afficherPopUp = false;
+        var nomFichierIdentique = "";
+
+        /*
+        ** Parcours le ou les fichiers drop dans la zone
+        */
+        for(var i = 0; i < e.dataTransfer.files.length; i++){
+
+            /*
+            ** Parcours le ou les fichiers existant
+            ** Si une occurence est trouvé : afficherPopUp = vrai et occurenceDeFichier = vrai
+            */
+            for(var j = 0; j < files.length; j++){
+                if(e.dataTransfer.files[i].name == files[j].name){
+                    occurenceDeFichier = true;
+                    afficherPopUp = true;
+                    nomFichierIdentique += "\t" + e.dataTransfer.files[i].name + "\n";
+                }
+            }
+
+            /*
+            ** Si une occurence de fichiers est trouvé creation de chaque ligne de la zone de drag and drop si le fichier n'est pas present
+            ** Chaque ligne est clickable pour affichier le qrCode unique
+            ** Chaque ligne a un bouton pour supprimer la ligne
+            */
+            if(occurenceDeFichier == false){
+                var div = document.createElement("DIV");
+                var span = document.createElement("SPAN");
+                var button = document.createElement("BUTTON");
+                var baliseI = document.createElement("I");
+                var textDiv = document.createTextNode(e.dataTransfer.files[i].name);
+
+                baliseI.setAttribute("class", "fa fa-eraser");
+                baliseI.setAttribute("style", "height:12px; width:12px;");
+
+                button.addEventListener("click", clickFunctionErase);
+                button.setAttribute("class", "btn btn-outline-success");
+                button.appendChild(baliseI);
+
+                span.appendChild(textDiv);
+                span.setAttribute("style", "white-space: nowrap; padding:5px; font-size:0.7em;");
+
+                div.addEventListener("click", afficherQrCode);
+                div.appendChild(button);
+                div.appendChild(span);
+                div.id = e.dataTransfer.files[i].name;
+
+                txtZone.appendChild(div);
+
+                files.push(e.dataTransfer.files[i]);
+            }
+
+            occurenceDeFichier = false;
+        }
+
+        /*
+        ** Affiche un popup avec le nom des fichiers qui n'ont pu être ajouté
+        */
+        if(afficherPopUp){
+            messageInfos("Un ou plusieurs fichiers ont le même nom : " + nomFichierIdentique,"warning");
+        }
+
+        lireFichier();
+    };
+
+    function lireFichier(){
+        qrCodes = [];
+
+        let facade = new FacadeController();
+
+        for(var i = 0; i < files.length; i++){
+            facade.importQRCode(files[i], function (qrCode) {qrCodes.push(qrCode);});
+        }
+    }
+
+    function clickFunctionErase(){
+        var id = this.parentNode;
+        var arrayTmp = [];
+
+        /*
+        ** Supprime la ligne html lie au fichier
+        */
+        for(var i = 1; i <= txtZone.childElementCount; i++){
+            if(txtZone.childNodes[i].id == id.id){
+                txtZone.removeChild(txtZone.childNodes[i]);
+            }
+        }
+
+        /*
+        ** Supprime le fichier dans le tableau files
+        */
+        for(var i = 0; i < files.length; i++){
+            if(files[i].name != id.id){
+                arrayTmp.push(files[i]);
+            }
+        }
+
+        files = arrayTmp;
+        lireFichier();
+    }
+
+    function afficherQrCode(){
+
+        if(divTmp != null){
+            if(divTmp.querySelector("span").hasAttribute("style")){
+                divTmp.querySelector("span").setAttribute("style", "white-space: nowrap; padding:5px; font-size:0.7em;");
+            }
+        }
+
+        divTmp = this;
+
+        this.querySelector("span").setAttribute("style", "white-space: nowrap; padding:5px; font-size:0.7em; background-color:#99cc00;");
+
+        /*
+        ** Affiche le qrCode que l'on vien de selectionner
+        */
+        for(var i = 0; i < files.length; i++){
+            if(files[i].name == this.id){
+                let facade = new FacadeController();
+                facade.genererQRCode($('#qrView')[0], qrCodes[i]);
+            }
+        }
+    }
+
+    $("#preview").click(function () {
+
+        var tmp = [];
+
+        var color = $("#qrColor").val();
+        var qrCodeEnsemble = new QRCodeEnsemble(document.getElementById('qrName').value, tmp,color);
+
+        for(var i = 0; i < qrCodes.length; i++){
+            console.log(qrCodes[i].getQRCode().data.length);
+            for(var j = 0; j < qrCodes[i].getQRCode().data.length; j++){
+                if((typeof qrCodes[i].getQRCode().data[j] === "object") && (qrCodes[i].getQRCode().data[j] !== null)){
+                    qrCodeEnsemble.ajouterQrCode(qrCodes[i].getQRCode().data[j]);
+                }
+            }
+        }
+
+        let facade = new FacadeController();
+        facade.genererQRCode($('#qrView')[0],qrCodeEnsemble);
+
+        $('#saveQRCode').attr('disabled', false);
+    });
+
+    $("#empty").click(function () {
+        qrCodes = [];
+        for(var i = txtZone.childElementCount; i > 0; i--){
+            txtZone.removeChild(txtZone.firstElementChild);
+            files.pop();
+        }
+    });
+
+    $("#saveQRCode").click(function () {
+        saveQRCodeImage();
+    });
+
+    $('#preview ,#empty').attr('disabled', true);
+
+
+    function activer_button(){
+        if (document.getElementById('qrName').value.length > 0)
+        {
+            $('#preview ,#empty').attr('disabled', false);
+        }
+    }
+
+</script>
