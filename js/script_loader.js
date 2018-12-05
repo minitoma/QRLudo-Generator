@@ -73,6 +73,5 @@ const {
 const {
   Projet,
   Reponse,
-  Question,
-  QuesRepController
-} = require(`${root}/Model/QuestionReponse`);
+  Question
+} = require(`${root}/Model/QRCodeQuestionReponse`);
