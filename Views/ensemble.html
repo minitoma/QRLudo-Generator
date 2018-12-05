@@ -17,12 +17,12 @@
 
         <div class="tab-content scrollbar-success" id="dropZone" style="height:300px; overflow-y: scroll; margin-top:15px;">
             <div id="texte" class="tab-pane fade in active show">
-                <h3></h3>
                 <div class="form-group">
                     <label class="col-sm-12 control-label" style="color:#28a745;padding-top:10px;">Nom du QR Code</label>
                     <div class="col-sm-7">
                         <input type="text" id="qrName" name="NomQR" class="form-control" onkeyup="activer_button(this.value);">
                     </div>
+                    <p id="txtDragAndDrop" class="col-sm-7" style="text-align: center; margin-top: 15%">Deposer vos fichier ici</p>
                     <!-- le type du QRCode, ici -> XL -->
                     <input id="typeQRCode" name="typeQRCode" type="hidden" value="xl">
                 </div>

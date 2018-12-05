@@ -15,6 +15,7 @@ $('#preview ,#empty').attr('disabled', true);
 
 var dropZone = document.getElementById('dropZone');
 var txtZone = document.getElementById('txtZone');
+var txtDragAndDrop = document.getElementById('txtDragAndDrop');
 var qrCodes = [];
 var qrCodeEnsemble;
 var qrCodesUniqueSelectionne;
@@ -44,6 +45,8 @@ dropZone.ondragover = function(e){
 dropZone.ondrop = function(e){
     e.preventDefault();
 
+    txtDragAndDrop.remove();
+
     let afficherPopUp = false;
     let nomFichierIdentique = "";
 
@@ -53,9 +56,9 @@ dropZone.ondrop = function(e){
     for(let i = 0; i < e.dataTransfer.files.length; i++) {
         let words = e.dataTransfer.files[i].name.split(".");
         if(!occurenceFichier(words[0])){
-            genererLigne(words[0]);
-            recuperationQrCodeUnique(e.dataTransfer.files[i]);
-            //recuperationQrCodeEnsemble(e.dataTransfer.files[i]);
+            /*genererLigne(words[0]);
+            recuperationQrCodeUnique(e.dataTransfer.files[i]);*/
+            recuperationQrCodeEnsemble(e.dataTransfer.files[i]);
         }else{
             afficherPopUp = true;
             nomFichierIdentique += "\t" + words[0] + "\n";
@@ -194,6 +197,33 @@ function activer_button(){
     }
 }
 
+/*
+ * Recupere un QR Code ensemble pour le supprimer ou rajouter des données
+ */
+function recuperationQrCodeEnsemble(file){
+    let facade = new FacadeController();
+    facade.importQRCode(file, function (qrCode) {qrCodeEnsemble = qrCode;});
+
+    setTimeout(suiteTraitement, 400);
+}
+
+/*
+ * Suite du traitement de la recuperation du QR Code ensemble
+ * 400 ms de sleep à cause de la fonction importQRCode
+ */
+function suiteTraitement() {
+    let data = qrCodeEnsemble.getData();
+    document.getElementById('qrName').value = qrCodeEnsemble.getName();
+    activer_button();
+
+    for(let i = 0; i < data.length; i++){
+        console.log(data[i]);
+        let qrCode = Object.assign(new QRCodeUnique("", [], ""), data[i]);
+        qrCodes.push(qrCode);
+        genererLigne(qrCode.getName());
+    }
+}
+
 $().ready(function() {
     /*
      * Genere le qrCode Ensemble
@@ -210,7 +240,6 @@ $().ready(function() {
         /*for(let i = 0; i < qrCodes.length; i++){
             for(let j = 0; j < qrCodes[i].getQRCode().data.length; j++){
                 if((typeof qrCodes[i].getQRCode().data[j] === "object") && (qrCodes[i].getQRCode().data[j] !== null)){
-                    //qrCodeEnsemble.ajouterQrCode(files[i].name);
                     qrCodeEnsemble.ajouterQrCode(qrCodes[i].getQRCode().data[j]);
                 }
             }
@@ -242,23 +271,3 @@ $().ready(function() {
         saveQRCodeImage("/QR-Ensemble/QR/");
     });
 });
-
-function recuperationQrCodeEnsemble(file){
-    let facade = new FacadeController();
-    facade.importQRCode(file, function (qrCode) {qrCodeEnsemble = qrCode;});
-
-    setTimeout(suiteTraitement, 400);
-}
-
-function suiteTraitement() {
-    let data = qrCodeEnsemble.getData();
-    document.getElementById('qrName').value = qrCodeEnsemble.getName();
-    activer_button();
-
-    for(let i = 0; i < data.length; i++){
-        console.log(data[i]);
-        let qrCode = Object.assign(new QRCodeUnique("", [], ""), data[i]);
-        qrCodes.push(qrCode);
-        genererLigne(qrCode.getName());
-    }
-}
