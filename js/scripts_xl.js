@@ -1,3 +1,4 @@
+
 /*
  * @Author: SALIM Youssef
  * @Date:   2018-Nov
@@ -9,32 +10,30 @@
      $('#saveQRCode,#preview, #annuler, #ajouterTexte, #showAudio, #showJson').attr('disabled', true);
 
 
-  //caché le button stop
-  // document.getElementById("stop").style.display = "none";
+     //debut Preview
+         // trigger preview qrcode action
+         $('#preview').click(e => {
 
-  //debut Preview
-  // trigger preview qrcode action
-  $('#preview').click(e => {
+           //enlever les messages en haut de page
+           initMessages();
 
-    //enlever les messages en haut de page
-    initMessages();
+           let inputArray = $('input, textarea');
+           if (validateForm(inputArray)) { // all fields are filled
+             // get all required attributes for qrcode
+             let qrColor = $('#qrColor').val();
+             let qrName = $('#qrName').val();
+             let qrData = [];
 
-    let inputArray = $('input, textarea');
-    if (validateForm(inputArray)) { // all fields are filled
-      // get all required attributes for qrcode
-      let qrColor = $('#qrColor').val();
-      let qrName = $('#qrName').val();
-      let qrData = [];
+             for (data of $('.qrData')) {
 
-      for (data of $('.qrData')) {
+               //le cas d'un fichier audio
+               if(data.name == 'AudioName'){
+                 let dataAudio = {
+                               type: 'music',
+                               url: 'https://drive.google.com/uc?export=download&id='+data.id,
+                               name: data.value
+                             }
 
-        //le cas d'un fichier audio
-        if (data.name == 'AudioName') {
-          let dataAudio = {
-            type: 'music',
-            url: 'https://drive.google.com/uc?export=download&id=' + data.id,
-            name: data.value
-          }
                  let jsonAudio = JSON.stringify(dataAudio);
                  qrData.push(JSON.parse(jsonAudio));
                }else if(data.name == 'JsonName'){ //le cas d'un fichier json
@@ -52,38 +51,38 @@
 
              }
 
-          let jsonAudio = JSON.stringify(dataAudio);
-          qrData.push(JSON.parse(jsonAudio));
-        } else
-          qrData.push($(data).val());
+             qrType = $('#typeQRCode').val();
 
-      }
+             // Generate in a div, the qrcode image for qrcode object
+             let div = $('#qrView')[0];
 
-      qrType = $('#typeQRCode').val();
+             previewQRCode(qrName, qrData, qrColor, div);
 
-      // Generate in a div, the qrcode image for qrcode object
-      let div = $('#qrView')[0];
+             $('#annuler').attr('disabled', false);
+           }
+         });
+     //Fin Preview
 
-      previewQRCode(qrName, qrData, qrColor, div);
-
-      $('#annuler').attr('disabled', false);
-    }
-  });
-  //Fin Preview
-
-  //exporter le QR
-  $('#saveQRCode').click(function() {
-    saveQRCodeImage("/QR-Unique/QR/");
-  });
+     //exporter le QR
+     $('#saveQRCode').click(function(){ saveQRCodeImage("/QR-Unique/QR/"); });
 
 
+     //debut reinitialiser
+       //btn reinitialiser l'affichage
+       $('#annuler').click(function(){
 
-  //debut annuler
-  //btn annuler -> reinitialiser l'affichage
-  $('#annuler').click(function() {
+         document.getElementById('myFormActive').reset();
 
-    document.getElementById('myFormActive').reset();
-    initMessages();
+         //initialiser l'affichage de messages en haut de page
+         initMessages();
+
+         //supprimer l'image QR
+         var divImgQr = document.getElementById('qrView');
+         //tester si le QR existe
+         if (divImgQr.hasChildNodes()) {
+           divImgQr.removeChild(divImgQr.firstChild);
+          }
+
          //supprimer les textarea, inputs ..
          var divChamps = document.getElementById('cible');
           while (divChamps.firstChild) {
@@ -194,6 +193,8 @@
         alert('Erreur : ' + e.stack);
       }
 
+    }
+
 
     //creer+sauvegarder le fichier json correspond à un qrcode qui depasse la taille 500
     //voir FacadeController.js -> fonction genererQRCode -> dans le message msg -> onclick='sauvegarderFichierJsonUnique(...)
@@ -257,4 +258,4 @@
     //cette fonction est utilisée dans quickstart.js --> fonction insertFile()
     function getNomFichierJsonToUpload(){
       return nomDeFichierJsonToUpload;
-    }
+}
