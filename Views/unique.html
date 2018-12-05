@@ -46,6 +46,9 @@
                         <button type="button" id="showAudio" class="btn btn-outline-success btn-unique-xl" name="ajouterSon" data-toggle="modal" data-target="#listeMusic">
                           <i class="fa fa-music"></i>&nbsp;&nbsp;Audio
                         </button>
+                        <button type="button" id="showJson" class="btn btn-outline-success btn-unique-xl" name="ajouterJson" data-toggle="modal" data-target="#listeJson">
+                          <i class="fa fa-file"></i>&nbsp;&nbsp;Json
+                        </button>
                           <div class="input-group  btn-unique-xl">
                             <div class="input-group-prepend">
                               <div class="input-group-text"><i class="fa fa-palette"></i></div>
@@ -67,32 +70,8 @@
                   </div>
                   <!--/.Panel-->
 
-                  <!-- Modal-1 -> pour generer le fichier .json et le sauvegarder dans un drive -->
-                  <div class="modal fade" id="sauvegarderFichierJson" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h5 class="modal-title" id="exampleModalCenterTitle">QR-Code Unique</h5>
-                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                          </button>
-                        </div>
-                        <div class="modal-body">
-                          <div class="alert alert-warning" role="alert" id="alertTaille">
 
-                          </div>
-                        </div>
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Fermer</button>
-                          <button type="button" class="btn btn-outline-success" id="sauvegarderQRcode">Sauvegarder</button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <!-- Fin Modal-1 -->
-
-
-                  <!-- Modal-2 -> Fichier audio -->
+                  <!-- Modal-1 -> Fichier audio -->
                   <div class="modal fade" id="listeMusic" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
                     <div class="modal-dialog modal-dialog-centered" role="document">
                       <div class="modal-content">
@@ -113,6 +92,29 @@
                       </div>
                     </div>
                   </div>
+                  <!-- Fin Modal-1 -->
+
+                  <!-- Modal-2 -> Fichiers json -->
+                  <div class="modal fade" id="listeJson" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                    <div class="modal-dialog modal-dialog-centered" role="document">
+                      <div class="modal-content">
+                        <div class="modal-header">
+                          <h5 class="modal-title" id="exampleModalCenterTitle">Les fichiers Json</h5>
+                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                          </button>
+                        </div>
+                        <div class="modal-body scrollbar-success" style="height:170px; overflow-y: scroll;">
+                          <div class="list-group" id="elementsJson">
+
+                          </div>
+                        </div>
+                        <div class="modal-footer">
+                          <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Fermer</button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
                   <!-- Fin Modal-2 -->
 
               <!-- fin contenu page unique -->
@@ -120,3 +122,6 @@
               <!-- Js pour les QR de type unique xl -->
               <script type="text/javascript" src="./js/script_unique.js"></script>
               <script type="text/javascript" src="./js/scripts_xl.js"></script>
+
+              <!-- Js api-google-drive -->
+              <script src="quickstart.js"></script>

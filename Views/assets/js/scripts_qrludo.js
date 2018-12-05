@@ -8,7 +8,8 @@
  * @Date:   2018-Oct
  */
 
- //ce fichier regroupe toutes les fonctions et scripts en commun avec les autres les pages
+ //ce fichier regroupe toutes les fonctions et scripts en commun avec d'autres pages
+
  $().ready(function() {
    window.jquery = window.$ = require("./node_modules/jquery/dist/jquery.js");
 
@@ -51,8 +52,8 @@ function initMessages(){
 }
 
 
-//message a afficher lors d'un : sauvegarde | Champ vide | Export ...
-//type: success | danger | warning
+//message a afficher lors d'un : sauvegarde | Champ vide | Export etc...
+//type: "success" | "danger" | "warning" | "info"
 function messageInfos(message,type){
   initMessages();
   var msg = document.createElement('div');
@@ -64,6 +65,8 @@ function messageInfos(message,type){
 
 }
 
+
+// exporter un QR-Code sous l'extension .jpeg
 // save image qr code
 // ex: path = /QR-Unique/QR/
 function saveQRCodeImage(path) {
@@ -80,17 +83,4 @@ function saveQRCodeImage(path) {
     messageInfos("votre QR est bien sauvegardé","success");
   });
 
-}
-
-//creer+sauvegarder le fichier json correspond à un qrcode qui depasse la taille 500
-function sauvegarderFichierJsonUnique(nomFichier,path){
-
-  path += nomFichier+".json";
-  fs.writeFile(path, JSON.stringify(nomFichier), (err) => {
-      if (err) {
-          console.error(err);
-          return;
-      };
-      messageInfos("votre fichier json est bien sauvegardé","success");
-  });
 }
