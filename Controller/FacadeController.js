@@ -6,7 +6,6 @@
  */
 
 
-
 /**
  * Jules Leguy, Alassane Diop
  * 2017
@@ -62,8 +61,11 @@ class FacadeController {
 
 
 
-      //si la taille depasse 500 -> generer un fichier json et le sauvegarder via un click sur le button sauvegarder
-      if(qrcode.getDataString().length > 500){
+      let tailleQR = qrcode.getDataString().length;
+
+      //si la taille depasse 500 -> generer un fichier json et le sauvegarder dans le dossier /QR-Unique/json/ puis dans le drive -> via un click sur le button sauvegarder situé dans le message d'alert
+      //voir la fonction sauvegarderFichierJsonUnique(..) dans scripts_xl.js
+      if(tailleQR > 500){
 
         //sauvegarder le fichier json
         //definir le nom du fichier + path
@@ -71,7 +73,7 @@ class FacadeController {
         let nomFichier = now.getDay()+"-"+now.getMonth()+"-"+now.getFullYear()+"-"+now.getHours()+":"+now.getMinutes()+":"+now.getSeconds();
         let path = "./QR-Unique/json/";
 
-        let msg = "La taille '"+qrcode.getDataString().length+"' de ce QR-Code dépasse le maximum autorisé '500'.&nbsp;&nbsp;&nbsp;<button type='button' class='btn btn-outline-success' id='sauvegarderQRcode' onclick='sauvegarderFichierJsonUnique(\""+nomFichier+"\",\""+path+"\");'>Sauvegarder</button>";
+        let msg = "La taille '"+tailleQR+"' de ce QR-Code dépasse le maximum autorisé '500'.&nbsp;&nbsp;&nbsp;<button type='button' class='btn btn-outline-success' id='sauvegarderQRcode' onclick='sauvegarderFichierJsonUnique(\""+nomFichier+"\",\""+path+"\");'>Sauvegarder</button>";
 
         //message a afficher apres le sauvegarde du fichier json
         messageInfos(msg,"warning");
@@ -81,7 +83,7 @@ class FacadeController {
       else{
             // compress qrcode when length reaches more than 117
             // compression is interesting only when qrcode reaches more than 117 car
-            if (qrcode.getDataString().length > 117) {
+            if (tailleQR > 117) {
               JsonCompressor.compress(qrcode.getDataString(), ImageGeneratorJson.genererQRCode, args);
             } else {
               args.push(qrcode.getDataString());
