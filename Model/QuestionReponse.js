@@ -87,8 +87,8 @@ class Question {
   constructor(title, reponsesUIDs = [], color = '#00000') {
     this.qrcode = {
       id: new Date().getTime(),
-      title: title,
-      reponsesUIDs: reponsesUIDs,
+      name: title,
+      data: reponsesUIDs,
       type: "question",
       color: color
     };
@@ -99,7 +99,7 @@ class Question {
   }
 
   getName() {
-    return this.qrcode.id;
+    return this.qrcode.name;
   }
 
   getId() {
@@ -107,15 +107,15 @@ class Question {
   }
 
   getTitle() {
-    return this.qrcode.title;
+    return this.qrcode.name;
   }
 
   getReponsesUIDs() {
-    return this.qrcode.reponsesUIDs;
+    return this.qrcode.data;
   }
 
   getReponseUIDByIndex(indice) {
-    return this.qrcode.reponsesUIDs[indice];
+    return this.qrcode.data[indice];
   }
 
   getColor() {
@@ -123,7 +123,7 @@ class Question {
   }
 
   addReponse(reponseUid) {
-    this.qrcode.reponsesUIDs.push(reponseUid);
+    this.qrcode.data.push(reponseUid);
   }
 
   getDataString() {
@@ -139,7 +139,8 @@ class Reponse {
   constructor(title, color = '#00000') {
     this.qrcode = {
       id: new Date().getTime(),
-      title: title,
+      name: title,
+      data: [title],
       type: "reponse",
       color: color
     };
@@ -150,7 +151,7 @@ class Reponse {
   }
 
   getName() {
-    return this.qrcode.id;
+    return this.qrcode.name;
   }
 
   getId() {
@@ -158,7 +159,7 @@ class Reponse {
   }
 
   getTitle() {
-    return this.qrcode.title;
+    return this.qrcode.name;
   }
 
   getColor() {

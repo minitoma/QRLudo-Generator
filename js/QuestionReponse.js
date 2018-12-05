@@ -40,7 +40,7 @@ $(document).ready(function() {
     }));
     $.each(projet.getReponses(), function(i, val) {
       $('#reponsesChooseSelectId').append($('<option>', {
-        val: val.getId(),
+        val: val.getDataString(),
         text: val.getTitle()
       }));
     });
@@ -165,12 +165,12 @@ $(document).ready(function() {
     projet.projet.nom = loaded.nom;
     console.log(loaded);
     for (let ques of loaded.questions) {
-      let current_ques = new Question(ques.qrcode.title, ques.qrcode.reponsesUIDs);
+      let current_ques = new Question(ques.qrcode.name, ques.qrcode.data);
       current_ques.setId(ques.qrcode.id);
       projet.addQuestion(current_ques);
     }
     for (let rep of loaded.reponses) {
-      let current_rep = new Reponse(rep.qrcode.title);
+      let current_rep = new Reponse(rep.qrcode.name);
       current_rep.setId(rep.qrcode.id);
       projet.addReponse(current_rep);
     }
@@ -219,7 +219,11 @@ function deleteReponse(todelete) {
 }
 
 function previewRep(topreview) {
-  let rep = projet.getReponsesById(topreview.prev().attr("id"));
+  console.log(topreview.prev());
+  var qr = JSON.parse(topreview.prev().attr("id"));
+  console.log(qr);
+  let rep = projet.getReponsesById(qr.id);
+  console.log(rep);
   previewQRCode(rep, $('#qrView')[0], "type_reponse");
 }
 
