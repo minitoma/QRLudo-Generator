@@ -219,6 +219,12 @@ function suiteTraitement() {
 }
 
 $().ready(function() {
+
+  var settings = require("electron-settings");
+
+  if (settings.has("defaultColor")) {
+    $("#qrColor").val(settings.get("defaultColor"));
+  }
     /*
      * Genere le qrCode Ensemble
      */
