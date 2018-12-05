@@ -20,6 +20,15 @@ var qrCodes = [];
 var qrCodeEnsemble;
 var qrCodesUniqueSelectionne;
 
+/*<p id="txtDragAndDrop" class="col-sm-7" style="text-align: center; margin-top: 15%">Deposer vos fichier ici</p>*/
+var txtDragAndDrop = document.createElement("P");
+
+txtDragAndDrop.setAttribute("id", "txtDragAndDrop");
+txtDragAndDrop.setAttribute("class", "col-sm-7");
+txtDragAndDrop.setAttribute("style", "text-align: center; margin-top: 15%");
+txtDragAndDrop.innerText = "Deposer vos fichier ici";
+
+txtZone.appendChild(txtDragAndDrop);
 /*
  * Ce declenche quand un element entre dans la zone de drop
  */
@@ -264,6 +273,8 @@ $().ready(function() {
             txtZone.removeChild(txtZone.firstElementChild);
             qrCodes.pop();
         }
+
+        txtZone.appendChild(txtDragAndDrop);
     });
 
     $("#saveQRCode").click(function () {
