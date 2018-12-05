@@ -12,9 +12,7 @@ const piexif = require('piexifjs');
 const {
   CompresseurTexte
 } = require(`${root}/Controller/CompresseurTexte`);
-const {
-  ControllerEnsemble
-} = require(`${root}/Controller/ControllerEnsemble`);
+
 
 const {
   FacadeController
