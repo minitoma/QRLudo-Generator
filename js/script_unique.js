@@ -2,7 +2,7 @@
  * @Author: alassane
  * @Date:   2018-11-10T17:59:11+01:00
  * @Last modified by:   alassane
- * @Last modified time: 2018-12-06T15:27:14+01:00
+ * @Last modified time: 2018-12-06T16:43:07+01:00
  */
 
 // fichier script concernant les qr codes uniques
@@ -44,7 +44,6 @@ $('#preview').click(e => {
       qrData.push(JSON.parse(jsonAudio));
     } else
       qrData.push($(data).val());
-
   }
 
   qrType = $('#typeQRCode').val();
@@ -52,11 +51,11 @@ $('#preview').click(e => {
   // Generate in a div, the qrcode image for qrcode object
   let div = $('#qrView')[0];
 
-    $('#annuler').attr('disabled', false);
-  }
-  $("#saveQRCode").on("click", function(){
-    saveQRCodeImage();
-  });
+  $('#annuler').attr('disabled', false);
+});
+
+$("#saveQRCode").on("click", function() {
+  saveQRCodeImage();
 });
 
 
