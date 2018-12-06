@@ -2,7 +2,7 @@
  * @Author: alassane
  * @Date:   2018-11-10T20:58:49+01:00
  * @Last modified by:   alassane
- * @Last modified time: 2018-11-16T16:20:58+01:00
+ * @Last modified time: 2018-12-06T17:36:37+01:00
  */
 
 
@@ -17,16 +17,6 @@
  * La vue instancie cette classe une seule fois à son initialisation et fait systématiquement appel à cette instance quand elle a besoin d'un traitement du controller.
  */
 
-const {
-  ImageGeneratorJson
-} = require(`./ImageGeneratorJson`);
-
-const {
-  CompresseurTexte
-} = require('./CompresseurTexte');
-const {
-  ImageGenerator
-} = require('./ImageGenerator');
 
 class FacadeController {
 
@@ -48,49 +38,43 @@ class FacadeController {
 
   //Génère une image QRCode à partir d'un objet QRCode dans le div passé en paramètre
   genererQRCode(divImg, qrcode) {
-    const {
-      JsonCompressor
-    } = require('./JsonCompressor');
-
     try {
       while (divImg.hasChildNodes()) {
         divImg.removeChild(divImg.firstChild);
       }
 
       let args = [qrcode, divImg];
-      // console.log("MY DIVIMG " : );
 
-
-
-      //si la taille depasse 500 -> generer un fichier json et le sauvegarder via un click sur le button sauvegarder
-      if(qrcode.getDataString().length > 500){
-        // $('#errorTaille').append("La taille '"+qrcode.getDataString().length+"' de ce QR-Code dépasse le maximum autorisé '500'.&nbsp;&nbsp;&nbsp;<button type='button' class='btn btn-outline-success' id='sauvegarderQRcode' onclick='sauvegarderFichierJsonUnique();'>Sauvegarder</button>");
-
-        //sauvegarder le fichier json
-        //definir le nom du fichier + path
-        let now = new Date();
-        let nomFichier = now.getDay()+"-"+now.getMonth()+"-"+now.getFullYear()+"-"+now.getHours()+":"+now.getMinutes()+":"+now.getSeconds();
-        let path = "./QR-Unique/json/";
-        let msg = "La taille '"+qrcode.getDataString().length+"' de ce QR-Code dépasse le maximum autorisé '500'.&nbsp;&nbsp;&nbsp;<button type='button' class='btn btn-outline-success' id='sauvegarderQRcode' onclick='sauvegarderFichierJsonUnique(\""+nomFichier+"\",\""+path+"\");'>Sauvegarder</button>";
-
-        //message a afficher apres le sauvegarde du fichier json
-        messageInfos(msg,"warning");
-
-        $('#saveQRCode, #listenField, #stop').attr('disabled', true);
+      // enable the commented if else block for activate qrcode xl control
+      // //si la taille depasse 500 -> generer un fichier json et le sauvegarder via un click sur le button sauvegarder
+      // if(qrcode.getDataString().length > 500){
+      //   // $('#errorTaille').append("La taille '"+qrcode.getDataString().length+"' de ce QR-Code dépasse le maximum autorisé '500'.&nbsp;&nbsp;&nbsp;<button type='button' class='btn btn-outline-success' id='sauvegarderQRcode' onclick='sauvegarderFichierJsonUnique();'>Sauvegarder</button>");
+      //
+      //   //sauvegarder le fichier json
+      //   //definir le nom du fichier + path
+      //   let now = new Date();
+      //   let nomFichier = now.getDay()+"-"+now.getMonth()+"-"+now.getFullYear()+"-"+now.getHours()+":"+now.getMinutes()+":"+now.getSeconds();
+      //   let path = "./QR-Unique/json/";
+      //   let msg = "La taille '"+qrcode.getDataString().length+"' de ce QR-Code dépasse le maximum autorisé '500'.&nbsp;&nbsp;&nbsp;<button type='button' class='btn btn-outline-success' id='sauvegarderQRcode' onclick='sauvegarderFichierJsonUnique(\""+nomFichier+"\",\""+path+"\");'>Sauvegarder</button>";
+      //
+      //   //message a afficher apres le sauvegarde du fichier json
+      //   messageInfos(msg,"warning");
+      //
+      //   $('#saveQRCode, #listenField, #stop').attr('disabled', true);
+      // }
+      // else{
+      // compress qrcode when length reaches more than 117
+      // compression is interesting only when qrcode reaches more than 117 car
+      if (qrcode.getDataString().length > 117) {
+        JsonCompressor.compress(qrcode.getDataString(), ImageGeneratorJson.genererQRCode, args);
+      } else {
+        args.push(qrcode.getDataString());
+        ImageGeneratorJson.genererQRCode(args);
       }
-      else{
-            // compress qrcode when length reaches more than 117
-            // compression is interesting only when qrcode reaches more than 117 car
-            if (qrcode.getDataString().length > 117) {
-              JsonCompressor.compress(qrcode.getDataString(), ImageGeneratorJson.genererQRCode, args);
-            } else {
-              args.push(qrcode.getDataString());
-              ImageGeneratorJson.genererQRCode(args);
-            }
 
-            $('#saveQRCode, #listenField').attr('disabled', false);
+      $('#saveQRCode, #listenField').attr('disabled', false);
 
-          }
+      // }
 
     } catch (e) {
       console.log(e);
@@ -107,22 +91,11 @@ class FacadeController {
 
   //Fonction appelée pour importer un qrcode json
   importQRCodeJson(file, callback) {
-    let qrcode;
-
-    const {
-      QRCodeLoaderJson
-    } = require('./QRCodeLoaderJson');
     QRCodeLoaderJson.loadImage(file, callback);
   }
 
   //Fonction appelée pour importer un qrcode
   importQRCode(file, callback) {
-    let qrcode;
-
-    const {
-      QRCodeLoader
-    } = require('./QRCodeLoader');
-
     // QRCodeLoader.loadImage(file, function(qrcode, drawQRCode) {
     //   console.log(qrcode);
     //   callback(qrcode); // faire le view du qrcode
