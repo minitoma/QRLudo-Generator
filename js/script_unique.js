@@ -2,7 +2,7 @@
  * @Author: alassane
  * @Date:   2018-11-10T17:59:11+01:00
  * @Last modified by:   alassane
- * @Last modified time: 2018-12-06T00:32:30+01:00
+ * @Last modified time: 2018-12-06T15:27:14+01:00
  */
 
 // fichier script concernant les qr codes uniques
@@ -160,26 +160,42 @@ function getMusicFromUrl() {
 
     if (this.status == 200) {
       let blob = this.response; // get binary data as a response
+      let contentType = xhr.getResponseHeader("content-type");
 
-      // get filename
-      let filename = xhr.getResponseHeader("content-disposition").split(";")[1];
-      filename = filename.replace('filename="', '');
-      filename = filename.replace('.mp3"', '.mp3');
+      if (contentType == 'audio/mpeg') {
+        // get filename
+        let filename = xhr.getResponseHeader("content-disposition").split(";")[1];
+        filename = filename.replace('filename="', '');
+        filename = filename.replace('.mp3"', '.mp3');
 
-      // save file in folder projet/download
-      let fileReader = new FileReader();
-      fileReader.onload = function() {
-        fs.writeFileSync(`${root}/Download/${filename}`, Buffer(new Uint8Array(this.result)));
+        // save file in folder projet/download
+        let fileReader = new FileReader();
+        fileReader.onload = function() {
+          fs.writeFileSync(`${root}/Download/${filename}`, Buffer(new Uint8Array(this.result)));
 
-        $(loader, errorMsg).remove();
-        $('#musicUrl').val('');
-        $('#closeModalListeMusic').click(); // close modal add music
-      };
-      fileReader.readAsArrayBuffer(blob);
+          $(loader, errorMsg).remove();
+          $('#musicUrl').val('');
+          $('#closeModalListeMusic').click(); // close modal add music
+        };
+        fileReader.readAsArrayBuffer(blob);
 
-      ajouterChampSon(filename, clipboard.readText());
+        ajouterChampSon(filename, url);
+      } else {
+        console.log('error ');
+        $(modal).find('.loader').remove();
+        $(errorMsg).text("Veuillez coller un lien de fichier téléchargeable. Reportez vous à la rubrique Aide pour plus d'informations.");
+        $(errorMsg).css('color', '#f35b6a');
+        $(errorMsg).addClass('errorLoader');
+        $(modal).prepend(errorMsg); // add error message
+      }
     } else {
       // request failed
+      console.log('error ');
+      $(modal).find('.loader').remove();
+      $(errorMsg).text("Veuillez coller un lien de fichier téléchargeable. Reportez vous à la rubrique Aide pour plus d'informations.");
+      $(errorMsg).css('color', '#f35b6a');
+      $(errorMsg).addClass('errorLoader');
+      $(modal).prepend(errorMsg); // add error message
     }
   };
 
