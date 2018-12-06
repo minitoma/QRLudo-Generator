@@ -2,13 +2,15 @@
  * @Author: alassane
  * @Date:   2018-11-10T17:59:11+01:00
  * @Last modified by:   alassane
- * @Last modified time: 2018-12-06T16:43:07+01:00
+ * @Last modified time: 2018-12-06T17:07:14+01:00
  */
 
 // fichier script concernant les qr codes uniques
 
 var qrcode;
 var qrType;
+$('#preview').attr('disabled', true);
+
 
 $(document).ready(function() {
   var settings = require("electron-settings");
@@ -17,11 +19,15 @@ $(document).ready(function() {
     $("#qrColor").val(settings.get("defaultColor"));
   }
 
+  $("#saveQRCode").click(e => {
+    saveQRCodeImage();
+  });
+
 });
 
 // trigger preview qrcode action
 $('#preview').click(e => {
-
+  console.log('preview');
   //enlever les messages en haut de page
   initMessages();
   let inputArray = $('input, textarea');
@@ -51,11 +57,9 @@ $('#preview').click(e => {
   // Generate in a div, the qrcode image for qrcode object
   let div = $('#qrView')[0];
 
-  $('#annuler').attr('disabled', false);
-});
+  previewQRCode(qrName, qrData, qrColor, div);
 
-$("#saveQRCode").on("click", function() {
-  saveQRCodeImage();
+  $('#annuler').attr('disabled', false);
 });
 
 
