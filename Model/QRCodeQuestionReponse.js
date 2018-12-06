@@ -119,7 +119,8 @@ class Question {
   }
 
   addReponse(reponseUid) {
-    this.qrcode.data.push({"id": reponseUid, "message":"Oui, c'est bien ça"});
+    var settings = require("electron-settings");
+    this.qrcode.data.push({"id": reponseUid, "message":settings.get("defaultBonneReponse")});
   }
 
   setMessage(reponseUid, message){

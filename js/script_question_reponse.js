@@ -229,11 +229,10 @@ function previewQRCode(qrcode, div, type) {
   let facade = new FacadeController();
   if (type == "type_question"){
     $.each($("#reponsesDivLabelsId div input"), function(i, val){
-      var value = val.value;
-      if(value === ''){
-        value = "Bravo, vous avez trouvé la bonne réponse";
+      if(val.value !== ''){
+        qrcode.setMessage(val.id, val.value);
       }
-      qrcode.setMessage(val.id, value);
+
     });
     facade.genererQRCode(div, qrcode);
   }
