@@ -75,11 +75,13 @@ $(document).ready(function() {
     }
     $("#reponsesDivLabelsId").append("<div class='form-inline'><label class='form-control control-label col-md-6' style='padding-top:10px;'>" + $("#reponsesChooseSelectId option:selected").text() + "</label>" +
       "<button id='" + $("#reponsesChooseSelectId option:selected").val() + "' type='button' name='rep[]' class='btn btn-outline-success' onclick='deleteReponse($(this));'><i class='fa fa-trash-alt'></i></button>" +
-      "<button type='button' name='previwRepQRCodeName' class='btn btn-outline-success' onclick='previewRep($(this));'><i class='fa fa-qrcode'></i></button></div>");
+      "<button type='button' name='previwRepQRCodeName' class='btn btn-outline-success' onclick='previewRep($(this));'><i class='fa fa-qrcode'></i></button>" +
+      "<button type='button' name='showEditMessage' class='btn btn-outline-success' onclick='toggleEditMessage($(this));'><i class='fa fa-edit'></i></button>" +
+      "<input class='form-control control-label col-md-6' style='padding-top:10px; display:none;' type='text' id='" + $("#reponsesChooseSelectId option:selected").val() + "' name='message'/>"+
+      "</div>");
     $("#chooseReponseModalId .close").click();
-    console.log(projet);
+    console.log($("input#"+ $("#reponsesChooseSelectId option:selected").val()));
   });
-
 
 
   //Evenement quand la liste deroulante de la question change
@@ -186,6 +188,10 @@ $(document).ready(function() {
   });
 });
 
+function toggleEditMessage(totoggle){
+  totoggle.parent('div').find("input").toggle();
+}
+
 //Cette fonction sauvegardel'image du qrcode dans un div pour le pouvoir generer apres
 function saveQRCodeImage(div, qrcode, directoryName) {
   let img = $(div).children()[0].src;
@@ -221,8 +227,16 @@ function previewRep(topreview) {
 // generate and print qr code
 function previewQRCode(qrcode, div, type) {
   let facade = new FacadeController();
-  if (type == "type_question")
+  if (type == "type_question"){
+    $.each($("#reponsesDivLabelsId div input"), function(i, val){
+      var value = val.value;
+      if(value === ''){
+        value = "Bravo, vous avez trouvé la bonne réponse";
+      }
+      qrcode.setMessage(val.id, value);
+    });
     facade.genererQRCode(div, qrcode);
+  }
   else if ((type == "type_reponse")) {
     facade.genererQRCode(div, qrcode);
   }
@@ -286,4 +300,13 @@ function selectOptionsValuesAsArray(selectId) {
 //Mettre les champs d'un modal vides
 function clearModalForm(modal_id) {
   $('#' + modal_id).find('form')[0].reset();
+}
+
+function showEditMessage(input){
+  console.log(input);
+  if(input.css('display')=='none'){
+    input.css('display', 'block');
+  } else {
+    input.css('display', 'none');
+  }
 }

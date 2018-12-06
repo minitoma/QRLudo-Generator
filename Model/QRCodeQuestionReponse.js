@@ -122,6 +122,14 @@ class Question {
     this.qrcode.data.push({"id": reponseUid, "message":"Oui, c'est bien ça"});
   }
 
+  setMessage(reponseUid, message){
+    for (let r of this.qrcode.data) {
+      if (r.id == reponseUid) {
+        r.message = message
+      }
+    }
+  }
+
   getDataString() {
     return JSON.stringify(this.qrcode);
   }
