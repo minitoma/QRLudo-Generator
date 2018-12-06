@@ -1,12 +1,21 @@
+/**
+ * @Author: alassane
+ * @Date:   2018-12-06T16:32:33+01:00
+ * @Last modified by:   alassane
+ * @Last modified time: 2018-12-06T18:06:09+01:00
+ */
+
+
+
 $('#preview ,#empty').attr('disabled', true);
 
-var dropZone = document.getElementById('dropZone');
-var txtZone = document.getElementById('txtZone');
-var qrCodes = [];
-var qrCodeEnsemble;
-var qrCodesUniqueSelectionne;
+let dropZone = document.getElementById('dropZone');
+let txtZone = document.getElementById('txtZone');
+let qrCodes = [];
+let qrCodeEnsemble;
+let qrCodesUniqueSelectionne;
 
-var txtDragAndDrop = document.createElement("P");
+let txtDragAndDrop = document.createElement("P");
 
 txtDragAndDrop.setAttribute("id", "txtDragAndDrop");
 txtDragAndDrop.setAttribute("class", "col-sm-7");
@@ -17,54 +26,52 @@ txtZone.appendChild(txtDragAndDrop);
 /*
  * Ce declenche quand un element entre dans la zone de drop
  */
-dropZone.ondragenter = function(e){
-};
+dropZone.ondragenter = function(e) {};
 
 /*
  * Ce declenche quand un element quitte la zone de drop
  */
-dropZone.ondragleave = function(e){
-};
+dropZone.ondragleave = function(e) {};
 
 /*
  * Ce declenche quand un element se deplace dans la zone de drop
  */
-dropZone.ondragover = function(e){
-    e.preventDefault();
+dropZone.ondragover = function(e) {
+  e.preventDefault();
 };
 
 /*
  * Ce declenche quand un element est depose dans la zone de drop
  */
-dropZone.ondrop = function(e){
-    e.preventDefault();
+dropZone.ondrop = function(e) {
+  e.preventDefault();
 
-    txtDragAndDrop.remove();
+  txtDragAndDrop.remove();
 
-    let afficherPopUp = false;
-    let nomFichierIdentique = "";
+  let afficherPopUp = false;
+  let nomFichierIdentique = "";
 
-    /*
-     * Parcours le ou les fichiers drop dans la zone
-     */
-    for(let i = 0; i < e.dataTransfer.files.length; i++) {
-        let words = e.dataTransfer.files[i].name.split(".");
-        if(!occurenceFichier(words[0])){
-            genererLigne(words[0]);
-            recuperationQrCodeUnique(e.dataTransfer.files[i]);
-            //recuperationQrCodeEnsemble(e.dataTransfer.files[i]);
-        }else{
-            afficherPopUp = true;
-            nomFichierIdentique += "\t" + words[0] + "\n";
-        }
+  /*
+   * Parcours le ou les fichiers drop dans la zone
+   */
+  for (let i = 0; i < e.dataTransfer.files.length; i++) {
+    let words = e.dataTransfer.files[i].name.split(".");
+    if (!occurenceFichier(words[0])) {
+      genererLigne(words[0]);
+      recuperationQrCodeUnique(e.dataTransfer.files[i]);
+      //recuperationQrCodeEnsemble(e.dataTransfer.files[i]);
+    } else {
+      afficherPopUp = true;
+      nomFichierIdentique += "\t" + words[0] + "\n";
     }
+  }
 
-    /*
-     * Affiche un popup avec le nom des fichiers qui n'ont pu être ajouté
-     */
-    if(afficherPopUp){
-        messageInfos("Un ou plusieurs fichiers ont le même nom : " + nomFichierIdentique,"warning");
-    }
+  /*
+   * Affiche un popup avec le nom des fichiers qui n'ont pu être ajouté
+   */
+  if (afficherPopUp) {
+    messageInfos("Un ou plusieurs fichiers ont le même nom : " + nomFichierIdentique, "warning");
+  }
 };
 
 /*
@@ -72,29 +79,29 @@ dropZone.ondrop = function(e){
  * Chaque ligne est clickable pour affichier le qrCode unique
  * Chaque ligne a un bouton pour supprimer la ligne
  */
-function genererLigne(name){
-    let baliseDiv = document.createElement("DIV");
-    let baliseSpan = document.createElement("SPAN");
-    let baliseButton = document.createElement("BUTTON");
-    let baliseI = document.createElement("I");
-    let textDiv = document.createTextNode(name);
+function genererLigne(name) {
+  let baliseDiv = document.createElement("DIV");
+  let baliseSpan = document.createElement("SPAN");
+  let baliseButton = document.createElement("BUTTON");
+  let baliseI = document.createElement("I");
+  let textDiv = document.createTextNode(name);
 
-    baliseI.setAttribute("class", "fa fa-eraser");
-    baliseI.setAttribute("style", "height:12px; width:12px;");
+  baliseI.setAttribute("class", "fa fa-eraser");
+  baliseI.setAttribute("style", "height:12px; width:12px;");
 
-    baliseButton.addEventListener("click", effacerLigne);
-    baliseButton.setAttribute("class", "btn btn-outline-success");
-    baliseButton.appendChild(baliseI);
+  baliseButton.addEventListener("click", effacerLigne);
+  baliseButton.setAttribute("class", "btn btn-outline-success");
+  baliseButton.appendChild(baliseI);
 
-    baliseSpan.appendChild(textDiv);
-    baliseSpan.setAttribute("style", "white-space: nowrap; padding:5px; font-size:0.7em;");
+  baliseSpan.appendChild(textDiv);
+  baliseSpan.setAttribute("style", "white-space: nowrap; padding:5px; font-size:0.7em;");
 
-    baliseDiv.addEventListener("click", afficherQrCode);
-    baliseDiv.appendChild(baliseButton);
-    baliseDiv.appendChild(baliseSpan);
-    baliseDiv.id = name;
+  baliseDiv.addEventListener("click", afficherQrCode);
+  baliseDiv.appendChild(baliseButton);
+  baliseDiv.appendChild(baliseSpan);
+  baliseDiv.id = name;
 
-    txtZone.appendChild(baliseDiv);
+  txtZone.appendChild(baliseDiv);
 }
 
 /*
@@ -102,103 +109,106 @@ function genererLigne(name){
  * Si une occurence est trouvé retourne true Sinon retourne false
  */
 function occurenceFichier(name) {
-    for (let i = 0; i < qrCodes.length; i++) {
-        if (name == qrCodes[i].getName()) {
-            return true;
-        }
+  for (let i = 0; i < qrCodes.length; i++) {
+    if (name == qrCodes[i].getName()) {
+      return true;
     }
-    return false;
+  }
+  return false;
 }
 
 /*
  * Recupere les qrCodes qui sont lie à chaque fichier
  * Les sauvegardes dans le tableau qrCodes
  */
-function recuperationQrCodeUnique(file){
-    let facade = new FacadeController();
-    facade.importQRCode(file, function (qrCode) {qrCodes.push(qrCode);});
+function recuperationQrCodeUnique(file) {
+  let facade = new FacadeController();
+  facade.importQRCode(file, function(qrCode) {
+    qrCodes.push(qrCode);
+  });
 }
 
 /*
  * Supprime une ligne dans la zone de drop
  */
-function effacerLigne(){
-    let id = this.parentNode.id;
-    let qrCodeTmp = [];
+function effacerLigne() {
+  let id = this.parentNode.id;
+  let qrCodeTmp = [];
 
-    /*
-     * Supprime la ligne html lie au fichier
-     */
-    for(let i = 1; i <= txtZone.childElementCount; i++){
-        if(txtZone.childNodes[i].id == id){
-            txtZone.removeChild(txtZone.childNodes[i]);
-        }
+  /*
+   * Supprime la ligne html lie au fichier
+   */
+  for (let i = 1; i <= txtZone.childElementCount; i++) {
+    if (txtZone.childNodes[i].id == id) {
+      txtZone.removeChild(txtZone.childNodes[i]);
     }
+  }
 
-    /*
-     * Supprime le fichier dans le tableau files
-     */
-    for(let i = 0; i < qrCodes.length; i++){
-        if(qrCodes[i].getName() != id){
-            qrCodeTmp.push(qrCodes[i]);
-        }
+  /*
+   * Supprime le fichier dans le tableau files
+   */
+  for (let i = 0; i < qrCodes.length; i++) {
+    if (qrCodes[i].getName() != id) {
+      qrCodeTmp.push(qrCodes[i]);
     }
+  }
 
-    qrCodes = qrCodeTmp;
+  qrCodes = qrCodeTmp;
 }
 
 /*
  * Affiche le qrCode unique lie à la ligne cliquable
  */
-function afficherQrCode(){
-    let id = this.id;
+function afficherQrCode() {
+  let id = this.id;
 
-    affichageLigneParDefault();
+  affichageLigneParDefault();
 
-    this.querySelector("span").setAttribute("style", "white-space: nowrap; padding:5px; font-size:0.7em; background-color:#99cc00;");
+  this.querySelector("span").setAttribute("style", "white-space: nowrap; padding:5px; font-size:0.7em; background-color:#99cc00;");
 
-    /*
-     * Affiche le qrCode que l'on vien de selectionner
-     */
-    for(let i = 0; i < qrCodes.length; i++){
-        if(qrCodes[i].getName() == id){
-            let facade = new FacadeController();
-            facade.genererQRCode($('#qrView')[0], qrCodes[i]);
-        }
+  /*
+   * Affiche le qrCode que l'on vien de selectionner
+   */
+  for (let i = 0; i < qrCodes.length; i++) {
+    if (qrCodes[i].getName() == id) {
+      let facade = new FacadeController();
+      facade.genererQRCode($('#qrView')[0], qrCodes[i]);
     }
+  }
 
-    qrCodesUniqueSelectionne = this;
+  qrCodesUniqueSelectionne = this;
 }
 
 /*
  * Redonne l'apparance par default d'une ligne
  */
-function affichageLigneParDefault(){
-    if(qrCodesUniqueSelectionne != null){
-        if(qrCodesUniqueSelectionne.querySelector("span").hasAttribute("style")){
-            qrCodesUniqueSelectionne.querySelector("span").setAttribute("style", "white-space: nowrap; padding:5px; font-size:0.7em;");
-        }
+function affichageLigneParDefault() {
+  if (qrCodesUniqueSelectionne != null) {
+    if (qrCodesUniqueSelectionne.querySelector("span").hasAttribute("style")) {
+      qrCodesUniqueSelectionne.querySelector("span").setAttribute("style", "white-space: nowrap; padding:5px; font-size:0.7em;");
     }
+  }
 }
 
 /*
  * Active le button vider et generer apres avoir donne un nom au qrCode
  */
-function activer_button(){
-    if (document.getElementById('qrName').value.length > 0)
-    {
-        $('#preview ,#empty').attr('disabled', false);
-    }
+function activer_button() {
+  if (document.getElementById('qrName').value.length > 0) {
+    $('#preview ,#empty').attr('disabled', false);
+  }
 }
 
 /*
  * Recupere un QR Code ensemble pour le supprimer ou rajouter des données
  */
-function recuperationQrCodeEnsemble(file){
-    let facade = new FacadeController();
-    facade.importQRCode(file, function (qrCode) {qrCodeEnsemble = qrCode;});
+function recuperationQrCodeEnsemble(file) {
+  let facade = new FacadeController();
+  facade.importQRCode(file, function(qrCode) {
+    qrCodeEnsemble = qrCode;
+  });
 
-    setTimeout(suiteTraitement, 400);
+  setTimeout(suiteTraitement, 400);
 }
 
 /*
@@ -206,16 +216,16 @@ function recuperationQrCodeEnsemble(file){
  * 400 ms de sleep à cause de la fonction importQRCode
  */
 function suiteTraitement() {
-    let data = qrCodeEnsemble.getData();
-    document.getElementById('qrName').value = qrCodeEnsemble.getName();
-    activer_button();
+  let data = qrCodeEnsemble.getData();
+  document.getElementById('qrName').value = qrCodeEnsemble.getName();
+  activer_button();
 
-    for(let i = 0; i < data.length; i++){
-        console.log(data[i]);
-        let qrCode = Object.assign(new QRCodeUnique("", [], ""), data[i]);
-        qrCodes.push(qrCode);
-        genererLigne(qrCode.getName());
-    }
+  for (let i = 0; i < data.length; i++) {
+    console.log(data[i]);
+    let qrCode = Object.assign(new QRCodeUnique("", [], ""), data[i]);
+    qrCodes.push(qrCode);
+    genererLigne(qrCode.getName());
+  }
 }
 
 $().ready(function() {
@@ -225,86 +235,86 @@ $().ready(function() {
   if (settings.has("defaultColor")) {
     $("#qrColor").val(settings.get("defaultColor"));
   }
-    /*
-     * Genere le qrCode Ensemble
-     */
-    $("#preview").click(function () {
+  /*
+   * Genere le qrCode Ensemble
+   */
+  $("#preview").click(function() {
 
-        affichageLigneParDefault();
+    affichageLigneParDefault();
 
-        var qrColor = $("#qrColor").val();
-        let qrCodeEnsemble = new QRCodeEnsembleJson(document.getElementById('qrName').value, [],qrColor);
+    let qrColor = $("#qrColor").val();
+    qrCodeEnsemble = new QRCodeEnsembleJson(document.getElementById('qrName').value, [], qrColor);
 
-        // /*
-        //  * Ajoute les donnees json de chaque qrCode unique dans le qrCode ensemble
-        //  */
-        // for(let i = 0; i < qrCodes.length; i++){
-        //     for(let j = 0; j < qrCodes[i].getQRCode().data.length; j++){
-        //         if((typeof qrCodes[i].getQRCode().data[j] === "object") && (qrCodes[i].getQRCode().data[j] !== null)){
-        //             qrCodeEnsemble.ajouterQrCode(qrCodes[i].getQRCode().data[j]);
-        //         }
-        //     }
-        // }
+    // /*
+    //  * Ajoute les donnees json de chaque qrCode unique dans le qrCode ensemble
+    //  */
+    // for(let i = 0; i < qrCodes.length; i++){
+    //     for(let j = 0; j < qrCodes[i].getQRCode().data.length; j++){
+    //         if((typeof qrCodes[i].getQRCode().data[j] === "object") && (qrCodes[i].getQRCode().data[j] !== null)){
+    //             qrCodeEnsemble.ajouterQrCode(qrCodes[i].getQRCode().data[j]);
+    //         }
+    //     }
+    // }
 
-        for(let i = 0; i < qrCodes.length; i++){
-            qrCodeEnsemble.ajouterQrCode(qrCodes[i]);
-        }
-
-        let facade = new FacadeController();
-        facade.genererQRCode($('#qrView')[0],qrCodeEnsemble);
-
-        $('#saveQRCode').attr('disabled', false);
-    });
-
-    /*
-     * Vide les tableaux qrCodes, files et les lignes de la zone drop
-     */
-    $("#empty").click(function () {
-
-        for(let i = txtZone.childElementCount; i > 0; i--){
-            txtZone.removeChild(txtZone.firstElementChild);
-            qrCodes.pop();
-        }
-
-        txtZone.appendChild(txtDragAndDrop);
-    });
-
-    $("#saveQRCode").on("click", function(){
-      saveQRCodeImage();
-    });
-
-    // save image qr code
-    function saveQRCodeImage() {
-      const fs = require('fs');
-
-      let img = $('#qrView img')[0].src;
-
-      // var data = img.replace(/^data:image\/\w+;base64,/, '');
-
-      var data = img.replace(/^data:image\/[^;]/, 'data:application/octet-stream');
-
-      var xhr = new XMLHttpRequest();
-      xhr.responseType = 'blob';
-      console.log(data);
-      xhr.open('GET', data, true);
-
-      xhr.onreadystatechange = function() {
-        if (xhr.readyState == xhr.DONE) {
-          var filesaver = require('file-saver');
-          console.log(xhr.response);
-          filesaver.saveAs(xhr.response, qrcode.getName() + '.jpeg');
-        }
-      }
-
-      xhr.send();
-
-
-      // fs.writeFile(`${root}/QR-Unique/QR/${qrcode.getName()}.jpeg`, data, {
-      //   encoding: 'base64'
-      // }, (err) => {
-      //   if (err) throw err;
-      //   messageInfos("votre QR est bien sauvegardé","success");
-      // });
-
+    for (let i = 0; i < qrCodes.length; i++) {
+      qrCodeEnsemble.ajouterQrCode(qrCodes[i]);
     }
+
+    let facade = new FacadeController();
+    facade.genererQRCode($('#qrView')[0], qrCodeEnsemble);
+
+    $('#saveQRCode').attr('disabled', false);
+  });
+
+  /*
+   * Vide les tableaux qrCodes, files et les lignes de la zone drop
+   */
+  $("#empty").click(function() {
+
+    for (let i = txtZone.childElementCount; i > 0; i--) {
+      txtZone.removeChild(txtZone.firstElementChild);
+      qrCodes.pop();
+    }
+
+    txtZone.appendChild(txtDragAndDrop);
+  });
+
+  $("#saveQRCode").click(e => {
+    saveQRCodeImage();
+  });
+
+  // save image qr code
+  function saveQRCodeImage() {
+    const fs = require('fs');
+
+    let img = $('#qrView img')[0].src;
+
+    // var data = img.replace(/^data:image\/\w+;base64,/, '');
+
+    var data = img.replace(/^data:image\/[^;]/, 'data:application/octet-stream');
+
+    var xhr = new XMLHttpRequest();
+    xhr.responseType = 'blob';
+
+    xhr.open('GET', data, true);
+
+    xhr.onreadystatechange = function() {
+      if (xhr.readyState == xhr.DONE) {
+        var filesaver = require('file-saver');
+        console.log(xhr.response);
+        filesaver.saveAs(xhr.response, qrCodeEnsemble.getName() + '.jpeg');
+      }
+    }
+
+    xhr.send();
+
+
+    // fs.writeFile(`${root}/QR-Unique/QR/${qrcode.getName()}.jpeg`, data, {
+    //   encoding: 'base64'
+    // }, (err) => {
+    //   if (err) throw err;
+    //   messageInfos("votre QR est bien sauvegardé","success");
+    // });
+
+  }
 });
