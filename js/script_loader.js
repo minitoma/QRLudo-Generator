@@ -2,7 +2,11 @@
  * @Author: alassane
  * @Date:   2018-12-04T14:28:52+01:00
  * @Last modified by:   alassane
- * @Last modified time: 2018-12-08T15:05:32+01:00
+<<<<<<< HEAD
+ * @Last modified time: 2018-12-08T15:08:02+01:00
+=======
+ * @Last modified time: 2018-12-08T15:08:02+01:00
+>>>>>>> f0956197d0bc8b217523a0d19da951558e2be701
  */
 
 const path = require('path');
