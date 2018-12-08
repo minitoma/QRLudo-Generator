@@ -2,7 +2,7 @@
  * @Author: alassane
  * @Date:   2018-11-10T17:59:11+01:00
  * @Last modified by:   alassane
- * @Last modified time: 2018-12-10T17:14:07+01:00
+ * @Last modified time: 2018-12-10T17:19:31+01:00
  */
 
 // fichier script concernant les qr codes uniques
@@ -178,7 +178,7 @@ function getMusicFromUrl() {
     xhr.open('GET', url, true);
   } catch (e) {
     console.log('error ');
-    $(errorMsg).text("Veuillez coller un lien de fichier téléchargeable. Reportez vous à la rubrique Aide pour plus d'informations.");
+    $(errorMsg).text("Veuillez coller un lien de fichier téléchargeable. Reportez vous à la rubrique Info pour plus d'informations.");
     $(errorMsg).css('color', '#f35b6a');
     $(errorMsg).addClass('errorLoader');
     $(modal).prepend(errorMsg); // add error message
@@ -211,7 +211,7 @@ function getMusicFromUrl() {
       } else {
         console.log('error ');
         $(modal).find('.loader').remove();
-        $(errorMsg).text("Veuillez coller un lien de fichier téléchargeable. Reportez vous à la rubrique Aide pour plus d'informations.");
+        $(errorMsg).text("Veuillez coller un lien de fichier téléchargeable. Reportez vous à la rubrique Info pour plus d'informations.");
         $(errorMsg).css('color', '#f35b6a');
         $(errorMsg).addClass('errorLoader');
         $(modal).prepend(errorMsg); // add error message
@@ -220,7 +220,7 @@ function getMusicFromUrl() {
       // request failed
       console.log('error ');
       $(modal).find('.loader').remove();
-      $(errorMsg).text("Veuillez coller un lien de fichier téléchargeable. Reportez vous à la rubrique Aide pour plus d'informations.");
+      $(errorMsg).text("Veuillez coller un lien de fichier téléchargeable. Reportez vous à la rubrique Info pour plus d'informations.");
       $(errorMsg).css('color', '#f35b6a');
       $(errorMsg).addClass('errorLoader');
       $(modal).prepend(errorMsg); // add error message
@@ -237,7 +237,7 @@ function getMusicFromUrl() {
   xhr.onerror = function(e) {
     console.log('error ');
     $(modal).find('.loader').remove();
-    $(errorMsg).text("Veuillez coller un lien de fichier téléchargeable. Reportez vous à la rubrique Aide pour plus d'informations.");
+    $(errorMsg).text("Veuillez coller un lien de fichier téléchargeable. Reportez vous à la rubrique Info pour plus d'informations.");
     $(errorMsg).css('color', '#f35b6a');
     $(errorMsg).addClass('errorLoader');
     $(modal).prepend(errorMsg); // add error message
