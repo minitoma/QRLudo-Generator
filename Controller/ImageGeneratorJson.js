@@ -2,7 +2,7 @@
  * @Author: alassane
  * @Date:   2018-11-09T18:42:04+01:00
  * @Last modified by:   alassane
- * @Last modified time: 2018-11-23T12:37:29+01:00
+ * @Last modified time: 2018-12-08T14:07:40+01:00
  */
 
 /**
@@ -34,7 +34,7 @@ class ImageGeneratorJson {
     // console.log($(`${div} canvas`)[0]);
     let canvas = $(div).children()[0];
     let arrayData = ImageGeneratorJson.stringtoUTF8Array(qrcode.getDataString());
-    console.log("arrayData stored in qrcode : ", arrayData);
+    console.log("arrayData stored in qrcode metadata : ", arrayData);
 
     ImageGeneratorJson.genererJPEGJson(arrayData, canvas, div);
 
