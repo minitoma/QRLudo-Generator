@@ -2,7 +2,7 @@
  * @Author: alassane
  * @Date:   2018-11-10T17:59:11+01:00
  * @Last modified by:   alassane
- * @Last modified time: 2018-12-10T17:21:39+01:00
+ * @Last modified time: 2018-12-11T00:45:35+01:00
  */
 
 // fichier script concernant les qr codes uniques
@@ -12,7 +12,8 @@ var qrType;
 $('#preview').attr('disabled', true);
 
 var {
-  remote
+  remote,
+  ipcRenderer
 } = require('electron');
 var {
   Menu,
@@ -45,9 +46,22 @@ $(document).ready(function() {
     }
   }));
 
-  $('input#musicUrl').contextmenu(e=>{
+  $('input#musicUrl').contextmenu(e => {
     menu.popup(remote.getCurrentWindow())
   });
+
+  $('button#showInfo').click(e => {
+    e.preventDefault();
+    ipcRenderer.send('showInfoWindow', null);
+  });
+
+  $('button#annuler').click(e => {
+    e.preventDefault();
+    if (settings.has("defaultColor")) {
+      $("#qrColor").val(settings.get("defaultColor"));
+    }
+  });
+
 });
 
 // trigger preview qrcode action

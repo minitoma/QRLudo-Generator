@@ -2,84 +2,91 @@
   <div class="col-sm-12 card">
 
     <nav class="nav nav-tabs">
-      <a class="nav-item nav-link active" href="#musicInput">Musique</a>
-      <a class="nav-item nav-link" href="#livres">Import</a>
-      <a class="nav-item nav-link" href="#temoignages">Ensemble</a>
-      <a class="nav-item nav-link" href="#questionReponses">Question / Réponse</a>
+      <a class="nav-item nav-link active" href="#info-MusicInput">Musique</a>
+      <a class="nav-item nav-link" href="#info-Import">Import</a>
+      <a class="nav-item nav-link" href="#info-Ensemble">Ensemble</a>
+      <a class="nav-item nav-link" href="#info-QuestionReponse">Question / Réponse</a>
     </nav>
 
     <div class="tab-content">
-      <div class="tab-pane active" id="musicInput">
-        <h4>Comment mettre une zone de texte musique ? </h4>
+      <div class="tab-pane active" id="info-MusicInput">
+        <h4>Comment mettre une musique dans un qrcode ? </h4>
         <hr>
 
-        <h5>Ouvrir la fenêtre de saisie de la musique</h5>
-        Cliquer sur le bouton <img src="./Views/assets/images/btnMusic.png"><br>
-        Vous verrez apparaitre une boite de dialogue avec une zone de texte <img src="./Views/assets/images/modalMusic.png">
+        <h5><a href="#openModal">Ouvrir la fenêtre de saisie de la musique</a></h5>
+        <div id="openModal" class="info-content">
+          Cliquer sur le bouton <img src="./Views/assets/images/btnMusic.png"><br>
+          Une boite de dialogue avec une zone de saisie va s'ouvrir<br>
+          <img src="./Views/assets/images/modalMusic.png">
+        </div>
+        <h5><a href="#copyLink">Copier le lien téléchargeable de la musique</a></h5>
+        <div id="copyLink" class="info-content">
+          <h6><a href="#google">Google Drive</a></h6>
+          <div id="google" class="info-content">
+            <ul class="list components">
+              <li>
+                Aller sur internet, se rendre sur son compte Google Drive (https://drive.google.com), se connecter éventuellement
+              </li>
+              <li>
+                Faire clic-droit sur le fichier audio en question
+              </li>
+              <li>
+                Cliquer sur "Obtenir le lien partageable"
+              </li>
+              <li>
+                Revenir sur l'application QRLudo
+              </li>
+              <li>
+                Vidéo résumant les étapes ci dessus
+              </li>
+            </ul>
+          </div>
 
-        <h5>Copier le lien téléchargeable de la musique</h5>
+          <h6><a href="#dropbox">Dropbox</a></h6>
+          <div id="dropbox" class="info-content">
+            <ul class="list components">
+              <li>
+                Aller sur internet, se rendre sur son compte Dropbox (https://www.dropbox.com), se connecter éventuellement
+              </li>
+              <li>
+                Survoller avec la souris le fichier audio en question
+              </li>
+              <li>
+                Cliquer sur "Partager", un popup va s'ouvrir
+              </li>
+              <li>
+                En bas à droite du popup ouvert, cliquer sur "Créer un lien"
+              </li>
+              <li>
+                Toujours sur le popup, cliquer sur "Copier le lien" en bas à droite
+              </li>
+              <li>
+                Revenir sur l'application QRLudo
+              </li>
+              <li>
+                Vidéo résumant les étapes ci dessus
+              </li>
+            </ul>
+          </div>
+        </div>
 
-        <h6>Google Drive</h6>
-        <ul class="list components">
-          <li>
-            Aller sur internet, se rendre sur son compte Google Drive (https://drive.google.com), se connecter éventuellement
-          </li>
-          <li>
-            Faites clique droit sur le fichier audio en question
-          </li>
-          <li>
-            Cliquer sur "Obtenir le lien partageable"
-          </li>
-          <li>
-            Revenir sur l'application QRLudo
-          </li>
-          <li>
-            Vidéo résumant les étapes ci dessus
-          </li>
-        </ul>
-
-        <h6>Dropbox</h6>
-        <ul class="list components">
-          <li>
-            Aller sur internet, se rendre sur son compte Dropbox (https://www.dropbox.com), se connecter éventuellement
-          </li>
-          <li>
-            Survoller avec la souris le fichier audio en question
-          </li>
-          <li>
-            Cliquer sur "Partager", un popup va s'ouvrir
-          </li>
-          <li>
-            En bas à droite du popup ouvert, cliquer sur "Créer un lien"
-          </li>
-          <li>
-            Toujours sur le popup, cliquer sur "Copier le lien" en bas à droite
-          </li>
-          <li>
-            Revenir sur l'application QRLudo
-          </li>
-          <li>
-            Vidéo résumant les étapes ci dessus
-          </li>
-        </ul>
-
-        <h5>Coller le lien récemment copié</h5>
-        <ul class="list components">
-          <li>
-            Faire clique
-          </li>
-          <li>
-            Survoller avec la souris le fichier audio en question
-          </li>
-        </ul>
+        <h5><a href="#pasteURL">Coller le lien récemment copié</a></h5>
+        <div id="pasteURL" class="info-content">
+          <ul class="list components">
+            <li>
+              Faire clic-droit sur la zone de saisie musique
+            </li>
+            <li>
+              cliquer sur "Coller le lien" (ou avec le clavier faire la combinaison de touches Ctrl + V)
+            </li>
+          </ul>
+        </div>
 
       </div>
 
-      <div class="tab-pane" id="livres">Tous les livres</div>
-
-      <div class="tab-pane" id="temoignages">Tous les témoignages</div>
-
-      <div class="tab-pane" id="questionReponses">Toutes les questions reponses</div>
+      <div class="tab-pane" id="info-Import"></div>
+      <div class="tab-pane" id="info-Ensemble"></div>
+      <div class="tab-pane" id="info-QuestionReponse"></div>
     </div>
 
     <hr>
