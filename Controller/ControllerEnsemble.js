@@ -1,7 +1,7 @@
 /**
  * @Date:   2018-12-06T16:32:33+01:00
  * @Last modified by:   alassane
- * @Last modified time: 2018-12-08T14:30:36+01:00
+ * @Last modified time: 2018-12-10T13:44:22+01:00
  */
 
 class ControllerEnsemble {
@@ -69,6 +69,16 @@ class ControllerEnsemble {
     let facade = new FacadeController();
     facade.importQRCode(file, function(qrcode) {
       controllerEnsemble.qrCodes.push(qrcode);
+    });
+  }
+
+  // Type de qrcode du fichier
+  isUnique(file) {
+    let facade = new FacadeController();
+    facade.importQRCode(file, function(qrcode) {
+      if (qrcode.getType() == 'unique')
+        return true;
+      return false;
     });
   }
 
