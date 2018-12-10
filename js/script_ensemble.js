@@ -1,7 +1,7 @@
 /**
  * @Date:   2018-12-06T16:32:33+01:00
  * @Last modified by:   alassane
- * @Last modified time: 2018-12-08T14:58:54+01:00
+ * @Last modified time: 2018-12-10T13:47:10+01:00
  */
 
 console.log(controllerEnsemble);
@@ -84,14 +84,19 @@ dropZone.ondrop = function(e) {
 
   // Parcours le ou les fichiers drop dans la zone
   for (let i = 0; i < e.dataTransfer.files.length; i++) {
-    let words = e.dataTransfer.files[i].name.split(".");
-    if (!controllerEnsemble.occurenceFichier(words[0])) {
-      genererLigne(words[0]);
-      controllerEnsemble.recuperationQrCodeUnique(e.dataTransfer.files[i]);
-      //recuperationQrCodeEnsemble(e.dataTransfer.files[i]);
+    let qrFile = e.dataTransfer.files[i];
+
+    if (controllerEnsemble.isUnique(qrFile)) {
+      let words = qrFile.name.split(".");
+      if (!controllerEnsemble.occurenceFichier(words[0])) {
+        genererLigne(words[0]);
+        controllerEnsemble.recuperationQrCodeUnique(qrFile);
+      } else {
+        afficherPopUp = true;
+        nomFichierIdentique += "\t" + words[0] + "\n";
+      }
     } else {
-      afficherPopUp = true;
-      nomFichierIdentique += "\t" + words[0] + "\n";
+      messageInfos("Impossible de mettre un qrcode ensemble dans un qrcode ensemble. Veuillez mettre que des qrcodes uniques", "danger");
     }
   }
 
