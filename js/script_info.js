@@ -2,7 +2,7 @@
  * @Author: alassane
  * @Date:   2018-12-10T13:37:39+01:00
  * @Last modified by:   alassane
- * @Last modified time: 2018-12-10T14:02:35+01:00
+ * @Last modified time: 2018-12-10T17:21:37+01:00
  */
 
 $('a.nav-link')

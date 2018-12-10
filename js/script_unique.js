@@ -2,7 +2,7 @@
  * @Author: alassane
  * @Date:   2018-11-10T17:59:11+01:00
  * @Last modified by:   alassane
- * @Last modified time: 2018-12-10T17:19:31+01:00
+ * @Last modified time: 2018-12-10T17:21:39+01:00
  */
 
 // fichier script concernant les qr codes uniques
