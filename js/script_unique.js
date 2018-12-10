@@ -2,7 +2,7 @@
  * @Author: alassane
  * @Date:   2018-11-10T17:59:11+01:00
  * @Last modified by:   alassane
- * @Last modified time: 2018-12-06T17:07:14+01:00
+ * @Last modified time: 2018-12-10T17:14:07+01:00
  */
 
 // fichier script concernant les qr codes uniques
@@ -11,6 +11,15 @@ var qrcode;
 var qrType;
 $('#preview').attr('disabled', true);
 
+var {
+  remote
+} = require('electron');
+var {
+  Menu,
+  MenuItem
+} = remote;
+
+var menu = new Menu();
 
 $(document).ready(function() {
   var settings = require("electron-settings");
@@ -23,6 +32,22 @@ $(document).ready(function() {
     saveQRCodeImage();
   });
 
+  // enable right click
+  menu.append(new MenuItem({
+    label: 'Coller le lien',
+    click() {
+      const {
+        clipboard
+      } = require('electron');
+      let url = clipboard.readText();
+      $('input#musicUrl').val(url);
+      getMusicFromUrl();
+    }
+  }));
+
+  $('input#musicUrl').contextmenu(e=>{
+    menu.popup(remote.getCurrentWindow())
+  });
 });
 
 // trigger preview qrcode action
