@@ -2,14 +2,15 @@
  * @Author: alassane
  * @Date:   2018-12-05T17:35:22+01:00
  * @Last modified by:   alassane
- * @Last modified time: 2018-12-06T00:51:06+01:00
+ * @Last modified time: 2018-12-11T00:36:46+01:00
  */
-
-
 
 const electron = require('electron');
 const app = electron.app;
 app.commandLine.appendSwitch('enable-speech-dispatcher');
+const {
+  ipcMain
+} = require('electron');
 const BrowserWindow = electron.BrowserWindow;
 var path = require('path');
 
@@ -18,14 +19,17 @@ require('electron-debug')({
 }); // pour debugger
 
 let mainWindow;
+let infoWindow = null;
 
 
 function createWindow() {
-
+  let display = electron.screen.getPrimaryDisplay();
+  let width = display.bounds.width;
+  let height = display.bounds.height;
 
   mainWindow = new BrowserWindow({
-    width: 1300, // on définit une taille pour notre fenêtre
-    height: 700,
+    width: width, // on définit une taille pour notre fenêtre
+    height: height,
     maximized: true,
     center: true,
     frame: true, // en faire une fenetre
@@ -41,7 +45,37 @@ function createWindow() {
     mainWindow = null;
   });
 
+}
 
+function createInfoWindow() {
+  let display = electron.screen.getPrimaryDisplay();
+  let width = display.bounds.width;
+  let height = display.bounds.height;
+
+  let w = Math.floor(width / 3);
+
+  infoWindow = new BrowserWindow({
+    parent: mainWindow,
+    maxWidth: w, // on définit une taille pour notre fenêtre
+    height: height,
+    maximized: true,
+    x: width - w,
+    y: 0,
+    frame: true, // en faire une fenetre
+    icon: path.join(__dirname, 'Views/assets/images/qrludo-icon.png')
+  });
+
+  infoWindow.setResizable(true); // autoriser le redimensionnement
+  infoWindow.loadURL(`file://${__dirname}/index-info.html`); // on doit charger un chemin absolu
+
+  infoWindow.on('closed', () => {
+    infoWindow = null;
+    if (mainWindow != null) {
+      mainWindow.setMaximumSize(width, height); // restore main window size
+      mainWindow.setSize(width, height); // restore main window size
+      mainWindow.maximize();
+    }
+  });
 }
 
 app.on('ready', createWindow);
@@ -71,6 +105,18 @@ app.on('window-all-closed', () => {
 app.on('activate', () => {
   if (mainWindow === null) {
     createWindow();
+  }
+});
+
+ipcMain.on('showInfoWindow', (e, arg) => {
+  if (infoWindow == null) {
+    createInfoWindow();
+    let display = electron.screen.getPrimaryDisplay();
+    let width = display.bounds.width;
+    let height = display.bounds.height;
+    let w = width - (Math.floor(width / 3) + 10);
+
+    mainWindow.setMaximumSize(w, height);
   }
 });
 
