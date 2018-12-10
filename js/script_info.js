@@ -1,13 +1,11 @@
 /**
  * @Author: alassane
- * @Date:   2018-12-08T17:37:13+01:00
+ * @Date:   2018-12-10T13:37:39+01:00
  * @Last modified by:   alassane
- * @Last modified time: 2018-12-08T18:19:08+01:00
+ * @Last modified time: 2018-12-10T14:02:35+01:00
  */
 
-$(document).ready({
-
-  $('a.nav-link')
+$('a.nav-link')
   .click(function(e) {
     e.preventDefault();
     let element = e.target;
@@ -19,6 +17,3 @@ $(document).ready({
     $(element).addClass('active');
     $(tab).addClass('active');
   });
-
-
-});
