@@ -3,9 +3,9 @@
  * @Date:   2018-12-04T14:28:52+01:00
  * @Last modified by:   alassane
 <<<<<<< HEAD
- * @Last modified time: 2018-12-08T15:08:02+01:00
+ * @Last modified time: 2018-12-11T01:02:27+01:00
 =======
- * @Last modified time: 2018-12-08T15:08:02+01:00
+ * @Last modified time: 2018-12-11T01:02:27+01:00
 >>>>>>> f0956197d0bc8b217523a0d19da951558e2be701
  */
 
@@ -49,6 +49,10 @@ const {
 const {
   DictionnaireXml
 } = require(`${root}/Model/DictionnaireXml`);
+
+const {
+  Music
+} = require(`${root}/Model/Music`);
 
 const {
   QRCode

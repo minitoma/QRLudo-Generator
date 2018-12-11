@@ -2,7 +2,7 @@
  * @Author: alassane
  * @Date:   2018-11-10T17:59:11+01:00
  * @Last modified by:   alassane
- * @Last modified time: 2018-12-11T00:45:35+01:00
+ * @Last modified time: 2018-12-11T01:38:27+01:00
  */
 
 // fichier script concernant les qr codes uniques
@@ -183,81 +183,77 @@ function getMusicFromUrl() {
   const {
     clipboard
   } = require('electron');
+
   let url = clipboard.readText();
-  url = url.replace('/open?', '/uc?');
-  url += '&authuser=0&export=download';
-
   let xhr = new XMLHttpRequest();
-  try {
-    xhr.open('GET', url, true);
-  } catch (e) {
-    console.log('error ');
-    $(errorMsg).text("Veuillez coller un lien de fichier téléchargeable. Reportez vous à la rubrique Info pour plus d'informations.");
-    $(errorMsg).css('color', '#f35b6a');
-    $(errorMsg).addClass('errorLoader');
-    $(modal).prepend(errorMsg); // add error message
-  }
-  xhr.responseType = 'blob';
-  xhr.onload = function(e) {
 
-    if (this.status == 200) {
-      let blob = this.response; // get binary data as a response
-      let contentType = xhr.getResponseHeader("content-type");
-
-      if (contentType == 'audio/mpeg') {
-        // get filename
-        let filename = xhr.getResponseHeader("content-disposition").split(";")[1];
-        filename = filename.replace('filename="', '');
-        filename = filename.replace('.mp3"', '.mp3');
-
-        // save file in folder projet/download
-        let fileReader = new FileReader();
-        fileReader.onload = function() {
-          fs.writeFileSync(`${root}/Download/${filename}`, Buffer(new Uint8Array(this.result)));
-
-          $(loader, errorMsg).remove();
-          $('#musicUrl').val('');
-          $('#closeModalListeMusic').click(); // close modal add music
-        };
-        fileReader.readAsArrayBuffer(blob);
-
-        ajouterChampSon(filename, url);
-      } else {
-        console.log('error ');
-        $(modal).find('.loader').remove();
-        $(errorMsg).text("Veuillez coller un lien de fichier téléchargeable. Reportez vous à la rubrique Info pour plus d'informations.");
-        $(errorMsg).css('color', '#f35b6a');
-        $(errorMsg).addClass('errorLoader');
-        $(modal).prepend(errorMsg); // add error message
-      }
-    } else {
-      // request failed
-      console.log('error ');
-      $(modal).find('.loader').remove();
-      $(errorMsg).text("Veuillez coller un lien de fichier téléchargeable. Reportez vous à la rubrique Info pour plus d'informations.");
-      $(errorMsg).css('color', '#f35b6a');
-      $(errorMsg).addClass('errorLoader');
-      $(modal).prepend(errorMsg); // add error message
+  Music.getDownloadLink(url, link => {
+    if (link == null) {
+      showError(modal, errorMsg);
+      return
     }
-  };
 
-  xhr.onloadstart = function(e) {
-    console.log('load start');
-    $(loader).addClass('loader');
-    $(modal).find('.errorLoader').remove();
-    $(modal).prepend(loader); // show loader when request progress
-  };
+    try {
+      xhr.open('GET', link, true);
+    } catch (e) {
+      showError(modal, errorMsg);
+    }
+    xhr.responseType = 'blob';
+    xhr.onload = function(e) {
 
-  xhr.onerror = function(e) {
-    console.log('error ');
-    $(modal).find('.loader').remove();
-    $(errorMsg).text("Veuillez coller un lien de fichier téléchargeable. Reportez vous à la rubrique Info pour plus d'informations.");
-    $(errorMsg).css('color', '#f35b6a');
-    $(errorMsg).addClass('errorLoader');
-    $(modal).prepend(errorMsg); // add error message
-  };
+      if (this.status == 200) {
+        let blob = this.response; // get binary data as a response
+        let contentType = xhr.getResponseHeader("content-type");
 
-  xhr.send();
+        if (contentType == 'audio/mpeg') {
+          // get filename
+          let filename = xhr.getResponseHeader("content-disposition").split(";")[1];
+          filename = filename.replace('filename="', '');
+          filename = filename.replace('.mp3"', '.mp3');
+
+          // save file in folder projet/download
+          let fileReader = new FileReader();
+          fileReader.onload = function() {
+            fs.writeFileSync(`${root}/Download/${filename}`, Buffer(new Uint8Array(this.result)));
+
+            $(loader, errorMsg).remove();
+            $('#musicUrl').val('');
+            $('#closeModalListeMusic').click(); // close modal add music
+          };
+          fileReader.readAsArrayBuffer(blob);
+
+          ajouterChampSon(filename, link);
+        } else {
+          showError(modal, errorMsg, "Le fichier n'est pas un fichier audio");
+        }
+      } else {
+        // request failed
+        showError(modal, errorMsg);
+      }
+    };
+
+    xhr.onloadstart = function(e) {
+      console.log('load start');
+      $(loader).addClass('loader');
+      $(modal).find('.errorLoader').remove();
+      $(modal).prepend(loader); // show loader when request progress
+    };
+
+    xhr.onerror = function(e) {
+      showError(modal, errorMsg);
+    };
+
+    xhr.send();
+  });
+}
+
+function showError(modal, errorMsg, message = "Veuillez coller un lien de fichier téléchargeable. Reportez vous à la rubrique Info pour plus d'informations.") {
+  console.log('error ');
+  $(modal).find('.loader').remove();
+  $(errorMsg).text(message);
+  $(errorMsg).css('color', '#f35b6a');
+  $(errorMsg).addClass('errorLoader');
+  $(modal).prepend(errorMsg); // add error message
 }
 
 //verifier le champ qrName du formulaire myFormActive puis activer le button generer
