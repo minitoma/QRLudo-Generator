@@ -93,12 +93,11 @@ $(document).ready(function() {
       $('#previwQuesQRCodeId').show();
       $('#reponsesDivId').show(); // Si une autre valeur le div des reponses sera affiché
       $('#reponsesDivLabelsId').html('');
-      console.log(projet);
       for (let ques_item of projet.getQuestions()) {
         if ($(this).val() == ques_item.getId()) {
           for (let repUid_item of ques_item.getReponsesUIDs()) {
             for (let rep of projet.getReponses()) {
-              if (repUid_item == rep.getId()) {
+              if (repUid_item.id == rep.getId()) {
                 $("#reponsesDivLabelsId").append("<div class='form-inline'><label class='form-control control-label col-md-6' style='padding-top:10px;'>" + rep.getName() + "</label>" +
                   "<button id='" + rep.getId() + "' type='button' name='rep[]' class='btn btn-outline-success' onclick='deleteReponse($(this));'><i class='fa fa-trash-alt'></i></button>" +
                   "<button type='button' name='previwRepQRCodeName' class='btn btn-outline-success' onclick='previewRep($(this));'><i class='fa fa-qrcode'></i></button></div>");
