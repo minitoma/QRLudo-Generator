@@ -43,6 +43,12 @@ class FacadeController {
         divImg.removeChild(divImg.firstChild);
       }
 
+
+      var rawconstants = fs.readFileSync('./constants.json');
+      var constants = JSON.parse(rawconstants);
+      qrcode.qrcode.version = constants.version;
+      console.log(qrcode);
+
       let args = [qrcode, divImg];
 
       // enable the commented if else block for activate qrcode xl control
