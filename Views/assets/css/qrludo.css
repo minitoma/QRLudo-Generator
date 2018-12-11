@@ -1,13 +1,7 @@
-
-
-
-
-
 /*
  * @Author: SALIM Youssef
  * @Date:   2018-Oct
  */
-
 @import "https://fonts.googleapis.com/css?family=Poppins:300,400,500,600,700";
 
 body {
@@ -231,29 +225,34 @@ label.error {
   font-size: 12px
 }
 
+label.qrludo {
+  color: #28a745;
+  padding-top: 10px;
+}
+
+label.error {
+  color: #EC5E69;
+  font-weight: 500;
+  margin-top: 0px;
+  font-size: 12px
+}
 
 label.qrludo {
   color: #28a745;
   padding-top: 10px;
 }
 
-label.error{color:#EC5E69;font-weight:500;margin-top:0px;font-size:12px}
-
-label.qrludo{color:#28a745;padding-top:10px;}
-
-.qrludo-QR{
+.qrludo-QR {
   /* /background:#39ca5a; */
-  height:auto;
-  margin:auto;
-  margin-top:50px;
+  height: auto;
+  margin: auto;
+  margin-top: 50px;
   padding: 10px;
 }
 
-
-  .qrludo-QR-img{
-    opacity: 0.1;
-  }
-
+.qrludo-QR-img {
+  opacity: 0.1;
+}
 
 .qrludo-QR {
   /*background: #000;*/
@@ -267,18 +266,15 @@ label.qrludo{color:#28a745;padding-top:10px;}
   opacity: 0.1;
 }
 
-
 .qrludo-QR-colorpicker {
   margin: auto;
   margin-top: 5px;
   padding: 0;
 }
 
-  .QR-colorpicker{
-    margin-top:25px;
-  }
-
-
+.QR-colorpicker {
+  margin-top: 25px;
+}
 
 .liste-QR {
   position: relative;
@@ -319,33 +315,33 @@ label.qrludo{color:#28a745;padding-top:10px;}
   background-color: #39ca5a;
 }
 
-
 input[type="color"] {
-	-webkit-appearance: none;
-	/* border: none; */
-	width: 60px;
-	height: 38px;
+  -webkit-appearance: none;
+  /* border: none; */
+  width: 60px;
+  height: 38px;
   border: 1px solid #28a745;
   border-radius: .0rem .25rem .25rem .0rem;
   cursor: pointer;
 }
+
 input[type="color"]::-webkit-color-swatch-wrapper {
-	padding: 0;
+  padding: 0;
 }
+
 input[type="color"]::-webkit-color-swatch {
-	border: none;
+  border: none;
 }
 
-
-.legendeQR{
+.legendeQR {
   margin-top: 10px;
 }
 
-.legendeQR-close-btn{
+.legendeQR-close-btn {
   margin-left: 10px;
 }
 
-.btn-unique-xl{
+.btn-unique-xl {
   margin-right: 5px;
 }
 
@@ -412,7 +408,30 @@ input[type="color"]::-webkit-color-swatch {
   }
 }
 
-.qrludo-QR img{
+.qrludo-QR img {
   max-width: 100%;
   height: auto
 }
+
+/*loader*/
+.loader {
+  margin: auto;
+  border: 16px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 16px solid #3498db;
+  width: 120px;
+  height: 120px;
+  animation: spin 2s linear infinite;
+}
+
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+
+  100% {
+    transform: rotate(360deg);
+  }
+}
+
+/*end loader*/

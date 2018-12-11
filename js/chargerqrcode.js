@@ -1,7 +1,7 @@
 /**
  * @Date:   2018-12-04T08:24:59+01:00
  * @Last modified by:   alassane
- * @Last modified time: 2018-12-04T21:53:26+01:00
+ * @Last modified time: 2018-12-08T14:19:38+01:00
  */
 
 
@@ -40,24 +40,52 @@ function drawQRCodeImport(qrcode) {
       $('input#qrColor').val(qrcode.getColor()); // restaurer la couleur du qrcode
       $('input#qrName').val(qrcode.getName()); //restaurer le nom du qrcode
 
-      let data = qrcode.getData();
-
-      for (var i = 0; i < data.length; i++) {
-        if (typeof data[i] === "string") {
-          ajouterChampLegende(data[i]);
-        } else if (typeof data[i] === "object") {
-          ajouterChampSon(data[i].name, data[i].url);
-        }
-      }
-
+      drawQRCodeData(qrcode);
     });
   } else if (qrcode.getType() == 'ensemble') {
     $("#charger-page").load("Views/ensemble.html", function() {
       $('input#qrName').val(qrcode.getName()); //restaurer le nom du qrcodeensemble
-
+      controllerEnsemble.setQRCodeEnsemble(qrcode);
+      drawQRCodeEnsembleUnique(qrcode);
+      $('#txtDragAndDrop').remove();
+      $('#preview ,#empty').attr('disabled', false);
     });
   } else if (qrcode.getType() == 'quesRep') {
     $("#charger-page").load("Views/quesRep.html", function() {});
   }
 
+}
+
+// recréer les input d'un qrcode unique
+function drawQRCodeData(qrcode) {
+  let data = qrcode.getData();
+
+  for (var i = 0; i < data.length; i++) {
+    if (typeof data[i] === "string") {
+      ajouterChampLegende(data[i]);
+    } else if (typeof data[i] === "object") {
+      ajouterChampSon(data[i].name, data[i].url);
+    }
+  }
+}
+
+// recréer les qrcode unique d'un qrcode ensemble
+function drawQRCodeEnsembleUnique(qrcode) {
+  for (var i = 0; i < qrcode.getData().length; i++) {
+    let qrJson = qrcode.getData()[i].qrcode;
+    let qr = null;
+    console.log(qrJson.type);
+
+    if (qrJson.type == "unique")
+      qr = new QRCodeUnique(qrJson.name, qrJson.data, qrJson.color);
+    else if (qrJson.type == "xl")
+      qr = new QRCodeXL(qrJson.name, qrJson.data, qrJson.color);
+    else if (qrJson.type == "ensemble")
+      qr = new QRCodeEnsembleJson(qrJson.name, qrJson.data, qrJson.color);
+
+    genererLigne(qr.getName());
+    controllerEnsemble.setQRCodeAtomiqueInArray(qr);
+  }
+  console.log(qrcode);
+  // recuperationQrCodeUnique(qrcode);
 }

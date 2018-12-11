@@ -17,12 +17,12 @@
            //enlever les messages en haut de page
            initMessages();
 
-           let inputArray = $('input, textarea');
-           if (validateForm(inputArray)) { // all fields are filled
-             // get all required attributes for qrcode
-             let qrColor = $('#qrColor').val();
-             let qrName = $('#qrName').val();
-             let qrData = [];
+    let inputArray = $('input, textarea');
+    //if (validateForm(inputArray)) { // all fields are filled
+      // get all required attributes for qrcode
+      let qrColor = $('#qrColor').val();
+      let qrName = $('#qrName').val();
+      let qrData = [];
 
              for (data of $('.qrData')) {
 
@@ -56,15 +56,11 @@
              // Generate in a div, the qrcode image for qrcode object
              let div = $('#qrView')[0];
 
-             previewQRCode(qrName, qrData, qrColor, div);
+      $('#annuler').attr('disabled', false);
+    // }
+  });
+  //Fin Preview
 
-             $('#annuler').attr('disabled', false);
-           }
-         });
-     //Fin Preview
-
-     //exporter le QR
-     $('#saveQRCode').click(function(){ saveQRCodeImage("/QR-Unique/QR/"); });
 
 
      //debut reinitialiser

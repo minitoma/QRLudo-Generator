@@ -2,7 +2,7 @@
  * @Author: alassane
  * @Date:   2018-11-14T00:46:15+01:00
  * @Last modified by:   alassane
- * @Last modified time: 2018-12-04T14:36:48+01:00
+ * @Last modified time: 2018-12-06T18:19:38+01:00
  */
 
 
@@ -45,7 +45,7 @@ class QRCodeLoaderJson {
           break;
 
         case "ensemble":
-          qrcode = new QRCodeEnsemble(qr.name, qr.data, qr.color);
+          qrcode = new QRCodeEnsembleJson(qr.name, qr.data, qr.color);
           break;
 
         case "questionReponse":

@@ -2,7 +2,11 @@
  * @Author: alassane
  * @Date:   2018-12-04T14:28:52+01:00
  * @Last modified by:   alassane
- * @Last modified time: 2018-12-04T14:57:11+01:00
+<<<<<<< HEAD
+ * @Last modified time: 2018-12-11T01:02:27+01:00
+=======
+ * @Last modified time: 2018-12-11T01:02:27+01:00
+>>>>>>> f0956197d0bc8b217523a0d19da951558e2be701
  */
 
 const path = require('path');
@@ -12,6 +16,7 @@ const piexif = require('piexifjs');
 const {
   CompresseurTexte
 } = require(`${root}/Controller/CompresseurTexte`);
+
 const {
   ControllerEnsemble
 } = require(`${root}/Controller/ControllerEnsemble`);
@@ -46,6 +51,10 @@ const {
 } = require(`${root}/Model/DictionnaireXml`);
 
 const {
+  Music
+} = require(`${root}/Model/Music`);
+
+const {
   QRCode
 } = require(`${root}/Model/QRCode`);
 
@@ -73,6 +82,8 @@ const {
 const {
   Projet,
   Reponse,
-  Question,
-  QuesRepController
-} = require(`${root}/Model/QuestionReponse`);
+  Question
+} = require(`${root}/Model/QRCodeQuestionReponse`);
+
+// Instanciate object
+let controllerEnsemble = new ControllerEnsemble();
