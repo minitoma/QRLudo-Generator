@@ -58,83 +58,14 @@
 </div>
 <!--/.Panel-->
 
-<<<<<<< HEAD
-                      </div>
-                      <div class="card-footer form-inline">
-                        <button type="button" class="btn btn-outline-success btn-unique-xl" name="ajouterTexte" id="ajouterTexte" onclick="ajouterChampLegende();">
-                          <i class="fa fa-file-alt"></i>&nbsp;&nbsp;Texte
-                        </button>
-                        <button type="button" id="showAudio" class="btn btn-outline-success btn-unique-xl" name="ajouterSon" data-toggle="modal" data-target="#listeMusic">
-                          <i class="fa fa-music"></i>&nbsp;&nbsp;Audio
-                        </button>
-                        <button type="button" id="showJson" class="btn btn-outline-success btn-unique-xl" name="ajouterJson" data-toggle="modal" data-target="#listeJson">
-                          <i class="fa fa-file"></i>&nbsp;&nbsp;Json
-                        </button>
-                          <div class="input-group  btn-unique-xl">
-                            <div class="input-group-prepend">
-                              <div class="input-group-text"><i class="fa fa-palette"></i></div>
-                            </div>
-                            <input type="color" id="qrColor" value="#000000">
-                          </div>
-                          <button type="reset" class="btn btn-outline-success btn-unique-xl" id="annuler"><i class="fa fa-sync"></i>&nbsp;&nbsp;Réinitialiser</button>
-                          <button type="submit" class="btn btn-outline-success" id="preview"><i class="fa fa-cogs"></i>&nbsp;&nbsp;Générer</button>
-                      </div>
-                    </form>
-                  </div>
-                  <!--/.Panel-->
-
-                  <!--Panel -> zone pour afficher le QrCode produit -->
-                  <div class="col-sm-4 card" id="qr-zone">
-                    <script>
-                      $("#qr-zone").load("Views/QR-zone.html");
-=======
 <!--Panel -> zone pour afficher le QrCode produit -->
 <div class="col-sm-4 card" id="qr-zone">
   <script>
     $("#qr-zone").load("Views/QR-zone.html");
->>>>>>> develop
                     </script>
 </div>
 <!--/.Panel-->
 
-<<<<<<< HEAD
-
-                  <!-- Modal-1 -> Fichier audio -->
-                  <div class="modal fade" id="listeMusic" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h5 class="modal-title" id="exampleModalCenterTitle">Les fichiers Audio</h5>
-                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                          </button>
-                        </div>
-                        <div class="modal-body scrollbar-success" style="height:170px; overflow-y: scroll;">
-                          <div class="list-group" id="elementsAudio">
-
-                          </div>
-                        </div>
-                        <div class="modal-footer">
-                          <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Fermer</button>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <!-- Fin Modal-1 -->
-
-                  <!-- Modal-2 -> Fichiers json -->
-                  <div class="modal fade" id="listeJson" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
-                    <div class="modal-dialog modal-dialog-centered" role="document">
-                      <div class="modal-content">
-                        <div class="modal-header">
-                          <h5 class="modal-title" id="exampleModalCenterTitle">Les fichiers Json</h5>
-                          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                          </button>
-                        </div>
-                        <div class="modal-body scrollbar-success" style="height:170px; overflow-y: scroll;">
-                          <div class="list-group" id="elementsJson">
-=======
 <!-- Modal-1 -> pour generer le fichier .json et le sauvegarder dans un drive -->
 <div class="modal fade" id="sauvegarderFichierJson" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
@@ -190,20 +121,10 @@
   </div>
 </div>
 <!-- Fin Modal-2 -->
->>>>>>> develop
 
 
 <!-- fin contenu page unique -->
 
-<<<<<<< HEAD
-              <!-- Js pour les QR de type unique xl -->
-              <script type="text/javascript" src="./js/script_unique.js"></script>
-              <script type="text/javascript" src="./js/scripts_xl.js"></script>
-
-              <!-- Js api-google-drive -->
-              <script src="quickstart.js"></script>
-=======
 <!-- Js pour les QR de type unique xl -->
 <script type="text/javascript" src="./js/script_unique.js"></script>
 <!-- <script type="text/javascript" src="./js/scripts_xl.js"></script> -->
->>>>>>> develop
