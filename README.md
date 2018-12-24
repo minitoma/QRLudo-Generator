@@ -23,7 +23,7 @@ _Si vous utiliser Ubuntu vous pouvez installer toutes les dépendances en éxecu
 
 - executer make install-jquery
 
-ou 
+ou
 
 - télécharger https://release.larsjung.de/jquery-qrcode/jquery-qrcode-0.14.0.zip
 - extraire l'archive dans le dossier node_modules/jquery/
