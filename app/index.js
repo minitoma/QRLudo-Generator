@@ -2,7 +2,7 @@
  * @Author: alassane
  * @Date:   2018-12-05T17:35:22+01:00
  * @Last modified by:   alassane
- * @Last modified time: 2018-12-24T17:15:17+01:00
+ * @Last modified time: 2018-12-27T19:48:48+01:00
  */
 
 const electron = require('electron');
@@ -57,6 +57,7 @@ function createInfoWindow() {
   infoWindow = new BrowserWindow({
     parent: mainWindow,
     maxWidth: w, // on définit une taille pour notre fenêtre
+    width: w, // on définit une taille pour notre fenêtre
     height: height,
     maximized: true,
     x: width - w,
@@ -91,7 +92,7 @@ app.on('window-all-closed', () => {
   let directory = path.join(__dirname, 'Download');
 
   fs.readdir(directory, (err, files) => {
-    if (err) throw err;
+    if (err) return; // throw err;
 
     for (const file of files) {
       fs.unlink(path.join(directory, file), err => {
@@ -114,9 +115,12 @@ ipcMain.on('showInfoWindow', (e, arg) => {
     let display = electron.screen.getPrimaryDisplay();
     let width = display.bounds.width;
     let height = display.bounds.height;
-    let w = width - (Math.floor(width / 3) + 10);
+    // let w = width - (Math.floor(width / 3) + 10);
+    let w = Math.floor(width / 3);
 
-    mainWindow.setMaximumSize(w, height);
+    mainWindow.setMaximumSize(w * 2, height);
+    mainWindow.setSize(w * 2, height);
+    mainWindow.unmaximize();
   }
 });
 
