@@ -118,15 +118,36 @@ class Question {
     return this.qrcode.data[indice];
   }
 
+  getReponseById(reponseUid){
+    for(let rep of this.qrcode.data){
+      console.log(rep);
+      console.log(reponseUid);
+      if(rep.id === reponseUid){
+        console.log(rep);
+        return rep;
+      }
+    }
+    return null;
+  }
+
   addReponse(reponseUid) {
     var settings = require("electron-settings");
     this.qrcode.data.push({"id": reponseUid, "message":settings.get("defaultBonneReponse")});
   }
 
+  removeReponse(reponseUid){
+    for(let rep of this.qrcode.data){
+      if(rep.id === reponseUid){
+        var index = this.qrcode.data.indexOf(rep);
+        this.qrcode.data.splice(index, 1);
+      }
+    }
+  }
+
   setMessage(reponseUid, message){
     for (let r of this.qrcode.data) {
-      if (r.id == reponseUid) {
-        r.message = message
+      if (r.id === reponseUid) {
+        r.message = message;
       }
     }
   }

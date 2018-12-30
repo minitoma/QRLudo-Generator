@@ -13,13 +13,8 @@ var projet = new Projet();
 
 $(document).ready(function() {
 
-  console.log("Root : " + root);
-
   // Cacher le boutton de previsualisation du qrCode Question par default
   $('#previwQuesQRCodeId').hide();
-
-  //Cacher le div des reponses par default
-  $('#reponsesDivId').hide();
 
   //Clear Question Form
   $("#addNewQuesBtnId").click(function() {
@@ -57,7 +52,7 @@ $(document).ready(function() {
   //Ajout d'une nouvelle reponse
   $("#addReponseBtnId").click(function() {
     addNewValueToArray($('#reponseTextAreaId').val(), projet.getReponses(), 'newReponseModalId');
-    console.log(projet);
+    updateReponses();
   });
 
   //cet evenement permet l'affectation d'une reponse a la question selectionnée
@@ -73,12 +68,8 @@ $(document).ready(function() {
         break;
       }
     }
-    $("#reponsesDivLabelsId").append("<div class='form-inline'><label class='form-control control-label col-md-6' style='padding-top:10px;'>" + $("#reponsesChooseSelectId option:selected").text() + "</label>" +
-      "<button id='" + $("#reponsesChooseSelectId option:selected").val() + "' type='button' name='rep[]' class='btn btn-outline-success' onclick='deleteReponse($(this));'><i class='fa fa-trash-alt'></i></button>" +
-      "<button type='button' name='previwRepQRCodeName' class='btn btn-outline-success' onclick='previewRep($(this));'><i class='fa fa-qrcode'></i></button>" +
-      "<button type='button' name='showEditMessage' class='btn btn-outline-success' onclick='toggleEditMessage($(this));'><i class='fa fa-edit'></i></button>" +
-      "<input class='form-control control-label col-md-6' style='padding-top:10px; display:none;' type='text' id='" + $("#reponsesChooseSelectId option:selected").val() + "' name='message'/>"+
-      "</div>");
+
+    updateReponses();
     $("#chooseReponseModalId .close").click();
     console.log($("input#"+ $("#reponsesChooseSelectId option:selected").val()));
   });
@@ -86,28 +77,7 @@ $(document).ready(function() {
 
   //Evenement quand la liste deroulante de la question change
   $("#questionsId").change(function() {
-    if ($(this).val() === "noquest") {
-      $('#reponsesDivId').hide(); // le div se cache quand l'option "Selectionner une question est selectionné"
-      $('#previwQuesQRCodeId').hide();
-    } else {
-      $('#previwQuesQRCodeId').show();
-      $('#reponsesDivId').show(); // Si une autre valeur le div des reponses sera affiché
-      $('#reponsesDivLabelsId').html('');
-      for (let ques_item of projet.getQuestions()) {
-        if ($(this).val() == ques_item.getId()) {
-          for (let repUid_item of ques_item.getReponsesUIDs()) {
-            for (let rep of projet.getReponses()) {
-              if (repUid_item.id == rep.getId()) {
-                $("#reponsesDivLabelsId").append("<div class='form-inline'><label class='form-control control-label col-md-6' style='padding-top:10px;'>" + rep.getName() + "</label>" +
-                  "<button id='" + rep.getId() + "' type='button' name='rep[]' class='btn btn-outline-success' onclick='deleteReponse($(this));'><i class='fa fa-trash-alt'></i></button>" +
-                  "<button type='button' name='previwRepQRCodeName' class='btn btn-outline-success' onclick='previewRep($(this));'><i class='fa fa-qrcode'></i></button></div>");
-              }
-            }
-          }
-          break;
-        }
-      }
-    }
+    updateReponses();
   });
 
   //Previsualiser le QRcode Question
@@ -188,7 +158,76 @@ $(document).ready(function() {
 });
 
 function toggleEditMessage(totoggle){
-  totoggle.parent('div').find("input").toggle();
+  totoggle.parent('div').find("div").toggle();
+}
+
+function updateReponses(){
+  var id_question = $("#questionsId option:selected").val();
+  var question = null;
+  if(id_question !== 'noquest'){
+    question = projet.getQuestionById(id_question);
+  }
+
+  $("#reponsesDivLabelsId").empty();
+  $.each(projet.getReponses(), function(i, val) {
+
+    var str_checked = '';
+    var str_message_value = '';
+    if(question !== null){
+      var rep = question.getReponseById(val.qrcode.id);
+      console.log(rep);
+      if(rep!==null){
+        str_checked = 'checked';
+        str_message_value = rep.message;
+      }
+    }
+
+    var new_reponse_div = "<div class='form-inline'><label class='form-control control-label col-md-6' style='padding-top:10px;'>" + val.getName() + "</label>" +
+      "<input class='form-check-input' type='checkbox' id='" + val.getId() + "' onclick='changeReponse($(this))' " + str_checked + "/>" +
+      "<button id='" + val.getId() + "' type='button' name='rep[]' class='btn btn-outline-success' onclick='deleteReponse($(this));'><i class='fa fa-trash-alt'></i></button>" +
+      "<button type='button' name='previwRepQRCodeName' class='btn btn-outline-success' onclick='previewRep($(this));'><i class='fa fa-qrcode'></i></button>" +
+      "<button type='button' name='showEditMessage' class='btn btn-outline-success' onclick='toggleEditMessage($(this));'><i class='fa fa-edit'></i></button>" +
+      "<div class='form-inline' id='customMessageDiv' style='display:none;'>" +
+        "<input class='form-control control-label col-md-6' type='text' id='" + val.getId() + "' name='message' value='" + str_message_value + "'/>"+
+        "<button class='btn btn-outline-success' onclick='setCustomMessage($(this));'><i class='fas fa-check'></i></button>" +
+      "</div></div>"
+    $("#reponsesDivLabelsId").append(new_reponse_div);
+  });
+}
+
+function changeReponse(checkbox){
+  var id_question = $("#questionsId option:selected").val();
+  //si une question est selectionnée
+  if(id_question !== 'noquest'){
+    for (let ques_item of projet.getQuestions()) {
+      if (id_question == ques_item.getId()) {
+        id_reponse = JSON.parse($(checkbox).attr('id'));
+        if($(checkbox).prop('checked')){
+          ques_item.addReponse(id_reponse);
+        }
+        else{
+          ques_item.removeReponse(id_reponse);
+        }
+      }
+    }
+  }
+}
+
+function setCustomMessage(button){
+  var id_question = JSON.parse($("#questionsId option:selected").val());
+  console.log(id_question);
+  if(id_question!=='noquest'){
+    for(let question of projet.getQuestions()){
+      console.log(question);
+      if(question.qrcode.id === id_question){
+        var input_text = button.parent('div').find("input");
+        console.log($(input_text).val());
+        question.setMessage(JSON.parse($(input_text).attr('id')), $(input_text).val());
+        console.log(question);
+      }
+    }
+
+  }
 }
 
 //Cette fonction sauvegardel'image du qrcode dans un div pour le pouvoir generer apres
