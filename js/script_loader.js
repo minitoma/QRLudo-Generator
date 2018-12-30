@@ -2,16 +2,17 @@
  * @Author: alassane
  * @Date:   2018-12-04T14:28:52+01:00
  * @Last modified by:   alassane
-<<<<<<< HEAD
  * @Last modified time: 2018-12-11T01:02:27+01:00
-=======
- * @Last modified time: 2018-12-11T01:02:27+01:00
->>>>>>> f0956197d0bc8b217523a0d19da951558e2be701
  */
 
 const path = require('path');
 const root = path.dirname(require.main.filename);
 const piexif = require('piexifjs');
+var {
+  remote,
+  ipcRenderer
+} = require('electron');
+const { dialog } = remote;
 
 const {
   CompresseurTexte

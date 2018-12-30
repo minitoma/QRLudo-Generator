@@ -47,7 +47,7 @@
     <div class="card-footer">
       <button type="reset" class="btn btn-outline-success"><i class="fa fa-eraser"></i>&nbsp;&nbsp;Annuler</button>
       <button id="addNewRepBtnId" type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#newReponseModalId">Ajouter Une Nouvelle Reponse</button>
-      <button id="importProjectBtnId" type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#importProjectModalId">Importer Un Projet Existant</button>
+      <button id="importProjectBtnId" type="button" class="btn btn-outline-success"><i class="fa fa-upload"></i>&nbsp;&nbsp;Importer Un Projet Existant</button>
 
     </div>
   </form>
@@ -98,7 +98,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="reponseModalTitleId">Nouvelle Question</h5>
+        <h5 class="modal-title" id="reponseModalTitleId">Nouvelle Réponse</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -107,7 +107,7 @@
         <form id="reponseAddFormId">
           <div class="form-group">
             <label class="col-sm-12 control-label" style="color:#28a745;padding-top:10px;">
-              Reponse
+              Réponse
             </label>
             <div class="col-sm-10">
               <textarea class="form-control" id="reponseTextAreaId" rows="2" name="Reponse"></textarea>
@@ -123,61 +123,6 @@
   </div>
 </div>
 <!-- end nouvelle reponse -->
-<!-- pour choisir une reponse -->
-<div class="modal fade" id="chooseReponseModalId" tabindex="-1" role="dialog" aria-labelledby="reponseModalTitleId" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="reponseModalTitleId">Choisir Une Question</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form id="reponseChooseFormId">
-          <div class="form-group">
-            <div class="col-sm-10">
-              <select id='reponsesChooseSelectId' name='reponsesName' class='form-control form-select-options col-md-6' style='margin-right:10px;'>
-                <!-- <option value='norep'>-Selectionner Une Reponse-</option> -->
-              </select>
-            </div>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Fermer</button>
-        <button id="chooseReponseBtnId" type="button" class="btn btn-outline-success">Ajouter</button>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- end choix reponse -->
-<!-- pour importer un projet -->
-<div class="modal fade" id="importProjectModalId" tabindex="-1" role="dialog" aria-labelledby="importProjectModalTitleId" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="importProjectModalTitleId">Importer Un Projet</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form id="importProjectFormId">
-          <div class="form-group">
-            <label for="importProjectInputFileId">Importer Un Projet</label>
-            <input type="file" class="form-control-file" id="importProjectInputFileId">
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Fermer</button>
-        <button id="importFileValidateBtnId" type="button" class="btn btn-outline-success">Valider</button>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- end import projet -->
 <!-- <script>
 $().ready(function(){
   $('#project').click(chargerProjects("QA_ProjectNames_File.json"));

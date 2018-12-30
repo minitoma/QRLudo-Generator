@@ -9,11 +9,6 @@
  * 2018
  */
 
- var {
-   remote,
-   ipcRenderer
- } = require('electron');
-const { dialog } = remote;
 var projet = new Projet();
 
 $(document).ready(function() {
@@ -51,7 +46,6 @@ $(document).ready(function() {
     if (addNewValueToComboBox($('#questionTextAreaId').val(), 'questionsId', 'newQuestionModalId', projet.getQuestions())) {
       $('#reponsesDivId').show();
     }
-    console.log(projet);
   });
 
   //Ajout d'une nouvelle reponse
@@ -76,7 +70,6 @@ $(document).ready(function() {
 
     updateReponses();
     $("#chooseReponseModalId .close").click();
-    console.log($("input#"+ $("#reponsesChooseSelectId option:selected").val()));
   });
 
 
@@ -99,12 +92,10 @@ $(document).ready(function() {
    sur les questions et reponse du projets ainsi que les qrcodes de ces questions_reponses*/
   $("#saveQRCode").click(function() {
     var dir_path = dialog.showOpenDialog({title: 'Sélectionnez un dossier', properties: ['openDirectory']});
-    console.log(dir_path);
     if(dir_path !== undefined){
       var facade = new FacadeController();
       projet.setName($("#projectId").val());
       dir_path += "/" + projet.getName();
-      console.log(dir_path);
 
       var fs = require('fs');
       if(!fs.existsSync(dir_path)){
@@ -122,49 +113,54 @@ $(document).ready(function() {
         facade.genererQRCode(div, reponse);
         saveQRCodeImage(div, reponse, dir_path);
       });
-
     }
   });
 
   //Import d'un projet existant
-  $('#importFileValidateBtnId').click(function() {
-    let loaded = $.ajax({
-      url: document.getElementById("importProjectInputFileId").files[0].path,
-      dataType: 'json',
-      async: false,
-      success: function(data) {
-        // console.log("success");
-      }
-    }).responseJSON;
+  $('#importProjectBtnId').click(function() {
+    var dir_path = dialog.showOpenDialog({title: 'Sélectionnez le projet', properties: ['openDirectory']});
     projet = new Projet();
-    projet.projet.id = loaded.id;
-    projet.projet.nom = loaded.nom;
-    console.log(loaded);
-    for (let ques of loaded.questions) {
-      let current_ques = new Question(ques.qrcode.name, ques.qrcode.data);
-      current_ques.setId(ques.qrcode.id);
-      projet.addQuestion(current_ques);
-    }
-    for (let rep of loaded.reponses) {
-      let current_rep = new Reponse(rep.qrcode.name);
-      current_rep.setId(rep.qrcode.id);
-      projet.addReponse(current_rep);
-    }
-    $('#projectId').val(projet.getName());
-    $('#questionsId').html('');
-    $('#questionsId').append($('<option>', {
-      val: "noquest",
-      text: "---Selectionner Une Question---"
-    }));
-    for (let question of projet.getQuestions()) {
-      $('#questionsId').append($('<option>', {
-        val: question.getId(),
-        text: question.getName()
-      }));
-    }
-    $("#importProjectModalId .close").click();
+    var path_split = dir_path[0].split('/');
+    projet.projet.nom = path_split[path_split.length-1];
+    $("#projectId").val(path_split[path_split.length-1]);
+
+    let facade = new FacadeController();
+
+    var fs = require('fs');
+
+    fs.readdir(dir_path[0], (err, files) => {
+      files.forEach(file => {
+        var file_path = dir_path + "/" + file;
+        let blob = null;
+        let xhr = new XMLHttpRequest();
+        xhr.open("GET", file_path);
+        xhr.responseType = "blob"; //force the HTTP response, response-type header to be blob
+        xhr.onload = function() {
+          blob = xhr.response; //xhr.response is now a blob object
+          facade.importQRCode(blob, importQuestionReponse);
+        }
+        xhr.send();
+      });
+    });
   });
+
 });
+
+function importQuestionReponse(qrcode){
+  if(qrcode.getType()==='question'){
+    projet.addQuestion(qrcode);
+    $('#questionsId').append($('<option>', {
+        val: qrcode.getId(),
+        text: qrcode.getName()
+    }));
+  }
+  else if (qrcode.getType()==='reponse') {
+    projet.addReponse(qrcode);
+  }
+
+  updateReponses();
+
+}
 
 function toggleEditMessage(totoggle){
   totoggle.parent('div').find("div").toggle();
@@ -184,7 +180,6 @@ function updateReponses(){
     var str_message_value = '';
     if(question !== null){
       var rep = question.getReponseById(val.qrcode.id);
-      console.log(rep);
       if(rep!==null){
         str_checked = 'checked';
         str_message_value = rep.message;
@@ -224,15 +219,11 @@ function changeReponse(checkbox){
 
 function setCustomMessage(button){
   var id_question = JSON.parse($("#questionsId option:selected").val());
-  console.log(id_question);
   if(id_question!=='noquest'){
     for(let question of projet.getQuestions()){
-      console.log(question);
       if(question.qrcode.id === id_question){
         var input_text = button.parent('div').find("input");
-        console.log($(input_text).val());
         question.setMessage(JSON.parse($(input_text).attr('id')), $(input_text).val());
-        console.log(question);
       }
     }
 

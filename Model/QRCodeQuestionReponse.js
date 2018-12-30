@@ -111,7 +111,11 @@ class Question {
   }
 
   getColor() {
-    this.qrcode.color;
+    return this.qrcode.color;
+  }
+
+  getType(){
+    return this.qrcode.type;
   }
 
   getReponseUIDByIndex(indice) {
@@ -185,7 +189,11 @@ class Reponse {
   }
 
   getColor() {
-    this.qrcode.color;
+    return this.qrcode.color;
+  }
+
+  getType(){
+    return this.qrcode.type;
   }
 
   getDataString() {
