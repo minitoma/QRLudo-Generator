@@ -18,7 +18,7 @@
           <div class="form-group">
             <label class="control-label" style="color:#28a745;padding-top:10px;">Projet</label>
             <div class="form-inline">
-              <textarea class="form-control col-sm-6" id="projectId" rows="2" name="nomprojet" placeholder="Nom Du Projet"></textarea>
+              <input type="text" class="form-control col-sm-6" id="projectId" rows="2" name="nomprojet" placeholder="Nom Du Projet" onkeyup="activerSave();"/>
             </div>
           </div>
           <div class="form-group">
@@ -46,7 +46,6 @@
     </div>
     <div class="card-footer">
       <button type="reset" class="btn btn-outline-success"><i class="fa fa-eraser"></i>&nbsp;&nbsp;Annuler</button>
-      <button id="save" type="submit" class="btn btn-outline-success"><i class="fa fa-cogs"></i>&nbsp;&nbsp;Générer</button>
       <button id="addNewRepBtnId" type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#newReponseModalId">Ajouter Une Nouvelle Reponse</button>
       <button id="importProjectBtnId" type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#importProjectModalId">Importer Un Projet Existant</button>
 

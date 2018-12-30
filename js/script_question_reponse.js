@@ -9,6 +9,11 @@
  * 2018
  */
 
+ var {
+   remote,
+   ipcRenderer
+ } = require('electron');
+const { dialog } = remote;
 var projet = new Projet();
 
 $(document).ready(function() {
@@ -92,28 +97,32 @@ $(document).ready(function() {
 
   /* Methode qui genere un dossier avec un fichier json comportant tous les informations
    sur les questions et reponse du projets ainsi que les qrcodes de ces questions_reponses*/
-  $("#save").click(function() {
-    var facade = new FacadeController();
-    projet.setName($("#projectId").val());
-    console.log(projet);
-    let dir = projet.getName();
-    if (!fs.existsSync(`${root}/${dir}`)) {
-      fs.mkdirSync(`${root}/${dir}`);
-    }
-    fs.writeFile(`${root}/${dir}/data.json`, projet.getDataString(), function(err) {
-      if (err) {
-        console.log("ERROR !!");
+  $("#saveQRCode").click(function() {
+    var dir_path = dialog.showOpenDialog({title: 'Sélectionnez un dossier', properties: ['openDirectory']});
+    console.log(dir_path);
+    if(dir_path !== undefined){
+      var facade = new FacadeController();
+      projet.setName($("#projectId").val());
+      dir_path += "/" + projet.getName();
+      console.log(dir_path);
+
+      var fs = require('fs');
+      if(!fs.existsSync(dir_path)){
+        fs.mkdirSync(dir_path);
       }
-    });
-    for (question of projet.getQuestions()) {
-      let div = document.createElement('div');
-      facade.genererQRCode(div, question);
-      saveQRCodeImage(div, question, projet.getName());
-    }
-    for (reponse of projet.getReponses()) {
-      let div = document.createElement('div');
-      facade.genererQRCode(div, reponse);
-      saveQRCodeImage(div, reponse, projet.getName());
+
+      $.each(projet.getQuestions(), function(id, question){
+        let div = document.createElement('div');
+        facade.genererQRCode(div, question);
+        saveQRCodeImage(div, question, dir_path);
+      });
+
+      $.each(projet.getReponses(), function(id, reponse){
+        let div = document.createElement('div');
+        facade.genererQRCode(div, reponse);
+        saveQRCodeImage(div, reponse, dir_path);
+      });
+
     }
   });
 
@@ -234,7 +243,7 @@ function setCustomMessage(button){
 function saveQRCodeImage(div, qrcode, directoryName) {
   let img = $(div).children()[0].src;
   let data = img.replace(/^data:image\/\w+;base64,/, '');
-  fs.writeFile(`${root}/${directoryName}/${qrcode.getName()}.jpeg`, data, {
+  fs.writeFile(`${directoryName}/${qrcode.getName()}.jpeg`, data, {
     encoding: 'base64'
   }, (err) => {
     if (err) throw err;
@@ -254,6 +263,15 @@ function deleteReponse(todelete) {
     }
   }
   todelete.parent('div').remove();
+}
+
+function activerSave(){
+  if($("#projectId").val().length > 0){
+    $("#saveQRCode").attr('disabled', false);
+  }
+  else{
+    $("#saveQRCode").attr('disabled', true);
+  }
 }
 
 // Previsualiser les reponses
@@ -337,13 +355,4 @@ function selectOptionsValuesAsArray(selectId) {
 //Mettre les champs d'un modal vides
 function clearModalForm(modal_id) {
   $('#' + modal_id).find('form')[0].reset();
-}
-
-function showEditMessage(input){
-  console.log(input);
-  if(input.css('display')=='none'){
-    input.css('display', 'block');
-  } else {
-    input.css('display', 'none');
-  }
 }
