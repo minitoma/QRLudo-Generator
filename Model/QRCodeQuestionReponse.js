@@ -106,7 +106,7 @@ class Projet {
  */
 class Question {
   //Constructeur d'une Question
-  constructor(title, reponsesUIDs = [], color = '#00000') {
+  constructor(title, reponsesUIDs = [], color = '#000000') {
     this.qrcode = {
       id: new Date().getTime(),
       name: title,
@@ -188,7 +188,7 @@ class Question {
  */
 class Reponse {
   //Constructeur d'une Reponse
-  constructor(name, color = '#00000') {
+  constructor(name, color = '#000000') {
     this.qrcode = {
       id: new Date().getTime(),
       name: name,

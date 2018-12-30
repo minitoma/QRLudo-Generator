@@ -12,10 +12,6 @@
 var projet = new Projet();
 
 $(document).ready(function() {
-
-  // Cacher le boutton de previsualisation du qrCode Question par default
-  $('#previwQuesQRCodeId').hide();
-
   //Clear Question Form
   $("#addNewQuesBtnId").click(function() {
     clearModalForm('newQuestionModalId');
@@ -81,7 +77,9 @@ $(document).ready(function() {
   //Previsualiser le QRcode Question
   $("#previwQuesQRCodeId").click(function() {
     for (let ques_item of projet.getQuestions()) {
-      if ($("#questionsId").val() == ques_item.getId()) {
+      console.log(JSON.parse($("#questionsId").val()));
+      console.log(ques_item.getId());
+      if (JSON.parse($("#questionsId").val()) == ques_item.getId()) {
         previewQRCode(ques_item, $('#qrView')[0], "type_question");
         break;
       }
