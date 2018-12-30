@@ -144,6 +144,14 @@ $(document).ready(function() {
     });
   });
 
+  $("#deleteQuestionBtn").on("click", function(){
+    var id_question = $("#questionsId option:selected").val();
+    if(id_question !== 'noquest'){
+      projet.removeQuestion(JSON.parse(id_question));
+      $("#questionsId option:selected").remove();
+    }
+  });
+
 });
 
 function importQuestionReponse(qrcode){
@@ -244,16 +252,8 @@ function saveQRCodeImage(div, qrcode, directoryName) {
 
 //Cette Fonction Supprime Une reponse a une question
 function deleteReponse(todelete) {
-  for (q of projet.getQuestions()) {
-    if (q.getId() == $("#questionsId option:selected").val()) {
-      for (i = 0; i < q.getReponsesUIDs().length; i++) {
-        if (q.getReponsesUIDs()[i] == todelete.attr('id')) {
-          q.getReponsesUIDs().splice(i, 1);
-        }
-      }
-    }
-  }
-  todelete.parent('div').remove();
+  projet.removeReponse(JSON.parse(todelete.attr('id')));
+  updateReponses();
 }
 
 function activerSave(){
