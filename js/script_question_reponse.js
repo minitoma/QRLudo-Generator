@@ -44,7 +44,7 @@ $(document).ready(function() {
   //Ajout d'une nouvelle question
   $("#addQuestionBtnId").click(function() {
     if (addNewValueToComboBox($('#questionTextAreaId').val(), 'questionsId', 'newQuestionModalId', projet.getQuestions())) {
-      $('#reponsesDivId').show();
+
     }
   });
 
@@ -300,7 +300,10 @@ function addNewValueToComboBox(new_val, selectid, modalIdToClose, array) {
       return;
     }
   });
-  if (existe) return false;
+  if (existe){
+    $("#messageQuestionModalError").show();
+    return false;
+  }
   //Ajouter a la liste deroulante la nouvelle valeur
   let nouvques = new Question(new_val);
   array.push(nouvques);
@@ -310,6 +313,7 @@ function addNewValueToComboBox(new_val, selectid, modalIdToClose, array) {
   }));
   //fermer la pop-up
   $("#" + selectid).val(nouvques.getId()).change();
+  $("#messageQuestionModalError").hide();
   $("#" + modalIdToClose + " .close").click();
   return true;
 }
@@ -325,12 +329,16 @@ function addNewValueToArray(new_val, my_array, modalIdToClose) {
       return;
     }
   });
-  if (existe) return false;
+  if (existe){
+    $("#messageReponseModalError").show();
+    return false;
+  }
   //Ajouter au tableau la nouvelle valeur
   my_array.push(new Reponse(new_val));
 
   //fermer la pop-up
   $("#" + modalIdToClose + " .close").click();
+  $("#messageReponseModalError").hide();
   return true;
 }
 
