@@ -12,15 +12,6 @@
 var projet = new Projet();
 
 $(document).ready(function() {
-
-  console.log("Root : " + root);
-
-  // Cacher le boutton de previsualisation du qrCode Question par default
-  $('#previwQuesQRCodeId').hide();
-
-  //Cacher le div des reponses par default
-  $('#reponsesDivId').hide();
-
   //Clear Question Form
   $("#addNewQuesBtnId").click(function() {
     clearModalForm('newQuestionModalId');
@@ -49,15 +40,14 @@ $(document).ready(function() {
   //Ajout d'une nouvelle question
   $("#addQuestionBtnId").click(function() {
     if (addNewValueToComboBox($('#questionTextAreaId').val(), 'questionsId', 'newQuestionModalId', projet.getQuestions())) {
-      $('#reponsesDivId').show();
+
     }
-    console.log(projet);
   });
 
   //Ajout d'une nouvelle reponse
   $("#addReponseBtnId").click(function() {
     addNewValueToArray($('#reponseTextAreaId').val(), projet.getReponses(), 'newReponseModalId');
-    console.log(projet);
+    updateReponses();
   });
 
   //cet evenement permet l'affectation d'une reponse a la question selectionnée
@@ -73,48 +63,23 @@ $(document).ready(function() {
         break;
       }
     }
-    $("#reponsesDivLabelsId").append("<div class='form-inline'><label class='form-control control-label col-md-6' style='padding-top:10px;'>" + $("#reponsesChooseSelectId option:selected").text() + "</label>" +
-      "<button id='" + $("#reponsesChooseSelectId option:selected").val() + "' type='button' name='rep[]' class='btn btn-outline-success' onclick='deleteReponse($(this));'><i class='fa fa-trash-alt'></i></button>" +
-      "<button type='button' name='previwRepQRCodeName' class='btn btn-outline-success' onclick='previewRep($(this));'><i class='fa fa-qrcode'></i></button>" +
-      "<button type='button' name='showEditMessage' class='btn btn-outline-success' onclick='toggleEditMessage($(this));'><i class='fa fa-edit'></i></button>" +
-      "<input class='form-control control-label col-md-6' style='padding-top:10px; display:none;' type='text' id='" + $("#reponsesChooseSelectId option:selected").val() + "' name='message'/>"+
-      "</div>");
+
+    updateReponses();
     $("#chooseReponseModalId .close").click();
-    console.log($("input#"+ $("#reponsesChooseSelectId option:selected").val()));
   });
 
 
   //Evenement quand la liste deroulante de la question change
   $("#questionsId").change(function() {
-    if ($(this).val() === "noquest") {
-      $('#reponsesDivId').hide(); // le div se cache quand l'option "Selectionner une question est selectionné"
-      $('#previwQuesQRCodeId').hide();
-    } else {
-      $('#previwQuesQRCodeId').show();
-      $('#reponsesDivId').show(); // Si une autre valeur le div des reponses sera affiché
-      $('#reponsesDivLabelsId').html('');
-      console.log(projet);
-      for (let ques_item of projet.getQuestions()) {
-        if ($(this).val() == ques_item.getId()) {
-          for (let repUid_item of ques_item.getReponsesUIDs()) {
-            for (let rep of projet.getReponses()) {
-              if (repUid_item == rep.getId()) {
-                $("#reponsesDivLabelsId").append("<div class='form-inline'><label class='form-control control-label col-md-6' style='padding-top:10px;'>" + rep.getName() + "</label>" +
-                  "<button id='" + rep.getId() + "' type='button' name='rep[]' class='btn btn-outline-success' onclick='deleteReponse($(this));'><i class='fa fa-trash-alt'></i></button>" +
-                  "<button type='button' name='previwRepQRCodeName' class='btn btn-outline-success' onclick='previewRep($(this));'><i class='fa fa-qrcode'></i></button></div>");
-              }
-            }
-          }
-          break;
-        }
-      }
-    }
+    updateReponses();
   });
 
   //Previsualiser le QRcode Question
   $("#previwQuesQRCodeId").click(function() {
     for (let ques_item of projet.getQuestions()) {
-      if ($("#questionsId").val() == ques_item.getId()) {
+      console.log(JSON.parse($("#questionsId").val()));
+      console.log(ques_item.getId());
+      if (JSON.parse($("#questionsId").val()) == ques_item.getId()) {
         previewQRCode(ques_item, $('#qrView')[0], "type_question");
         break;
       }
@@ -123,80 +88,159 @@ $(document).ready(function() {
 
   /* Methode qui genere un dossier avec un fichier json comportant tous les informations
    sur les questions et reponse du projets ainsi que les qrcodes de ces questions_reponses*/
-  $("#save").click(function() {
-    var facade = new FacadeController();
-    projet.setName($("#projectId").val());
-    console.log(projet);
-    let dir = projet.getName();
-    if (!fs.existsSync(`${root}/${dir}`)) {
-      fs.mkdirSync(`${root}/${dir}`);
-    }
-    fs.writeFile(`${root}/${dir}/data.json`, projet.getDataString(), function(err) {
-      if (err) {
-        console.log("ERROR !!");
+  $("#saveQRCode").click(function() {
+    var dir_path = dialog.showOpenDialog({title: 'Sélectionnez un dossier', properties: ['openDirectory']});
+    if(dir_path !== undefined){
+      var facade = new FacadeController();
+      projet.setName($("#projectId").val());
+      dir_path += "/" + projet.getName();
+
+      var fs = require('fs');
+      if(!fs.existsSync(dir_path)){
+        fs.mkdirSync(dir_path);
       }
-    });
-    for (question of projet.getQuestions()) {
-      let div = document.createElement('div');
-      facade.genererQRCode(div, question);
-      saveQRCodeImage(div, question, projet.getName());
-    }
-    for (reponse of projet.getReponses()) {
-      let div = document.createElement('div');
-      facade.genererQRCode(div, reponse);
-      saveQRCodeImage(div, reponse, projet.getName());
+
+      $.each(projet.getQuestions(), function(id, question){
+        let div = document.createElement('div');
+        facade.genererQRCode(div, question);
+        saveQRCodeImage(div, question, dir_path);
+      });
+
+      $.each(projet.getReponses(), function(id, reponse){
+        let div = document.createElement('div');
+        facade.genererQRCode(div, reponse);
+        saveQRCodeImage(div, reponse, dir_path);
+      });
     }
   });
 
   //Import d'un projet existant
-  $('#importFileValidateBtnId').click(function() {
-    let loaded = $.ajax({
-      url: document.getElementById("importProjectInputFileId").files[0].path,
-      dataType: 'json',
-      async: false,
-      success: function(data) {
-        // console.log("success");
-      }
-    }).responseJSON;
+  $('#importProjectBtnId').click(function() {
+    var dir_path = dialog.showOpenDialog({title: 'Sélectionnez le projet', properties: ['openDirectory']});
     projet = new Projet();
-    projet.projet.id = loaded.id;
-    projet.projet.nom = loaded.nom;
-    console.log(loaded);
-    for (let ques of loaded.questions) {
-      let current_ques = new Question(ques.qrcode.name, ques.qrcode.data);
-      current_ques.setId(ques.qrcode.id);
-      projet.addQuestion(current_ques);
-    }
-    for (let rep of loaded.reponses) {
-      let current_rep = new Reponse(rep.qrcode.name);
-      current_rep.setId(rep.qrcode.id);
-      projet.addReponse(current_rep);
-    }
-    $('#projectId').val(projet.getName());
-    $('#questionsId').html('');
-    $('#questionsId').append($('<option>', {
-      val: "noquest",
-      text: "---Selectionner Une Question---"
-    }));
-    for (let question of projet.getQuestions()) {
-      $('#questionsId').append($('<option>', {
-        val: question.getId(),
-        text: question.getName()
-      }));
-    }
-    $("#importProjectModalId .close").click();
+    var path_split = dir_path[0].split('/');
+    projet.projet.nom = path_split[path_split.length-1];
+    $("#projectId").val(path_split[path_split.length-1]);
+
+    let facade = new FacadeController();
+
+    var fs = require('fs');
+
+    fs.readdir(dir_path[0], (err, files) => {
+      files.forEach(file => {
+        var file_path = dir_path + "/" + file;
+        let blob = null;
+        let xhr = new XMLHttpRequest();
+        xhr.open("GET", file_path);
+        xhr.responseType = "blob"; //force the HTTP response, response-type header to be blob
+        xhr.onload = function() {
+          blob = xhr.response; //xhr.response is now a blob object
+          facade.importQRCode(blob, importQuestionReponse);
+        }
+        xhr.send();
+      });
+    });
   });
+
+  $("#deleteQuestionBtn").on("click", function(){
+    var id_question = $("#questionsId option:selected").val();
+    if(id_question !== 'noquest'){
+      projet.removeQuestion(JSON.parse(id_question));
+      $("#questionsId option:selected").remove();
+    }
+  });
+
 });
 
+function importQuestionReponse(qrcode){
+  if(qrcode.getType()==='question'){
+    projet.addQuestion(qrcode);
+    $('#questionsId').append($('<option>', {
+        val: qrcode.getId(),
+        text: qrcode.getName()
+    }));
+  }
+  else if (qrcode.getType()==='reponse') {
+    projet.addReponse(qrcode);
+  }
+
+  updateReponses();
+
+}
+
 function toggleEditMessage(totoggle){
-  totoggle.parent('div').find("input").toggle();
+  totoggle.parent('div').find("div").toggle();
+}
+
+function updateReponses(){
+  var id_question = $("#questionsId option:selected").val();
+  var question = null;
+  if(id_question !== 'noquest'){
+    question = projet.getQuestionById(id_question);
+  }
+
+  $("#reponsesDivLabelsId").empty();
+  $.each(projet.getReponses(), function(i, val) {
+
+    var str_checked = '';
+    var str_message_value = '';
+    if(question !== null){
+      var rep = question.getReponseById(val.qrcode.id);
+      if(rep!==null){
+        str_checked = 'checked';
+        str_message_value = rep.message;
+      }
+    }
+
+    var new_reponse_div = "<div class='form-inline'><label class='form-control control-label col-md-6' style='padding-top:10px;'>" + val.getName() + "</label>" +
+      "<input class='form-check-input' type='checkbox' id='" + val.getId() + "' onclick='changeReponse($(this))' " + str_checked + "/>" +
+      "<button id='" + val.getId() + "' type='button' name='rep[]' class='btn btn-outline-success' onclick='deleteReponse($(this));'><i class='fa fa-trash-alt'></i></button>" +
+      "<button type='button' name='previwRepQRCodeName' class='btn btn-outline-success' onclick='previewRep($(this));'><i class='fa fa-qrcode'></i></button>" +
+      "<button type='button' name='showEditMessage' class='btn btn-outline-success' onclick='toggleEditMessage($(this));'><i class='fa fa-edit'></i></button>" +
+      "<div class='form-inline' id='customMessageDiv' style='display:none;'>" +
+        "<input class='form-control control-label col-md-6' type='text' id='" + val.getId() + "' name='message' value='" + str_message_value + "'/>"+
+        "<button class='btn btn-outline-success' onclick='setCustomMessage($(this));'><i class='fas fa-check'></i></button>" +
+      "</div></div>"
+    $("#reponsesDivLabelsId").append(new_reponse_div);
+  });
+}
+
+function changeReponse(checkbox){
+  var id_question = $("#questionsId option:selected").val();
+  //si une question est selectionnée
+  if(id_question !== 'noquest'){
+    for (let ques_item of projet.getQuestions()) {
+      if (id_question == ques_item.getId()) {
+        id_reponse = JSON.parse($(checkbox).attr('id'));
+        if($(checkbox).prop('checked')){
+          ques_item.addReponse(id_reponse);
+        }
+        else{
+          ques_item.removeReponse(id_reponse);
+        }
+      }
+    }
+  }
+}
+
+function setCustomMessage(button){
+  var id_question = JSON.parse($("#questionsId option:selected").val());
+  if(id_question!=='noquest'){
+    for(let question of projet.getQuestions()){
+      if(question.qrcode.id === id_question){
+        var input_text = button.parent('div').find("input");
+        question.setMessage(JSON.parse($(input_text).attr('id')), $(input_text).val());
+      }
+    }
+
+  }
 }
 
 //Cette fonction sauvegardel'image du qrcode dans un div pour le pouvoir generer apres
 function saveQRCodeImage(div, qrcode, directoryName) {
   let img = $(div).children()[0].src;
   let data = img.replace(/^data:image\/\w+;base64,/, '');
-  fs.writeFile(`${root}/${directoryName}/${qrcode.getName()}.jpeg`, data, {
+  fs.writeFile(`${directoryName}/${qrcode.getName()}.jpeg`, data, {
     encoding: 'base64'
   }, (err) => {
     if (err) throw err;
@@ -206,16 +250,17 @@ function saveQRCodeImage(div, qrcode, directoryName) {
 
 //Cette Fonction Supprime Une reponse a une question
 function deleteReponse(todelete) {
-  for (q of projet.getQuestions()) {
-    if (q.getId() == $("#questionsId option:selected").val()) {
-      for (i = 0; i < q.getReponsesUIDs().length; i++) {
-        if (q.getReponsesUIDs()[i] == todelete.attr('id')) {
-          q.getReponsesUIDs().splice(i, 1);
-        }
-      }
-    }
+  projet.removeReponse(JSON.parse(todelete.attr('id')));
+  updateReponses();
+}
+
+function activerSave(){
+  if($("#projectId").val().length > 0){
+    $("#saveQRCode").attr('disabled', false);
   }
-  todelete.parent('div').remove();
+  else{
+    $("#saveQRCode").attr('disabled', true);
+  }
 }
 
 // Previsualiser les reponses
@@ -253,7 +298,10 @@ function addNewValueToComboBox(new_val, selectid, modalIdToClose, array) {
       return;
     }
   });
-  if (existe) return false;
+  if (existe){
+    $("#messageQuestionModalError").show();
+    return false;
+  }
   //Ajouter a la liste deroulante la nouvelle valeur
   let nouvques = new Question(new_val);
   array.push(nouvques);
@@ -263,6 +311,7 @@ function addNewValueToComboBox(new_val, selectid, modalIdToClose, array) {
   }));
   //fermer la pop-up
   $("#" + selectid).val(nouvques.getId()).change();
+  $("#messageQuestionModalError").hide();
   $("#" + modalIdToClose + " .close").click();
   return true;
 }
@@ -278,12 +327,16 @@ function addNewValueToArray(new_val, my_array, modalIdToClose) {
       return;
     }
   });
-  if (existe) return false;
+  if (existe){
+    $("#messageReponseModalError").show();
+    return false;
+  }
   //Ajouter au tableau la nouvelle valeur
   my_array.push(new Reponse(new_val));
 
   //fermer la pop-up
   $("#" + modalIdToClose + " .close").click();
+  $("#messageReponseModalError").hide();
   return true;
 }
 
@@ -299,13 +352,4 @@ function selectOptionsValuesAsArray(selectId) {
 //Mettre les champs d'un modal vides
 function clearModalForm(modal_id) {
   $('#' + modal_id).find('form')[0].reset();
-}
-
-function showEditMessage(input){
-  console.log(input);
-  if(input.css('display')=='none'){
-    input.css('display', 'block');
-  } else {
-    input.css('display', 'none');
-  }
 }

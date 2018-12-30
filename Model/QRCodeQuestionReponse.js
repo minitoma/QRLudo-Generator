@@ -32,6 +32,28 @@ class Projet {
     this.projet.reponses.push(reponse)
   }
 
+  removeQuestion(questionId){
+    for(let question of this.projet.questions){
+      if(question.qrcode.id === questionId){
+        var index = this.projet.questions.indexOf(question);
+        this.projet.questions.splice(index, 1);
+      }
+    }
+  }
+
+  removeReponse(reponseId){
+    for(let reponse of this.projet.reponses){
+      if(reponse.qrcode.id === reponseId){
+        var index = this.projet.reponses.indexOf(reponse);
+        this.projet.reponses.splice(index, 1);
+      }
+    }
+
+    for(let question of this.projet.questions){
+      question.removeReponse(reponseId);
+    }
+  }
+
   setName(nom) {
     return this.projet.nom = nom;
   }
@@ -84,7 +106,7 @@ class Projet {
  */
 class Question {
   //Constructeur d'une Question
-  constructor(title, reponsesUIDs = [], color = '#00000') {
+  constructor(title, reponsesUIDs = [], color = '#000000') {
     this.qrcode = {
       id: new Date().getTime(),
       name: title,
@@ -111,11 +133,27 @@ class Question {
   }
 
   getColor() {
-    this.qrcode.color;
+    return this.qrcode.color;
+  }
+
+  getType(){
+    return this.qrcode.type;
   }
 
   getReponseUIDByIndex(indice) {
     return this.qrcode.data[indice];
+  }
+
+  getReponseById(reponseUid){
+    for(let rep of this.qrcode.data){
+      console.log(rep);
+      console.log(reponseUid);
+      if(rep.id === reponseUid){
+        console.log(rep);
+        return rep;
+      }
+    }
+    return null;
   }
 
   addReponse(reponseUid) {
@@ -123,10 +161,19 @@ class Question {
     this.qrcode.data.push({"id": reponseUid, "message":settings.get("defaultBonneReponse")});
   }
 
+  removeReponse(reponseUid){
+    for(let rep of this.qrcode.data){
+      if(rep.id === reponseUid){
+        var index = this.qrcode.data.indexOf(rep);
+        this.qrcode.data.splice(index, 1);
+      }
+    }
+  }
+
   setMessage(reponseUid, message){
     for (let r of this.qrcode.data) {
-      if (r.id == reponseUid) {
-        r.message = message
+      if (r.id === reponseUid) {
+        r.message = message;
       }
     }
   }
@@ -141,7 +188,7 @@ class Question {
  */
 class Reponse {
   //Constructeur d'une Reponse
-  constructor(name, color = '#00000') {
+  constructor(name, color = '#000000') {
     this.qrcode = {
       id: new Date().getTime(),
       name: name,
@@ -164,7 +211,11 @@ class Reponse {
   }
 
   getColor() {
-    this.qrcode.color;
+    return this.qrcode.color;
+  }
+
+  getType(){
+    return this.qrcode.type;
   }
 
   getDataString() {

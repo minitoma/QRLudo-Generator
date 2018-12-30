@@ -48,8 +48,14 @@ class QRCodeLoaderJson {
           qrcode = new QRCodeEnsembleJson(qr.name, qr.data, qr.color);
           break;
 
-        case "questionReponse":
-          console.log("Créer un qr code question réponse");
+        case "question":
+          qrcode = new Question(qr.name, qr.data, qr.color);
+          qrcode.setId(qr.id);
+          break;
+
+        case "reponse":
+          qrcode = new Reponse(qr.name, qr.color);
+          qrcode.setId(qr.id);
           break;
 
         default:

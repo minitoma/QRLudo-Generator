@@ -4,15 +4,12 @@
  * @Last modified time: 2018-12-08T14:19:38+01:00
  */
 
-
-
 $().ready(function() {
+  //require("./js/script_unique.js");
 
-  $('#setImportedFile').click(function(e) {
-    if (document.getElementById("importedFile").files.length > 0) {
-      var nomfichier = document.getElementById("importedFile").files[0].path;
-      importQRCodeImport(nomfichier);
-    }
+  $('#setImportedFile').click(function() {
+    var nomfichier = document.getElementById("importedFile").files[0].path;
+    importQRCodeImport(nomfichier);
   });
 });
 //fonction permettant de charger, importer un qr code
@@ -33,9 +30,7 @@ function importQRCodeImport(filename) {
 // fonction permettant de recréer visuellement un qr code
 function drawQRCodeImport(qrcode) {
   console.log("qr code to be drawn : ", qrcode);
-
   if (qrcode.getType() == 'unique' || qrcode.getType() == 'xl') {
-
     $("#charger-page").load("Views/unique.html", function() {
       $('input#qrColor').val(qrcode.getColor()); // restaurer la couleur du qrcode
       $('input#qrName').val(qrcode.getName()); //restaurer le nom du qrcode
@@ -49,9 +44,11 @@ function drawQRCodeImport(qrcode) {
       drawQRCodeEnsembleUnique(qrcode);
       $('#txtDragAndDrop').remove();
       $('#preview ,#empty').attr('disabled', false);
+
     });
   } else if (qrcode.getType() == 'quesRep') {
-    $("#charger-page").load("Views/quesRep.html", function() {});
+    $("#charger-page").load("Views/quesRep.html", function() {
+    });
   }
 
 }

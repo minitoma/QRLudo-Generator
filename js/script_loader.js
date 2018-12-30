@@ -8,6 +8,11 @@
 const path = require('path');
 const root = path.dirname(require.main.filename);
 const piexif = require('piexifjs');
+var {
+  remote,
+  ipcRenderer
+} = require('electron');
+const { dialog } = remote;
 
 const {
   CompresseurTexte
