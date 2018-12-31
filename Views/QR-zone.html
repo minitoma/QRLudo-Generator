@@ -57,31 +57,11 @@
     $("#pauseLecture").hide();
   });
 
-  // function play(){
-  //   var data = $(".qrData")[currentRead];
-  //
-  //   if(data.name == 'legendeQR'){
-  //     var utter = new SpeechSynthesisUtterance();
-  //     utter.text = data.value;
-  //     utter.onend = function(event) { console.log('Speech complete'); }
-  //     utter.voice = speechSynthesis.getVoices()[26];
-  //     speechSynthesis.speak(utter);
-  //   }
-  //   else if(data.name == 'AudioName'){
-  //     if(!paused){
-  //
-  //     }
-  //
-  //   }
-  //   paused = false;
-  //
-  // }
-
   function getCurrentRead(){
     return $(".qrData")[currentRead];
   }
 
-  function play(){
+  function playSound(){
     if(!paused){
       var data = getCurrentRead();
       sound = new Howl({
@@ -91,6 +71,30 @@
     console.log(sound);
 
     sound.play();
+  }
+
+  function playTTS(){
+    if(!paused){
+      speechSynthesis.cancel();
+      var utter = new SpeechSynthesisUtterance();
+      utter.text = getCurrentRead().value;
+      utter.onend = function(event) { console.log('Speech complete'); }
+      utter.voice = speechSynthesis.getVoices()[26];
+      speechSynthesis.speak(utter);
+    }
+    else{
+      speechSynthesis.resume();
+    }
+
+  }
+
+  function play(){
+    if(getCurrentRead().name==='AudioName'){
+      playSound();
+    }
+    else if (getCurrentRead().name==='legendeQR') {
+      playTTS();
+    }
 
     //si c'est le premier champ, on désactive le bouton previous
     $("#prevLecture").attr("disabled", currentRead===0);
@@ -104,7 +108,12 @@
   }
 
   function stop() {
-    sound.stop();
+    if(getCurrentRead().name==='AudioName'){
+      sound.stop();
+    }
+    else if (getCurrentRead().name==='legendeQR') {
+      speechSynthesis.cancel();
+    }
     paused = false;
   }
 
@@ -119,13 +128,17 @@
     $("#stopLecture").attr("disabled", true);
     $("#pauseLecture").hide();
     $("#playLecture").show();
-    speechSynthesis.cancel();
     currentRead = 0;
 
   });
 
   $("#pauseLecture").on("click", function(){
-    sound.pause();
+    if(getCurrentRead().name==='AudioName'){
+      sound.pause();
+    }
+    else if (getCurrentRead().name==='legendeQR') {
+      speechSynthesis.pause();
+    }
     $("#pauseLecture").hide();
     $("#playLecture").show();
     paused = true;
