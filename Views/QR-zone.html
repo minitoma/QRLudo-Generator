@@ -15,11 +15,11 @@
   <button type="button" class="btn btn-outline-success" id="playLecture">
     <i class="fa fa-play"></i>&nbsp;&nbsp;Lire
   </button>
-  <button type="button" class="btn btn-outline-success" id="nextLecture">
-    <i class="fa fa-step-forward"></i>
-  </button>
   <button type="button" class="btn btn-outline-success" id="pauseLecture">
     <i class="fa fa-pause"></i>&nbsp;&nbsp;Pause
+  </button>
+  <button type="button" class="btn btn-outline-success" id="nextLecture">
+    <i class="fa fa-step-forward"></i>
   </button>
   <button type="button" class="btn btn-outline-success" id="stopLecture">
     <i class="fa fa-stop"></i>&nbsp;&nbsp;Stop
@@ -37,49 +37,76 @@
   var context = new AudioContext();
   var request = new XMLHttpRequest();
   var source = context.createBufferSource();
+  var {Howl, Howler} = require('howler');
+  var sound = null;
+
+  var player = null;
 
   var startedAt;
   var pausedAt;
-  var paused;
+  var paused = false;
 
   var currentRead = 0;
 
   $(document).ready(function(){
     speechSynthesis.getVoices();
+    $("#playLecture").attr("disabled", false);
+    $("#prevLecture").attr("disabled", true);
+    $("#nextLecture").attr("disabled", true);
+    $("#stopLecture").attr("disabled", true);
+    $("#pauseLecture").hide();
   });
 
-  function play(){
+  // function play(){
+  //   var data = $(".qrData")[currentRead];
+  //
+  //   if(data.name == 'legendeQR'){
+  //     var utter = new SpeechSynthesisUtterance();
+  //     utter.text = data.value;
+  //     utter.onend = function(event) { console.log('Speech complete'); }
+  //     utter.voice = speechSynthesis.getVoices()[26];
+  //     speechSynthesis.speak(utter);
+  //   }
+  //   else if(data.name == 'AudioName'){
+  //     if(!paused){
+  //
+  //     }
+  //
+  //   }
+  //   paused = false;
+  //
+  // }
 
-    paused = false;
-
-    var data = $(".qrData")[currentRead];
-
-    if(data.name == 'legendeQR'){
-      var utter = new SpeechSynthesisUtterance();
-      utter.text = data.value;
-      utter.onend = function(event) { console.log('Speech complete'); }
-      utter.voice = speechSynthesis.getVoices()[26];
-      speechSynthesis.speak(utter);
-    }
-    else if(data.name == 'AudioName'){
-      const {Howl, Howler} = require('howler');
-      var sound = new Howl({
-        src: ['./Download/'+data.value]
-      });
-
-      sound.play();
+  function getCurrentRead(){
+    return $(".qrData")[currentRead];
   }
 
+  function play(){
+    if(!paused){
+      var data = getCurrentRead();
+      sound = new Howl({
+        src: ['./Download/'+data.value]
+      });
+    }
+    console.log(sound);
+
+    sound.play();
+
+    //si c'est le premier champ, on désactive le bouton previous
+    $("#prevLecture").attr("disabled", currentRead===0);
+    //si c'est le dernier champ, on désactive le bouton next
+    $("#nextLecture").attr("disabled", currentRead===$(".qrData").length-1);
+
+    $("#stopLecture").attr("disabled", false);
+    $("#playLecture").hide();
+    $("#pauseLecture").show();
+    paused = false;
   }
 
   function stop() {
-    pausedAt = 0;
-    currentRead = 0;
-    source.stop(0);
+    sound.stop();
+    paused = false;
   }
-
-
-  $("#playLecture").attr("disabled", false);
 
   $("#playLecture").on("click", function(){
     play();
@@ -87,37 +114,38 @@
 
   $("#stopLecture").on("click", function(){
     stop();
+    $("#prevLecture").attr("disabled", true);
+    $("#nextLecture").attr("disabled", true);
+    $("#stopLecture").attr("disabled", true);
+    $("#pauseLecture").hide();
+    $("#playLecture").show();
     speechSynthesis.cancel();
+    currentRead = 0;
+
   });
 
   $("#pauseLecture").on("click", function(){
-    if (paused) play();
-    else{
-      source.stop(0);
-      pausedAt = Date.now() - startedAt;
-      paused = true;
-    }
+    sound.pause();
+    $("#pauseLecture").hide();
+    $("#playLecture").show();
+    paused = true;
   });
 
   $("#nextLecture").on("click", function(){
+    stop();
     currentRead++;
     if(currentRead==$(".qrData").length){
       currentRead=0;
     }
-
-    source.stop(0);
-    pausedAt = 0;
     play();
   });
 
   $("#prevLecture").on("click", function(){
+    stop();
     currentRead--;
     if(currentRead<0){
       currentRead = $(".qrData").length-1;
     }
-
-    source.stop(0);
-    pausedAt = 0;
     play();
   });
 
