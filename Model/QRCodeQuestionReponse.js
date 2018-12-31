@@ -107,6 +107,7 @@ class Projet {
 class Question {
   //Constructeur d'une Question
   constructor(title, reponsesUIDs = [], color = '#000000') {
+    console.log(color);
     this.qrcode = {
       id: new Date().getTime(),
       name: title,
@@ -134,6 +135,10 @@ class Question {
 
   getColor() {
     return this.qrcode.color;
+  }
+
+  setColor(color){
+    this.qrcode.color = color;
   }
 
   getType(){
@@ -212,6 +217,10 @@ class Reponse {
 
   getColor() {
     return this.qrcode.color;
+  }
+
+  setColor(color){
+    this.qrcode.color = color;
   }
 
   getType(){

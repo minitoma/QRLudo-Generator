@@ -12,8 +12,11 @@
 var projet = new Projet();
 
 $(document).ready(function() {
+  var settings = require("electron-settings");
 
-  $("#play-sound-div").hide();
+  if (settings.has("defaultColor")) {
+    $("#qrColor").val(settings.get("defaultColor"));
+  }
 
   //Clear Question Form
   $("#addNewQuesBtnId").click(function() {
@@ -42,15 +45,60 @@ $(document).ready(function() {
 
   //Ajout d'une nouvelle question
   $("#addQuestionBtnId").click(function() {
-    if (addNewValueToComboBox($('#questionTextAreaId').val(), 'questionsId', 'newQuestionModalId', projet.getQuestions())) {
-
+    if ($('#questionTextAreaId').val() === "") return false; // si le champ est vide on sort
+    //sortir de la fonction si le champ entré existe deja
+    let existe = false;
+    $('select#questionsId').find('option').each(function() {
+      if ($(this).text() === $('#questionTextAreaId').val()) {
+        existe = true;
+        return;
+      }
+    });
+    if (existe){
+      $("#messageQuestionModalError").show();
+      return false;
     }
+
+    //Ajouter au projet la nouvelle question
+    let nouvques = new Question($('#questionTextAreaId').val(), [], $("#qrColor").val());
+    projet.addQuestion(nouvques);
+
+    //Ajouter a la liste deroulante la nouvelle valeur
+    $('#questionsId').append($('<option>', {
+      val: nouvques.getId(),
+      text: $('#questionTextAreaId').val()
+    }));
+    //fermer la pop-up
+    $("#questionsId").val(nouvques.getId()).change();
+    $("#messageQuestionModalError").hide();
+    $("#newQuestionModalId .close").click();
+    return true;
   });
 
   //Ajout d'une nouvelle reponse
   $("#addReponseBtnId").click(function() {
-    addNewValueToArray($('#reponseTextAreaId').val(), projet.getReponses(), 'newReponseModalId');
+    if ($('#reponseTextAreaId').val() === "") return false; // si le champ est vide on sort
+    //sortir de la fonction si le champ entré existe deja
+    let existe = false;
+    $.each(projet.getReponses(), function(i, val) {
+      if (val.getName() === $('#reponseTextAreaId').val()) {
+        existe = true;
+        return;
+      }
+    });
+    if (existe){
+      $("#messageReponseModalError").show();
+      return false;
+    }
+    //Ajouter au tableau la nouvelle valeur
+    projet.addReponse(new Reponse($('#reponseTextAreaId').val(), $("#qrColor").val()));
+
+    //fermer la pop-up
+    $("#newReponseModalId .close").click();
+    $("#messageReponseModalError").hide();
     updateReponses();
+
+    return true;
   });
 
   //cet evenement permet l'affectation d'une reponse a la question selectionnée
@@ -151,6 +199,18 @@ $(document).ready(function() {
       projet.removeQuestion(JSON.parse(id_question));
       $("#questionsId option:selected").remove();
     }
+  });
+
+  //Changement couleur
+  $("#qrColor").on('change', function(){
+    var color = $(this).val();
+    $.each(projet.getQuestions(), function(i, question){
+      question.setColor(color);
+    });
+
+    $.each(projet.getReponses(), function(i, reponse){
+      reponse.setColor(color);
+    });
   });
 
 });
@@ -280,67 +340,10 @@ function previewQRCode(qrcode, div, type) {
       if(val.value !== ''){
         qrcode.setMessage(val.id, val.value);
       }
-
     });
-    facade.genererQRCode(div, qrcode);
-  }
-  else if ((type == "type_reponse")) {
-    facade.genererQRCode(div, qrcode);
-  }
-}
 
-
-//Ajouter une nouvelle valeur a la liste deroulante
-function addNewValueToComboBox(new_val, selectid, modalIdToClose, array) {
-  if (new_val === "") return false; // si le champ est vide on sort
-  //sortir de la fonction si le champ entré existe deja
-  let existe = false;
-  $('select#' + selectid).find('option').each(function() {
-    if ($(this).text() === new_val) {
-      existe = true;
-      return;
-    }
-  });
-  if (existe){
-    $("#messageQuestionModalError").show();
-    return false;
   }
-  //Ajouter a la liste deroulante la nouvelle valeur
-  let nouvques = new Question(new_val);
-  array.push(nouvques);
-  $('#' + selectid).append($('<option>', {
-    val: nouvques.getId(),
-    text: new_val
-  }));
-  //fermer la pop-up
-  $("#" + selectid).val(nouvques.getId()).change();
-  $("#messageQuestionModalError").hide();
-  $("#" + modalIdToClose + " .close").click();
-  return true;
-}
-
-//Ajouter une nouvelle valeur a un tableau
-function addNewValueToArray(new_val, my_array, modalIdToClose) {
-  if (new_val === "") return false; // si le champ est vide on sort
-  //sortir de la fonction si le champ entré existe deja
-  let existe = false;
-  $.each(my_array, function(i, val) {
-    if (val.getName() === new_val) {
-      existe = true;
-      return;
-    }
-  });
-  if (existe){
-    $("#messageReponseModalError").show();
-    return false;
-  }
-  //Ajouter au tableau la nouvelle valeur
-  my_array.push(new Reponse(new_val));
-
-  //fermer la pop-up
-  $("#" + modalIdToClose + " .close").click();
-  $("#messageReponseModalError").hide();
-  return true;
+  facade.genererQRCode(div, qrcode);
 }
 
 //Renvoie un Array des valeur d'une liste deroulante
