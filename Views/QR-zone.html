@@ -62,33 +62,12 @@
       speechSynthesis.speak(utter);
     }
     else if(data.name == 'AudioName'){
+      const {Howl, Howler} = require('howler');
+      var sound = new Howl({
+        src: ['./Download/'+data.value]
+      });
 
-
-      request.open('GET', 'https://drive.google.com/uc?export=download&id=' + data.id, true);
-      request.responseType = 'arraybuffer';
-
-      source = context.createBufferSource(); // creates a sound source
-
-
-      // Decode asynchronously
-      request.onload = function() {
-        context.decodeAudioData(request.response, function(buffer) {
-
-          source.connect(context.destination);
-          source.buffer = buffer;
-          if (pausedAt) {
-              startedAt = Date.now() - pausedAt;
-              source.start(0, pausedAt / 1000);
-          }
-          else {
-              startedAt = Date.now();
-              source.start(0);
-          }
-        }, function(error){
-          console.log(error);
-        });
-      }
-      request.send();
+      sound.play();
   }
 
   }

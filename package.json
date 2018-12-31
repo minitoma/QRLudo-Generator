@@ -17,7 +17,7 @@
     "zlib": "^1.0.5",
     "electron-settings":"^3.2.0",
     "request":"^2.88.0",
-    "play-sound":"^1.1.2"
+    "howler": "^2.1.1"
   },
   "scripts": {
     "install-linux": "electron-packager . qrludo-generator --overwrite --asar --platform=linux --out=release-builds",
