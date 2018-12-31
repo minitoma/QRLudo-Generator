@@ -345,6 +345,17 @@ input[type="color"]::-webkit-color-swatch {
   margin-right: 5px;
 }
 
+#parametres{
+  margin-left: 25px;
+  margin-bottom: 10px;
+  background-color: white;
+}
+
+#parametres:hover{
+  background-color: #28a745;
+  border: 1px solid white;
+}
+
 /* ---------------------------------------------------
     MEDIAQUERIES
 ----------------------------------------------------- */
