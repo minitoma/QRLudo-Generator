@@ -4,7 +4,6 @@
  * @Last modified time: 2018-12-11T23:14:43+01:00
  */
 
-console.log(controllerEnsemble);
 $().ready(function() {
 
   var settings = require("electron-settings");
@@ -12,6 +11,8 @@ $().ready(function() {
   if (settings.has("defaultColor")) {
     $("#qrColor").val(settings.get("defaultColor"));
   }
+
+  $("#play-sound-div").hide();
 
   // Genere le qrCode Ensemble
   $("#preview").click(function() {
@@ -130,6 +131,8 @@ function genererLigne(name) {
 
   baliseSpan.appendChild(textDiv);
   baliseSpan.setAttribute("style", "white-space: nowrap; padding:5px; font-size:0.7em;");
+  baliseSpan.setAttribute("class", "qrData");
+  baliseSpan.setAttribute("name", "qrCode");
 
   baliseDiv.addEventListener("click", afficherQrCode);
   baliseDiv.appendChild(baliseButton);

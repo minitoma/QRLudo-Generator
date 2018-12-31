@@ -12,6 +12,9 @@
 var projet = new Projet();
 
 $(document).ready(function() {
+
+  $("#play-sound-div").hide();
+
   //Clear Question Form
   $("#addNewQuesBtnId").click(function() {
     clearModalForm('newQuestionModalId');
