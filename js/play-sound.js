@@ -48,6 +48,10 @@ function playTTS(){
   var filepath = path.join('./tts/', 'current_tts.mp3');
   var fs = require('fs');
 
+  if(!fs.existsSync('./tts/')){
+    fs.mkdirSync('./tts/');
+  }
+
   gtts.save(filepath, getCurrentRead().value , function() {
     sound = createNewHowlSound(filepath);
     sound.play();
