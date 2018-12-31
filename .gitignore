@@ -1,6 +1,6 @@
 node_modules
 Download/*
-tts/
+tts/*
 release-builds/*
 
 qr-codes-linux-x64/
