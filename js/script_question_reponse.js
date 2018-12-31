@@ -12,8 +12,8 @@
 var projet = new Projet();
 
 $(document).ready(function() {
+  //Affichage de la couleur par défaut des paramètres
   var settings = require("electron-settings");
-
   if (settings.has("defaultColor")) {
     $("#qrColor").val(settings.get("defaultColor"));
   }
@@ -90,35 +90,18 @@ $(document).ready(function() {
       $("#messageReponseModalError").show();
       return false;
     }
-    //Ajouter au tableau la nouvelle valeur
+    //Ajouter au projet la nouvelle réponse
     projet.addReponse(new Reponse($('#reponseTextAreaId').val(), $("#qrColor").val()));
 
     //fermer la pop-up
     $("#newReponseModalId .close").click();
     $("#messageReponseModalError").hide();
+
+    //On met à jour l'affichage des réponses
     updateReponses();
 
     return true;
   });
-
-  //cet evenement permet l'affectation d'une reponse a la question selectionnée
-  $("#chooseReponseBtnId").click(function() {
-    for (let ques_item of projet.getQuestions()) {
-      if (ques_item.getName() === $("#questionsId option:selected").text()) {
-        for (let rep_itemUid of ques_item.getReponsesUIDs()) {
-          if (rep_itemUid === $("#reponsesChooseSelectId option:selected").val()) {
-            return;
-          }
-        }
-        ques_item.addReponse($("#reponsesChooseSelectId option:selected").val());
-        break;
-      }
-    }
-
-    updateReponses();
-    $("#chooseReponseModalId .close").click();
-  });
-
 
   //Evenement quand la liste deroulante de la question change
   $("#questionsId").change(function() {
@@ -128,8 +111,6 @@ $(document).ready(function() {
   //Previsualiser le QRcode Question
   $("#previwQuesQRCodeId").click(function() {
     for (let ques_item of projet.getQuestions()) {
-      console.log(JSON.parse($("#questionsId").val()));
-      console.log(ques_item.getId());
       if (JSON.parse($("#questionsId").val()) == ques_item.getId()) {
         previewQRCode(ques_item, $('#qrView')[0], "type_question");
         break;
@@ -137,9 +118,11 @@ $(document).ready(function() {
     }
   });
 
-  /* Methode qui genere un dossier avec un fichier json comportant tous les informations
-   sur les questions et reponse du projets ainsi que les qrcodes de ces questions_reponses*/
+  /*Permet d'exporter un Projet
+  On enregistre toutes les questions et réponses du projet dans le répertoire sélectionné
+  par l'utilisateur*/
   $("#saveQRCode").click(function() {
+    //Permet de sélectinner le répertoire où le projet va être enregistré
     var dir_path = dialog.showOpenDialog({title: 'Sélectionnez un dossier', properties: ['openDirectory']});
     if(dir_path !== undefined){
       var facade = new FacadeController();
@@ -151,12 +134,14 @@ $(document).ready(function() {
         fs.mkdirSync(dir_path);
       }
 
+      //On enregistre chaque question
       $.each(projet.getQuestions(), function(id, question){
         let div = document.createElement('div');
         facade.genererQRCode(div, question);
         saveQRCodeImage(div, question, dir_path);
       });
 
+      //Idem pour les réponses
       $.each(projet.getReponses(), function(id, reponse){
         let div = document.createElement('div');
         facade.genererQRCode(div, reponse);
@@ -165,11 +150,13 @@ $(document).ready(function() {
     }
   });
 
-  //Import d'un projet existant
+  //Import d'un projet existant à partir d'un répertoire
   $('#importProjectBtnId').click(function() {
+    //Permet de sélectionner le répertoire du projet
     var dir_path = dialog.showOpenDialog({title: 'Sélectionnez le projet', properties: ['openDirectory']});
     projet = new Projet();
     var path_split = dir_path[0].split('/');
+    //On récupère le nom du projet
     projet.projet.nom = path_split[path_split.length-1];
     $("#projectId").val(path_split[path_split.length-1]);
 
@@ -177,15 +164,22 @@ $(document).ready(function() {
 
     var fs = require('fs');
 
+    //Pour chaque fichier du répertoire
     fs.readdir(dir_path[0], (err, files) => {
       files.forEach(file => {
         var file_path = dir_path + "/" + file;
         let blob = null;
+        //On crée une requête xmlhttp pour récupérer le blob du fichier
         let xhr = new XMLHttpRequest();
         xhr.open("GET", file_path);
-        xhr.responseType = "blob"; //force the HTTP response, response-type header to be blob
+        xhr.responseType = "blob";
         xhr.onload = function() {
-          blob = xhr.response; //xhr.response is now a blob object
+          blob = xhr.response;
+          //Puis on importe le qrcode à partir du blob récupéré
+
+          //importQuestionReponse est un callback, il s'agit de la méthode appliquée
+          //par la façade sur le qrcode importé
+          //(cf méthode importQuestionReponse)
           facade.importQRCode(blob, importQuestionReponse);
         }
         xhr.send();
@@ -193,6 +187,7 @@ $(document).ready(function() {
     });
   });
 
+  //Permet de supprimer une question d'un projet
   $("#deleteQuestionBtn").on("click", function(){
     var id_question = $("#questionsId option:selected").val();
     if(id_question !== 'noquest'){
@@ -215,6 +210,8 @@ $(document).ready(function() {
 
 });
 
+//Méthode appelée lors de l'import d'un qrcode Question/Réponse
+//Permet d'ajouter au projet les qrcodes
 function importQuestionReponse(qrcode){
   if(qrcode.getType()==='question'){
     projet.addQuestion(qrcode);
@@ -228,21 +225,28 @@ function importQuestionReponse(qrcode){
   }
 
   updateReponses();
-
 }
 
 function toggleEditMessage(totoggle){
   totoggle.parent('div').find("div").toggle();
 }
 
+//Permet de mettre à jour l'affichage des réponses en fonction de la question sélectionnée
 function updateReponses(){
+  //On récupère l'id de la question sélectionnée
   var id_question = $("#questionsId option:selected").val();
   var question = null;
+
+  //Si c'est bien l'i d'une question (noquest est la valeur du message par défaut)
+  //alors on récupère la question dans le projet
   if(id_question !== 'noquest'){
     question = projet.getQuestionById(id_question);
   }
 
+  //On vide le div des réponses
   $("#reponsesDivLabelsId").empty();
+
+  //Et pour chaque réponses on crée une nouvelle ligne
   $.each(projet.getReponses(), function(i, val) {
 
     var str_checked = '';
@@ -268,6 +272,8 @@ function updateReponses(){
   });
 }
 
+//Permet d'ajouter ou de supprimer une réponse à une question
+//Cette méthode est appelée lors du changement d'état des checkboxes
 function changeReponse(checkbox){
   var id_question = $("#questionsId option:selected").val();
   //si une question est selectionnée
@@ -295,11 +301,10 @@ function setCustomMessage(button){
         question.setMessage(JSON.parse($(input_text).attr('id')), $(input_text).val());
       }
     }
-
   }
 }
 
-//Cette fonction sauvegardel'image du qrcode dans un div pour le pouvoir generer apres
+//Cette fonction sauvegarde l'image du qrcode dans un div pour le pouvoir generer apres
 function saveQRCodeImage(div, qrcode, directoryName) {
   let img = $(div).children()[0].src;
   let data = img.replace(/^data:image\/\w+;base64,/, '');
@@ -346,7 +351,7 @@ function previewQRCode(qrcode, div, type) {
   facade.genererQRCode(div, qrcode);
 }
 
-//Renvoie un Array des valeur d'une liste deroulante
+//Renvoie un Array des valeurs d'une liste deroulante
 function selectOptionsValuesAsArray(selectId) {
   let resArray = [];
   $('select#' + selectId).find('option').each(function() {

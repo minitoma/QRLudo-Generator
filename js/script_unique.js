@@ -145,8 +145,6 @@ function saveQRCodeImage() {
 
   let img = $('#qrView img')[0].src;
 
-  // var data = img.replace(/^data:image\/\w+;base64,/, '');
-
   var data = img.replace(/^data:image\/[^;]/, 'data:application/octet-stream');
 
   var xhr = new XMLHttpRequest();
@@ -163,15 +161,6 @@ function saveQRCodeImage() {
   }
 
   xhr.send();
-
-
-  // fs.writeFile(`${root}/QR-Unique/QR/${qrcode.getName()}.jpeg`, data, {
-  //   encoding: 'base64'
-  // }, (err) => {
-  //   if (err) throw err;
-  //   messageInfos("votre QR est bien sauvegardé","success");
-  // });
-
 }
 
 

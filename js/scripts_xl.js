@@ -87,32 +87,6 @@ $().ready(function() {
     $('#saveQRCode, #preview, #annuler, #ajouterTexte, #showAudio').attr('disabled', true);
   });
   //fin annuler
-
-  // sur clic du bouton Lire pour ecouter les textes saisis
-  // $('button#listenField').click(function(){
-  //   document.getElementById("listenField").style.display = "none";
-  //   $('#stop').attr('disabled', false);
-  //   document.getElementById("stop").style.display = "";
-  //   getForm(null);
-  // });
-
-  // sur clic du bouton Stop
-  // $('button#stop').click(function(){
-  //   document.getElementById("stop").style.display = "none";
-  //   document.getElementById("listenField").style.display = "";
-  //   stopLecture();
-  // });
-
-  // ajouter un eventlistener sur playChamp pour lire le champ sur click du bouton
-  // $('button.playChamp').click(function(event){
-  //   console.log(event.target);
-  //   var texte = event.target.parentNode.parentNode.parentNode.parentNode.childNodes[0].childNodes[0].value;
-  //   getForm(texte);
-  // });
-
-  //charger les fichiers audio dans le Modal 'listeMusic'
-  // remplirListeMusic();
-
 });
 
 //verifier le champ qrName du formulaire myFormActive puis activer le button generer
@@ -159,24 +133,3 @@ function ajouterChampSon(nom, url) {
 function supprimerChampSon(e) {
   $(e).parents('div#inputAudio').remove();
 }
-
-
-//remplir le Modal 'listeMusic' par des fichiers audio depuis le drive
-// function remplirListeMusic() {
-//   const fs = require('fs');
-//   try {
-//     // Load client secrets from a local file.
-//     fs.readFile('credentials.json', function processClientSecrets(err, content) {
-//       if (err) {
-//         console.log('Error loading client secret file: ' + err);
-//         return;
-//       }
-//       // Authorize a client with the loaded credentials, then call the Drive API.
-//       authorize(JSON.parse(content), listFiles);
-//       //  console.log(listFiles);
-//     });
-//   } catch (e) {
-//     alert('Erreur : ' + e.stack);
-//   }
-//
-// }
