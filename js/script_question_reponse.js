@@ -18,6 +18,8 @@ $(document).ready(function() {
     $("#qrColor").val(settings.get("defaultColor"));
   }
 
+  $("#play-sound-div").hide();
+
   //Clear Question Form
   $("#addNewQuesBtnId").click(function() {
     clearModalForm('newQuestionModalId');
