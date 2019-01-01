@@ -48,10 +48,6 @@ function playTTS(){
   var filepath = path.join('./tts/', 'current_tts.mp3');
   var fs = require('fs');
 
-  if(!fs.existsSync('./tts/')){
-    fs.mkdirSync('./tts/');
-  }
-
   gtts.save(filepath, getCurrentRead().value , function() {
     sound = createNewHowlSound(filepath);
     sound.play();
@@ -92,7 +88,15 @@ function stop() {
 
 //Clic sur play
 $("#playLecture").on("click", function(){
-  play();
+  if($(".qrData").length!==0){
+    play();
+  }
+  else{
+    $("#alertLecture").show();
+    setTimeout(function () {
+      $('#alertLecture').hide();
+    }, 10000);
+  }
 });
 
 //Clic sur stop

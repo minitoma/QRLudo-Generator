@@ -59,6 +59,10 @@ $(document).ready(function() {
     e.preventDefault();
     if (settings.has("defaultColor")) {
       $("#qrColor").val(settings.get("defaultColor"));
+      $.each($(".qrData"), function(i, val){
+        $("#cible").empty();
+      });
+      $("#qrName").val("");
     }
   });
 
