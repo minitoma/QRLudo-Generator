@@ -79,7 +79,11 @@ $(document).ready(function() {
 
   //Ajout d'une nouvelle reponse
   $("#addReponseBtnId").click(function() {
-    if ($('#reponseTextAreaId').val() === "") return false; // si le champ est vide on sort
+    if ($('#reponseTextAreaId').val() === ""){
+      $("#messageReponseVideModalError").show();
+      return false; // si le champ est vide on sort
+    }
+    $("#messageReponseVideModalError").hide();
     //sortir de la fonction si le champ entré existe deja
     let existe = false;
     $.each(projet.getReponses(), function(i, val) {
@@ -92,12 +96,13 @@ $(document).ready(function() {
       $("#messageReponseModalError").show();
       return false;
     }
+    $("#messageReponseModalError").hide();
+
     //Ajouter au projet la nouvelle réponse
     projet.addReponse(new Reponse($('#reponseTextAreaId').val(), $("#qrColor").val()));
 
     //fermer la pop-up
     $("#newReponseModalId .close").click();
-    $("#messageReponseModalError").hide();
 
     //On met à jour l'affichage des réponses
     updateReponses();
@@ -192,6 +197,8 @@ $(document).ready(function() {
         xhr.send();
       });
     });
+
+    $("#saveQRCode").attr('disabled', false);
   });
 
   //Permet de supprimer une question d'un projet
@@ -256,11 +263,13 @@ function updateReponses(){
   //Et pour chaque réponses on crée une nouvelle ligne
   $.each(projet.getReponses(), function(i, val) {
 
+    var str_display = 'display:none;';
     var str_checked = '';
     var str_message_value = '';
     if(question !== null){
-      var rep = question.getReponseById(val.qrcode.id);
+      var rep = question.getReponseById(val.getId());
       if(rep!==null){
+        str_display = '';
         str_checked = 'checked';
         str_message_value = rep.message;
       }
@@ -270,7 +279,7 @@ function updateReponses(){
       "<input class='form-check-input' type='checkbox' id='" + val.getId() + "' onclick='changeReponse($(this))' " + str_checked + "/>" +
       "<button id='" + val.getId() + "' type='button' name='rep[]' class='btn btn-outline-success' onclick='deleteReponse($(this));'><i class='fa fa-trash-alt'></i></button>" +
       "<button type='button' name='previwRepQRCodeName' class='btn btn-outline-success' onclick='previewRep($(this));'><i class='fa fa-qrcode'></i></button>" +
-      "<button type='button' name='showEditMessage' class='btn btn-outline-success' onclick='toggleEditMessage($(this));'><i class='fa fa-edit'></i></button>" +
+      "<button type='button' id='showEditMessage' class='btn btn-outline-success' onclick='toggleEditMessage($(this));' style='" + str_display + "'><i class='fa fa-edit'></i></button>" +
       "<div class='form-inline' id='customMessageDiv' style='display:none;'>" +
         "<input class='form-control control-label col-md-6' type='text' id='" + val.getId() + "' name='message' value='" + str_message_value + "'/>"+
         "<button class='btn btn-outline-success' onclick='setCustomMessage($(this));'><i class='fas fa-check'></i></button>" +
@@ -290,9 +299,11 @@ function changeReponse(checkbox){
         id_reponse = JSON.parse($(checkbox).attr('id'));
         if($(checkbox).prop('checked')){
           ques_item.addReponse(id_reponse);
+          $(checkbox).parent('div').children("#showEditMessage").show();
         }
         else{
           ques_item.removeReponse(id_reponse);
+          $(checkbox).parent('div').children("#showEditMessage").hide();
         }
       }
     }
@@ -303,9 +314,13 @@ function setCustomMessage(button){
   var id_question = JSON.parse($("#questionsId option:selected").val());
   if(id_question!=='noquest'){
     for(let question of projet.getQuestions()){
-      if(question.qrcode.id === id_question){
+      if(question.getId() === id_question){
         var input_text = button.parent('div').find("input");
         question.setMessage(JSON.parse($(input_text).attr('id')), $(input_text).val());
+        $('#alertModifMessageOk').show();
+        setTimeout(function () {
+          $('#alertModifMessageOk').hide();
+        }, 10000);
       }
     }
   }

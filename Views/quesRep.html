@@ -6,6 +6,9 @@
   <div class="alert alert-success" role="alert" id="alertExportationOk" style="display:none;">
   Votre projet a bien été enregistré.
   </div>
+  <div class='alert alert-success' role='alert' id='alertModifMessageOk' style='display:none;'>
+  Message modifié
+  </div>
   <form id="formulaireQesRep" onsubmit="return false;">
     <div class="card-body">
       <h6 class="card-title"></h6>
@@ -122,12 +125,15 @@
       </div>
       <div class="modal-body">
         <form id="reponseAddFormId">
+          <div class="alert alert-danger" role="alert" id="messageReponseModalError" style="display:none;">
+          Cette réponse existe déjà.
+          </div>
+          <div class="alert alert-danger" role="alert" id="messageReponseVideModalError" style="display:none;">
+          Veuillez ajouter le texte de votre réponse.
+          </div>
           <div class="form-group">
             <label class="col-sm-12 control-label" style="color:#28a745;padding-top:10px;">
               Réponse
-            </label>
-            <label id="messageReponseModalError" class="col-sm-12 control-label" style="color: rgb(243, 91, 106); display: none;">
-                Cette réponse existe déjà.
             </label>
             <div class="col-sm-10">
               <textarea class="form-control" id="reponseTextAreaId" rows="2" name="Reponse"></textarea>
