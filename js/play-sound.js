@@ -1,10 +1,6 @@
 var {Howl, Howler} = require('howler');
 var sound = null;
 
-var player = null;
-
-var startedAt;
-var pausedAt;
 var paused = false;
 
 var currentRead = 0;
@@ -17,10 +13,13 @@ $(document).ready(function(){
   $("#pauseLecture").hide();
 });
 
+//Tous les éléments à lire sont de la classe .qrData, on récupère l'élément courant
+//de ce tableau
 function getCurrentRead(){
   return $(".qrData")[currentRead];
 }
 
+//Retourne un objet Howl (lecteur de fichier)
 function createNewHowlSound(filepath){
   sound = new Howl({
     src: [filepath],
@@ -34,20 +33,20 @@ function createNewHowlSound(filepath){
   return sound;
 }
 
+//Permet de jouer un fichier mp3
 function playSound(){
   var data = getCurrentRead();
   sound = createNewHowlSound('./Download/'+data.value);
   sound.play();
 }
 
+//Permet de jouer le text to speech
+//Enregistre le texte lu par voix de synthèse dans le fichier tts/current_tts.mp3
+//puis le joue avec un objet Howl (lecteur de fichier mp3)
 function playTTS(){
   var gtts = require('node-gtts')('fr');
   var filepath = path.join('./tts/', 'current_tts.mp3');
   var fs = require('fs');
-
-  if(!fs.existsSync('./tts/')){
-    fs.mkdirSync('./tts/');
-  }
 
   gtts.save(filepath, getCurrentRead().value , function() {
     sound = createNewHowlSound(filepath);
@@ -56,6 +55,8 @@ function playTTS(){
 }
 
 function play(){
+  //Si l'état n'est pas en pause, alors on commence une nouvelle lecture
+  //Sinon on reprend là où la lecture s'était arrêtée
   if(!paused){
     if(getCurrentRead().name==='AudioName'){
       playSound();
@@ -85,10 +86,20 @@ function stop() {
   paused = false;
 }
 
+//Clic sur play
 $("#playLecture").on("click", function(){
-  play();
+  if($(".qrData").length!==0){
+    play();
+  }
+  else{
+    $("#alertLecture").show();
+    setTimeout(function () {
+      $('#alertLecture').hide();
+    }, 10000);
+  }
 });
 
+//Clic sur stop
 $("#stopLecture").on("click", function(){
   stop();
   $("#prevLecture").attr("disabled", true);
@@ -100,6 +111,7 @@ $("#stopLecture").on("click", function(){
 
 });
 
+//Clic sur pause
 $("#pauseLecture").on("click", function(){
   sound.pause();
   $("#pauseLecture").hide();
@@ -107,12 +119,14 @@ $("#pauseLecture").on("click", function(){
   paused = true;
 });
 
+//Clic sur suivant
 $("#nextLecture").on("click", function(){
   stop();
   currentRead++;
   play();
 });
 
+//Clic sur précédant
 $("#prevLecture").on("click", function(){
   stop();
   currentRead--;
