@@ -149,6 +149,11 @@ $(document).ready(function() {
         facade.genererQRCode(div, reponse);
         saveQRCodeImage(div, reponse, dir_path);
       });
+
+      $("#alertExportationOk").show();
+      setTimeout(function () {
+        $('#alertExportationOk').hide();
+      }, 10000);
     }
   });
 
