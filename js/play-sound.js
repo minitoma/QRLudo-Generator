@@ -110,6 +110,8 @@ function stop() {
 
 //Clic sur play
 $("#playLecture").on("click", function(){
+  $("#alertLectureAucunChamp").hide();
+  $("#alertLectureChampVide").hide();
   if(getData().length!==0){
     play();
   }
