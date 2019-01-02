@@ -260,10 +260,10 @@ function activer_button() {
 function ajouterChampLegende(valeur = "") {
 
   var textareaLegende = document.createElement('div');
-  textareaLegende.innerHTML = `<textarea id='testtexxtarea' class='form-control qrData' rows='3' name='legendeQR' placeholder='Mettre la légende'>${valeur}</textarea>
-  <button type='button' class='btn btn-outline-success legendeQR-close-btn' onclick='supprimerChampLegende(this);'>
+  textareaLegende.innerHTML = `<i class='fa fa-play align-self-center icon-player'></i><i class="fa fa-pause align-self-center icon-player"></i><textarea id='testtexxtarea' class='form-control qrData' rows='3' name='legendeQR' placeholder='Mettre la légende'>${valeur}</textarea>
+  <button type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='supprimerChampLegende(this);'>
   <i class='fa fa-trash-alt'></i></button>`;
-  textareaLegende.setAttribute("class", "d-flex align-items-start legendeQR");
+  textareaLegende.setAttribute("class", "d-flex align-items-start form-inline legendeQR");
   textareaLegende.setAttribute("id", "legendeTexarea");
 
   document.getElementById('cible').appendChild(textareaLegende);
@@ -277,8 +277,8 @@ function supprimerChampLegende(e) {
 function ajouterChampSon(nom, url) {
 
   var inputSon = document.createElement('div');
-  inputSon.innerHTML = "<input type='text' id='" + url + "' name='AudioName' class='form-control qrData' value='" + nom + "' readonly>" +
-    "<button type='button' class='btn btn-outline-success legendeQR-close-btn' onclick='supprimerChampSon(this);'>" +
+  inputSon.innerHTML = "<i class='fa fa-play align-self-center icon-player'></i><i class='fa fa-pause align-self-center icon-player'></i><input type='text' id='" + url + "' name='AudioName' class='form-control qrData' value='" + nom + "' readonly>" +
+    "<button type='button' class='btn btn-outline-success legendeQR-close-btn align-self-center' onclick='supprimerChampSon(this);'>" +
     "<i class='fa fa-trash-alt'></i>" +
     "</button>";
   inputSon.setAttribute("class", "d-flex align-items-start legendeQR");

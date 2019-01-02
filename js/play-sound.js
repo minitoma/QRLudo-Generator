@@ -19,6 +19,10 @@ function getCurrentRead(){
   return $(".qrData")[currentRead];
 }
 
+function getData(){
+  return $(".qrData");
+}
+
 //Retourne un objet Howl (lecteur de fichier)
 function createNewHowlSound(filepath){
   sound = new Howl({
@@ -26,7 +30,7 @@ function createNewHowlSound(filepath){
     onend: function(){
       $("#pauseLecture").hide();
       $("#playLecture").show();
-      stop();
+      $("#nextLecture").click();
     }
   });
 
@@ -62,18 +66,30 @@ function play(){
       playSound();
     }
     else if (getCurrentRead().name==='legendeQR') {
-      playTTS();
+      if(getCurrentRead().value !== ''){
+        playTTS();
+      }
+      else{
+        $("#alertLectureChampVide").show();
+        setTimeout(function () {
+          $('#alertLectureChampVide').hide();
+        }, 5000);
+        $("#nextLecture").click();
+        return;
+      }
     }
   }
   else{
     sound.play();
   }
 
+  var div = getCurrentRead();
 
-  //si c'est le premier champ, on désactive le bouton previous
+  $(div).parent().children('.fa-play').show();
+  $(div).parent().children('.fa-pause').hide();
+
+  $("#nextLecture").attr("disabled", currentRead===getData().length-1);
   $("#prevLecture").attr("disabled", currentRead===0);
-  //si c'est le dernier champ, on désactive le bouton next
-  $("#nextLecture").attr("disabled", currentRead===$(".qrData").length-1);
 
   $("#stopLecture").attr("disabled", false);
   $("#playLecture").hide();
@@ -82,20 +98,26 @@ function play(){
 }
 
 function stop() {
-  sound.unload();
+  var div = getCurrentRead();
+  $(div).parent().children('.fa-play').hide();
+  $(div).parent().children('.fa-pause').hide();
+
+  if(sound !== null){
+    sound.unload();
+  }
   paused = false;
 }
 
 //Clic sur play
 $("#playLecture").on("click", function(){
-  if($(".qrData").length!==0){
+  if(getData().length!==0){
     play();
   }
   else{
-    $("#alertLecture").show();
+    $("#alertLectureAucunChamp").show();
     setTimeout(function () {
-      $('#alertLecture').hide();
-    }, 10000);
+      $('#alertLectureAucunChamp').hide();
+    }, 5000);
   }
 });
 
@@ -107,12 +129,16 @@ $("#stopLecture").on("click", function(){
   $("#stopLecture").attr("disabled", true);
   $("#pauseLecture").hide();
   $("#playLecture").show();
+
   currentRead = 0;
 
 });
 
 //Clic sur pause
 $("#pauseLecture").on("click", function(){
+  var div = getCurrentRead();
+  $(div).parent().children('.fa-play').hide();
+  $(div).parent().children('.fa-pause').show();
   sound.pause();
   $("#pauseLecture").hide();
   $("#playLecture").show();
@@ -123,12 +149,19 @@ $("#pauseLecture").on("click", function(){
 $("#nextLecture").on("click", function(){
   stop();
   currentRead++;
-  play();
+  if(currentRead < getData().length){
+    play();
+  }
+  else{
+    $("#stopLecture").click();
+  }
 });
 
 //Clic sur précédant
 $("#prevLecture").on("click", function(){
   stop();
-  currentRead--;
+  if(currentRead > 0){
+    currentRead--;
+  }
   play();
 });
