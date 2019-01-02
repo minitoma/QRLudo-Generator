@@ -1,5 +1,7 @@
 node_modules
 Download/*
+tts/*
 release-builds/*
 
 qr-codes-linux-x64/
+.Rhistory

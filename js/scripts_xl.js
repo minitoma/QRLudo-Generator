@@ -96,14 +96,6 @@
 
  });
 
- //verifier le champ qrName du formulaire myFormActive puis activer le button generer
- function activer_button(){
-     if (document.getElementById('qrName').value.length > 0)
-     {
-         $('#preview, #annuler, #ajouterTexte, #showAudio, #showJson').attr('disabled', false);
-     }
-   }
-
    //ajouter une nvlle legende (textarea) a chaque click sur button Texte (pour chaque textarea il faut rajouter à l'attribut class la valeur qrData class="... qrData")
    function ajouterChampLegende(valeur=null){
 
@@ -191,6 +183,18 @@
 
     }
 
+    //desactiver les buttons
+    $('#saveQRCode, #preview, #annuler, #ajouterTexte, #showAudio').attr('disabled', true);
+  });
+  //fin annuler
+});
+
+//verifier le champ qrName du formulaire myFormActive puis activer le button generer
+function activer_button() {
+  if (document.getElementById('qrName').value.length > 0) {
+    $('#preview, #annuler, #ajouterTexte, #showAudio').attr('disabled', false);
+  }
+}
 
     //creer+sauvegarder le fichier json correspond à un qrcode qui depasse la taille 500
     //voir FacadeController.js -> fonction genererQRCode -> dans le message msg -> onclick='sauvegarderFichierJsonUnique(...)
@@ -220,38 +224,7 @@
 
     }
 
-
-    //variable contient le nom du fichier json a sauvegarder dans le drive
-    //modifiée par la fonction uploadFileToDrive()
-    //retournée par la fonction getNomFichierJsonToUpload()
-    let nomDeFichierJsonToUpload;
-
-    //upload file to drive -> si la taille du qr-code depasse 500
-    function uploadFileToDrive(nomDeFichier){
-
-      try {
-        // Load client secrets from a local file.
-        fs.readFile('credentials.json', function processClientSecrets(err, content) {
-          if (err) {
-            console.log('Error loading client secret file: ' + err);
-            return;
-          }
-          //enregistrer le nom du fichier json sauvegardé
-          nomDeFichierJsonToUpload = nomDeFichier;
-
-          // Authorize a client with the loaded credentials, then call the Drive API.
-          authorize(JSON.parse(content), insertFile);
-        //  console.log(listFiles);
-
-        });
-      } catch (e) {
-        alert('Erreur : ' + e.stack);
-      }
-
-    }
-
-    //retourne le nom du fichier json a sauvegarder dans le drive
-    //cette fonction est utilisée dans quickstart.js --> fonction insertFile()
-    function getNomFichierJsonToUpload(){
-      return nomDeFichierJsonToUpload;
+//supprimer un champ Audio -> event onclick
+function supprimerChampSon(e) {
+  $(e).parents('div#inputAudio').remove();
 }

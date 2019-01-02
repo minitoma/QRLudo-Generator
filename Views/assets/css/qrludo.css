@@ -198,6 +198,17 @@ a.article:hover {
   color: #fff !important;
 }
 
+#parametres{
+  margin-left: 25px;
+  margin-bottom: 10px;
+  background-color: white;
+}
+
+#parametres:hover{
+  background-color: #28a745;
+  border: 1px solid white;
+}
+
 /* ---------------------------------------------------
     CONTENT STYLE
 ----------------------------------------------------- */
@@ -344,6 +355,13 @@ input[type="color"]::-webkit-color-swatch {
 .btn-unique-xl {
   margin-right: 5px;
 }
+
+.icon-player{
+  color:#28a745;
+  display:none;
+  margin-right:10px;
+}
+
 
 /* ---------------------------------------------------
     MEDIAQUERIES

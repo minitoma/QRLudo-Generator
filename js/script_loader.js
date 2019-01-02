@@ -8,6 +8,7 @@
 const path = require('path');
 const root = path.dirname(require.main.filename);
 const piexif = require('piexifjs');
+const fs = require ('fs');
 var {
   remote,
   ipcRenderer

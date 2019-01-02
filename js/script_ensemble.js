@@ -4,7 +4,6 @@
  * @Last modified time: 2018-12-11T23:14:43+01:00
  */
 
-console.log(controllerEnsemble);
 $().ready(function() {
 
   var settings = require("electron-settings");
@@ -12,6 +11,8 @@ $().ready(function() {
   if (settings.has("defaultColor")) {
     $("#qrColor").val(settings.get("defaultColor"));
   }
+
+  $("#play-sound-div").hide();
 
   // Genere le qrCode Ensemble
   $("#preview").click(function() {
@@ -130,6 +131,8 @@ function genererLigne(name) {
 
   baliseSpan.appendChild(textDiv);
   baliseSpan.setAttribute("style", "white-space: nowrap; padding:5px; font-size:0.7em;");
+  baliseSpan.setAttribute("class", "qrData");
+  baliseSpan.setAttribute("name", "qrCode");
 
   baliseDiv.addEventListener("click", afficherQrCode);
   baliseDiv.appendChild(baliseButton);
@@ -183,30 +186,12 @@ function effacerLigne() {
   console.log(qrCodes.filter(item => item.getName() != id));
   controllerEnsemble.setQRCodeAtomiqueArray(qrCodes.filter(item => item.getName() != id));
   console.log("after suppress", qrCodes);
-  // for (let i = 0; i < qrCodes.length; i++) {
-  //   if (qrCodes[i].getName() != id) {
-  //     qrCodeTmp.push(qrCodes[i]);
-  //   }
-  // }
-  // qrCodes = qrCodeTmp;
 }
 
 
 // Redonne l'apparance par default d'une ligne
 function affichageLigneParDefault() {
   $('#txtZone').find('span').css('background-color', '')
-  // let qrcode = controllerEnsemble.getQRCodeSelectionne();
-  // console.log(qrcode);
-  // if (qrcode != "") {
-  //   if (element.querySelector("span").hasAttribute("style")) {
-  //     element.querySelector("span").setAttribute("style", "white-space: nowrap; padding:5px; font-size:0.7em;");
-  //   }
-  // }
-  // if (qrCodesUniqueSelectionne != null) {
-  //   if (qrCodesUniqueSelectionne.querySelector("span").hasAttribute("style")) {
-  //     qrCodesUniqueSelectionne.querySelector("span").setAttribute("style", "white-space: nowrap; padding:5px; font-size:0.7em;");
-  //   }
-  // }
 }
 
 // Active le button vider et generer apres avoir donne un nom au qrCode
@@ -215,26 +200,6 @@ function activer_button() {
     $('#preview ,#empty').attr('disabled', false);
   }
 }
-
-
-/*
- * Suite du traitement de la recuperation du QR Code ensemble
- * 400 ms de sleep à cause de la fonction importQRCode
- */
-// function suiteTraitement() {
-//   let data = controllerEnsemble.getQRCodeEnsemble().getData();
-//   // document.getElementById('qrName').value = qrCodeEnsemble.getName();
-//   activer_button();
-//
-//   for (let i = 0; i < data.length; i++) {
-//     console.log(data[i]);
-//     let qrCode = Object.assign(new QRCodeUnique("", [], ""), data[i]);
-//     // qrCodes.push(qrCode);
-//     controllerEnsemble.setQRCodeAtomiqueInArray(qrCode);
-//
-//     genererLigne(qrCode.getName());
-//   }
-// }
 
 // save image qr code
 function saveQRCodeImage() {

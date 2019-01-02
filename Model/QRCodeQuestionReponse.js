@@ -55,7 +55,7 @@ class Projet {
   }
 
   setName(nom) {
-    return this.projet.nom = nom;
+    this.projet.nom = nom;
   }
 
   getName() {
@@ -87,7 +87,7 @@ class Projet {
     return null;
   }
 
-  getReponsesById(id) {
+  getReponseById(id) {
     for (let q of this.projet.reponses) {
       if (q.getId() == id) {
         return q;
@@ -107,6 +107,7 @@ class Projet {
 class Question {
   //Constructeur d'une Question
   constructor(title, reponsesUIDs = [], color = '#000000') {
+    console.log(color);
     this.qrcode = {
       id: new Date().getTime(),
       name: title,
@@ -128,12 +129,20 @@ class Question {
     return this.qrcode.name;
   }
 
-  getReponsesUIDs() {
+  setName(name){
+    this.qrcode.name = name;
+  }
+
+  getReponses() {
     return this.qrcode.data;
   }
 
   getColor() {
     return this.qrcode.color;
+  }
+
+  setColor(color){
+    this.qrcode.color = color;
   }
 
   getType(){
@@ -146,19 +155,20 @@ class Question {
 
   getReponseById(reponseUid){
     for(let rep of this.qrcode.data){
-      console.log(rep);
-      console.log(reponseUid);
-      if(rep.id === reponseUid){
-        console.log(rep);
+      if(rep.id == reponseUid){
         return rep;
       }
     }
     return null;
   }
 
-  addReponse(reponseUid) {
-    var settings = require("electron-settings");
-    this.qrcode.data.push({"id": reponseUid, "message":settings.get("defaultBonneReponse")});
+  addReponse(reponseUid, message='') {
+    if(message===''){
+      var settings = require("electron-settings");
+      message = settings.get("defaultBonneReponse")
+    }
+
+    this.qrcode.data.push({"id": reponseUid, "message":message});
   }
 
   removeReponse(reponseUid){
@@ -168,6 +178,10 @@ class Question {
         this.qrcode.data.splice(index, 1);
       }
     }
+  }
+
+  removeAllReponses(){
+    this.qrcode.data = [];
   }
 
   setMessage(reponseUid, message){
@@ -212,6 +226,10 @@ class Reponse {
 
   getColor() {
     return this.qrcode.color;
+  }
+
+  setColor(color){
+    this.qrcode.color = color;
   }
 
   getType(){

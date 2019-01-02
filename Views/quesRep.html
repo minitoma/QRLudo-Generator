@@ -3,6 +3,12 @@
 <!--Panel-->
 
 <div class="col-sm-12 card">
+  <div class="alert alert-success" role="alert" id="alertExportationOk" style="display:none;">
+  Votre projet a bien été enregistré.
+  </div>
+  <div class="alert alert-danger" role="alert" id="alertQuestionVideError" style="display:none;">
+  Veuillez saisir le texte de votre question.
+  </div>
   <form id="formulaireQesRep" onsubmit="return false;">
     <div class="card-body">
       <h6 class="card-title"></h6>
@@ -22,37 +28,27 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="control-label" style="color:#28a745;padding-top:10px;">Questions</label>
-            <button id="addNewQuesBtnId" type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#newQuestionModalId">
+            <label class="control-label" style="color:#28a745;padding-top:10px;">Nouvelle question</label>
+            <input type='text' id="newQuestionText" placeholder="Saisissez la question"/>
+            <button id="addNewQuesBtnId" type="button" class="btn btn-outline-success">
               <i class="fa fa-plus"></i>
             </button>
             <div id="questionsDivLabelsId" class="form-group">
-            </div>
-            <div class="form-inline">
-              <select id="questionsId" name="questionsName" class="form-control form-select-options col-md-6" style="margin-right:10px;">
-                <option value="noquest">---Selectionner Une Question---</option>
-              </select>
-              <button type='button' id='previwQuesQRCodeId' class='btn btn-outline-success'>
-                <i class='fa fa-qrcode'></i>
-              </button>
-              <button id='deleteQuestionBtn' type='button' class='btn btn-outline-success'>
-                <i class='fa fa-trash-alt'></i>
-              </button>
-            </div>
-          </div>
-          <div id="reponsesDivId" class="form-group">
-            <label class="control-label" style="color:#28a745;padding-top:10px;">Réponses</label>
-            <button id="addNewRepBtnId" type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#newReponseModalId"><i class="fa fa-plus"></i></button>
-            <div id="reponsesDivLabelsId" class="form-group">
             </div>
           </div>
         </div>
 
       </div>
     </div>
-    <div class="card-footer">
-      <button type="reset" class="btn btn-outline-success"><i class="fa fa-eraser"></i>&nbsp;&nbsp;Annuler</button>
-      <button id="importProjectBtnId" type="button" class="btn btn-outline-success"><i class="fa fa-upload"></i>&nbsp;&nbsp;Importer Un Projet Existant</button>
+    <div class="card-footer form-inline">
+      <div class="input-group  btn-unique-xl">
+        <div class="input-group-prepend">
+          <div class="input-group-text"><i class="fa fa-palette"></i></div>
+        </div>
+        <input type="color" id="qrColor" value="#000000">
+      </div>
+      <button type="reset" class="btn btn-outline-success btn-unique-xl"><i class="fa fa-eraser"></i>&nbsp;&nbsp;Annuler</button>
+      <button id="importProjectBtnId" type="button" class="btn btn-outline-success btn-unique-xl"><i class="fa fa-upload"></i>&nbsp;&nbsp;Importer Un Projet Existant</button>
 
     </div>
   </form>
@@ -67,68 +63,44 @@
 </div>
 <!--/.Panel-->
 
-
-<!-- pour ajouter une nouvelle question -->
-<div class="modal fade" id="newQuestionModalId" tabindex="-1" role="dialog" aria-labelledby="questionModalTitleId" aria-hidden="true">
-  <div class="modal-dialog" role="document">
+<!-- pour affecter des réponses à une question -->
+<div class="modal fade" id="editQuestionModal" tabindex="-1" role="dialog" aria-labelledby="editQuestionModalTitleId" aria-hidden="true">
+  <div class="modal-dialog modal-lg" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title" id="questionModalTitleId">Nouvelle Question</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        <form id="questionAddFormId">
-          <div class="form-group">
-            <label class="col-sm-12 control-label" style="color:#28a745;padding-top:10px;">
-              Question
-            </label>
-            <label id="messageQuestionModalError" class="col-sm-12 control-label" style="color: rgb(243, 91, 106); display: none;">
-                Cette question existe déjà.
-            </label>
-            <div class="col-sm-10">
-              <textarea class="form-control" id="questionTextAreaId" rows="2" name="Question"></textarea>
-            </div>
-          </div>
-        </form>
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Fermer</button>
-        <button id="addQuestionBtnId" type="button" class="btn btn-outline-success">Ajouter</button>
-      </div>
-    </div>
-  </div>
-</div>
-<!-- end nouvelle question -->
-<!-- pour ajouter une nouvelle reponse -->
-<div class="modal fade" id="newReponseModalId" tabindex="-1" role="dialog" aria-labelledby="reponseModalTitleId" aria-hidden="true">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="reponseModalTitleId">Nouvelle Réponse</h5>
+        <h5 class="modal-title" id="editQuestionModalTitleId">Modifier la question</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
       </div>
       <div class="modal-body">
         <form id="reponseAddFormId">
+          <div class="alert alert-danger" role="alert" id="messageReponseModalError" style="display:none;">
+          Cette réponse existe déjà.
+          </div>
+          <div class="alert alert-danger" role="alert" id="messageReponseVideModalError" style="display:none;">
+          Veuillez ajouter le texte de votre réponse.
+          </div>
+          <input type="hidden" id="editQuestionModalIdQuestion"/>
+          <label style="color:#28a745;">
+            Question
+          </label>
+          <input type="text" id="editQuestionModalQuestion"/>
           <div class="form-group">
-            <label class="col-sm-12 control-label" style="color:#28a745;padding-top:10px;">
-              Réponse
-            </label>
-            <label id="messageReponseModalError" class="col-sm-12 control-label" style="color: rgb(243, 91, 106); display: none;">
-                Cette réponse existe déjà.
-            </label>
-            <div class="col-sm-10">
-              <textarea class="form-control" id="reponseTextAreaId" rows="2" name="Reponse"></textarea>
+            <div class='form-inline' style='margin-top:10px;'>
+              <label class="control-label" style="color:#28a745;margin-right:5px;">
+                Réponses
+              </label>
+              <input type='text' id='newReponseModalText' placeholder="Saisissez la réponse"/><button id="addNewRepBtnModalId" class='btn btn-outline-success'><i class='fa fa-plus'></i></button>
             </div>
+            <div id="reponsesListModal" class="col-sm-10">
+          </div>
           </div>
         </form>
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">Fermer</button>
-        <button id="addReponseBtnId" type="button" class="btn btn-outline-success">Ajouter</button>
+        <button id="validateeditQuestionModal" type="button" class="btn btn-outline-success">Valider</button>
       </div>
     </div>
   </div>

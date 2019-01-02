@@ -42,7 +42,7 @@ class FacadeController {
         divImg.removeChild(divImg.firstChild);
       }
 
-
+      
       var rawconstants = fs.readFileSync('./constants.json');
       var constants = JSON.parse(rawconstants);
       qrcode.qrcode.version = constants.version;
