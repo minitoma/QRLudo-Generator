@@ -55,7 +55,7 @@ class Projet {
   }
 
   setName(nom) {
-    return this.projet.nom = nom;
+    this.projet.nom = nom;
   }
 
   getName() {
@@ -87,7 +87,7 @@ class Projet {
     return null;
   }
 
-  getReponsesById(id) {
+  getReponseById(id) {
     for (let q of this.projet.reponses) {
       if (q.getId() == id) {
         return q;
@@ -129,7 +129,11 @@ class Question {
     return this.qrcode.name;
   }
 
-  getReponsesUIDs() {
+  setName(name){
+    this.qrcode.name = name;
+  }
+
+  getReponses() {
     return this.qrcode.data;
   }
 
@@ -151,19 +155,20 @@ class Question {
 
   getReponseById(reponseUid){
     for(let rep of this.qrcode.data){
-      console.log(rep);
-      console.log(reponseUid);
-      if(rep.id === reponseUid){
-        console.log(rep);
+      if(rep.id == reponseUid){
         return rep;
       }
     }
     return null;
   }
 
-  addReponse(reponseUid) {
-    var settings = require("electron-settings");
-    this.qrcode.data.push({"id": reponseUid, "message":settings.get("defaultBonneReponse")});
+  addReponse(reponseUid, message='') {
+    if(message===''){
+      var settings = require("electron-settings");
+      message = settings.get("defaultBonneReponse")
+    }
+
+    this.qrcode.data.push({"id": reponseUid, "message":message});
   }
 
   removeReponse(reponseUid){
@@ -173,6 +178,10 @@ class Question {
         this.qrcode.data.splice(index, 1);
       }
     }
+  }
+
+  removeAllReponses(){
+    this.qrcode.data = [];
   }
 
   setMessage(reponseUid, message){
