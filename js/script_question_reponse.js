@@ -233,6 +233,7 @@ function addQuestionLine(question){
   "<button class='btn btn-outline-success float-right' id='" + question.getId() + "' onclick='deleteQuestion(this);'><i class='fa fa-trash-alt'></i></button>" +
   "<button class='btn btn-outline-success float-right' id='" + question.getId() + "' onclick='previewQRCodeQuestion(this)'><i class='fa fa-qrcode'></i></button>" +
   "<button class='btn btn-outline-success float-right' id='" + question.getId() + "' data-toggle='modal' data-target='#editQuestionModal' onclick='editQuestion(this);'><i class='fa fa-edit'></i></button>"  +
+  "<button class='btn btn-outline-success float-right' id='" + question.getId() + "' onclick='lireQuestion(this);'><i class='fa fa-play'></i></button>"  +
   "</div>" +
   "<label class='control-label'>Réponse(s)</label>" +
   "<div class='reponseDiv' id='" + question.getId() + "'>" +
@@ -255,9 +256,10 @@ function addReponseLine(reponse){
 
   //Ajout dans le panel des réponses
   var new_ligne_reponse_panel = "<div class='form-group divReponseLignePanel' id='" + reponse.getId() + "'>" +
-  reponse.getName()+
+  "<label class='control-label text-left reponseNameLabel' id='" + reponse.getId() +  "'>" + reponse.getName()+ "</label>" +
   "<button class='btn btn-outline-success float-right' id='" + reponse.getId() + "' onclick='deleteReponse(this);'><i class='fa fa-trash-alt'></i></button>" +
   "<button class='btn btn-outline-success float-right' id='" + reponse.getId() + "' onclick='previewQRCodeReponse(this)'><i class='fa fa-qrcode'></i></button>" +
+  "<button class='btn btn-outline-success float-right' id='" + reponse.getId() + "' onclick='lireReponse(this);'><i class='fa fa-play'></i></button>"  +
   "</div>";
 
   $("#reponsesDivLabelsId").append(new_ligne_reponse_panel);
@@ -423,4 +425,18 @@ function previewQRCode(qrcode, div, type) {
 
   }
   facade.genererQRCode(div, qrcode);
+}
+
+function lireQuestion(button){
+  var id_question = $(button).attr('id');
+  var text_question = $("label#" + id_question + ".questionNameLabel").text();
+
+  playTTS(text_question);
+}
+
+function lireReponse(button){
+  var id_reponse = $(button).attr('id');
+  var text_reponse = $("label#" + id_reponse + ".reponseNameLabel").text();
+
+  playTTS(text_reponse)
 }
