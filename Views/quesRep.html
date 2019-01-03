@@ -9,12 +9,18 @@
   <div class="alert alert-danger" role="alert" id="alertQuestionVideError" style="display:none;">
   Veuillez saisir le texte de votre question.
   </div>
+  <div class="alert alert-danger" role="alert" id="alertReponseVideError" style="display:none;">
+  Veuillez saisir le texte de votre réponse.
+  </div>
+  <div class="alert alert-danger" role="alert" id="alertReponseExistanteError" style="display:none;">
+  Cette réponse existe déjà.
+  </div>
   <form id="formulaireQesRep" onsubmit="return false;">
     <div class="card-body">
       <h6 class="card-title"></h6>
       <ul class="nav nav-tabs">
         <li class="nav-item">
-          <a class="nav-link active" data-toggle="tab" href="#newProject">Mes questions</a>
+          <a class="nav-link active" data-toggle="tab" href="#newProject">Mon projet</a>
         </li>
         <li class="nav-item">
           <a class="nav-link" data-toggle="tab" href="#mesReponses">Mes réponses</a>
@@ -41,9 +47,6 @@
           </div>
         </div>
         <div id="mesReponses" class="tab-pane fade" role="tabpanel">
-          <div class="form-group">
-            <label class="control-label" style="color:#28a745;padding-top:10px;">Réponses</label>
-          </div>
           <div class="form-group">
             <label class="control-label" style="color:#28a745;padding-top:10px;">Nouvelle réponse</label>
             <input type='text' id="newReponseText" placeholder="Saisissez la réponse"/>

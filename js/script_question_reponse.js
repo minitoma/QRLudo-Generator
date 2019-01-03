@@ -41,13 +41,48 @@ $(document).ready(function() {
     return true;
   });
 
+  $("#addNewRepBtnId").click(function(e){
+    e.preventDefault();
+    $("#alertReponseExistanteError").hide();
+    $("#alertReponseVideError").hide();
+
+    if ($('#newReponseText').val() === ""){
+      $("#alertReponseVideError").show();
+      return; // si le champ est vide on sort
+    }
+    //sortir de la fonction si le champ entré existe deja
+    let existe = false;
+    $.each(projet.getReponses(), function(i, val) {
+      if (val.getName() === $('#newReponseText').val()) {
+        existe = true;
+        return;
+      }
+    });
+    if (existe){
+      $("#alertReponseExistanteError").show();
+      return;
+    }
+
+    var new_rep = new Reponse($('#newReponseText').val(), $("#qrColor").val());
+    //Ajouter au projet la nouvelle réponse
+    projet.addReponse(new_rep);
+
+    addReponseLine(new_rep);
+
+    $('#newReponseText').val('');
+
+    return true;
+  });
+
   $("#addNewRepBtnModalId").click(function(e){
     e.preventDefault();
+    $("#messageReponseVideModalError").hide();
+    $("#messageReponseModalError").hide();
+
     if ($('#newReponseModalText').val() === ""){
       $("#messageReponseVideModalError").show();
       return false; // si le champ est vide on sort
     }
-    $("#messageReponseVideModalError").hide();
     //sortir de la fonction si le champ entré existe deja
     let existe = false;
     $.each(projet.getReponses(), function(i, val) {
@@ -60,7 +95,6 @@ $(document).ready(function() {
       $("#messageReponseModalError").show();
       return false;
     }
-    $("#messageReponseModalError").hide();
 
     var new_rep = new Reponse($('#newReponseModalText').val(), $("#qrColor").val());
     //Ajouter au projet la nouvelle réponse
@@ -212,10 +246,21 @@ function addReponseLine(reponse){
   var settings = require("electron-settings");
   var default_message = settings.get("defaultBonneReponse");
 
-  var new_ligne_reponse = "<div class='form-group'><input class='form-check-input reponseCheckbox' type='checkbox' id='" + reponse.getId() + "' onclick='toggleCustomMessageInput(this);'/>" +
+  //Ajout dans le modal de modification d'une réponse
+  var new_ligne_reponse_modal = "<div class='form-group divReponseLigneModal' id='" + reponse.getId() + "'>" +
+  "<input class='form-check-input reponseCheckbox' type='checkbox' id='" + reponse.getId() + "' onclick='toggleCustomMessageInput(this);'/>" +
   "<p>" + reponse.getName() + "</p>" +
   "<input type='text' id='" + reponse.getId() + "' class='customMessage col-lg-12' placeholder='Saisissez le message de la réponse'/></div>";
-  $("#reponsesListModal").append(new_ligne_reponse);
+  $("#reponsesListModal").append(new_ligne_reponse_modal);
+
+  //Ajout dans le panel des réponses
+  var new_ligne_reponse_panel = "<div class='form-group divReponseLignePanel' id='" + reponse.getId() + "'>" +
+  reponse.getName()+
+  "<button class='btn btn-outline-success float-right' id='" + reponse.getId() + "' onclick='deleteReponse(this);'><i class='fa fa-trash-alt'></i></button>" +
+  "<button class='btn btn-outline-success float-right' id='" + reponse.getId() + "' onclick='previewQRCodeReponse(this)'><i class='fa fa-qrcode'></i></button>" +
+  "</div>";
+
+  $("#reponsesDivLabelsId").append(new_ligne_reponse_panel);
 }
 
 function addReponseLineToQuestionDiv(question, reponse){
@@ -264,10 +309,25 @@ function editQuestion(button){
   $("#messageReponseVideModalError").hide();
 }
 
+//Supprimer une question du projet
 function deleteQuestion(button){
   var id_question = $(button).attr('id');
   $("div#" + id_question + '.divQuestion').remove();
   projet.removeQuestion(JSON.parse(id_question));
+}
+
+//Supprimer une réponse du projet
+function deleteReponse(button){
+  var id_reponse = $(button).attr('id');
+  $("div#" + id_reponse + '.divReponseLigneModal').remove();
+  $("div#" + id_reponse + '.divReponseLignePanel').remove();
+  projet.removeReponse(id_reponse);
+
+  //Update des affichages des questions
+  $.each($(".divQuestion"), function(i, div){
+    var reponsesDiv = $(div).children(".reponseDiv");
+    $(reponsesDiv).find("li#" + id_reponse).remove();
+  });
 }
 
 //Méthode appelée lors de l'import d'un qrcode Question/Réponse
@@ -345,8 +405,9 @@ function previewQRCodeQuestion(button){
 }
 
 // Previsualiser les reponses
-function previewRep(topreview) {
-  let rep = projet.getReponsesById(topreview.prev().attr("id"));
+function previewQRCodeReponse(button) {
+  var id_reponse = $(button).attr('id');
+  let rep = projet.getReponseById(id_reponse);
   previewQRCode(rep, $('#qrView')[0], "type_reponse");
 }
 
