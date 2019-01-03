@@ -37,6 +37,9 @@ $(document).ready(function() {
 
     addQuestionLine(nouvques);
 
+    //On ouvre le modal de modification de la question
+    $("#" + nouvques.getId() + ".editQuestion").click();
+
     $('#newQuestionText').val("");
     return true;
   });
@@ -176,9 +179,9 @@ $(document).ready(function() {
   //Import d'un projet existant à partir d'un répertoire
   $('#importProjectBtnId').click(function() {
     //Permet de sélectionner le répertoire du projet
-    var dir_path = dialog.showOpenDialog({title: 'Sélectionnez le projet', properties: ['openDirectory']});
+    var dir_path = dialog.showOpenDialog({title: 'Sélectionnez le projet', properties: ['openDirectory']})[0];
     projet = new Projet();
-    var path_split = dir_path[0].split('/');
+    var path_split = dir_path.split('/');
     //On récupère le nom du projet
     projet.setName(path_split[path_split.length-1]);
     $("#projectId").val(path_split[path_split.length-1]);
@@ -190,9 +193,10 @@ $(document).ready(function() {
     var fs = require('fs');
 
     //Pour chaque fichier du répertoire
-    fs.readdir(dir_path[0], (err, files) => {
+    fs.readdir(dir_path, (err, files) => {
       $.each(files, function(i, file){
-        var file_path = dir_path + "/" + file;
+        console.log(file);
+        var file_path = path.join(dir_path,file);
         let blob = null;
         //On crée une requête xmlhttp pour récupérer le blob du fichier
         let xhr = new XMLHttpRequest();
@@ -232,7 +236,7 @@ function addQuestionLine(question){
   "<label class='control-label text-left questionNameLabel' id='" + question.getId() + "' style='text-align:left!important; color:black;'>" + question.getName() + "</label>" +
   "<button class='btn btn-outline-success float-right' id='" + question.getId() + "' onclick='deleteQuestion(this);'><i class='fa fa-trash-alt'></i></button>" +
   "<button class='btn btn-outline-success float-right' id='" + question.getId() + "' onclick='previewQRCodeQuestion(this)'><i class='fa fa-qrcode'></i></button>" +
-  "<button class='btn btn-outline-success float-right' id='" + question.getId() + "' data-toggle='modal' data-target='#editQuestionModal' onclick='editQuestion(this);'><i class='fa fa-edit'></i></button>"  +
+  "<button class='btn btn-outline-success float-right editQuestion' id='" + question.getId() + "' data-toggle='modal' data-target='#editQuestionModal' onclick='editQuestion(this);'><i class='fa fa-edit'></i></button>"  +
   "<button class='btn btn-outline-success float-right' id='" + question.getId() + "' onclick='lireQuestion(this);'><i class='fa fa-play'></i></button>"  +
   "</div>" +
   "<label class='control-label'>Réponse(s)</label>" +
@@ -383,7 +387,8 @@ function setCustomMessage(button){
 function saveQRCodeImage(div, qrcode, directoryName) {
   let img = $(div).children()[0].src;
   let data = img.replace(/^data:image\/\w+;base64,/, '');
-  fs.writeFile(`${directoryName}/${qrcode.getName()}.jpeg`, data, {
+  var file_name = qrcode.getName().replace(/[^a-zA-Z0-9]+/g, "") + '.jpeg';
+  fs.writeFile(path.join(directoryName, file_name), data, {
     encoding: 'base64'
   }, (err) => {
     if (err) throw err;
