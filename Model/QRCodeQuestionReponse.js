@@ -34,7 +34,7 @@ class Projet {
 
   removeQuestion(questionId){
     for(let question of this.projet.questions){
-      if(question.qrcode.id === questionId){
+      if(question.qrcode.id == questionId){
         var index = this.projet.questions.indexOf(question);
         this.projet.questions.splice(index, 1);
       }
@@ -43,7 +43,7 @@ class Projet {
 
   removeReponse(reponseId){
     for(let reponse of this.projet.reponses){
-      if(reponse.qrcode.id === reponseId){
+      if(reponse.qrcode.id == reponseId){
         var index = this.projet.reponses.indexOf(reponse);
         this.projet.reponses.splice(index, 1);
       }

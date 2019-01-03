@@ -37,17 +37,55 @@ $(document).ready(function() {
 
     addQuestionLine(nouvques);
 
+    //On ouvre le modal de modification de la question
+    $("#" + nouvques.getId() + ".editQuestion").click();
+
     $('#newQuestionText').val("");
+    return true;
+  });
+
+  $("#addNewRepBtnId").click(function(e){
+    e.preventDefault();
+    $("#alertReponseExistanteError").hide();
+    $("#alertReponseVideError").hide();
+
+    if ($('#newReponseText').val() === ""){
+      $("#alertReponseVideError").show();
+      return; // si le champ est vide on sort
+    }
+    //sortir de la fonction si le champ entré existe deja
+    let existe = false;
+    $.each(projet.getReponses(), function(i, val) {
+      if (val.getName() === $('#newReponseText').val()) {
+        existe = true;
+        return;
+      }
+    });
+    if (existe){
+      $("#alertReponseExistanteError").show();
+      return;
+    }
+
+    var new_rep = new Reponse($('#newReponseText').val(), $("#qrColor").val());
+    //Ajouter au projet la nouvelle réponse
+    projet.addReponse(new_rep);
+
+    addReponseLine(new_rep);
+
+    $('#newReponseText').val('');
+
     return true;
   });
 
   $("#addNewRepBtnModalId").click(function(e){
     e.preventDefault();
+    $("#messageReponseVideModalError").hide();
+    $("#messageReponseModalError").hide();
+
     if ($('#newReponseModalText').val() === ""){
       $("#messageReponseVideModalError").show();
       return false; // si le champ est vide on sort
     }
-    $("#messageReponseVideModalError").hide();
     //sortir de la fonction si le champ entré existe deja
     let existe = false;
     $.each(projet.getReponses(), function(i, val) {
@@ -60,7 +98,6 @@ $(document).ready(function() {
       $("#messageReponseModalError").show();
       return false;
     }
-    $("#messageReponseModalError").hide();
 
     var new_rep = new Reponse($('#newReponseModalText').val(), $("#qrColor").val());
     //Ajouter au projet la nouvelle réponse
@@ -142,9 +179,9 @@ $(document).ready(function() {
   //Import d'un projet existant à partir d'un répertoire
   $('#importProjectBtnId').click(function() {
     //Permet de sélectionner le répertoire du projet
-    var dir_path = dialog.showOpenDialog({title: 'Sélectionnez le projet', properties: ['openDirectory']});
+    var dir_path = dialog.showOpenDialog({title: 'Sélectionnez le projet', properties: ['openDirectory']})[0];
     projet = new Projet();
-    var path_split = dir_path[0].split('/');
+    var path_split = dir_path.split('/');
     //On récupère le nom du projet
     projet.setName(path_split[path_split.length-1]);
     $("#projectId").val(path_split[path_split.length-1]);
@@ -156,9 +193,10 @@ $(document).ready(function() {
     var fs = require('fs');
 
     //Pour chaque fichier du répertoire
-    fs.readdir(dir_path[0], (err, files) => {
+    fs.readdir(dir_path, (err, files) => {
       $.each(files, function(i, file){
-        var file_path = dir_path + "/" + file;
+        console.log(file);
+        var file_path = path.join(dir_path,file);
         let blob = null;
         //On crée une requête xmlhttp pour récupérer le blob du fichier
         let xhr = new XMLHttpRequest();
@@ -198,7 +236,8 @@ function addQuestionLine(question){
   "<label class='control-label text-left questionNameLabel' id='" + question.getId() + "' style='text-align:left!important; color:black;'>" + question.getName() + "</label>" +
   "<button class='btn btn-outline-success float-right' id='" + question.getId() + "' onclick='deleteQuestion(this);'><i class='fa fa-trash-alt'></i></button>" +
   "<button class='btn btn-outline-success float-right' id='" + question.getId() + "' onclick='previewQRCodeQuestion(this)'><i class='fa fa-qrcode'></i></button>" +
-  "<button class='btn btn-outline-success float-right' id='" + question.getId() + "' data-toggle='modal' data-target='#editQuestionModal' onclick='editQuestion(this);'><i class='fa fa-edit'></i></button>"  +
+  "<button class='btn btn-outline-success float-right editQuestion' id='" + question.getId() + "' data-toggle='modal' data-target='#editQuestionModal' onclick='editQuestion(this);'><i class='fa fa-edit'></i></button>"  +
+  "<button class='btn btn-outline-success float-right' id='" + question.getId() + "' onclick='lireQuestion(this);'><i class='fa fa-play'></i></button>"  +
   "</div>" +
   "<label class='control-label'>Réponse(s)</label>" +
   "<div class='reponseDiv' id='" + question.getId() + "'>" +
@@ -212,10 +251,22 @@ function addReponseLine(reponse){
   var settings = require("electron-settings");
   var default_message = settings.get("defaultBonneReponse");
 
-  var new_ligne_reponse = "<div class='form-group'><input class='form-check-input reponseCheckbox' type='checkbox' id='" + reponse.getId() + "' onclick='toggleCustomMessageInput(this);'/>" +
+  //Ajout dans le modal de modification d'une réponse
+  var new_ligne_reponse_modal = "<div class='form-group divReponseLigneModal' id='" + reponse.getId() + "'>" +
+  "<input class='form-check-input reponseCheckbox' type='checkbox' id='" + reponse.getId() + "' onclick='toggleCustomMessageInput(this);'/>" +
   "<p>" + reponse.getName() + "</p>" +
   "<input type='text' id='" + reponse.getId() + "' class='customMessage col-lg-12' placeholder='Saisissez le message de la réponse'/></div>";
-  $("#reponsesListModal").append(new_ligne_reponse);
+  $("#reponsesListModal").append(new_ligne_reponse_modal);
+
+  //Ajout dans le panel des réponses
+  var new_ligne_reponse_panel = "<div class='form-group divReponseLignePanel' id='" + reponse.getId() + "'>" +
+  "<label class='control-label text-left reponseNameLabel' id='" + reponse.getId() +  "'>" + reponse.getName()+ "</label>" +
+  "<button class='btn btn-outline-success float-right' id='" + reponse.getId() + "' onclick='deleteReponse(this);'><i class='fa fa-trash-alt'></i></button>" +
+  "<button class='btn btn-outline-success float-right' id='" + reponse.getId() + "' onclick='previewQRCodeReponse(this)'><i class='fa fa-qrcode'></i></button>" +
+  "<button class='btn btn-outline-success float-right' id='" + reponse.getId() + "' onclick='lireReponse(this);'><i class='fa fa-play'></i></button>"  +
+  "</div>";
+
+  $("#reponsesDivLabelsId").append(new_ligne_reponse_panel);
 }
 
 function addReponseLineToQuestionDiv(question, reponse){
@@ -264,10 +315,25 @@ function editQuestion(button){
   $("#messageReponseVideModalError").hide();
 }
 
+//Supprimer une question du projet
 function deleteQuestion(button){
   var id_question = $(button).attr('id');
   $("div#" + id_question + '.divQuestion').remove();
   projet.removeQuestion(JSON.parse(id_question));
+}
+
+//Supprimer une réponse du projet
+function deleteReponse(button){
+  var id_reponse = $(button).attr('id');
+  $("div#" + id_reponse + '.divReponseLigneModal').remove();
+  $("div#" + id_reponse + '.divReponseLignePanel').remove();
+  projet.removeReponse(id_reponse);
+
+  //Update des affichages des questions
+  $.each($(".divQuestion"), function(i, div){
+    var reponsesDiv = $(div).children(".reponseDiv");
+    $(reponsesDiv).find("li#" + id_reponse).remove();
+  });
 }
 
 //Méthode appelée lors de l'import d'un qrcode Question/Réponse
@@ -321,7 +387,8 @@ function setCustomMessage(button){
 function saveQRCodeImage(div, qrcode, directoryName) {
   let img = $(div).children()[0].src;
   let data = img.replace(/^data:image\/\w+;base64,/, '');
-  fs.writeFile(`${directoryName}/${qrcode.getName()}.jpeg`, data, {
+  var file_name = qrcode.getName().replace(/[^a-zA-Z0-9]+/g, "") + '.jpeg';
+  fs.writeFile(path.join(directoryName, file_name), data, {
     encoding: 'base64'
   }, (err) => {
     if (err) throw err;
@@ -345,8 +412,9 @@ function previewQRCodeQuestion(button){
 }
 
 // Previsualiser les reponses
-function previewRep(topreview) {
-  let rep = projet.getReponsesById(topreview.prev().attr("id"));
+function previewQRCodeReponse(button) {
+  var id_reponse = $(button).attr('id');
+  let rep = projet.getReponseById(id_reponse);
   previewQRCode(rep, $('#qrView')[0], "type_reponse");
 }
 
@@ -362,4 +430,18 @@ function previewQRCode(qrcode, div, type) {
 
   }
   facade.genererQRCode(div, qrcode);
+}
+
+function lireQuestion(button){
+  var id_question = $(button).attr('id');
+  var text_question = $("label#" + id_question + ".questionNameLabel").text();
+
+  playTTS(text_question);
+}
+
+function lireReponse(button){
+  var id_reponse = $(button).attr('id');
+  var text_reponse = $("label#" + id_reponse + ".reponseNameLabel").text();
+
+  playTTS(text_reponse)
 }

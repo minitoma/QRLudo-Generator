@@ -9,18 +9,27 @@
   <div class="alert alert-danger" role="alert" id="alertQuestionVideError" style="display:none;">
   Veuillez saisir le texte de votre question.
   </div>
+  <div class="alert alert-danger" role="alert" id="alertReponseVideError" style="display:none;">
+  Veuillez saisir le texte de votre réponse.
+  </div>
+  <div class="alert alert-danger" role="alert" id="alertReponseExistanteError" style="display:none;">
+  Cette réponse existe déjà.
+  </div>
   <form id="formulaireQesRep" onsubmit="return false;">
     <div class="card-body">
       <h6 class="card-title"></h6>
       <ul class="nav nav-tabs">
         <li class="nav-item">
-          <a class="nav-link active" data-toggle="tab" href="#newProject">Mon Projet</a>
+          <a class="nav-link active" data-toggle="tab" href="#newProject">Mon projet</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" data-toggle="tab" href="#mesReponses">Mes réponses</a>
         </li>
 
       </ul>
 
       <div class="tab-content scrollbar-success" style="height:600px; overflow-y: scroll; margin-top:15px;">
-        <div id="newProject" class="tab-pane fade in active show">
+        <div id="newProject" class="tab-pane fade in active show" role="tabpanel">
           <div class="form-group">
             <label class="control-label" style="color:#28a745;padding-top:10px;">Projet</label>
             <div class="form-inline">
@@ -37,9 +46,18 @@
             </div>
           </div>
         </div>
-
-      </div>
-    </div>
+        <div id="mesReponses" class="tab-pane fade" role="tabpanel">
+          <div class="form-group">
+            <label class="control-label" style="color:#28a745;padding-top:10px;">Nouvelle réponse</label>
+            <input type='text' id="newReponseText" placeholder="Saisissez la réponse"/>
+            <button id="addNewRepBtnId" type="button" class="btn btn-outline-success">
+              <i class="fa fa-plus"></i>
+            </button>
+            <div id="reponsesDivLabelsId" class="form-group">
+            </div>
+          </div>
+        </div>
+      </div>    </div>
     <div class="card-footer form-inline">
       <div class="input-group  btn-unique-xl">
         <div class="input-group-prepend">

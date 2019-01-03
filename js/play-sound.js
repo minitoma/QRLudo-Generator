@@ -38,21 +38,21 @@ function createNewHowlSound(filepath){
 }
 
 //Permet de jouer un fichier mp3
-function playSound(){
+function playSound(soundName){
   var data = getCurrentRead();
-  sound = createNewHowlSound('./Download/'+data.value);
+  sound = createNewHowlSound('./Download/'+soundName);
   sound.play();
 }
 
 //Permet de jouer le text to speech
 //Enregistre le texte lu par voix de synthèse dans le fichier tts/current_tts.mp3
 //puis le joue avec un objet Howl (lecteur de fichier mp3)
-function playTTS(){
+function playTTS(textToSay){
   var gtts = require('node-gtts')('fr');
   var filepath = path.join('./tts/', 'current_tts.mp3');
   var fs = require('fs');
 
-  gtts.save(filepath, getCurrentRead().value , function() {
+  gtts.save(filepath, textToSay , function() {
     sound = createNewHowlSound(filepath);
     sound.play();
   });
@@ -63,11 +63,11 @@ function play(){
   //Sinon on reprend là où la lecture s'était arrêtée
   if(!paused){
     if(getCurrentRead().name==='AudioName'){
-      playSound();
+      playSound(getCurrentRead().value);
     }
     else if (getCurrentRead().name==='legendeQR') {
       if(getCurrentRead().value !== ''){
-        playTTS();
+        playTTS(getCurrentRead().value);
       }
       else{
         $("#alertLectureChampVide").show();
