@@ -1,7 +1,9 @@
 node_modules
 Download/*
 tts/*
+dist/*
 release-builds/*
-
+npm-debug.log
 qr-codes-linux-x64/
 .Rhistory
+app/release-builds/*
