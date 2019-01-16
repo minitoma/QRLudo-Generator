@@ -1,7 +1,7 @@
 /**
  * @Date:   2018-12-04T08:24:59+01:00
  * @Last modified by:   alassane
- * @Last modified time: 2019-01-16T23:27:07+01:00
+ * @Last modified time: 2019-01-16T23:34:40+01:00
  */
 
 $().ready(function() {
@@ -36,7 +36,6 @@ function drawQRCodeImport(qrcode) {
       $('input#qrName').val(qrcode.getName()); //restaurer le nom du qrcode
 
       drawQRCodeData(qrcode);
-      $('#preview ,#empty').attr('disabled', false);
     });
   } else if (qrcode.getType() == 'ensemble') {
     $("#charger-page").load(path.join(__dirname, "Views/ensemble.html"), function() {
@@ -44,14 +43,12 @@ function drawQRCodeImport(qrcode) {
       controllerEnsemble.setQRCodeEnsemble(qrcode);
       drawQRCodeEnsembleUnique(qrcode);
       $('#txtDragAndDrop').remove();
-      $('#preview ,#empty').attr('disabled', false);
 
     });
   } else if (qrcode.getType() == 'quesRep') {
-    $("#charger-page").load(path.join(__dirname, "Views/quesRep.html"), function() {
-    });
+    $("#charger-page").load(path.join(__dirname, "Views/quesRep.html"), function() {});
   }
-
+  $('#preview, #empty').attr('disabled', false);
 }
 
 // recréer les input d'un qrcode unique
