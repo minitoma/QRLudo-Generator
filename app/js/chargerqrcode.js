@@ -1,7 +1,7 @@
 /**
  * @Date:   2018-12-04T08:24:59+01:00
  * @Last modified by:   alassane
- * @Last modified time: 2018-12-08T14:19:38+01:00
+ * @Last modified time: 2019-01-16T23:27:07+01:00
  */
 
 $().ready(function() {
@@ -36,6 +36,7 @@ function drawQRCodeImport(qrcode) {
       $('input#qrName').val(qrcode.getName()); //restaurer le nom du qrcode
 
       drawQRCodeData(qrcode);
+      $('#preview ,#empty').attr('disabled', false);
     });
   } else if (qrcode.getType() == 'ensemble') {
     $("#charger-page").load(path.join(__dirname, "Views/ensemble.html"), function() {
