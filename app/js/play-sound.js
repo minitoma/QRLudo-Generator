@@ -1,3 +1,12 @@
+/**
+ * @Author: alassane
+ * @Date:   2019-01-16T15:16:09+01:00
+ * @Last modified by:   alassane
+ * @Last modified time: 2019-01-17T15:28:37+01:00
+ */
+
+
+
 var {Howl, Howler} = require('howler');
 var sound = null;
 
@@ -40,7 +49,7 @@ function createNewHowlSound(filepath){
 //Permet de jouer un fichier mp3
 function playSound(soundName){
   var data = getCurrentRead();
-  sound = createNewHowlSound('./Download/'+soundName);
+  sound = createNewHowlSound(`${temp}/Download/${soundName}`);
   sound.play();
 }
 
@@ -49,7 +58,7 @@ function playSound(soundName){
 //puis le joue avec un objet Howl (lecteur de fichier mp3)
 function playTTS(textToSay){
   var gtts = require('node-gtts')('fr');
-  var filepath = path.join(__dirname, 'tts', 'current_tts.mp3');
+  var filepath = path.join(`${temp}/tts/current_tts.mp3`);
   var fs = require('fs');
 
   console.log(textToSay);

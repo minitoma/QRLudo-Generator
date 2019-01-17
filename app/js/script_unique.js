@@ -2,7 +2,7 @@
  * @Author: alassane
  * @Date:   2018-11-10T17:59:11+01:00
  * @Last modified by:   alassane
- * @Last modified time: 2019-01-17T15:20:31+01:00
+ * @Last modified time: 2019-01-17T15:27:19+01:00
  */
 
 // fichier script concernant les qr codes uniques
@@ -207,7 +207,7 @@ function getMusicFromUrl() {
           // save file in folder projet/download
           let fileReader = new FileReader();
           fileReader.onload = function() {
-            fs.writeFileSync(__dirname + `/Download/${filename}`, Buffer(new Uint8Array(this.result)));
+            fs.writeFileSync(`${temp}/Download/${filename}`, Buffer(new Uint8Array(this.result)));
 
             $(loader, errorMsg).remove();
             $('#musicUrl').val('');
