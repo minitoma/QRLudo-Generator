@@ -2,7 +2,7 @@
  * @Author: alassane
  * @Date:   2018-12-05T17:35:22+01:00
  * @Last modified by:   alassane
- * @Last modified time: 2018-12-11T00:36:46+01:00
+ * @Last modified time: 2019-01-17T00:11:59+01:00
  */
 
 const electron = require('electron');
@@ -87,13 +87,23 @@ app.on('window-all-closed', () => {
   // delete all music in folder Download
   const fs = require('fs');
   const path = require('path');
-  let directory = path.join(__dirname, 'Download');
-
-  fs.readdir(directory, (err, files) => {
+  let download_dir = path.join(__dirname, 'Download');
+  fs.readdir(download_dir, (err, files) => {
     if (err) throw err;
 
     for (const file of files) {
-      fs.unlink(path.join(directory, file), err => {
+      fs.unlink(path.join(download_dir, file), err => {
+        if (err) throw err;
+      });
+    }
+  });
+
+  let tts_dir = path.join(__dirname, 'tts');
+  fs.readdir(tts_dir, (err, files) => {
+    if (err) throw err;
+
+    for (const file of files) {
+      fs.unlink(path.join(tts_dir, file), err => {
         if (err) throw err;
       });
     }

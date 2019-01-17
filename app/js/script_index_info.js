@@ -2,13 +2,14 @@
  * @Author: alassane
  * @Date:   2018-12-10T13:37:39+01:00
  * @Last modified by:   alassane
- * @Last modified time: 2018-12-11T00:38:46+01:00
+ * @Last modified time: 2019-01-17T00:22:21+01:00
  */
 
 const jquery = require('jquery');
 window.$ = jquery;
 
 $(document).ready(function() {
+  const path = require('path');
   $("#charger-page").load(path.join(__dirname, "Views/info.html"));
   $('div.info-content').css('display', 'none');
 
