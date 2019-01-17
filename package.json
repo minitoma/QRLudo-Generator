@@ -26,7 +26,6 @@
     "piexifjs": "^1.0.3",
     "popper.js": "^1.14.4",
     "request": "^2.88.0",
-    "rimraf": "^2.6.3",
     "zlib": "^1.0.5"
   },
   "devDependencies": {
