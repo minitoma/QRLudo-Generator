@@ -84,30 +84,21 @@ app.on('window-all-closed', () => {
     app.quit();
   }
 
-  // delete all music in folder Download
+  // delete local folder QRLudo
   const fs = require('fs');
   const path = require('path');
-  let download_dir = path.join(__dirname, 'Download');
-  fs.readdir(download_dir, (err, files) => {
-    if (err) throw err;
-
-    for (const file of files) {
-      fs.unlink(path.join(download_dir, file), err => {
-        if (err) throw err;
-      });
-    }
-  });
-
-  let tts_dir = path.join(__dirname, 'tts');
-  fs.readdir(tts_dir, (err, files) => {
-    if (err) throw err;
-
-    for (const file of files) {
-      fs.unlink(path.join(tts_dir, file), err => {
-        if (err) throw err;
-      });
-    }
-  });
+  const rimraf = require("rimraf");
+  switch (process.platform) {
+    case 'win32':
+    let temp = path.join(`${process.env.temp}`, 'QRLudo');
+    rimraf(temp, err => {
+      console.log("done");
+    });
+      break;
+    default:
+      console.log('Unknown operating system');
+      break;
+  }
 
 });
 

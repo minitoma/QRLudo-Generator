@@ -17,6 +17,35 @@ require(__dirname + "/Views/assets/js/bootstrap.min.js");
 require(__dirname + "/Views/assets/js/solid.js");
 require(__dirname + "/Views/assets/js/fontawesome.js");
 
+const temp = path.join(`${process.env.temp}`, 'QRLudo');
+// Create QRLudo temp folder if not exist
+switch (process.platform) {
+  case 'linux':
+
+    break;
+
+    case 'win32':
+    let download = path.join(temp, 'Download');
+    let tts = path.join(temp, 'tts');
+    fs.access(temp, fs.constants.F_OK, (err) => {
+      if(err){
+      fs.mkdir(temp, err=>{
+        if(err) console.log(err);
+        fs.mkdir(download, err=>{
+          if(err) console.log(err);
+        });
+        fs.mkdir(tts, err=>{
+          if(err) console.log(err);
+        });
+      });
+      }
+    });
+      break;
+  default:
+  console.log('Unknown operating system');
+    break;
+}
+
 var {
   remote,
   ipcRenderer
