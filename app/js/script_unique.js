@@ -2,11 +2,11 @@
  * @Author: alassane
  * @Date:   2018-11-10T17:59:11+01:00
  * @Last modified by:   alassane
- * @Last modified time: 2018-12-11T01:38:27+01:00
+ * @Last modified time: 2019-01-17T15:20:31+01:00
  */
 
 // fichier script concernant les qr codes uniques
-
+console.log(temp);
 var qrcode;
 var qrType;
 $('#preview').attr('disabled', true);

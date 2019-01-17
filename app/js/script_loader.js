@@ -2,13 +2,13 @@
  * @Author: alassane
  * @Date:   2018-12-04T14:28:52+01:00
  * @Last modified by:   alassane
- * @Last modified time: 2018-12-11T01:02:27+01:00
+ * @Last modified time: 2019-01-17T15:17:42+01:00
  */
 
 const path = require('path');
 const root = path.dirname(require.main.filename);
 const piexif = require('piexifjs');
-const fs = require ('fs');
+const fs = require('fs');
 window.$ = window.jQuery = require(__dirname + "/Views/assets/js/jquery.min.js");
 require(__dirname + "/Views/assets/js/jquery.qrcode.min.js");
 require(__dirname + "/Views/assets/js/jquery-qrcode-0.14.0.min.js");
@@ -17,32 +17,52 @@ require(__dirname + "/Views/assets/js/bootstrap.min.js");
 require(__dirname + "/Views/assets/js/solid.js");
 require(__dirname + "/Views/assets/js/fontawesome.js");
 
-const temp = path.join(`${process.env.temp}`, 'QRLudo');
 // Create QRLudo temp folder if not exist
 switch (process.platform) {
   case 'linux':
+    var temp = path.join(process.env.HOME, 'temp/QRLudo');
+    let downloadLinux = path.join(temp, 'Download');
+    let ttsLinux = path.join(temp, 'tts');
 
+    fs.access(temp, fs.constants.F_OK, (err) => {
+      if (err) {
+        fs.mkdir(path.join(`${process.env.HOME}`, 'temp'), err => {
+          if (err) console.log(err);
+          fs.mkdir(temp, err => {
+            if (err) console.log(err);
+            fs.mkdir(downloadLinux, err => {
+              if (err) console.log(err);
+            });
+            fs.mkdir(ttsLinux, err => {
+              if (err) console.log(err);
+            });
+          });
+        });
+      }
+    });
     break;
 
-    case 'win32':
+  case 'win32':
+    var temp = path.join(`${process.env.temp}`, 'QRLudo');
     let download = path.join(temp, 'Download');
     let tts = path.join(temp, 'tts');
     fs.access(temp, fs.constants.F_OK, (err) => {
-      if(err){
-      fs.mkdir(temp, err=>{
-        if(err) console.log(err);
-        fs.mkdir(download, err=>{
-          if(err) console.log(err);
+      if (err) {
+        fs.mkdir(temp, err => {
+          if (err) console.log(err);
+          fs.mkdir(download, err => {
+            if (err) console.log(err);
+          });
+          fs.mkdir(tts, err => {
+            if (err) console.log(err);
+          });
         });
-        fs.mkdir(tts, err=>{
-          if(err) console.log(err);
-        });
-      });
       }
     });
-      break;
+    break;
+
   default:
-  console.log('Unknown operating system');
+    console.log('Unknown operating system');
     break;
 }
 
@@ -50,7 +70,9 @@ var {
   remote,
   ipcRenderer
 } = require('electron');
-const { dialog } = remote;
+const {
+  dialog
+} = remote;
 
 const {
   CompresseurTexte
