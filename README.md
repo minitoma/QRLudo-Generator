@@ -12,18 +12,15 @@ Lancer la commande npm install dans le dossier racine du projet
 
 #### Pour Linux
 
-su root
-sudo run dist-linux
+sudo npm run dist-linux
 
 #### Pour Windows (7,8, 10)
 
-su root
-sudo run dist-win32
+sudo npm run dist-win32
 
 ou
 
-su root
-sudo run dist-win64
+sudo npm run dist-win64
 
 ## Information et liens utiles
 
