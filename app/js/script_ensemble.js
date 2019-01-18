@@ -1,7 +1,7 @@
 /**
  * @Date:   2018-12-06T16:32:33+01:00
  * @Last modified by:   alassane
- * @Last modified time: 2018-12-11T23:14:43+01:00
+ * @Last modified time: 2019-01-16T23:37:53+01:00
  */
 
 $().ready(function() {
@@ -108,6 +108,7 @@ dropZone.ondrop = function(e) {
   if (afficherPopUp) {
     messageInfos("Un ou plusieurs fichiers ont le même nom : " + nomFichierIdentique, "warning");
   }
+  activer_button();
 };
 
 /*

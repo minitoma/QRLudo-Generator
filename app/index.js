@@ -2,7 +2,7 @@
  * @Author: alassane
  * @Date:   2018-12-05T17:35:22+01:00
  * @Last modified by:   alassane
- * @Last modified time: 2018-12-11T00:36:46+01:00
+ * @Last modified time: 2019-01-18T18:40:09+01:00
  */
 
 const electron = require('electron');
@@ -84,22 +84,47 @@ app.on('window-all-closed', () => {
     app.quit();
   }
 
-  // delete all music in folder Download
+  // delete local folder QRLudo
   const fs = require('fs');
   const path = require('path');
-  let directory = path.join(__dirname, 'Download');
+  const { exec } = require('child_process');
 
-  fs.readdir(directory, (err, files) => {
-    if (err) throw err;
+  switch (process.platform) {
+    case 'win32':
+      let temp = path.join(process.env.temp, 'QRLudo');
 
-    for (const file of files) {
-      fs.unlink(path.join(directory, file), err => {
-        if (err) throw err;
+      exec(`rmdir /s/q ${temp}`, (error, stdout, stderr) => {
+        if (error) {
+          console.error(`exec error: ${error}`);
+          return;
+        }
+        alert(`stdout: ${stdout}`);
+        alert(`stderr: ${stderr}`);
       });
-    }
-  });
+
+      break;
+
+    case 'linux':
+      let tempLinux = path.join(process.env.HOME, 'temp');
+
+      exec(`rm -rf ${tempLinux}`, (error, stdout, stderr) => {
+        if (error) {
+          console.error(`exec error: ${error}`);
+          return;
+        }
+        console.log(`stdout: ${stdout}`);
+        console.log(`stderr: ${stderr}`);
+      });
+
+      break;
+
+    default:
+      console.log('Unknown operating system');
+      break;
+  }
 
 });
+
 
 app.on('activate', () => {
   if (mainWindow === null) {
@@ -118,6 +143,25 @@ ipcMain.on('showInfoWindow', (e, arg) => {
     mainWindow.setMaximumSize(w, height);
   }
 });
+
+ipcMain.on('exitApp', (e, arg) => {
+  mainWindow.close();
+});
+
+function deleteFolderRecursive(path) {
+  const fs = require('fs');
+  if (fs.existsSync(path)) {
+    fs.readdirSync(path).forEach(function(file, index) {
+      let curPath = path + "/" + file;
+      if (fs.lstatSync(curPath).isDirectory()) { // recurse
+        deleteFolderRecursive(curPath);
+      } else { // delete file
+        fs.unlinkSync(curPath);
+      }
+    });
+    fs.rmdirSync(path);
+  }
+};
 
 /**
  * Copyright © 12/02/2018, Corentin TALARMAIN, Thomas CALATAYUD, Rahmatou Walet MOHAMEDOUN, Jules LEGUY, David DEMBELE, Alassane DIOP

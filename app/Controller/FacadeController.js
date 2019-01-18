@@ -2,9 +2,8 @@
  * @Author: alassane
  * @Date:   2018-11-10T20:58:49+01:00
  * @Last modified by:   alassane
- * @Last modified time: 2018-12-06T17:36:37+01:00
+ * @Last modified time: 2019-01-16T23:22:00+01:00
  */
-
 
 
 /**
@@ -43,8 +42,8 @@ class FacadeController {
         divImg.removeChild(divImg.firstChild);
       }
 
-
-      var rawconstants = fs.readFileSync('./constants.json');
+      var rawconstants = fs.readFileSync(`${root}/constants.json`);
+      
       var constants = JSON.parse(rawconstants);
       qrcode.qrcode.version = constants.version;
 

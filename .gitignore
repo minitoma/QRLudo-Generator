@@ -1,6 +1,4 @@
 node_modules
-Download/*
-tts/*
 dist/*
 release-builds/*
 npm-debug.log
