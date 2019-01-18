@@ -1,6 +1,4 @@
 node_modules
-Download/*
-tts/current_tts.mp3
 dist/*
 release-builds/*
 npm-debug.log
