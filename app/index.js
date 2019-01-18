@@ -87,16 +87,35 @@ app.on('window-all-closed', () => {
   // delete local folder QRLudo
   const fs = require('fs');
   const path = require('path');
+  const { exec } = require('child_process');
 
   switch (process.platform) {
     case 'win32':
       let temp = path.join(process.env.temp, 'QRLudo');
-      deleteFolderRecursive(temp);
+
+      exec(`rmdir /s/q ${temp}`, (error, stdout, stderr) => {
+        if (error) {
+          console.error(`exec error: ${error}`);
+          return;
+        }
+        alert(`stdout: ${stdout}`);
+        alert(`stderr: ${stderr}`);
+      });
+
       break;
 
     case 'linux':
       let tempLinux = path.join(process.env.HOME, 'temp');
-      deleteFolderRecursive(tempLinux);
+
+      exec(`rm -rf ${tempLinux}`, (error, stdout, stderr) => {
+        if (error) {
+          console.error(`exec error: ${error}`);
+          return;
+        }
+        console.log(`stdout: ${stdout}`);
+        console.log(`stderr: ${stderr}`);
+      });
+
       break;
 
     default:
