@@ -29,7 +29,6 @@ function importQRCodeImport(filename) {
 
 // fonction permettant de recréer visuellement un qr code
 function drawQRCodeImport(qrcode) {
-  console.log("qr code to be drawn : ", qrcode);
   if (qrcode.getType() == 'unique' || qrcode.getType() == 'xl') {
     $("#charger-page").load(path.join(__dirname, "Views/unique.html"), function() {
       $('input#qrColor').val(qrcode.getColor()); // restaurer la couleur du qrcode
@@ -69,7 +68,6 @@ function drawQRCodeEnsembleUnique(qrcode) {
   for (var i = 0; i < qrcode.getData().length; i++) {
     let qrJson = qrcode.getData()[i].qrcode;
     let qr = null;
-    console.log(qrJson.type);
 
     if (qrJson.type == "unique")
       qr = new QRCodeUnique(qrJson.name, qrJson.data, qrJson.color);
@@ -81,6 +79,5 @@ function drawQRCodeEnsembleUnique(qrcode) {
     genererLigne(qr.getName());
     controllerEnsemble.setQRCodeAtomiqueInArray(qr);
   }
-  console.log(qrcode);
   // recuperationQrCodeUnique(qrcode);
 }

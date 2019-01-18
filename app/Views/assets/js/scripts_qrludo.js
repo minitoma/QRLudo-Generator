@@ -7,13 +7,13 @@ $().ready(function() {
 
   //pour chaque item dans le menu on charge une page html
   $("#unique-html").click(function() {
-    $("#charger-page").load(path.join(__dirname, "Views/unique.html"));
+    $("#charger-page").load(path.join(__dirname, "Views/unique.html"), loadDefaultColor);
   });
   $("#ensemble-html").click(function() {
-    $("#charger-page").load(path.join(__dirname, "Views/ensemble.html"));
+    $("#charger-page").load(path.join(__dirname, "Views/ensemble.html"), loadDefaultColor);
   });
   $("#quesRep-html").click(function() {
-    $("#charger-page").load(path.join(__dirname, "Views/quesRep.html"));
+    $("#charger-page").load(path.join(__dirname, "Views/quesRep.html"), loadDefaultColor);
   });
   $("#info-html").click(function() {
     $("#charger-page").load(path.join(__dirname, "Views/info.html"));
@@ -38,6 +38,13 @@ $().ready(function() {
 
 });
 
+function loadDefaultColor(){
+  var settings = require("electron-settings");
+
+  if (settings.has("defaultColor")) {
+    $("#qrColor").val(settings.get("defaultColor"));
+  }
+}
 
 //supprimer les messages d'infos en haut de page
 function initMessages() {

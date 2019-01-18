@@ -5,13 +5,6 @@
  */
 
 $().ready(function() {
-
-  var settings = require("electron-settings");
-
-  if (settings.has("defaultColor")) {
-    $("#qrColor").val(settings.get("defaultColor"));
-  }
-
   $("#play-sound-div").hide();
 
   // Genere le qrCode Ensemble

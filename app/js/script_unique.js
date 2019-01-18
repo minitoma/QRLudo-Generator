@@ -23,12 +23,6 @@ var {
 var menu = new Menu();
 
 $(document).ready(function() {
-  var settings = require("electron-settings");
-
-  if (settings.has("defaultColor")) {
-    $("#qrColor").val(settings.get("defaultColor"));
-  }
-
   $("#saveQRCode").click(e => {
     saveQRCodeImage();
   });

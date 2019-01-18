@@ -27,7 +27,6 @@ class QRCodeLoader {
 
     // `onload` as listener
     fileReader.addEventListener('load', function(ev) {
-      console.log("dataUrlSize:", ev.target.result.length);
 
       // it's not a qr code xml, so load json qr code
       if (QRCodeLoader.__traiterImage(ev.target.result) == false) {
@@ -49,16 +48,6 @@ class QRCodeLoader {
         } else {
           let qr = QRCodeLoader.parseXMLtoJson(qrcode);
           callback(qr);
-          // console.log(qr);
-          // console.log(qrcode.getTailleContenu());
-          // for (var i = 0; i < qrcode.getTailleContenu(); i++) {
-          //   console.log(qrcode.getTexte(i));
-          //   console.log(qrcode.getTypeContenu(i));
-          // }
-          // console.log(qrcode.getTypeQR());
-          // console.log(qrcode.getDonneesUtilisateur());
-          // console.log(qrcode.getColorQRCode());
-          // callback(qrcode, drawQRCodeAtomique);
         }
       }
     });

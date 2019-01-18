@@ -210,7 +210,6 @@ class ImageGenerator {
     options.fill = "#00D091";
     options.left = width / 2;
     options.top = 0;
-    console.log(options);
     $(c).qrcode(options);
 
     options.fill = "#FFA652";

@@ -70,7 +70,6 @@ class CompresseurTexte {
     texteCompresse = "1" + texteCompresse;
     texteCompresse = String.fromCharCode(1024) + texteCompresse;
 
-    console.log(texteCompresse);
 
     return texteCompresse;
 
