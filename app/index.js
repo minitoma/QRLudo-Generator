@@ -2,7 +2,7 @@
  * @Author: alassane
  * @Date:   2018-12-05T17:35:22+01:00
  * @Last modified by:   alassane
- * @Last modified time: 2019-01-17T18:18:08+01:00
+ * @Last modified time: 2019-01-18T18:40:09+01:00
  */
 
 const electron = require('electron');
@@ -142,6 +142,10 @@ ipcMain.on('showInfoWindow', (e, arg) => {
 
     mainWindow.setMaximumSize(w, height);
   }
+});
+
+ipcMain.on('exitApp', (e, arg) => {
+  mainWindow.close();
 });
 
 function deleteFolderRecursive(path) {

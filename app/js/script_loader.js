@@ -2,7 +2,7 @@
  * @Author: alassane
  * @Date:   2018-12-04T14:28:52+01:00
  * @Last modified by:   alassane
- * @Last modified time: 2019-01-17T15:17:42+01:00
+ * @Last modified time: 2019-01-18T18:46:56+01:00
  */
 
 const path = require('path');
@@ -18,44 +18,59 @@ require(__dirname + "/Views/assets/js/solid.js");
 require(__dirname + "/Views/assets/js/fontawesome.js");
 
 // Create QRLudo temp folder if not exist
+const {
+  exec
+} = require('child_process');
 switch (process.platform) {
   case 'linux':
     var temp = path.join(process.env.HOME, 'temp/QRLudo');
-    let downloadLinux = path.join(temp, 'Download');
-    let ttsLinux = path.join(temp, 'tts');
-
     fs.access(temp, fs.constants.F_OK, (err) => {
       if (err) {
-        fs.mkdir(path.join(`${process.env.HOME}`, 'temp'), err => {
-          if (err) console.log(err);
-          fs.mkdir(temp, err => {
-            if (err) console.log(err);
-            fs.mkdir(downloadLinux, err => {
-              if (err) console.log(err);
-            });
-            fs.mkdir(ttsLinux, err => {
-              if (err) console.log(err);
-            });
-          });
+        var {
+          ipcRenderer
+        } = require('electron');
+
+        exec(`mkdir -p ${temp}/Download`, (error, stdout, stderr) => {
+          if (error) {
+            console.error(`exec error: ${error}`);
+            ipcRenderer.send('exitApp', null);
+            return;
+          }
+        });
+
+        exec(`mkdir -p ${temp}/tts`, (error, stdout, stderr) => {
+          if (error) {
+            console.error(`exec error: ${error}`);
+            ipcRenderer.send('exitApp', null);
+            return;
+          }
         });
       }
     });
     break;
 
   case 'win32':
-    var temp = path.join(`${process.env.temp}`, 'QRLudo');
-    let download = path.join(temp, 'Download');
-    let tts = path.join(temp, 'tts');
+    var temp = path.join(process.env.temp, 'QRLudo');
     fs.access(temp, fs.constants.F_OK, (err) => {
       if (err) {
-        fs.mkdir(temp, err => {
-          if (err) console.log(err);
-          fs.mkdir(download, err => {
-            if (err) console.log(err);
-          });
-          fs.mkdir(tts, err => {
-            if (err) console.log(err);
-          });
+        var {
+          ipcRenderer
+        } = require('electron');
+
+        exec(`mkdir ${temp}\\Download`, (error, stdout, stderr) => {
+          if (error) {
+            console.error(`exec error: ${error}`);
+            ipcRenderer.send('exitApp', null);
+            return;
+          }
+        });
+
+        exec(`mkdir ${temp}\\tts`, (error, stdout, stderr) => {
+          if (error) {
+            console.error(`exec error: ${error}`);
+            ipcRenderer.send('exitApp', null);
+            return;
+          }
         });
       }
     });
