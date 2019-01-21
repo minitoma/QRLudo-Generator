@@ -51,6 +51,8 @@ $(document).ready(function() {
 
   $('button#annuler').click(e => {
     e.preventDefault();
+    var settings = require("electron-settings");
+
     if (settings.has("defaultColor")) {
       $("#qrColor").val(settings.get("defaultColor"));
       $.each($(".qrData"), function(i, val){
