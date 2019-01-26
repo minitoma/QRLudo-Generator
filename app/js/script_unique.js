@@ -6,10 +6,8 @@
  */
 
 // fichier script concernant les qr codes uniques
-console.log(temp);
 var qrcode;
 var qrType;
-$('#preview').attr('disabled', true);
 
 var {
   remote,
@@ -23,6 +21,12 @@ var {
 var menu = new Menu();
 
 $(document).ready(function() {
+
+  // desactiver les boutons s'il y a rien à lire ou generer
+  if (document.getElementById('qrName').value.length === 0) {
+    $('#preview').attr('disabled', true);
+  }
+
   $("#saveQRCode").click(e => {
     saveQRCodeImage();
   });

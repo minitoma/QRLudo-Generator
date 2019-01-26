@@ -41,9 +41,11 @@ $().ready(function() {
   $("#saveQRCode").click(e => {
     saveQRCodeImage();
   });
-});
 
-$('#preview ,#empty').attr('disabled', true);
+  if (document.getElementById('qrName').value.length === 0) {
+    $('#preview #empty').attr('disabled', true);
+  }
+});
 
 var dropZone = document.getElementById('dropZone');
 var txtZone = document.getElementById('txtZone');
