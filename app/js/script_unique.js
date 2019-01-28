@@ -2,7 +2,7 @@
  * @Author: alassane
  * @Date:   2018-11-10T17:59:11+01:00
  * @Last modified by:   alassane
- * @Last modified time: 2019-01-17T15:27:19+01:00
+ * @Last modified time: 2019-01-27T23:13:55+01:00
  */
 
 // fichier script concernant les qr codes uniques
@@ -33,6 +33,11 @@ $(document).ready(function() {
     saveQRCodeImage();
   });
 
+  $('#closeModalListeMusic').click(e => {
+    $('#musicUrl').val('');
+    $('#listeMusic').find('.errorLoader').remove();
+  }); // close modal add music
+
   // enable right click
   menu.append(new MenuItem({
     label: 'Coller le lien',
@@ -59,7 +64,7 @@ $(document).ready(function() {
     e.preventDefault();
     if (settings.has("defaultColor")) {
       $("#qrColor").val(settings.get("defaultColor"));
-      $.each($(".qrData"), function(i, val){
+      $.each($(".qrData"), function(i, val) {
         $("#cible").empty();
       });
       $("#qrName").val("");
@@ -210,7 +215,6 @@ function getMusicFromUrl() {
             fs.writeFileSync(`${temp}/Download/${filename}`, Buffer(new Uint8Array(this.result)));
 
             $(loader, errorMsg).remove();
-            $('#musicUrl').val('');
             $('#closeModalListeMusic').click(); // close modal add music
           };
           fileReader.readAsArrayBuffer(blob);

@@ -2,7 +2,7 @@
  * @Author: alassane
  * @Date:   2018-12-04T14:28:52+01:00
  * @Last modified by:   alassane
- * @Last modified time: 2019-01-18T18:46:56+01:00
+ * @Last modified time: 2019-01-28T01:41:24+01:00
  */
 
 const path = require('path');
@@ -79,6 +79,12 @@ switch (process.platform) {
   default:
     console.log('Unknown operating system');
     break;
+}
+
+// Check internet connection
+if (!navigator.onLine) {
+  alert("L'application ne peut pas se lancer sans une liaison à internet. Veuillez vérifier votre connexion internet");
+  window.close();
 }
 
 var {
