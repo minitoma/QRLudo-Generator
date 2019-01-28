@@ -63,7 +63,11 @@ function drawQRCodeData(qrcode) {
       ajouterChampSon(data[i].name, data[i].url);
     }
   }
-  restoreSavedMusic(data.filter(d => d.type == 'music'));
+  let musics = data.filter(d => d.type == 'music');
+
+  if(musics.length !==0){
+    restoreSavedMusic(musics);
+  }
 }
 
 // recréer les qrcode unique d'un qrcode ensemble
