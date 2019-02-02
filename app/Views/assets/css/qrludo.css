@@ -198,13 +198,13 @@ a.article:hover {
   color: #fff !important;
 }
 
-#parametres{
+#parametres {
   margin-left: 25px;
   margin-bottom: 10px;
   background-color: white;
 }
 
-#parametres:hover{
+#parametres:hover {
   background-color: #28a745;
   border: 1px solid white;
 }
@@ -356,12 +356,11 @@ input[type="color"]::-webkit-color-swatch {
   margin-right: 5px;
 }
 
-.icon-player{
-  color:#28a745;
-  display:none;
-  margin-right:10px;
+.icon-player {
+  color: #28a745;
+  display: none;
+  margin-right: 10px;
 }
-
 
 /* ---------------------------------------------------
     MEDIAQUERIES
@@ -453,3 +452,28 @@ input[type="color"]::-webkit-color-swatch {
 }
 
 /*end loader*/
+/*info*/
+.tab-pane>h5 {
+  margin-top: 20px;
+}
+
+.modalMusic, .modalAjoutReponse, .champReponse, .modalAjoutReponseCreerReponse,
+.modalAjoutReponseReponseAjoutee, .importerProjetDialog, .projetImporte,
+.exporterProjetDialog, .modalCharger, .zoneEnsemble {
+  display: block;
+}
+
+@media (max-width:640px) {
+
+  .modalMusic, .modalAjoutReponse, .champReponse, .modalAjoutReponseCreerReponse,
+  .modalAjoutReponseReponseAjoutee, .importerProjetDialog, .projetImporte,
+  .exporterProjetDialog, .modalCharger, .zoneEnsemble {
+    display: none;
+  }
+
+  #info-Ensemble>ul>li:nth-child(5)>video {
+    height: 250px;
+  }
+}
+
+/*end info*/
