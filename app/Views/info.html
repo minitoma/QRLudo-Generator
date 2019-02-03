@@ -10,14 +10,16 @@
 
     <div class="tab-content">
       <div class="tab-pane active" id="info-MusicInput">
-        <h4>Comment mettre une musique dans un qrcode ? </h4>
+        <h5>Comment mettre une musique dans un qrcode ? </h5>
         <hr>
 
         <h5><a href="#openModal">Ouvrir la fenêtre de saisie de la musique</a></h5>
         <div id="openModal" class="info-content">
-          Cliquer sur le bouton <img src="./Views/assets/images/btnMusic.png"><br>
-          Une boite de dialogue avec une zone de saisie va s'ouvrir<br>
-          <img src="./Views/assets/images/modalMusic.png">
+          <ul>
+            <li>Cliquer sur le bouton <img src="./Views/assets/images/btnMusic.png"></li>
+            <li>Une boite de dialogue avec une zone de saisie va s'ouvrir<br>
+              <img class="modalMusic" src="./Views/assets/images/modalMusic.png"></li>
+          </ul>
         </div>
         <h5><a href="#copyLink">Copier le lien téléchargeable de la musique</a></h5>
         <div id="copyLink" class="info-content">
@@ -84,165 +86,254 @@
 
       </div>
 
-      <div class="tab-pane" id="info-Import"></div>
-      <div class="tab-pane" id="info-Ensemble"></div>
+      <div class="tab-pane" id="info-Import">
+
+        <h5>Importer un QR-Code Unique ou Ensemble</h5>
+        <hr>
+
+        <ul>
+          <li>Cliquer sur le bouton <img src="./Views/assets/images/infos_import/boutonCharger.png"></li>
+          <li>
+            Une boite de dialogue s'ouvre </br>
+            <img class="modalCharger" src="./Views/assets/images/infos_import/modalCharger.png">
+          </li>
+          <li>
+            Cliquer sur le bouton
+            <img src="./Views/assets/images/infos_import/modalChargerChoisirFichier.png">
+          </li>
+          <li>Choisir le qrcode à importer</li>
+          <li>Cliquer sur le bouton << Valider>> pour importer le qrcode,</br>
+              << Annuler>> pour annuler </br>
+                <img src="./Views/assets/images/infos_import/modalChargerValider.png">
+          </li>
+          <li>Le QR-Code sera importé recréé et affiché.
+          </li>
+        </ul>
+
+      </div>
+
+      <div class="tab-pane" id="info-Ensemble">
+        <h5>Créer un QR-Code Ensemble</h5>
+        <hr>
+
+        <ul>
+          <li>Cliquer sur le bouton <img src="./Views/assets/images/infos_ensemble/boutonEnsemble.png"></li>
+          <li>
+            La zone correspondante à la création de QR-Code Ensemble va s'afficher </br>
+            <img class="zoneEnsemble" src="./Views/assets/images/infos_ensemble/zoneEnsemble.png">
+          </li>
+          <li>Saisir le nom du QR-Code</li>
+          <li>
+            Depuis votre ordinateur Glisser les QR-Codes uniques à ajouter et les déposer sur l'appplication, sur la zone
+            <img src="./Views/assets/images/infos_ensemble/deposerEnsemble.png">
+          </li>
+          <li>
+            <video width="auto" height="500" controls loop>
+              <source src="./Views/assets/images/infos_ensemble/ensemble.mp4" type="video/mp4">
+            </video>
+          </li>
+        </ul>
+
+      </div>
+
       <div class="tab-pane" id="info-QuestionReponse">
+
         <h5><a href="#ajoutQuestion">Ajouter une question au projet</a></h5>
         <div id="ajoutQuestion" class="info-content">
-          <ul class="list-group">
-            <li class="list-group-item">
-              Saisissez le texte de votre question dans le champ <img src="./Views/assets/images/infos_questions_reponses/nouvelleQuestion.png"/> puis cliquez sur le bouton <img src="./Views/assets/images/infos_questions_reponses/boutonPlus.png"/>
+          <ul>
+            <li>
+              Saisissez le texte de votre question dans le champ
+              <img src="./Views/assets/images/infos_questions_reponses/nouvelleQuestion.png" />
+              puis cliquez sur le bouton
+              <img src="./Views/assets/images/infos_questions_reponses/boutonPlus.png" />
             </li>
-            <li class="list-group-item">
-              Une boîte de dialogue apparaît : elle contient votre question et vous permet d'ajouter de nouvelles réponses à votre question <a href="#ajoutReponse" style="padding-left:0px;">(voir Ajouter une réponse à une question/En modifiant directement la réponse).</a>
+            <li>
+              Une boîte de dialogue apparaît : elle contient votre question et vous permet d'ajouter de nouvelles réponses à votre question <a href="#ajoutReponse" style="padding-left:0px;">(voir Ajouter une réponse à une question/En modifiant
+                directement la réponse).</a>
             </li>
-            <li class="list-group-item">
-              Un nouveau champ apparaît : il contient toutes les informations de la question que vous venez de créer.<br/>
-              <img src="./Views/assets/images/infos_questions_reponses/nouvelleQuestionChamp.png"/>
+            <li>
+              Un nouveau champ apparaît : il contient toutes les informations de la question que vous venez de créer
+              <img src="./Views/assets/images/infos_questions_reponses/nouvelleQuestionChamp.png" />
             </li>
           </ul>
         </div>
+
         <h5><a href="#ajoutReponse">Ajouter une reponse à une question</a></h5>
         <div id="ajoutReponse" class="info-content">
+
           <h6><a href="#ajoutReponseModifQuestion">En modifiant directement la question</a></h6>
           <div id="ajoutReponseModifQuestion" class='info-content'>
-            <ul class="list-group">
-              <li class="list-group-item">
-                Cliquez sur le bouton <img src="./Views/assets/images/infos_questions_reponses/boutonEditQuestion.png"/> de la question que vous voulez modifier.
+            <ul>
+              <li>
+                Cliquez sur le bouton
+                <img src="./Views/assets/images/infos_questions_reponses/boutonEditQuestion.png" />
+                de la question que vous voulez modifier.
               </li>
-              <li class="list-group-item">
-                Une boîte de dialogue qui contient les informations de la question apparaît.<br/>
-                <img src="./Views/assets/images/infos_questions_reponses/modalAjoutReponse.png"/>
+              <li>
+                Une boîte de dialogue qui contient les informations de la question apparaît.<br />
+                <img class="modalAjoutReponse" src="./Views/assets/images/infos_questions_reponses/modalAjoutReponse.png" />
               </li>
-              <li class="list-group-item">
-                Dans le champ <img src="./Views/assets/images/infos_questions_reponses/ajoutReponse.png"/>, saisissez le texte de votre réponse puis cliquez sur le bouton <img src="./Views/assets/images/infos_questions_reponses/boutonPlus.png"/>
+              <li>
+                Dans le champ
+                <img src="./Views/assets/images/infos_questions_reponses/ajoutReponse.png" />
+                , saisissez le texte de votre réponse puis cliquez sur le bouton
+                <img src="./Views/assets/images/infos_questions_reponses/boutonPlus.png" />
                 pour ajouter votre réponse.
               </li>
-              <li class="list-group-item">
-                Votre réponse apparaît et est ajoutée par défaut.<br/>
-                <img src="./Views/assets/images/infos_questions_reponses/modalAjoutReponseReponseAjoutee.png"/>
+              <li>
+                Votre réponse apparaît et est ajoutée par défaut.<br />
+                <img class="modalAjoutReponseReponseAjoutee" src="./Views/assets/images/infos_questions_reponses/modalAjoutReponseReponseAjoutee.png" />
               </li>
-              <li class="list-group-item">
-                Enfin, cliquez sur le bouton <img src="./Views/assets/images/infos_questions_reponses/boutonValider.png"/> pour valider vos modifications.
+              <li>
+                Enfin, cliquez sur le bouton
+                <img src="./Views/assets/images/infos_questions_reponses/boutonValider.png" />
+                pour valider vos modifications.
               </li>
-              <li class="list-group-item">
-                <div class="alert alert-info" role="alert">
-                  <br/>
-                  <i class="fa fa-info-circle"></i>&nbsp;&nbsp;Avec le champ <img src="./Views/assets/images/infos_questions_reponses/champCustomMessage.png"/>, vous pouvez modifier le message qui sera lu
-                  par la synthèse vocale de QRLudo lorsque cette réponse sera scannée. Par défault, le message est celui indiqué dans les paramètres.<br/><br/>
-                </div>
+              <li>
+                Avec le champ de saisie de texte, vous pouvez modifier le message qui sera lu par la synthèse vocale de QRLudo lorsque cette réponse sera scannée.</br>
+                Par défault, le message est celui indiqué dans les paramètres.
+                <img src="./Views/assets/images/infos_questions_reponses/champCustomMessage.png" />
               </li>
-              <li class="list-group-item">
-                Votre réponse apparaît dans la description de la question.<br/>
-                <img src="./Views/assets/images/infos_questions_reponses/champQuestionNouvelleReponse.png"/>
+              <li>
+                Votre réponse apparaît dans la description de la question.<br />
+                <img src="./Views/assets/images/infos_questions_reponses/champQuestionNouvelleReponse.png" />
               </li>
             </ul>
           </div>
+
           <h6><a href="#ajoutReponseCreationReponse">En créant une réponse et en l'ajoutant à la question</a></h6>
           <div id="ajoutReponseCreationReponse" class='info-content'>
-            <ul class="list-group">
-              <li class="list-group-item">
-                Cliquez sur <img src="./Views/assets/images/infos_questions_reponses/boutonMesReponses.png"/>.
+            <ul>
+              <li>
+                Cliquez sur
+                <img src="./Views/assets/images/infos_questions_reponses/boutonMesReponses.png" />
               </li>
-              <li class="list-group-item">
-                Dans le champ <img src="./Views/assets/images/infos_questions_reponses/champNouvelleReponse.png"/>, saisissez votre réponse puis validez la en cliquant sur le bouton <img src="./Views/assets/images/infos_questions_reponses/boutonPlus.png"/>
+              <li>
+                Dans le champ
+                <img src="./Views/assets/images/infos_questions_reponses/champNouvelleReponse.png" />,
+                saisissez votre réponse puis validez la en cliquant sur le bouton
+                <img src="./Views/assets/images/infos_questions_reponses/boutonPlus.png" />
               </li>
-              <li class="list-group-item">
-                Votre réponse apparaît.<br/>
-                <img src="./Views/assets/images/infos_questions_reponses/champReponse.png"/>
+              <li>
+                Votre réponse apparaît
+                <img class="champReponse" src="./Views/assets/images/infos_questions_reponses/champReponse.png" />
               </li>
-              <li class="list-group-item">
-                Cliquez sur <img src="./Views/assets/images/infos_questions_reponses/boutonMonProjet.png"/> pour retourner à la page des questions.
+              <li>
+                Cliquez sur
+                <img src="./Views/assets/images/infos_questions_reponses/boutonMonProjet.png" />
+                pour retourner à la page des questions.
               </li>
-              <li class="list-group-item">
-                Cliquez sur le bouton <img src="./Views/assets/images/infos_questions_reponses/boutonEditQuestion.png"/> de la question que vous voulez modifier.
+              <li>
+                Cliquez sur le bouton
+                <img src="./Views/assets/images/infos_questions_reponses/boutonEditQuestion.png" />
+                de la question que vous voulez modifier.
               </li>
-              <li class="list-group-item">
-                Une boîte de dialogue apparaît.<br/>
-                <img src="./Views/assets/images/infos_questions_reponses/modalAjoutReponseCreerReponse.png"/>
+              <li>
+                Une boîte de dialogue apparaît.<br />
+                <img class="modalAjoutReponseCreerReponse" src="./Views/assets/images/infos_questions_reponses/modalAjoutReponseCreerReponse.png" />
               </li>
-              <li class="list-group-item">
-                Cochez la case correspondant à la réponse que vous souhaitez ajouter puis cliquez sur <img src="./Views/assets/images/infos_questions_reponses/boutonValider.png"/>
+              <li>
+                Cochez la case correspondant à la réponse que vous souhaitez ajouter puis cliquez sur
+                <img src="./Views/assets/images/infos_questions_reponses/boutonValider.png" />
                 pour enregister vos modifications.
               </li>
             </ul>
           </div>
         </div>
+
         <h5><a href="#retirerReponse">Retirer une réponse à une question</a></h5>
         <div id="retirerReponse" class="info-content">
-          <ul class="list-group">
-            <li class="list-group-item">
-              Cliquez sur le bouton <img src="./Views/assets/images/infos_questions_reponses/boutonEditQuestion.png"/> qui correspond à question que vous souhaitez modifier.
+          <ul>
+            <li>
+              Cliquez sur le bouton
+              <img src="./Views/assets/images/infos_questions_reponses/boutonEditQuestion.png" />
+              qui correspond à question que vous souhaitez modifier.
             </li>
-            <li class="list-group-item">
+            <li>
               Décochez la case correspondant à la réponse que vous voulez retirer.
             </li>
-            <li class="list-group-item">
-              Cliquez sur <img src="./Views/assets/images/infos_questions_reponses/boutonValider.png"/> pour enregister vos modifications.
+            <li>
+              Cliquez sur
+              <img src="./Views/assets/images/infos_questions_reponses/boutonValider.png" />
+              pour enregister vos modifications.
             </li>
           </ul>
         </div>
+
         <h5><a href="#modifierQuestion">Modifier une question</a></h5>
         <div id="modifierQuestion" class="info-content">
-          <ul class="list-group">
-            <li class="list-group-item">
-              Cliquez sur le bouton <img src="./Views/assets/images/infos_questions_reponses/boutonEditQuestion.png"/> qui correspond à la question que vous souhaitez modifier.
+          <ul>
+            <li>
+              Cliquez sur le bouton
+              <img src="./Views/assets/images/infos_questions_reponses/boutonEditQuestion.png" />
+              qui correspond à la question que vous souhaitez modifier.
             </li>
-            <li class="list-group-item">
-              Modifiez l'intitulé de votre question dans le champ <img src="./Views/assets/images/infos_questions_reponses/modifsIntituleQuestion.png"/>.
+            <li>
+              Modifiez l'intitulé de votre question dans le champ
+              <img src="./Views/assets/images/infos_questions_reponses/modifsIntituleQuestion.png" />.
             </li>
-            <li class="list-group-item">
-              Cliquez sur <img src="./Views/assets/images/infos_questions_reponses/boutonValider.png"/> pour enregister vos modifications.
+            <li>
+              Cliquez sur
+              <img src="./Views/assets/images/infos_questions_reponses/boutonValider.png" />
+              pour enregister vos modifications.
             </li>
           </ul>
         </div>
+
         <h5><a href="#supprimerReponse">Supprimer une réponse du projet</a></h5>
         <div id="supprimerReponse" class="info-content">
-          <ul class="list-group">
-            <li class="list-group-item">
-              Cliquez sur <img src="./Views/assets/images/infos_questions_reponses/boutonMesReponses.png"/>.
+          <ul>
+            <li>
+              Cliquez sur
+              <img src="./Views/assets/images/infos_questions_reponses/boutonMesReponses.png" />.
             </li>
-            <li class="list-group-item">
-              Cliquez sur le bouton <img src="./Views/assets/images/infos_questions_reponses/boutonSupprimer.png"/> de la réponse que vous souhaitez supprimer.
+            <li>
+              Cliquez sur le bouton
+              <img src="./Views/assets/images/infos_questions_reponses/boutonSupprimer.png" />
+              de la réponse que vous souhaitez supprimer.
             </li>
           </ul>
         </div>
+
         <h5><a href="#exporterProjet">Enregistrer un projet</a></h5>
         <div id="exporterProjet" class="info-content">
-          <ul class="list-group">
-            <li class="list-group-item">
-              Vérifiez que vous avez entré le nom de votre projet.<br/>
-              <img src="./Views/assets/images/infos_questions_reponses/champNomProjet.png"/>
+          <ul>
+            <li>
+              Vérifiez que vous avez entré le nom de votre projet
+              <img src="./Views/assets/images/infos_questions_reponses/champNomProjet.png" />
             </li>
-            <li class="list-group-item">
-              Cliquez sur <img src="./Views/assets/images/infos_questions_reponses/boutonExporter.png"/>
+            <li>
+              Cliquez sur
+              <img src="./Views/assets/images/infos_questions_reponses/boutonExporter.png" />
             </li>
-            <li class="list-group-item">
-              Une boîte de dialogue apparaît : elle vous permet de sélectionner l'endroit où votre projet va être sauvegarder.<br/>
-              <img src="./Views/assets/images/infos_questions_reponses/exporterProjetDialog.png"/>
+            <li>
+              Une boîte de dialogue apparaît : elle vous permet de sélectionner l'endroit où votre projet va être sauvegarder.<br />
+              <img class="exporterProjetDialog" src="./Views/assets/images/infos_questions_reponses/exporterProjetDialog.png" />
             </li>
-            <li class="list-group-item">
-              Un message vous indique que votre projet a bien été enregister.<br/>
-              <img src="./Views/assets/images/infos_questions_reponses/alertProjetExporte.png"/>
+            <li>
+              Un message vous indique que votre projet a bien été enregister.<br />
+              <img src="./Views/assets/images/infos_questions_reponses/alertProjetExporte.png" />
             </li>
           </ul>
         </div>
+
         <h5><a href="#importerProjet">Importer un projet</a></h5>
         <div id="importerProjet" class="info-content">
-          <ul class="list-group">
-            <li class="list-group-item">
-              Cliquez sur <img src="./Views/assets/images/infos_questions_reponses/boutonImporter.png"/>
+          <ul>
+            <li>
+              Cliquez sur <img src="./Views/assets/images/infos_questions_reponses/boutonImporter.png" />
             </li>
-            <li class="list-group-item">
-              Sélectionnez le nom du dossier qui contient votre projet.<br/>
-              <img src="./Views/assets/images/infos_questions_reponses/importerProjetDialog.png"/>
+            <li>
+              Sélectionnez le nom du dossier qui contient votre projet.<br />
+              <img class="importerProjetDialog" src="./Views/assets/images/infos_questions_reponses/importerProjetDialog.png" />
             </li>
-            <li class="list-group-item">
-              Tous les éléments de votre projet sont affichés.<br/>
-              <img src="./Views/assets/images/infos_questions_reponses/projetImporte.png"/>
+            <li>
+              Tous les éléments de votre projet sont affichés.<br />
+              <img class="projetImporte" src="./Views/assets/images/infos_questions_reponses/projetImporte.png" />
             </li>
           </ul>
         </div>
+
       </div>
     </div>
 
