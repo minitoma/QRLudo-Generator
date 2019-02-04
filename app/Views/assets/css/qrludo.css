@@ -52,8 +52,8 @@ span {
   display: inline-block;
 }
 
-#testtexxtarea {
-  width: 90%;
+#inputAudio input, #legendeTexarea textarea {
+  width: 80%;
 }
 
 /* ---------------------------------------------------
