@@ -267,12 +267,14 @@ function ajouterChampLegende(valeur = "") {
   var textareaLegende = document.createElement('div');
   textareaLegende.innerHTML = `<i class='fa fa-play align-self-center icon-player'></i><i class="fa fa-pause align-self-center icon-player"></i><textarea id='testtexxtarea' class='form-control qrData' rows='3' name='legendeQR' placeholder='Mettre la légende'>${valeur}</textarea>
   <button type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='supprimerChampLegende(this);'>
-  <i class='fa fa-trash-alt'></i></button>
-  <button type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='moveUp(this);'>
-  <i class='fa fa-arrow-up'></i></button>
-  <button type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='moveDown(this);'>
-  <i class='fa fa-arrow-down'></i></button>`;
-  textareaLegende.setAttribute("class", "d-flex align-items-start form-inline legendeQR");
+  <div class="inline-block">
+    <i class='fa fa-trash-alt'></i></button>
+    <button type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='moveUp(this);'>
+    <i class='fa fa-arrow-up'></i></button>
+    <button type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='moveDown(this);'>
+    <i class='fa fa-arrow-down'></i></button>
+  </div>`;
+  textareaLegende.setAttribute("class", "d-flex align-items-start legendeQR");
   textareaLegende.setAttribute("id", "legendeTexarea");
 
   document.getElementById('cible').appendChild(textareaLegende);
@@ -288,11 +290,13 @@ function ajouterChampSon(nom, url) {
   var inputSon = document.createElement('div');
   inputSon.innerHTML = `<i class='fa fa-play align-self-center icon-player'></i><i class='fa fa-pause align-self-center icon-player'></i><input type='text' id='${url}' name='AudioName' class='form-control qrData' value='${nom}' readonly>
     <button type='button' class='btn btn-outline-success legendeQR-close-btn align-self-center' onclick='supprimerChampSon(this);'>
-    <i class='fa fa-trash-alt'></i></button>
-    <button type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='moveUp(this);'>
-    <i class='fa fa-arrow-up'></i></button>
-    <button type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='moveDown(this);'>
-    <i class='fa fa-arrow-down'></i></button>`;
+    <div class="inline-block">
+      <i class='fa fa-trash-alt'></i></button>
+      <button type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='moveUp(this);'>
+      <i class='fa fa-arrow-up'></i></button>
+      <button type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='moveDown(this);'>
+      <i class='fa fa-arrow-down'></i></button>
+    </div>`;
   inputSon.setAttribute("class", "d-flex align-items-start legendeQR");
   inputSon.setAttribute("id", "inputAudio");
   document.getElementById('cible').appendChild(inputSon);
