@@ -1,7 +1,7 @@
 /**
  * @Date:   2018-12-04T08:24:59+01:00
  * @Last modified by:   alassane
- * @Last modified time: 2019-01-28T01:23:30+01:00
+ * @Last modified time: 2019-02-04T21:10:01+01:00
  */
 
 $().ready(function() {
@@ -100,7 +100,7 @@ function restoreSavedMusic(data) {
 
   let nbMusic = 0;
 
-  for (var music of data) {
+  for (let music of data) {
     let xhr = new XMLHttpRequest();
     try {
       xhr.open('GET', music.url, true);
