@@ -2,7 +2,7 @@
  * @Author: alassane
  * @Date:   2018-11-10T17:59:11+01:00
  * @Last modified by:   alassane
- * @Last modified time: 2019-02-04T20:28:47+01:00
+ * @Last modified time: 2019-02-04T21:09:51+01:00
  */
 
 // fichier script concernant les qr codes uniques
@@ -166,6 +166,7 @@ function saveQRCodeImage() {
       var filesaver = require('file-saver');
       console.log(xhr.response);
       filesaver.saveAs(xhr.response, qrcode.getName() + '.jpeg');
+      messageInfos("Le QR code a bien été enregistré", "success"); //message a afficher en haut de la page
     }
   }
 
