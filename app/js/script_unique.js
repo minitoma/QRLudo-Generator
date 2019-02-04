@@ -2,7 +2,7 @@
  * @Author: alassane
  * @Date:   2018-11-10T17:59:11+01:00
  * @Last modified by:   alassane
- * @Last modified time: 2019-01-27T23:13:55+01:00
+ * @Last modified time: 2019-02-04T21:09:51+01:00
  */
 
 // fichier script concernant les qr codes uniques
@@ -166,6 +166,7 @@ function saveQRCodeImage() {
       var filesaver = require('file-saver');
       console.log(xhr.response);
       filesaver.saveAs(xhr.response, qrcode.getName() + '.jpeg');
+      messageInfos("Le QR code a bien été enregistré", "success"); //message a afficher en haut de la page
     }
   }
 
@@ -266,7 +267,11 @@ function ajouterChampLegende(valeur = "") {
   var textareaLegende = document.createElement('div');
   textareaLegende.innerHTML = `<i class='fa fa-play align-self-center icon-player'></i><i class="fa fa-pause align-self-center icon-player"></i><textarea id='testtexxtarea' class='form-control qrData' rows='3' name='legendeQR' placeholder='Mettre la légende'>${valeur}</textarea>
   <button type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='supprimerChampLegende(this);'>
-  <i class='fa fa-trash-alt'></i></button>`;
+  <i class='fa fa-trash-alt'></i></button>
+  <button type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='moveUp(this);'>
+  <i class='fa fa-arrow-up'></i></button>
+  <button type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='moveDown(this);'>
+  <i class='fa fa-arrow-down'></i></button>`;
   textareaLegende.setAttribute("class", "d-flex align-items-start form-inline legendeQR");
   textareaLegende.setAttribute("id", "legendeTexarea");
 
@@ -281,10 +286,13 @@ function supprimerChampLegende(e) {
 function ajouterChampSon(nom, url) {
 
   var inputSon = document.createElement('div');
-  inputSon.innerHTML = "<i class='fa fa-play align-self-center icon-player'></i><i class='fa fa-pause align-self-center icon-player'></i><input type='text' id='" + url + "' name='AudioName' class='form-control qrData' value='" + nom + "' readonly>" +
-    "<button type='button' class='btn btn-outline-success legendeQR-close-btn align-self-center' onclick='supprimerChampSon(this);'>" +
-    "<i class='fa fa-trash-alt'></i>" +
-    "</button>";
+  inputSon.innerHTML = `<i class='fa fa-play align-self-center icon-player'></i><i class='fa fa-pause align-self-center icon-player'></i><input type='text' id='${url}' name='AudioName' class='form-control qrData' value='${nom}' readonly>
+    <button type='button' class='btn btn-outline-success legendeQR-close-btn align-self-center' onclick='supprimerChampSon(this);'>
+    <i class='fa fa-trash-alt'></i></button>
+    <button type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='moveUp(this);'>
+    <i class='fa fa-arrow-up'></i></button>
+    <button type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='moveDown(this);'>
+    <i class='fa fa-arrow-down'></i></button>`;
   inputSon.setAttribute("class", "d-flex align-items-start legendeQR");
   inputSon.setAttribute("id", "inputAudio");
   document.getElementById('cible').appendChild(inputSon);
@@ -296,4 +304,26 @@ function ajouterChampSon(nom, url) {
 //supprimer un champ Audio -> event onclick
 function supprimerChampSon(e) {
   $(e).parents('div#inputAudio').remove();
+}
+
+// déplacer au dessus du champ précédent
+function moveUp(e) {
+  let prev = $(e).parents('.legendeQR').prev();
+  let div = $(e).parents('.legendeQR');
+
+  if (prev.length > 0) {
+    div.remove();
+    div.insertBefore(prev);
+  }
+}
+
+// déplacer en dessous du champ suivant
+function moveDown(e) {
+  let next = $(e).parents('.legendeQR').next();
+  let div = $(e).parents('.legendeQR');
+
+  if (next.length > 0) {
+    div.remove();
+    div.insertAfter(next);
+  }
 }
