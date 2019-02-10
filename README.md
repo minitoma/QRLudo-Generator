@@ -1,8 +1,8 @@
 # QR Ludo Generator
 
-QR Ludo Generator est une application de bureau qui permet de générer des QR codes. Cette application a été créée dans le but d'aider les transcripteurs de l'Institut Montéclair d'Angers à créer des supports de cours pour les élèves défficients visuels qui fréquentent l'établissement.
+QR Ludo Generator est une application de bureau qui permet de générer des QR codes. Cette application a été créée dans le but d'aider les transcripteurs de l'Institut Montéclair d'Angers à créer des supports de cours pour les élèves déficients visuels qui fréquentent l'établissement.
 
-Les QR codes générés doivent être détectés ensuite avec l'application mobile [QRLudo](https://github.com/vrahier/QRLudo).
+Les QR codes générés doivent être détectés avec l'application mobile [QRLudo](https://github.com/vrahier/QRLudo).
 
 ## Installation
 
