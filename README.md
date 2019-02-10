@@ -1,20 +1,37 @@
-# QRCode_Generator
-Application permettant de générer des QR-Codes qui seront lus (synthése vocale), à l'aide de l'application android [QRLudo](https://github.com/vrahier/QRLudo)
-Cette application est la suite du projet [QRLudo Générator](https://github.com/minitoma/QRLudo-Generator) développée par l'équipe de concrétisation de l'année universitaire 2017/2018.
+# QR Ludo Generator
 
-## Installation et dépendances
+QR Ludo Generator est une application de bureau qui permet de générer des QR codes. Cette application a été créée dans le but d'aider les transcripteurs de l'Institut Montéclair d'Angers à créer des supports de cours pour les élèves défficients visuels qui fréquentent l'établissement.
+
+Les QR codes générés doivent être détectés ensuite avec l'application mobile [QRLudo](https://github.com/vrahier/QRLudo).
+
+## Installation de QR Ludo Generateur
+
+Pour obtenir QR Ludo Generateur, il faut télécharger son installeur à l'adresse : 
+
+## Contexte de développement
+
+Ce projet a eu lieu dans le cadre des modules d'enseignement Management de Projet et Concrétisation Disciplinaire suivis par les étudiants de Master 2 Informatique ACDI (Analyse, Conception et Développement Informatique) et de Master 1 Informatique de l'Université d'Angers de l'année universitaire 2018/2019.
+
+# Pour les développeurs
+
+## Langages
+
+QR Ludo Generateur a été développée à l'aide du framework Electron basé sur du Javascript. Il utilise les langages du web HTML, Javascript et CSS. Il utilise NodeJS pour l'ajout et la gestion des dépendances.
+
+## Mise en place
 
 [nodejs et npm](https://doc.ubuntu-fr.org/nodejs)
+Nodejs et npm doivent être installés sur votre poste.
 
-Lancer la commande npm install dans le dossier racine du projet
+Ensuite, il suffit de lancer la commande npm install dans le dossier racine du projet pour installer toutes les dépendances nécessaires au projet.
 
-### Génération de l'installeur pour l'application
+## Génération de l'installeur pour l'application
 
-#### Pour Linux
+### Pour Linux
 
 sudo npm run dist-linux
 
-#### Pour Windows (7,8, 10)
+### Pour Windows (7,8, 10)
 
 sudo npm run dist-win32
 
@@ -23,9 +40,6 @@ ou
 sudo npm run dist-win64
 
 ## Information et liens utiles
-
-[nodejs](https://nodejs.org/fr/)
-[electron](https://electronjs.org/)
 
 [QRLudo Générator version 1](https://github.com/minitoma/QRLudo-Generator)
 
