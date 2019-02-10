@@ -4,9 +4,13 @@ QR Ludo Generator est une application de bureau qui permet de générer des QR c
 
 Les QR codes générés doivent être détectés ensuite avec l'application mobile [QRLudo](https://github.com/vrahier/QRLudo).
 
-## Installation de QR Ludo Generateur
+## Installation
 
 Pour obtenir QR Ludo Generateur, il faut télécharger son installeur à l'adresse : 
+
+## Manuel d'utilisation
+
+Un manuel d'utilisation est disponible à l'adresse : https://github.com/univ-angers/QRLudo-Generator/blob/master/docs/qrludo_manuel_utilisateur.pdf
 
 ## Contexte de développement
 
@@ -25,7 +29,7 @@ Nodejs et npm doivent être installés sur votre poste.
 
 Ensuite, il suffit de lancer la commande npm install dans le dossier racine du projet pour installer toutes les dépendances nécessaires au projet.
 
-## Génération de l'installeur pour l'application
+## Génération de l'installeur de l'application
 
 ### Pour Linux
 
@@ -46,3 +50,5 @@ sudo npm run dist-win64
 [QRLudo version 1](https://github.com/CorTal/QRLudo)
 
 [QRLudo version 2](https://github.com/juleguy/QRLudo)
+
+# Licence
