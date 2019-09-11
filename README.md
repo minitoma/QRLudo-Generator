@@ -6,7 +6,7 @@ Les QR codes générés doivent être détectés avec l'application mobile [QRLu
 
 ## Installation
 
-Pour obtenir QR Ludo Generateur, il faut télécharger son installeur à l'adresse : 
+Pour obtenir QR Ludo Generateur, il faut télécharger son installeur à l'adresse : TBD
 
 ## Manuel d'utilisation
 
