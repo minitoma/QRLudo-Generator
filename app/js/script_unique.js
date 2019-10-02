@@ -55,7 +55,13 @@ $(document).ready(function() {
 
   $('button#showInfo').click(e => {
     e.preventDefault();
-    ipcRenderer.send('showInfoWindow', null);
+    var info = document.getElementById('info-MusicInput');
+    console.log(info);
+    var para = document.createElement('p');
+    para.innerHTML = `<p>test</p>`;
+    console.log("test");
+    document.getElementById('elementsAudio').appendChild(info);
+    //ipcRenderer.send('showInfoWindow', null);
   });
 
   $('button#annuler').click(e => {
@@ -165,8 +171,12 @@ function saveQRCodeImage() {
     if (xhr.readyState == xhr.DONE) {
       var filesaver = require('file-saver');
       console.log(xhr.response);
-      filesaver.saveAs(xhr.response, qrcode.getName() + '.jpeg');
-      messageInfos("Le QR code a bien été enregistré", "success"); //message a afficher en haut de la page
+      //DAns les deux case filsaver.saveAs renvoie rien qui s'apparente à un bolléen
+      if(filesaver.saveAs(xhr.response, qrcode.getName() + '.jpeg') == true ){
+        console.log(filesaver.saveAs(xhr.response, qrcode.getName() + '.jpeg').getName);
+        messageInfos("Le QR code a bien été enregistré", "success"); //message a afficher en haut de la page
+      }
+
     }
   }
 

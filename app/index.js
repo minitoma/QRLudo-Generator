@@ -133,14 +133,18 @@ app.on('activate', () => {
 });
 
 ipcMain.on('showInfoWindow', (e, arg) => {
-  if (infoWindow == null) {
+  p.innerHTML = `<p>test </p>`;
+
+  document.getElementById('form-group').appendChild(p);
+
+  /*if (infoWindow == null) {
     createInfoWindow();
     let display = electron.screen.getPrimaryDisplay();
     let width = display.bounds.width;
     let height = display.bounds.height;
     let w = width - (Math.floor(width / 3) + 10);
 
-    mainWindow.setMaximumSize(w, height);
+    mainWindow.setMaximumSize(w, height);*/
   }
 });
 
