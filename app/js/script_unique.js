@@ -255,33 +255,50 @@ function showError(modal, errorMsg, message = "Veuillez coller un lien de fichie
 }
 
 //verifier le champ qrName du formulaire myFormActive puis activer le button generer
+//Le nom du QR Code doit contenir au moins un caractère, sinon le bouton generer n'est pas accessible
 function activer_button() {
+  $('#preview').attr('disabled', true); //Par defaut le bouton generer est toujours activé, on le desactive dans la condition suivante si necessaire
   if (document.getElementById('qrName').value.length > 0) {
     $('#preview, #annuler, #ajouterTexte, #showAudio').attr('disabled', false);
   }
 }
 
+
+
+let numTextArea = 0; //Ce compteur permet de compter le nombre de textarea pour differencier les id
+
 //ajouter une nvlle legende (textarea) a chaque click sur button Texte (pour chaque textarea il faut rajouter à l'attribut class la valeur qrData class="... qrData")
 function ajouterChampLegende(valeur = "") {
 
+  numTextArea++; // Nouveau numero pour le prochain textarea
+
   var textareaLegende = document.createElement('div');
-  textareaLegende.innerHTML = `<i class='fa fa-play align-self-center icon-player'></i><i class="fa fa-pause align-self-center icon-player"></i><textarea id='testtexxtarea' class='form-control qrData' rows='3' name='legendeQR' placeholder='Mettre la légende'>${valeur}</textarea>
-  <button type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='supprimerChampLegende(this);'>
-  <div class="inline-block">
-    <i class='fa fa-trash-alt'></i></button>
-    <button type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='moveUp(this);'>
-    <i class='fa fa-arrow-up'></i></button>
-    <button type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='moveDown(this);'>
-    <i class='fa fa-arrow-down'></i></button>
-  </div>`;
+  textareaLegende.innerHTML = `<i class='fa fa-play align-self-center icon-player'></i><i class="fa fa-pause align-self-center icon-player"></i>
+    <textarea id='textarea${numTextArea}' class='form-control qrData' rows='3' name='legendeQR' placeholder='Mettre la légende (255 caractères maximum)' maxlength='255' onkeyup="verifNombreCaractere(${numTextArea});">${valeur}</textarea>
+    <button type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='supprimerChampLegende(this);'>
+    <div class="inline-block">
+      <i class='fa fa-trash-alt'></i></button>
+      <button type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='moveUp(this);'>
+      <i class='fa fa-arrow-up'></i></button>
+      <button type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='moveDown(this);'>
+      <i class='fa fa-arrow-down'></i></button>`;
   textareaLegende.setAttribute("class", "d-flex align-items-start legendeQR");
-  textareaLegende.setAttribute("id", "legendeTexarea");
+  textareaLegende.setAttribute("id", "legendeTextarea");
 
   document.getElementById('cible').appendChild(textareaLegende);
 }
 
+//verifier si le nombre de caractère maximal est respecté, si ce n'est pas le cas on affiche une pop up d'informations
+function verifNombreCaractere(num) {
+  $('#messages').empty();
+  if(document.getElementById('textarea'+num).value.length >= $('#textarea'+num).attr('maxlength')) {
+    messageInfos("La limite de caractère est atteinte (255 caractères)","warning");
+  }
+}
+
 function supprimerChampLegende(e) {
-  $(e).parents('div#legendeTexarea').remove();
+  numTextArea--;
+  $(e).parents('div#legendeTextarea').remove();
 }
 
 //generer un input 'pour un fichier audio' -> nom de fichier + url (pour chaque input il faut rajouter à l'attribut class la valeur qrData class=".. qrData")
@@ -302,7 +319,6 @@ function ajouterChampSon(nom, url) {
   document.getElementById('cible').appendChild(inputSon);
 
   $('#listeMusic .close').click();
-
 }
 
 //supprimer un champ Audio -> event onclick
