@@ -7,6 +7,7 @@
 $().ready(function() {
   $("#play-sound-div").hide();
 
+
   // Genere le qrCode Ensemble
   $("#preview").click(function() {
 
@@ -118,6 +119,13 @@ function genererLigne(name) {
   let baliseI = document.createElement("I");
   let textDiv = document.createTextNode(name);
 
+  let baliseButtonUp = document.createElement("BUTTON");
+  let baliseButtonDown= document.createElement("BUTTON");
+  let baliseIUp = document.createElement("I");
+  let baliseIDown = document.createElement("I");
+
+
+
   baliseI.setAttribute("class", "fa fa-eraser");
   baliseI.setAttribute("style", "height:12px; width:12px;");
 
@@ -130,12 +138,32 @@ function genererLigne(name) {
   baliseSpan.setAttribute("class", "qrData");
   baliseSpan.setAttribute("name", "qrCode");
 
+  //ajout des boutons
+  baliseIUp.setAttribute("style",  "border: solid black; border-width: 0 3px 3px 0; display: inline-block; padding: 3px; transform: rotate(-135deg); -webkit-transform: rotate(-135deg);");
+  baliseIDown.setAttribute("style",  "border: solid black; border-width: 0 3px 3px 0; display: inline-block; padding: 3px; transform: rotate(45deg); -webkit-transform: rotate(45deg);");
+
+  baliseButtonUp.setAttribute("id", name+'Up');
+  baliseButtonUp.appendChild(baliseIUp);
+  baliseButtonDown.setAttribute("id", name+'Down');
+  baliseButtonDown.appendChild(baliseIDown);
+
+  //addEventListener sur les bouton Up and down       &&
+  baliseButtonUp.addEventListener("click", upItem);
+  baliseButtonDown.addEventListener("click", downItem);
+
+
   baliseDiv.addEventListener("click", afficherQrCode);
   baliseDiv.appendChild(baliseButton);
   baliseDiv.appendChild(baliseSpan);
   baliseDiv.id = name;
 
+
+  baliseDiv.appendChild(baliseButtonUp);
+  baliseDiv.appendChild(baliseButtonDown);
+
   txtZone.appendChild(baliseDiv);
+
+
 }
 
 // Affiche le qrCode unique lie à la ligne cliquable
@@ -145,6 +173,7 @@ function afficherQrCode(e) {
   console.log(this);
   console.log(item);
   affichageLigneParDefault();
+
 
   this.querySelector("span").setAttribute("style", "white-space: nowrap; padding:5px; font-size:0.7em; background-color:#99cc00;");
 
@@ -222,4 +251,17 @@ function saveQRCodeImage() {
   }
 
   xhr.send();
+}
+
+
+//fonction deplacement de fichier vers le haut ou bas  &&&
+function upItem(e){
+  let parentElement = $(this).parent();
+  $(parentElement).insertBefore($(parentElement).prev());
+}
+
+//fonction deplacement de fichier vers bas  &&&
+function downItem(e){
+  let parentElement = $(this).parent();
+  $(parentElement).insertAfter($(parentElement).next());
 }

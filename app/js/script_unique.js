@@ -22,6 +22,21 @@ var menu = new Menu();
 
 $(document).ready(function() {
 
+  //aficher popup quand on click sur reinitialiser
+  // cache le qr générer & desactivation du bouton exporter
+  $('button#annuler').on('click', function(){
+    var a = confirm("Etes vous sûr de vouloir réinitialiser?");
+    if (a==true){
+      $('#qrView').hide();
+      $('#saveQRCode').attr('disabled', true);
+      $('#preview').attr('disabled', true);
+    }
+
+
+
+  });
+
+
   // desactiver les boutons s'il y a rien à lire ou generer
   if (document.getElementById('qrName').value.length === 0) {
     $('#preview').attr('disabled', true);
@@ -75,6 +90,10 @@ $(document).ready(function() {
 
 // trigger preview qrcode action
 $('#preview').click(e => {
+
+  //re-afficher le qr generer si le bouton est reinitialiser a deja été utilisé
+  $("#qrView").show();
+
   console.log('preview');
   //enlever les messages en haut de page
   initMessages();
