@@ -21,7 +21,9 @@ var {
 var menu = new Menu();
 
 $(document).ready(function() {
-
+  //Use to implement information on the audio import
+  var info = document.createElement('div');
+  var info_activ = false;
   // desactiver les boutons s'il y a rien à lire ou generer
   if (document.getElementById('qrName').value.length === 0) {
     $('#preview').attr('disabled', true);
@@ -51,16 +53,76 @@ $(document).ready(function() {
 
   $('input#musicUrl').contextmenu(e => {
     menu.popup(remote.getCurrentWindow())
+    if(info_activ == true){
+      document.getElementById('elementsAudio').removeChild(info);
+      info_activ = false;
+    }
   });
-
+   //Show the onformation about the audio file import (help)
   $('button#showInfo').click(e => {
     e.preventDefault();
-    var info = document.getElementById('info-MusicInput');
-    console.log(info);
-    var para = document.createElement('p');
-    para.innerHTML = `<p>test</p>`;
-    console.log("test");
-    document.getElementById('elementsAudio').appendChild(info);
+  //var info = document.getElementById('info-MusicInput');
+    if (info_activ==false){
+        info.innerHTML = ` <div id="info-audio" class="info-content">
+        <h5><a href="#copyLink">Copier le lien téléchargeable de la musique</a></h5>
+          <div id="copyLink" class="info-content">
+            <h6><a href="#google">Google Drive</a></h6>
+            <div id="google" class="info-content">
+              <ul class="list components">
+                <li>
+                  Aller sur internet, se rendre sur son compte Google Drive (https://drive.google.com), se connecter éventuellement
+                </li>
+                <li>
+                  Faire clic-droit sur le fichier audio en question
+                </li>
+                <li>
+                  Cliquer sur "Obtenir le lien partageable"
+                </li>
+                <li>
+                  Revenir sur l'application QRLudo
+                </li>
+                <li>
+                  Vidéo résumant les étapes ci dessus
+                </li>
+              </ul>
+            </div>
+
+            <h6><a href="#dropbox">Dropbox</a></h6>
+            <div id="dropbox" class="info-content">
+              <ul class="list components">
+                <li>
+                  Aller sur internet, se rendre sur son compte Dropbox (https://www.dropbox.com), se connecter éventuellement
+                </li>
+                <li>
+                  Survoller avec la souris le fichier audio en question
+                </li>
+                <li>
+                  Cliquer sur "Partager", un popup va s'ouvrir
+                </li>
+                <li>
+                  En bas à droite du popup ouvert, cliquer sur "Créer un lien"
+                </li>
+                <li>
+                  Toujours sur le popup, cliquer sur "Copier le lien" en bas à droite
+                </li>
+                <li>
+                  Revenir sur l'application QRLudo
+                </li>
+                <li>
+                  Vidéo résumant les étapes ci dessus
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>`;
+      console.log("test");
+      document.getElementById('elementsAudio').appendChild(info);
+      info_activ = true;
+    }
+    else {
+      document.getElementById('elementsAudio').removeChild(info);
+      info_activ = false;
+    }
     //ipcRenderer.send('showInfoWindow', null);
   });
 
@@ -76,7 +138,6 @@ $(document).ready(function() {
       $("#qrName").val("");
     }
   });
-
 });
 
 // trigger preview qrcode action
