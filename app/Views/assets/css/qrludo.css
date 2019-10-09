@@ -52,7 +52,7 @@ span {
   display: inline-block;
 }
 
-#inputAudio input, #legendeTexarea textarea {
+#inputAudio input, #legendeTextarea textarea {
   width: 80%;
 }
 
