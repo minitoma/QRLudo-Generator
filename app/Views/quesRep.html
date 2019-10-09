@@ -20,12 +20,13 @@
       <h6 class="card-title"></h6>
       <ul class="nav nav-tabs">
         <li class="nav-item">
-          <a class="nav-link active" data-toggle="tab" href="#newProject">Mon projet</a>
+          <a class="nav-link active" data-toggle="tab" href="#newProject">QR - Questions Reponses</a>
         </li>
+        <!--
         <li class="nav-item">
           <a class="nav-link" data-toggle="tab" href="#mesReponses">Mes réponses</a>
         </li>
-
+        -->
       </ul>
 
       <div class="tab-content scrollbar-success" style="height:600px; overflow-y: scroll; margin-top:15px;">
@@ -37,15 +38,54 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="control-label" style="color:#28a745;padding-top:10px;">Nouvelle question</label>
-            <input type='text' id="newQuestionText" placeholder="Saisissez la question"/>
-            <button id="addNewQuesBtnId" type="button" class="btn btn-outline-success">
-              <i class="fa fa-plus"></i>
-            </button>
+            <label class="control-label" style="color:#28a745;padding-top:10px;">Question : </label>
+            <div class="form-inline">
+              <input type='text' class="form-control col-sm-6" id="newQuestionText" name="nomQuest" placeholder="Saisissez la question"/>
+              <button id="addNewQuesBtnId" type="button" class="btn btn-outline-success">
+                <i class='fa fa-plus'></i>
+              </button>
+            </div>
+
+            <hr>
+            <div class="form-group">
+              <table>
+                <tr>
+                  <td>
+                    <label class="control-label" style="color:#28a745;padding-top:10px;">Reponse :</label>
+                  </td>
+                  <td>
+                    <div class="form-inline">
+                      <input type='text' class="form-control col-sm-11" id="newReponseText" placeholder="Saisissez la reponse"/>
+                    </div>
+                  </td>
+                  <td rowspan="2">
+                    <div style="text-align: center;">
+                      <button id="ajoutReponse" type="button" class="btn btn-outline-success">Nouvelle Réponse</button>
+                    </div>
+                  </td>
+                </tr>
+                <tr>
+                  <td>
+                    <label class="control-label" style="color:#28a745;padding-top:10px;">Retour Vocal :&nbsp;&nbsp;</label>
+                  </td>
+                  <td>
+                    <div class="form-inline">
+                      <input type='text' class="form-control col-sm-11" id="newRetourVocal" placeholder="Saisissez le réponse vocale"/>
+                    </div>
+                  </td>
+                </tr>
+
+              </table>
+            </div>
+            <hr>
+
+
             <div id="questionsDivLabelsId" class="form-group">
             </div>
           </div>
+
         </div>
+        <!--
         <div id="mesReponses" class="tab-pane fade" role="tabpanel">
           <div class="form-group">
             <label class="control-label" style="color:#28a745;padding-top:10px;">Nouvelle réponse</label>
@@ -57,7 +97,9 @@
             </div>
           </div>
         </div>
-      </div>    </div>
+        -->
+      </div>
+    </div>
     <div class="card-footer form-inline">
       <div class="input-group  btn-unique-xl">
         <div class="input-group-prepend">
@@ -65,7 +107,7 @@
         </div>
         <input type="color" id="qrColor" value="#000000">
       </div>
-      <button type="reset" class="btn btn-outline-success btn-unique-xl"><i class="fa fa-eraser"></i>&nbsp;&nbsp;Annuler</button>
+      <button type="reset" class="btn btn-outline-success btn-unique-xl"><i class="fa fa-eraser"></i>&nbsp;&nbsp;Réinitialiser</button>
       <button id="importProjectBtnId" type="button" class="btn btn-outline-success btn-unique-xl"><i class="fa fa-upload"></i>&nbsp;&nbsp;Importer Un Projet Existant</button>
 
     </div>
@@ -80,6 +122,7 @@
   </script>
 </div>
 <!--/.Panel-->
+
 
 <!-- pour affecter des réponses à une question -->
 <div class="modal fade" id="editQuestionModal" tabindex="-1" role="dialog" aria-labelledby="editQuestionModalTitleId" aria-hidden="true">
@@ -123,6 +166,7 @@
     </div>
   </div>
 </div>
+
 <!-- end nouvelle reponse -->
 <!-- <script>
 $().ready(function(){
