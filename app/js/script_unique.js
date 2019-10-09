@@ -22,8 +22,8 @@ var menu = new Menu();
 
 $(document).ready(function() {
   //Use to implement information on the audio import
-  var info = document.createElement('div');
-  var info_activ = false;
+  var info = document.createElement('div'); // balise div : contain html information
+  var info_activ = false; // boolean : give the etat of info (up/off)
   // desactiver les boutons s'il y a rien à lire ou generer
   if (document.getElementById('qrName').value.length === 0) {
     $('#preview').attr('disabled', true);
@@ -58,10 +58,9 @@ $(document).ready(function() {
       info_activ = false;
     }
   });
-   //Show the onformation about the audio file import (help)
+   //Show the information about the audio file import (help)
   $('button#showInfo').click(e => {
     e.preventDefault();
-  //var info = document.getElementById('info-MusicInput');
     if (info_activ==false){
         info.innerHTML = ` <div id="info-audio" class="info-content">
         <h5><a href="#copyLink">Copier le lien téléchargeable de la musique</a></h5>
@@ -232,7 +231,7 @@ function saveQRCodeImage() {
     if (xhr.readyState == xhr.DONE) {
       var filesaver = require('file-saver');
       console.log(xhr.response);
-      //DAns les deux case filsaver.saveAs renvoie rien qui s'apparente à un bolléen
+      //Dans les deux cas filsaver.saveAs renvoie rien qui s'apparente à un bolléen
       if(filesaver.saveAs(xhr.response, qrcode.getName() + '.jpeg') == true ){
         console.log(filesaver.saveAs(xhr.response, qrcode.getName() + '.jpeg').getName);
         messageInfos("Le QR code a bien été enregistré", "success"); //message a afficher en haut de la page
