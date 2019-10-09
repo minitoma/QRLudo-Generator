@@ -133,7 +133,9 @@ app.on('activate', () => {
 });
 
 ipcMain.on('showInfoWindow', (e, arg) => {
-  if (infoWindow == null) {
+
+
+    if (infoWindow == null) {
     createInfoWindow();
     let display = electron.screen.getPrimaryDisplay();
     let width = display.bounds.width;

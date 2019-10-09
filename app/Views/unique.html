@@ -51,7 +51,7 @@
         </div>
         <input type="color" id="qrColor" value="#000000">
       </div>
-      <button type="reset" class="btn btn-outline-success btn-unique-xl" id="annuler"><i class="fa fa-sync"></i>&nbsp;&nbsp;Réinitialiser</button>
+      <button type="reset" class="btn btn-outline-success btn-unique-xl" id="annuler"><i class="fa fa-sync"></i>&nbsp;&nbsp;Tout supprimer</button>
       <button type="submit" class="btn btn-outline-success" id="preview"><i class="fa fa-cogs"></i>&nbsp;&nbsp;Générer</button>
     </div>
   </form>
@@ -104,13 +104,16 @@
       <div class="modal-body scrollbar-success">
         <div class="list-group" id="elementsAudio">
           <div class="form-group">
-            <button type="button" class="btn btn-outline-success" id="showInfo" title="Afficher aide">
-              <i class="fa fa-info-circle"></i>
-            </button>
+
             <label class="col-sm-12 control-label" style="color:#28a745;padding-top:10px;">Veuillez copier et coller le lien téléchargeable du fichier audio</label>
             <div class="col-sm-12">
               <input type="text" id="musicUrl" name="musicUrl" class="form-control" onpaste="getMusicFromUrl()">
             </div>
+            <br>
+            <button type="button" class="btn btn-outline-success" id="showInfo" title="Afficher aide">
+              <i class="fa fa-info-circle"></i>
+            </button>
+
           </div>
         </div>
       </div>
