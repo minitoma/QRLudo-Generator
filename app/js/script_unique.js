@@ -32,9 +32,7 @@ $(document).ready(function() {
       $('#preview').attr('disabled', true);
     }
 
-
-
-  });
+ });
 
 
   // desactiver les boutons s'il y a rien à lire ou generer
