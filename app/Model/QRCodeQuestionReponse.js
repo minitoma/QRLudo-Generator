@@ -48,9 +48,15 @@ class Projet {
         this.projet.reponses.splice(index, 1);
       }
     }
+  }
+
+  removeReponseFromQuestion(reponseId, questionId) {
+    this.removeReponse(reponseId);
 
     for(let question of this.projet.questions){
-      question.removeReponse(reponseId);
+      if(question.getId() == questionId) {
+        question.removeReponse(reponseId);
+      }
     }
   }
 
@@ -173,7 +179,7 @@ class Question {
 
   removeReponse(reponseUid){
     for(let rep of this.qrcode.data){
-      if(rep.id === reponseUid){
+      if(rep.id == reponseUid){
         var index = this.qrcode.data.indexOf(rep);
         this.qrcode.data.splice(index, 1);
       }
