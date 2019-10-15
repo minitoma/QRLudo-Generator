@@ -56,10 +56,13 @@ $(document).ready(function() {
       return false; // si le champ est vide on sort
     }
 
+    var new_rep = new Reponse($('#newReponseText').val(), $("#qrColor").val());
+    var new_rep_vocal = $('#newReponseVocalText').val();
+
     //sortir de la fonction si le champ entré existe deja
     let existe = false;
-    $.each(projet.getReponses(), function(i, val) {
-      if (val.getName() === $('#newReponseText').val()) {
+    $.each(projet.getReponsesFromQuestion(new_rep.getId(), currentQuestion.getId()), function(i, val) {
+      if (projet.getReponseById(val.id).getName() === $('#newReponseText').val()) {
         existe = true;
         return;
       }
@@ -69,8 +72,7 @@ $(document).ready(function() {
       return false;
     }
 
-    var new_rep = new Reponse($('#newReponseText').val(), $("#qrColor").val());
-    var new_rep_vocal = $('#newReponseVocalText').val();
+
     //Ajouter au projet la nouvelle réponse
     projet.addReponse(new_rep);
 
@@ -88,6 +90,9 @@ $(document).ready(function() {
     //Par défaut, la réponse ajoutée est checkée
     //$("#" + new_rep.getId() +".reponseCheckbox").prop('checked', true);
     //$('#newReponseModalText').val('');
+
+
+    console.log(projet.getReponses());
 
     return true;
   });
@@ -206,9 +211,9 @@ function addQuestionLine(question){
 function addReponseLineToQuestionDiv(question, reponse){
   var infos_rep = question.getReponseById(reponse.getId());
 
-  var newRepLine = "<div style='height:35px;'>" +
-  "<li style='color:black; font-size:15px;' id='" + reponse.getId() + "'>" +
-  "<label>" + reponse.getName() + "</label>" +
+  var newRepLine = "<div style='height:35px;' id='" + reponse.getId() + "'>" +
+  "<li style='color:black; font-size:15px;'>" +
+  "<label>" + reponse.getName() + "&nbsp&nbsp</label>" +
   "<em style='color:gray'>" + infos_rep.message + "</em>" +
   "<button class='btn btn-outline-success float-right' id='" + reponse.getId() + "' onclick='deleteReponse(this," + question.getId() + ");'><i class='fa fa-trash-alt'></i></button>" +
   "<button class='btn btn-outline-success float-right' id='" + reponse.getId() + "' onclick='previewQRCodeReponse(this)'><i class='fa fa-qrcode'></i></button>" +
@@ -244,7 +249,7 @@ function deleteReponse(button, questionId){
   var id_reponse = $(button).attr('id');
 
   projet.removeReponseFromQuestion(id_reponse, questionId);
-  $("li#" + id_reponse).remove();
+  $("div#" + id_reponse).remove();
 }
 
 //Méthode appelée lors de l'import d'un qrcode Question/Réponse
@@ -355,7 +360,7 @@ function lireQuestion(button){
 
 function lireReponse(button){
   var id_reponse = $(button).attr('id');
-  var text_reponse = $("li#" + id_reponse).text();
+  var text_reponse = $("div#" + id_reponse).text();
 
   playTTS(text_reponse)
 }

@@ -102,6 +102,15 @@ class Projet {
     return null;
   }
 
+  getReponsesFromQuestion(reponseId, questionId) {
+    for(let question of this.projet.questions){
+      if(question.getId() == questionId) {
+        return question.getReponses();
+      }
+    }
+    return null;
+  }
+
   getDataString() {
     return JSON.stringify(this.projet);
   }
@@ -113,7 +122,6 @@ class Projet {
 class Question {
   //Constructeur d'une Question
   constructor(title, reponsesUIDs = [], color = '#000000') {
-    console.log(color);
     this.qrcode = {
       id: new Date().getTime(),
       name: title,

@@ -341,7 +341,7 @@ function activer_button() {
 
 
 
-let numTextArea = 0; //Ce compteur permet de compter le nombre de textarea pour differencier les id
+numTextArea = 0; //Ce compteur permet de compter le nombre de textarea pour differencier les id
 
 //ajouter une nvlle legende (textarea) a chaque click sur button Texte (pour chaque textarea il faut rajouter à l'attribut class la valeur qrData class="... qrData")
 function ajouterChampLegende(valeur = "") {
