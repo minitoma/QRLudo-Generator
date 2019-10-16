@@ -5,13 +5,8 @@
  */
 
 
-/**
- * HARBOUL Abdessabour
- * 2018
- **/
-
 /*
- *Classe permettant de creer un projet de questions_reponses
+ *Classe permettant de creer un projet de QCM
  */
 class Projet {
   //Constructeur d'un Projet
