@@ -22,9 +22,11 @@ var menu = new Menu();
 
 $(document).ready(function() {
 
+
   //Use to implement information on the audio import
   var info = document.createElement('div'); // balise div : contain html information
   var info_activ = false; // boolean : give the etat of info (up/off)
+
 
   // desactiver les boutons s'il y a rien à lire ou generer
   if (document.getElementById('qrName').value.length === 0) {
@@ -128,14 +130,26 @@ $(document).ready(function() {
   });
 
   $('button#annuler').click(e => {
+    //aficher popup quand on click sur reinitialiser
+    // cache le qr générer & desactivation du bouton exporter
+    var popUpQuiter = confirm("Etes vous sûr de vouloir réinitialiser?");
+    if (popUpQuiter==true){
+      $('#qrView').hide();
+      $('#saveQRCode').attr('disabled', true);
+      $('#preview').attr('disabled', true);
+    }
+
     e.preventDefault();
     var settings = require("electron-settings");
 
     if (settings.has("defaultColor")) {
       $("#qrColor").val(settings.get("defaultColor"));
+      let a = $('#legendeTextarea0');
       $.each($(".qrData"), function(i, val) {
         $("#cible").empty();
       });
+      $("#cible").append(a);
+      $('#textarea1').val("");
       $("#qrName").val("");
     }
   });
@@ -341,12 +355,12 @@ function activer_button() {
 
 
 
-numTextArea = 0; //Ce compteur permet de compter le nombre de textarea pour differencier les id
+
 
 //ajouter une nvlle legende (textarea) a chaque click sur button Texte (pour chaque textarea il faut rajouter à l'attribut class la valeur qrData class="... qrData")
 function ajouterChampLegende(valeur = "") {
-
-  numTextArea++; // Nouveau numero pour le prochain textarea
+let numTextArea = 0; //Ce compteur permet de compter le nombre de textarea pour differencier les id
+//  numTextArea++; // Nouveau numero pour le prochain textarea
 
   var textareaLegende = document.createElement('div');
   textareaLegende.innerHTML = `<i class='fa fa-play align-self-center icon-player'></i><i class="fa fa-pause align-self-center icon-player"></i>
@@ -362,6 +376,12 @@ function ajouterChampLegende(valeur = "") {
   textareaLegende.setAttribute("id", "legendeTextarea");
 
   document.getElementById('cible').appendChild(textareaLegende);
+
+  //limiter zone de de texte &&
+    let nombreDeZone = $("#cible div").length;
+    if (nombreDeZone>=4)
+      $('#ajouterTexte').attr('disabled', true);
+
 }
 
 //verifier si le nombre de caractère maximal est respecté, si ce n'est pas le cas on affiche une pop up d'informations
@@ -373,8 +393,12 @@ function verifNombreCaractere(num) {
 }
 
 function supprimerChampLegende(e) {
-  numTextArea--;
+  //numTextArea--;
   $(e).parents('div#legendeTextarea').remove();
+  //degrisser bouton apres supression d'un champ
+  let nombreDeZone = $("#cible div").length;
+  if (nombreDeZone<4)
+    $('#ajouterTexte').attr('disabled', false);
 }
 
 //generer un input 'pour un fichier audio' -> nom de fichier + url (pour chaque input il faut rajouter à l'attribut class la valeur qrData class=".. qrData")
@@ -422,4 +446,6 @@ function moveDown(e) {
     div.remove();
     div.insertAfter(next);
   }
+
+
 }
