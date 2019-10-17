@@ -5,8 +5,7 @@
  */
 
 
-var projet = new Projet();
-var currentQuestion = null;
+var projet = new ProjetQCM();
 
 $(document).ready(function() {
   $("#play-sound-div").hide();
@@ -23,25 +22,15 @@ $(document).ready(function() {
     $("#alertQuestionVideError").hide();
     $("#alertQuestionExistError").hide();
 
-    //sortir de la fonction si la question existe déjà
-    let existe = false;
-    $.each(projet.getQuestions(), function(i,val) {
-      if(val.getName() === $('#newQuestionText').val()) {
-        existe = true;
-        return;
-      }
-    });
-    if(existe) {
-      $("#alertQuestionExistError").show();
-      return false;
-    }
 
-    //Ajouter au projet la nouvelle question
-    let nouvques = new Question($('#newQuestionText').val(), [], $("#qrColor").val());
-    projet.addQuestion(nouvques);
+    //On cache le bouton car un QCM ne contient qu'une seule question
+    $("#addNewQuesBtnId").hide();
+
+    //Creation de la question dans le projet
+    let nouvques = new QuestionQCM($('#newQuestionText').val(), [], $("#qrColor").val());
+    projet.setQuestion(nouvques);
 
     addQuestionLine(nouvques);
-    currentQuestion = nouvques; //
 
     $('#newQuestionText').val("");
     return true;
@@ -56,7 +45,7 @@ $(document).ready(function() {
     $("#messageReponseExistError").hide();
 
     //On verifie qu'il y a une question de créée
-    if (currentQuestion == null) {
+    if (projet.getQuestion() == null) {
       $("#messageReponseSansQuestionError").show();
       return false;
     }
@@ -74,12 +63,13 @@ $(document).ready(function() {
     }
 
 
-    var new_rep = new Reponse($('#newReponseText').val(), $("#qrColor").val());
+    var new_rep = new ReponseQCM($('#newReponseText').val(), $("#qrColor").val());
     var new_rep_vocal = $('#newReponseVocalText').val();
 
-    //sortir de la fonction si la reponse existe déjà pour la question courante
+    //sortir de la fonction si la reponse existe déjà pour la question
     let existe = false;
-    $.each(projet.getReponsesFromQuestion(new_rep.getId(), currentQuestion.getId()), function(i, val) {
+    $.each(projet.getReponses(), function(i, val) {
+    
       if (projet.getReponseById(val.id).getName() === $('#newReponseText').val()) {
         existe = true;
         return;
@@ -90,14 +80,11 @@ $(document).ready(function() {
       return false;
     }
 
-    //Ajouter au projet la nouvelle réponse
+    //Ajouter au projet et à la question la nouvelle réponse
     projet.addReponse(new_rep);
 
-    //Ajouter la reponse à la question courante
-    currentQuestion.addReponse(new_rep.getId(),new_rep_vocal);
-
     //addReponseLine(new_rep);
-    addReponseLineToQuestionDiv(currentQuestion, new_rep);
+    addReponseLine(new_rep);
 
 
     //Suppression des données dans les champs de tests pour ecrire une nouvelle reponses
@@ -124,12 +111,9 @@ $(document).ready(function() {
         fs.mkdirSync(dir_path);
       }
 
-      //On enregistre chaque question
-      $.each(projet.getQuestions(), function(id, question){
-        let div = document.createElement('div');
-        facade.genererQRCode(div, question);
-        saveQRCodeImage(div, question, dir_path);
-      });
+      //On enregistre la question
+      let div = document.createElement('div');
+      saveQRCodeImage(div, projet.getQuestion(), dir_path);
 
       //Idem pour les réponses
       $.each(projet.getReponses(), function(id, reponse){
@@ -149,7 +133,7 @@ $(document).ready(function() {
   $('#importProjectBtnId').click(function() {
     //Permet de sélectionner le répertoire du projet
     var dir_path = dialog.showOpenDialog({title: 'Sélectionnez le projet', properties: ['openDirectory']})[0];
-    projet = new Projet();
+    projet = new ProjetQCM();
     var path_split = dir_path.split(path.sep);
     //On récupère le nom du projet
     projet.setName(path_split[path_split.length-1]);
@@ -178,7 +162,7 @@ $(document).ready(function() {
           //importQuestionReponse est un callback, il s'agit de la méthode appliquée
           //par la façade sur le qrcode importé
           //(cf méthode importQuestionReponse)
-          facade.importQRCode(blob, importQuestionReponse);
+          facade.importQRCode(blob, importQCM);
         }
         xhr.send();
       });
@@ -189,9 +173,8 @@ $(document).ready(function() {
   //Changement couleur
   $("#qrColor").on('change', function(){
     var color = $(this).val();
-    $.each(projet.getQuestions(), function(i, question){
-      question.setColor(color);
-    });
+
+    projet.getQuestion().setColor(color);
 
     $.each(projet.getReponses(), function(i, reponse){
       reponse.setColor(color);
@@ -206,8 +189,9 @@ function addQuestionLine(question){
   "<div class='form-group'>" +
   "<label class='control-label text-left questionNameLabel' id='" + question.getId() + "' style='text-align:left!important; color:black;'>" + question.getName() + "</label>" +
   "<button class='btn btn-outline-success float-right' id='" + question.getId() + "' onclick='deleteQuestion(this);'><i class='fa fa-trash-alt'></i></button>" +
-  "<button class='btn btn-outline-success float-right' id='" + question.getId() + "' onclick='previewQRCodeQuestion(this)'><i class='fa fa-qrcode'></i></button>" +
+  "<button class='btn btn-outline-success float-right' id='" + question.getId() + "' onclick='previewQRCodeQuestion()' onmouseover='afficheInfoBtnQrCode(\"Question\")' onmouseout='supprimeInfoBtnQrCode(\"Question\")'><i class='fa fa-qrcode'></i></button>" +
   "<button class='btn btn-outline-success float-right' id='" + question.getId() + "' onclick='lireQuestion(this);'><i class='fa fa-play'></i></button>"  +
+  "<div class='alert alert-success fade show float-right' role='alert' id='infoGenererQrCodeQuestion' style='display:none'>Générer le Qr Code</div>" +
   "</div>" +
   "<label class='control-label'>Réponse(s)</label>" +
   "<div class='reponseDiv' id='" + question.getId() + "'>" +
@@ -218,26 +202,32 @@ function addQuestionLine(question){
 }
 
 //Ajout de la reponse dans le div d'une question
-function addReponseLineToQuestionDiv(question, reponse){
-  var infos_rep = question.getReponseById(reponse.getId());
+function addReponseLine(reponse){
+  var infos_rep = projet.getReponseById(reponse.getId());
 
   var newRepLine = "<div style='height:35px;' id='" + reponse.getId() + "'>" +
   "<li style='color:black; font-size:15px;'>" +
   "<label>" + reponse.getName() + "&nbsp&nbsp</label>" +
   "<em style='color:gray'>" + infos_rep.message + "</em>" +
-  "<button class='btn btn-outline-success float-right' id='" + reponse.getId() + "' onclick='deleteReponse(this," + question.getId() + ");'><i class='fa fa-trash-alt'></i></button>" +
-  "<button class='btn btn-outline-success float-right' id='" + reponse.getId() + "' onclick='previewQRCodeReponse(this)' onmouseover='affiche(this)'><i class='fa fa-qrcode'></i></button>" +
+  "<button class='btn btn-outline-success float-right' id='" + reponse.getId() + "' onclick='deleteReponse(this);'><i class='fa fa-trash-alt'></i></button>" +
+  "<button class='btn btn-outline-success float-right' id='" + reponse.getId() + "' onclick='previewQRCodeReponse(this)' onmouseover='afficheInfoBtnQrCode(\"Reponse\")' onmouseout='supprimeInfoBtnQrCode(\"Reponse\")'><i class='fa fa-qrcode'></i></button>" +
   "<button class='btn btn-outline-success float-right' id='" + reponse.getId() + "' onclick='lireReponse(this);'><i class='fa fa-play'></i></button>" +
+  "<div class='alert alert-success fade show float-right' role='alert' id='infoGenererQrCodeReponse' style='display:none'>Générer le Qr Code</div>" +
   "</li>" +
   "</div>";
 
-  $("div#" + question.getId() + ".reponseDiv").append(newRepLine);
+  $("div#" + projet.getQuestion().getId() + ".reponseDiv").append(newRepLine);
 }
 
-function affiche(button) {
-  var id_question = $(button).attr('id');
-  console.log("ok");
-  $("div#" + id_question).val('Generer QR Code');
+
+//Permet d'afficher une information sur le bouton pour generer les qr code
+function afficheInfoBtnQrCode(cible){
+  $("div#infoGenererQrCode" + cible).show();
+}
+
+//Permet d'enlever l'information sur le bouton pour generer les qr code
+function supprimeInfoBtnQrCode(cible){
+  $("div#infoGenererQrCode" + cible).hide();
 }
 
 // Jamais utilisé ??
@@ -258,19 +248,22 @@ function deleteQuestion(button){
   $("div#" + id_question + '.divQuestion').remove();
 
   projet.removeQuestion(JSON.parse(id_question));
+
+  //On peut ré-afficher le bouton pour ajouter une question
+  $("#addNewQuesBtnId").show();
 }
 
 //Supprimer une réponse du projet
-function deleteReponse(button, questionId){
+function deleteReponse(button){
   var id_reponse = $(button).attr('id');
 
-  projet.removeReponseFromQuestion(id_reponse, questionId);
+  projet.removeReponse(id_reponse);
   $("div#" + id_reponse).remove();
 }
 
-//Méthode appelée lors de l'import d'un qrcode Question/Réponse
+//Méthode appelée lors de l'import d'un qrcode QCM
 //Permet d'ajouter au projet les qrcodes importés
-function importQuestionReponse(qrcode){
+function importQCM(qrcode){
   if(qrcode.getType()==='question'){
     projet.addQuestion(qrcode);
     addQuestionLine(qrcode);
@@ -340,9 +333,8 @@ function activerSave(){
   }
 }
 
-function previewQRCodeQuestion(button){
-  var id_question = $(button).attr('id');
-  var question = projet.getQuestionById(id_question);
+function previewQRCodeQuestion(){
+  var question = projet.getQuestion();
   previewQRCode(question, $('#qrView')[0], "type_question");
 }
 

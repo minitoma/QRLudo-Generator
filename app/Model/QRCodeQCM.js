@@ -8,23 +8,27 @@
 /*
  *Classe permettant de creer un projet de QCM
  */
-class Projet {
+class ProjetQCM {
   //Constructeur d'un Projet
-  constructor(nom = "No_Name", questions = [], reponses = []) {
+  constructor(nom = "No_Name", question = null, reponses = []) {
     this.projet = {
       id: new Date().getTime(),
       nom: nom,
-      questions: questions,
+      question: question,
       reponses: reponses
     };
   }
 
-  addQuestion(question) {
-    this.projet.questions.push(question)
+  setQuestion(question) {
+    this.projet.question = question;
   }
 
   addReponse(reponse) {
-    this.projet.reponses.push(reponse)
+    //On ajoute la reponse au projet
+    this.projet.reponses.push(reponse);
+
+    //On ajoute la reponse à la question
+    this.projet.question.addReponse(reponse);
   }
 
   removeReponse(reponseId){
@@ -34,30 +38,22 @@ class Projet {
         this.projet.reponses.splice(index, 1);
       }
     }
-  }
 
-  removeReponseFromQuestion(reponseId, questionId) {
-    this.removeReponse(reponseId);
-
-    for(let question of this.projet.questions){
-      if(question.getId() == questionId) {
-        question.removeReponse(reponseId);
-      }
+    //On supprime aussi la reponse dans la question
+    if(this.projet.question != null) {
+      this.projet.question.removeReponse(reponseId);
     }
   }
+
 
   removeQuestion(questionId){
-    for(let question of this.projet.questions){
-      if(question.qrcode.id == questionId){
-        var index = this.projet.questions.indexOf(question);
-        this.projet.questions.splice(index, 1);
-
-        //On supprime egalement les reponses de la question
-        for(let reponse of question.qrcode.data) {
-          this.removeReponseFromQuestion(reponse.id, question.qrcode.id);
-        }
-      }
+    //On supprime tout les reponses de la question
+    for(let reponse of this.projet.question.qrcode.data) {
+      this.removeReponse(reponse.id);
     }
+
+    //Ensuite on supprime la question
+    this.projet.question = null;
   }
 
 
@@ -69,44 +65,22 @@ class Projet {
     return this.projet.nom;
   }
 
-  getQuestions() {
-    return this.projet.questions;
+  getQuestion() {
+    return this.projet.question;
   }
 
   getReponses() {
     return this.projet.reponses;
   }
 
-  getQuestionByIndex(indice) {
-    return this.projet.questions[indice];
-  }
-
   getReponsesByIndex(indice) {
     return this.projet.reponses[indice];
-  }
-
-  getQuestionById(id) {
-    for (let q of this.projet.questions) {
-      if (q.getId() == id) {
-        return q;
-      }
-    }
-    return null;
   }
 
   getReponseById(id) {
     for (let q of this.projet.reponses) {
       if (q.getId() == id) {
         return q;
-      }
-    }
-    return null;
-  }
-
-  getReponsesFromQuestion(reponseId, questionId) {
-    for(let question of this.projet.questions){
-      if(question.getId() == questionId) {
-        return question.getReponses();
       }
     }
     return null;
@@ -120,7 +94,7 @@ class Projet {
 /*
  *Classe permettant de creer une question
  */
-class Question {
+class QuestionQCM {
   //Constructeur d'une Question
   constructor(title, reponsesUIDs = [], color = '#000000') {
     this.qrcode = {
@@ -195,9 +169,6 @@ class Question {
     }
   }
 
-  removeAllReponses(){
-    this.qrcode.data = [];
-  }
 
   setMessage(reponseUid, message){
     for (let r of this.qrcode.data) {
@@ -215,7 +186,7 @@ class Question {
 /*
  *Classe permettant de creer une reponse
  */
-class Reponse {
+class ReponseQCM {
   //Constructeur d'une Reponse
   constructor(name, color = '#000000') {
     this.qrcode = {
@@ -257,7 +228,7 @@ class Reponse {
 }
 
 module.exports = {
-  Projet,
-  Reponse,
-  Question
+  ProjetQCM,
+  ReponseQCM,
+  QuestionQCM
 };
