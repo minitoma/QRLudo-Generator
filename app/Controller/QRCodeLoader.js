@@ -95,6 +95,8 @@ class QRCodeLoader {
     //On convertit les données en chaîne de caractères
     var donnees = QRCodeLoader.bin2String(dataUtf8);
 
+    console.log(ev.target.result);
+
     if (donnees[0] != "<")
       return false;
     //On convertit la chaine xml en données xml

@@ -23,12 +23,12 @@ class ProjetQCM {
     this.projet.question = question;
   }
 
-  addReponse(reponse) {
+  addReponse(reponse, message) {
     //On ajoute la reponse au projet
     this.projet.reponses.push(reponse);
 
     //On ajoute la reponse à la question
-    this.projet.question.addReponse(reponse);
+    this.projet.question.addReponse(reponse.getId(), message);
   }
 
   removeReponse(reponseId){
@@ -101,7 +101,7 @@ class QuestionQCM {
       id: new Date().getTime(),
       name: title,
       data: reponsesUIDs,
-      type: "question",
+      type: "questionQCM",
       color: color
     };
   }
@@ -151,12 +151,7 @@ class QuestionQCM {
     return null;
   }
 
-  addReponse(reponseUid, message='') {
-    if(message===''){
-      var settings = require("electron-settings");
-      message = settings.get("defaultBonneReponse")
-    }
-
+  addReponse(reponseUid, message) {
     this.qrcode.data.push({"id": reponseUid, "message":message});
   }
 
@@ -165,15 +160,6 @@ class QuestionQCM {
       if(rep.id == reponseUid){
         var index = this.qrcode.data.indexOf(rep);
         this.qrcode.data.splice(index, 1);
-      }
-    }
-  }
-
-
-  setMessage(reponseUid, message){
-    for (let r of this.qrcode.data) {
-      if (r.id === reponseUid) {
-        r.message = message;
       }
     }
   }
@@ -193,7 +179,7 @@ class ReponseQCM {
       id: new Date().getTime(),
       name: name,
       data: [],
-      type: "reponse",
+      type: "reponseQCM",
       color: color
     };
   }
