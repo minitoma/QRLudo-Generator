@@ -5,6 +5,13 @@
  * @Last modified time: 2019-01-28T01:41:24+01:00
  */
 
+//Déclaration des differents store permettant la continuité entre les differents onglets
+const Store = require('electron-store');
+const store = new Store();
+
+numTextArea = 1;
+
+
 const path = require('path');
 const root = path.dirname(require.main.filename);
 const piexif = require('piexifjs');

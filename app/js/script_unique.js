@@ -22,7 +22,9 @@ var menu = new Menu();
 
 $(document).ready(function() {
 
-
+  //appel à la focntion qui permet de lire les enregistrement
+  enregistrement();
+  store.set(`numTextArea`,numTextArea);
   //Use to implement information on the audio import
   var info = document.createElement('div'); // balise div : contain html information
   var info_activ = false; // boolean : give the etat of info (up/off)
@@ -132,6 +134,11 @@ $(document).ready(function() {
   $('button#annuler').click(e => {
     //aficher popup quand on click sur reinitialiser
     // cache le qr générer & desactivation du bouton exporter
+
+    //Les différents store sont clean ici
+    store.clear();
+    numTextArea = 1;
+
     var popUpQuiter = confirm("Etes vous sûr de vouloir réinitialiser?");
     if (popUpQuiter==true){
       $('#qrView').hide();
@@ -152,6 +159,7 @@ $(document).ready(function() {
       $('#textarea1').val("");
       $("#qrName").val("");
     }
+
   });
 });
 
@@ -196,6 +204,41 @@ $('#preview').click(e => {
   $('#annuler').attr('disabled', false);
 });
 
+function enregistrement(){
+  //On parcours le store titre pour le réafficher
+
+  if(store.size > 0){
+    //On parcours le store des zone de text ajout
+    console.log(store.store);
+
+    numTextArea = store.get(`numTextArea`);
+
+    if(store.get(`titre`)){
+      document.getElementById('qrName').value = store.get(`titre`);
+    }
+
+
+    for(var i = 2; i<=numTextArea; i++){
+      if (store.get(`textZone${i}`)){
+        var text = document.createElement('div');
+        text.innerHTML = store.get(`textZone${i}`);
+        text.setAttribute("class", "d-flex align-items-start legendeQR");
+        text.setAttribute("id", "legendeTextarea");
+        document.getElementById('cible').appendChild(text);
+      }
+    }
+
+    //On parcours le store des zone de text ajout
+    for(var i = 1; i<=numTextArea; i++){
+      if (store.get(`text${i}`)){
+        document.getElementById('textarea'+(i)).value = store.get(`text${i}`);
+      }
+    }
+  }
+
+
+  return null;
+}
 
 // form validation return true if all fields are filled
 function validateForm(inputArray) {
@@ -259,7 +302,6 @@ function saveQRCodeImage() {
 
     }
   }
-
   xhr.send();
 }
 
@@ -347,25 +389,36 @@ function showError(modal, errorMsg, message = "Veuillez coller un lien de fichie
 //verifier le champ qrName du formulaire myFormActive puis activer le button generer
 //Le nom du QR Code doit contenir au moins un caractère, sinon le bouton generer n'est pas accessible
 function activer_button() {
+  //Permet l'enregistrement du titre dans le store Titre
+  store.delete(`titre`);
+  var titre = document.getElementById('qrName').value;
+  store.set(`titre`, titre);
+
+
   $('#preview').attr('disabled', true); //Par defaut le bouton generer est toujours activé, on le desactive dans la condition suivante si necessaire
   if (document.getElementById('qrName').value.length > 0) {
     $('#preview, #annuler, #ajouterTexte, #showAudio').attr('disabled', false);
+
   }
+
+
 }
 
 
 
 
+//Ce compteur permet de compter le nombre de textarea pour differencier les id
 
 //ajouter une nvlle legende (textarea) a chaque click sur button Texte (pour chaque textarea il faut rajouter à l'attribut class la valeur qrData class="... qrData")
 function ajouterChampLegende(valeur = "") {
-let numTextArea = 0; //Ce compteur permet de compter le nombre de textarea pour differencier les id
-//  numTextArea++; // Nouveau numero pour le prochain textarea
-
+  //store.delete(`numTextArea`);
+  numTextArea++; // Nouveau numero pour le prochain textarea
+  store.set(`numTextArea`,numTextArea);
+  //console.log(numTextArea);
   var textareaLegende = document.createElement('div');
   textareaLegende.innerHTML = `<i class='fa fa-play align-self-center icon-player'></i><i class="fa fa-pause align-self-center icon-player"></i>
     <textarea id='textarea${numTextArea}' class='form-control qrData' rows='3' name='legendeQR' placeholder='Mettre la légende (255 caractères maximum)' maxlength='255' onkeyup="verifNombreCaractere(${numTextArea});">${valeur}</textarea>
-    <button type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='supprimerChampLegende(this);'>
+    <button type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='supprimerChampLegende(this, ${numTextArea});'>
     <div class="inline-block">
       <i class='fa fa-trash-alt'></i></button>
       <button type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='moveUp(this);'>
@@ -382,18 +435,47 @@ let numTextArea = 0; //Ce compteur permet de compter le nombre de textarea pour 
     if (nombreDeZone>=4)
       $('#ajouterTexte').attr('disabled', true);
 
+
+
+    //Permet d'enregistrer l'ajour de case texte
+    store.set(`textZone${numTextArea}`,textareaLegende.innerHTML);
+
 }
 
 //verifier si le nombre de caractère maximal est respecté, si ce n'est pas le cas on affiche une pop up d'informations
 function verifNombreCaractere(num) {
+  //console.log(storeTextTextarea.get(`text${num}`));
+  //Permet l'enregistrement du text dans le store TextTextarea
+  store.delete(`text${num}`);
+  var txt = document.getElementById('textarea'+num).value;
+  store.set(`text${num}`, txt);
+
+
   $('#messages').empty();
   if(document.getElementById('textarea'+num).value.length >= $('#textarea'+num).attr('maxlength')) {
     messageInfos("La limite de caractère est atteinte (255 caractères)","warning");
   }
 }
 
-function supprimerChampLegende(e) {
-  //numTextArea--;
+function verifNombreCaractere1() {
+  //Permet l'enregistrement du text dans le store TextTextarea
+  store.delete(`text1`);
+  var txt = document.getElementById('textarea1').value;
+  store.set(`text1`, txt);
+
+
+  $('#messages').empty();
+  if(document.getElementById('textarea1').value.length >= $('#textarea1').attr('maxlength')) {
+    messageInfos("La limite de caractère est atteinte (255 caractères)","warning");
+  }
+}
+
+function supprimerChampLegende(e, numText) {
+  //store.delete(`numTextArea`);
+  numTextArea--;
+  store.set(`numTextArea`,numTextArea);
+  store.delete(`text`+numText);
+  store.delete(`textZone`+numText);
   $(e).parents('div#legendeTextarea').remove();
   //degrisser bouton apres supression d'un champ
   let nombreDeZone = $("#cible div").length;
