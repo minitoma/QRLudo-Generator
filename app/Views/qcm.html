@@ -1,18 +1,17 @@
-<script src="js/script_question_reponse.js"></script>
+<script src="js/script_qcm.js"></script>
 <!-- contenu page QuesRep -->
 <!--Panel-->
-
 
 <div class="col-sm-12 card">
   <div class="alert alert-success" role="alert" id="alertExportationOk" style="display:none;">  Votre projet a bien été enregistré. </div>
   <div class="alert alert-danger" role="alert" id="alertQuestionVideError" style="display:none;"> Veuillez saisir le texte de votre question. </div>
   <div class="alert alert-danger" role="alert" id="alertQuestionExistError" style="display:none"> La question existe déjà. </div>
-  <form id="formulaireQesRep" onsubmit="return false;">
+  <form id="formulaireQCM" onsubmit="return false;">
     <div class="card-body">
       <h6 class="card-title"></h6>
       <ul class="nav nav-tabs">
         <li class="nav-item">
-          <a class="nav-link active" data-toggle="tab" href="#newProject">QR - Questions Reponses</a>
+          <a class="nav-link active" data-toggle="tab" href="#newProject">QR - QCM</a>
         </li>
       </ul>
 
@@ -99,13 +98,3 @@
     $("#qr-zone").load("Views/QR-zone.html");
   </script>
 </div>
-
-<!-- end nouvelle reponse -->
-<!--
-<script>
-$().ready(function(){
-  $('#project').click(chargerProjects("QA_ProjectNames_File.json"));
-
-});
-</script>
--->
