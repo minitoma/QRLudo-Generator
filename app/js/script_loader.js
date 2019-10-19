@@ -5,10 +5,11 @@
  * @Last modified time: 2019-01-28T01:41:24+01:00
  */
 
-//Déclaration des differents store permettant la continuité entre les differents onglets
+//Déclaration du store permettant la continuité entre les differents onglets
 const Store = require('electron-store');
 const store = new Store();
 
+//Déclaration de l'entier permettant l'implémentation des différentes zones de textes dans l'onglet qr unique
 numTextArea = 1;
 
 

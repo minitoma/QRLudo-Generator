@@ -122,8 +122,8 @@ app.on('window-all-closed', () => {
       console.log('Unknown operating system');
       break;
   }
-  //Les differents store sont clean ici
-  storeTextarea.clear();
+  //Le store est clean ici
+  store.clear();
 });
 
 

@@ -25,6 +25,7 @@ $(document).ready(function() {
   //appel à la focntion qui permet de lire les enregistrement
   enregistrement();
   store.set(`numTextArea`,numTextArea);
+
   //Use to implement information on the audio import
   var info = document.createElement('div'); // balise div : contain html information
   var info_activ = false; // boolean : give the etat of info (up/off)
@@ -204,20 +205,20 @@ $('#preview').click(e => {
   $('#annuler').attr('disabled', false);
 });
 
+
+//Fonction permettant la continuité entre les onglet avec la gestion de l'objet store
 function enregistrement(){
-  //On parcours le store titre pour le réafficher
 
   if(store.size > 0){
-    //On parcours le store des zone de text ajout
-    console.log(store.store);
 
+    //Le nombre de zone texte mis à jour en fonction de ce qui a été enregistré précédement
     numTextArea = store.get(`numTextArea`);
 
     if(store.get(`titre`)){
       document.getElementById('qrName').value = store.get(`titre`);
     }
 
-
+    //implémentation des différentes zones de txt enregistrées
     for(var i = 2; i<=numTextArea; i++){
       if (store.get(`textZone${i}`)){
         var text = document.createElement('div');
@@ -228,7 +229,7 @@ function enregistrement(){
       }
     }
 
-    //On parcours le store des zone de text ajout
+    //On parcours le store pour afficher les texte enregistré dans les zones correspondantes
     for(var i = 1; i<=numTextArea; i++){
       if (store.get(`text${i}`)){
         document.getElementById('textarea'+(i)).value = store.get(`text${i}`);
@@ -404,9 +405,6 @@ function activer_button() {
 
 }
 
-
-
-
 //Ce compteur permet de compter le nombre de textarea pour differencier les id
 
 //ajouter une nvlle legende (textarea) a chaque click sur button Texte (pour chaque textarea il faut rajouter à l'attribut class la valeur qrData class="... qrData")
@@ -444,8 +442,7 @@ function ajouterChampLegende(valeur = "") {
 
 //verifier si le nombre de caractère maximal est respecté, si ce n'est pas le cas on affiche une pop up d'informations
 function verifNombreCaractere(num) {
-  //console.log(storeTextTextarea.get(`text${num}`));
-  //Permet l'enregistrement du text dans le store TextTextarea
+  //Permet l'enregistrement du text dans le store
   store.delete(`text${num}`);
   var txt = document.getElementById('textarea'+num).value;
   store.set(`text${num}`, txt);
@@ -457,8 +454,9 @@ function verifNombreCaractere(num) {
   }
 }
 
+//veriefie le nmbr de caractère pour la zone de texte par defaut
 function verifNombreCaractere1() {
-  //Permet l'enregistrement du text dans le store TextTextarea
+  //Permet l'enregistrement du text dans le store
   store.delete(`text1`);
   var txt = document.getElementById('textarea1').value;
   store.set(`text1`, txt);
@@ -471,8 +469,9 @@ function verifNombreCaractere1() {
 }
 
 function supprimerChampLegende(e, numText) {
-  //store.delete(`numTextArea`);
+
   numTextArea--;
+  //suppression dans le store de la zone de txt correspondante
   store.set(`numTextArea`,numTextArea);
   store.delete(`text`+numText);
   store.delete(`textZone`+numText);
