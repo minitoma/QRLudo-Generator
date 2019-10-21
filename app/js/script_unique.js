@@ -402,8 +402,7 @@ function verifNombreCaractere(num) {
 }
 
 //grisser le bouton de la derniere zonne de texte
-let nombreDeZone = $("#cible").length;
-console.log(nombreDeZone);
+nombreDeZone = $("#cible").length;
 if(nombreDeZone==2)
 {
   $($("#cible :first-child").children()).attr('disabled', true);
@@ -414,10 +413,8 @@ if(nombreDeZone==2)
 
 function supprimerChampLegende(e) {
   numTextArea--;
-  console.log(numTextArea);
   $(e).parents('div#legendeTextarea').remove();
   //degrisser bouton apres supression d'un champ
-
   if (numTextArea<3)
     $('#ajouterTexte').attr('disabled', false);
   if (numTextArea==1)
