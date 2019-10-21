@@ -242,7 +242,6 @@ function addReponseLineToQuestionDiv(question, reponse){
 
 function affiche(button) {
   var id_question = $(button).attr('id');
-  console.log("ok");
   $("div#" + id_question).val('Generer QR Code');
 }
 

@@ -80,14 +80,19 @@ $(document).ready(function() {
     }
 
     //Ajouter au projet et à la question la nouvelle réponse
-    projet.addReponse(new_rep, new_rep_vocal);
+    projet.addReponse(new_rep);
+    projet.getQuestion().addReponse(new_rep.getId(), new_rep_vocal);
 
-    //addReponseLine(new_rep);
-    addReponseLine(new_rep, new_rep_vocal);
+
+    addReponseLine(new_rep);
 
 
     console.log(projet.getQuestion());
+    console.log("--------------------");
     console.log(projet.getReponses());
+    console.log("--------------------");
+    console.log(projet.getQuestion().getReponses());
+
 
     //Suppression des données dans les champs de tests pour ecrire une nouvelle reponses
     $('#newReponseText').val('');
@@ -136,6 +141,8 @@ $(document).ready(function() {
 
   //Import d'un projet existant à partir d'un répertoire
   $('#importProjectBtnId').click(function() {
+
+
     //Permet de sélectionner le répertoire du projet
     var dir_path = dialog.showOpenDialog({title: 'Sélectionnez le projet', properties: ['openDirectory']})[0];
     projet = new ProjetQCM();
@@ -149,6 +156,7 @@ $(document).ready(function() {
     let facade = new FacadeController();
 
     var fs = require('fs');
+
 
     //Pour chaque fichier du répertoire
     fs.readdir(dir_path, (err, files) => {
@@ -207,11 +215,13 @@ function addQuestionLine(question){
 }
 
 //Ajout de la reponse dans le div d'une question
-function addReponseLine(reponse, message){
+function addReponseLine(reponse){
+  var infos_rep = projet.getQuestion().getReponseById(reponse.getId());
+
   var newRepLine = "<div style='height:35px;' id='" + reponse.getId() + "'>" +
   "<li style='color:black;font-size:14px;'>" +
   "<label>" + reponse.getName() + "&nbsp&nbsp</label>" +
-  "<em style='color:gray'>" + message + "</em>" +
+  "<em style='color:gray'>" + infos_rep.message + "</em>" +
   "<button class='btn btn-outline-success float-right' id='" + reponse.getId() + "' onclick='deleteReponse(this);'><i class='fa fa-trash-alt'></i></button>" +
   "<button class='btn btn-outline-success float-right' id='" + reponse.getId() + "' onclick='previewQRCodeReponse(this)' onmouseover='afficheInfoBtnQrCode(this,\"reponse\")' onmouseout='supprimeInfoBtnQrCode(this,\"reponse\")'><i class='fa fa-qrcode'></i></button>" +
   "<button class='btn btn-outline-success float-right' id='" + reponse.getId() + "' onclick='lireReponse(this);'><i class='fa fa-play'></i></button>" +
@@ -269,21 +279,26 @@ function deleteReponse(button){
 //Méthode appelée lors de l'import d'un qrcode QCM
 //Permet d'ajouter au projet les qrcodes importés
 function importQCM(qrcode){
-  if(qrcode.getType()==='question'){
+  if(qrcode.getType()==='questionQCM'){
     // Si la qr code est la question, on l'ajoute au projet, on l'affiche et on cache le bouton d'ajout d'une nouvelle question
     projet.setQuestion(qrcode);
     addQuestionLine(qrcode);
 
     $("#addNewQuesBtnId").hide();
   }
-  else if (qrcode.getType()==='reponse') {
-    // Si le qr code est une reponse, on ajoute la question au projet (et à la question) et on affiche les reponses
+  else if (qrcode.getType()==='reponseQCM') {
+
+    // Si le qr code est une reponse, on l'ajoute au projet
     projet.addReponse(qrcode);
+
 
     var infos_rep = projet.getQuestion().getReponseById(qrcode.getId());
     if(infos_rep !== null) {
+      // On ajoute la reponse a la question et on affiche la reponse
+      projet.getQuestion().addReponse(qrcode.getId(), infos_rep.message);
       addReponseLine(qrcode, infos_rep.message);
     }
+
   }
 }
 

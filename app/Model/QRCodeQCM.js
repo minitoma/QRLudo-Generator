@@ -23,12 +23,8 @@ class ProjetQCM {
     this.projet.question = question;
   }
 
-  addReponse(reponse, message) {
-    //On ajoute la reponse au projet
+  addReponse(reponse) {
     this.projet.reponses.push(reponse);
-
-    //On ajoute la reponse à la question
-    this.projet.question.addReponse(reponse.getId(), message);
   }
 
   removeReponse(reponseId){
