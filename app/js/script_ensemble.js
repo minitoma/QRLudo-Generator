@@ -32,12 +32,16 @@ $().ready(function() {
   });
 
   // Vide les tableaux qrCodes, files et les lignes de la zone drop
-  $("#empty").click(function() {
-    controllerEnsemble = new ControllerEnsemble();
-    $('#qrName').val('');
-    $(txtZone).empty();
-    txtZone.appendChild(txtDragAndDrop);
-  });
+  function viderZone(){
+    //$("#empty").click(function() {
+      controllerEnsemble = new ControllerEnsemble();
+      $('#qrName').val('');
+      $(txtZone).empty();
+      txtZone.appendChild(txtDragAndDrop);
+    //});
+  }
+  $("#empty").click(viderZone);
+
 
   $("#saveQRCode").click(e => {
     saveQRCodeImage();
@@ -107,6 +111,12 @@ dropZone.ondrop = function(e) {
   activer_button();
 };
 
+
+function setAttributes(el, attrs) {
+  for(var key in attrs) {
+    el.setAttribute(key, attrs[key]);
+  }
+}
 /*
  * Genere une ligne dans la zone de drop en fonction des fichiers drop dans la zone
  * Chaque ligne est clickable pour affichier le qrCode unique
@@ -115,49 +125,54 @@ dropZone.ondrop = function(e) {
 function genererLigne(name) {
   let baliseDiv = document.createElement("DIV");
   let baliseSpan = document.createElement("SPAN");
-  let baliseButton = document.createElement("BUTTON");
-  let baliseI = document.createElement("I");
   let textDiv = document.createTextNode(name);
 
+  let baliseButtonDelete = document.createElement("BUTTON");
+  let baliseIDelete = document.createElement("I");
+
+
   let baliseButtonUp = document.createElement("BUTTON");
-  let baliseButtonDown= document.createElement("BUTTON");
   let baliseIUp = document.createElement("I");
+
+  let baliseButtonDown= document.createElement("BUTTON");
   let baliseIDown = document.createElement("I");
 
 
+  //fonctionatité bouton delete   &&
+  setAttributes(baliseIDelete, {"class": "fa fa-trash-alt", "height":"8px", "width":"8px"});
+  baliseButtonDelete.addEventListener("click", effacerLigne);
+  baliseButtonDelete.setAttribute("class", "btn btn-outline-success align-self-center legendeQR-close-btn");
+  baliseButtonDelete.setAttribute("padding", "10px 10px");
+  baliseButtonDelete.appendChild(baliseIDelete);
 
-  baliseI.setAttribute("class", "fa fa-eraser");
-  baliseI.setAttribute("style", "height:12px; width:12px;");
-
-  baliseButton.addEventListener("click", effacerLigne);
-  baliseButton.setAttribute("class", "btn btn-outline-success");
-  baliseButton.appendChild(baliseI);
-
-  baliseSpan.appendChild(textDiv);
-  baliseSpan.setAttribute("style", "white-space: nowrap; padding:5px; font-size:0.7em;");
-  baliseSpan.setAttribute("class", "qrData");
-  baliseSpan.setAttribute("name", "qrCode");
-
-  //ajout des boutons
-  baliseIUp.setAttribute("style",  "border: solid black; border-width: 0 3px 3px 0; display: inline-block; padding: 3px; transform: rotate(-135deg); -webkit-transform: rotate(-135deg);");
-  baliseIDown.setAttribute("style",  "border: solid black; border-width: 0 3px 3px 0; display: inline-block; padding: 3px; transform: rotate(45deg); -webkit-transform: rotate(45deg);");
-
-  baliseButtonUp.setAttribute("id", name+'Up');
+  //fonctinalité bouton up  &&
+  setAttributes(baliseIUp, {"class": "fa fa-arrow-up", "height":"8px", "width":"8px"});
+  baliseButtonUp.setAttribute("class","btn btn-outline-success align-self-center legendeQR-close-btn ");
   baliseButtonUp.appendChild(baliseIUp);
-  baliseButtonDown.setAttribute("id", name+'Down');
-  baliseButtonDown.appendChild(baliseIDown);
-
-  //addEventListener sur les bouton Up and down       &&
+  baliseButtonUp.setAttribute("id", name+'Up');
   baliseButtonUp.addEventListener("click", upItem);
+
+  //fonctinalité bouton down  &&
+  setAttributes(baliseIDown, {"class": "fa fa-arrow-down", "height":"8px", "width":"8px"});
+  baliseButtonDown.setAttribute("class","btn btn-outline-success  ");
+  baliseButtonDown.appendChild(baliseIDown);
+  baliseButtonDown.setAttribute("id", name+'Down');
   baliseButtonDown.addEventListener("click", downItem);
 
 
+  //fonctionatité nom qrcode
+  baliseSpan.appendChild(textDiv);
+  baliseSpan.setAttribute("style", "white-space: nowrap; padding:5px; font-size:0.7em;");
+  baliseSpan.setAttribute("class", "qrData ");
+  baliseSpan.setAttribute("name", "qrCode");
+
+
+
   baliseDiv.addEventListener("click", afficherQrCode);
-  baliseDiv.appendChild(baliseButton);
   baliseDiv.appendChild(baliseSpan);
   baliseDiv.id = name;
 
-
+  baliseDiv.appendChild(baliseButtonDelete);
   baliseDiv.appendChild(baliseButtonUp);
   baliseDiv.appendChild(baliseButtonDown);
 
@@ -198,10 +213,11 @@ function effacerLigne() {
   // let qrCodeTmp = [];
 
   // Supprime la ligne html lie au fichier
-  for (let i = 1; i <= txtZone.childElementCount; i++) {
+  for (let i = 0; i <= txtZone.childElementCount; i++) {
     if (txtZone.childNodes[i].id == id) {
       txtZone.removeChild(txtZone.childNodes[i]);
     }
+
   }
 
   // Supprime le fichier dans le tableau files
