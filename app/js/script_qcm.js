@@ -4,10 +4,6 @@
  * @Last modified time: 2018-12-04T21:15:05+01:00
  */
 
-/**
- * Abdessabour HARBOUL
- * 2018
- */
 
 var projet = new Projet();
 var currentQuestion = null;
