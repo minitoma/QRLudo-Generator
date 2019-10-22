@@ -118,9 +118,11 @@ $(document).ready(function() {
   $("#saveQRCode").click(function() {
     //Permet de sélectinner le répertoire où le projet va être enregistré
     var dir_path = dialog.showOpenDialog({title: 'Sélectionnez un dossier', properties: ['openDirectory']})[0];
+
     if(dir_path !== undefined){
       var facade = new FacadeController();
       projet.setName($("#projectId").val());
+
       var dir_path = path.join(dir_path, projet.getName());
 
       var fs = require('fs');
@@ -240,7 +242,6 @@ function addReponseLineToQuestionDiv(question, reponse){
 
 function affiche(button) {
   var id_question = $(button).attr('id');
-  console.log("ok");
   $("div#" + id_question).val('Generer QR Code');
 }
 
