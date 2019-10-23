@@ -37,6 +37,7 @@
             <div class="alert alert-danger" role="alert" id="messageReponseVideError" style="display:none;">Veuillez ajouter le texte de votre réponse.</div>
             <div class="alert alert-danger" role="alert" id="messageRetourVocalVideError" style="display:none;">Veuillez ajouter le texte de votre retour vocal.</div>
             <div class="alert alert-danger" role="alert" id="messageReponseExistError" style="display:none;">Cette réponse existe déjà.</div>
+            <div class="alert alert-danger" role="alert" id="messageReponseMaxError" style="display:none;">Le maximum est de quatres réponses</div>
             <div class="form-group">
               <table>
                 <tr>
@@ -50,7 +51,7 @@
                   </td>
                   <td rowspan="2">
                     <div style="text-align: center;">
-                      <input id="repCheckBox" type="checkbox" /> <label for="repCheckBox"><em style='color:gray'>Cochez si c'est la bonne réponse</em></label>
+                      <input id="isBonneRepCheckBox" type="checkbox" /> <label for="isBonneRepCheckBox"><em style='color:gray'>Cochez si c'est la bonne réponse</em></label>
                       <br />
                       <button id="addNewRep" type="button" class="btn btn-outline-success">Ajouter Réponse</button>
                     </div>
@@ -86,7 +87,9 @@
       </div>
       <button type="reset" class="btn btn-outline-success btn-unique-xl"><i class="fa fa-eraser"></i>&nbsp;&nbsp;Réinitialiser</button>
       <button id="importProjectBtnId" type="button" class="btn btn-outline-success btn-unique-xl"><i class="fa fa-upload"></i>&nbsp;&nbsp;Importer Un Projet Existant</button>
-
+      <button type="button" class="btn btn-outline-success btn-unique-xl " id="saveQRCode" disabled>
+        <i class="fa fa-download"></i>&nbsp;&nbsp;Exporter
+      </button>
     </div>
   </form>
 </div>

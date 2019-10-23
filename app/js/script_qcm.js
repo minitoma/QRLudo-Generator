@@ -10,8 +10,6 @@ var projet = new ProjetQCM();
 $(document).ready(function() {
   $("#play-sound-div").hide();
 
-
-
   //Ajout d'une nouvelle question
   $("#addNewQuesBtnId").click(function() {
     //On verifie si le texte de la question n'est pas vide
@@ -43,10 +41,17 @@ $(document).ready(function() {
     $("#messageReponseVideError").hide();
     $("#messageRetourVocalVideError").hide();
     $("#messageReponseExistError").hide();
+    $("#messageReponseMaxError").hide();
 
     //On verifie qu'il y a une question de créée
     if (projet.getQuestion() == null) {
       $("#messageReponseSansQuestionError").show();
+      return false;
+    }
+
+    //On verifie la condition "4 reponses maximum"
+    if(projet.getReponses().length >= 4) {
+      $("#messageReponseMaxError").show();
       return false;
     }
 
@@ -62,8 +67,12 @@ $(document).ready(function() {
       return false;
     }
 
+    let isAnswer = false;
+    if($("#isBonneRepCheckBox").is(":checked")) {
+      isAnswer = true;
+    }
 
-    var new_rep = new ReponseQCM($('#newReponseText').val(), $("#qrColor").val());
+    var new_rep = new ReponseQCM($('#newReponseText').val(),isAnswer,$("#qrColor").val());
     var new_rep_vocal = $('#newReponseVocalText').val();
 
     //sortir de la fonction si la reponse existe déjà pour la question
@@ -86,13 +95,13 @@ $(document).ready(function() {
 
     addReponseLine(new_rep);
 
-
+/*
     console.log(projet.getQuestion());
     console.log("--------------------");
     console.log(projet.getReponses());
     console.log("--------------------");
     console.log(projet.getQuestion().getReponses());
-
+*/
 
     //Suppression des données dans les champs de tests pour ecrire une nouvelle reponses
     $('#newReponseText').val('');
@@ -100,7 +109,6 @@ $(document).ready(function() {
 
     return true;
   });
-
 
   /*Permet d'exporter un Projet
   On enregistre la questions et les réponses du projet dans le répertoire sélectionné
@@ -266,6 +274,13 @@ function deleteQuestion(button){
 
   //On peut ré-afficher le bouton pour ajouter une question
   $("#addNewQuesBtnId").show();
+
+  //On cache les erreurs des réponses si elles sont présentes
+  $("#messageReponseSansQuestionError").hide();
+  $("#messageReponseVideError").hide();
+  $("#messageRetourVocalVideError").hide();
+  $("#messageReponseExistError").hide();
+  $("#messageReponseMaxError").hide();
 }
 
 //Supprimer une réponse du projet
@@ -274,6 +289,8 @@ function deleteReponse(button){
 
   projet.removeReponse(id_reponse);
   $("div#" + id_reponse).remove();
+
+  $("#messageReponseMaxError").hide();
 }
 
 //Méthode appelée lors de l'import d'un qrcode QCM
@@ -291,11 +308,9 @@ function importQCM(qrcode){
     // Si le qr code est une reponse, on l'ajoute au projet
     projet.addReponse(qrcode);
 
-
     var infos_rep = projet.getQuestion().getReponseById(qrcode.getId());
     if(infos_rep !== null) {
       // On ajoute la reponse a la question et on affiche la reponse
-      projet.getQuestion().addReponse(qrcode.getId(), infos_rep.message);
       addReponseLine(qrcode, infos_rep.message);
     }
 

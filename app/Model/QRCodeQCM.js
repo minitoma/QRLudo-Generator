@@ -170,13 +170,14 @@ class QuestionQCM {
  */
 class ReponseQCM {
   //Constructeur d'une Reponse
-  constructor(name, color = '#000000') {
+  constructor(name, isAnswer, color = '#000000') {
     this.qrcode = {
       id: new Date().getTime(),
       name: name,
       data: [],
       type: "reponseQCM",
-      color: color
+      color: color,
+      isAnswer: isAnswer
     };
   }
 
