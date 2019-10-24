@@ -5,6 +5,14 @@
  * @Last modified time: 2019-01-28T01:41:24+01:00
  */
 
+//Déclaration du store permettant la continuité entre les differents onglets
+const Store = require('electron-store');
+const store = new Store();
+
+//Déclaration de l'entier permettant l'implémentation des différentes zones de textes dans l'onglet qr unique
+numTextArea = 1;
+
+
 const path = require('path');
 const root = path.dirname(require.main.filename);
 const piexif = require('piexifjs');

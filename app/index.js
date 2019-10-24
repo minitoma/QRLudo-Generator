@@ -122,7 +122,8 @@ app.on('window-all-closed', () => {
       console.log('Unknown operating system');
       break;
   }
-
+  //Le store est clean ici
+  store.clear();
 });
 
 
