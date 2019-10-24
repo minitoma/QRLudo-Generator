@@ -32,6 +32,7 @@ class ImageGeneratorJson {
 
     let canvas = $(div).children()[0];
     let arrayData = ImageGeneratorJson.stringtoUTF8Array(qrcode.getDataString());
+
     console.log("arrayData stored in qrcode metadata : ", arrayData);
 
     ImageGeneratorJson.genererJPEGJson(arrayData, canvas, div);

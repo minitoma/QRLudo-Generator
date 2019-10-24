@@ -149,6 +149,7 @@ class QRCode {
 
   //Retourne la chaîne contenant le type de qrcode (atomique ou ensemble)
   getTypeQR() {
+    console.log("okfef");
     return this.donneesUtilisateur.getAttribute(DictionnaireXml.getAttTypeQRCode());
   }
 

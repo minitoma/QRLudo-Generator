@@ -175,5 +175,11 @@ const {
   Question
 } = require(`${root}/Model/QRCodeQuestionReponse`);
 
+const {
+  ProjetQCM,
+  ReponseQCM,
+  QuestionQCM
+} = require(`${root}/Model/QRCodeQCM`);
+
 // Instanciate object
 let controllerEnsemble = new ControllerEnsemble();
