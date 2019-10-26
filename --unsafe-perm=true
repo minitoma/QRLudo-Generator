@@ -1,0 +1,4 @@
++ electron-util@0.12.2
+updated 1 package and audited 1482 packages in 1.661s
+found 1 high severity vulnerability
+  run `npm audit fix` to fix them, or `npm audit` for details
