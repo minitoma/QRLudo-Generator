@@ -5,6 +5,10 @@
  * @Last modified time: 2019-01-18T18:40:09+01:00
  */
 
+//déclaration du store qui fera le lien avec la continuité des onglets
+const Store = require('electron-store');
+const store = new Store();
+
 const electron = require('electron');
 const app = electron.app;
 const {

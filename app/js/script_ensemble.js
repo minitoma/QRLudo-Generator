@@ -5,6 +5,10 @@
  */
 
 $().ready(function() {
+
+/*  enregistrement();
+  store.set(`numFich`,numFich);*/
+
   $("#play-sound-div").hide();
 
 
@@ -78,6 +82,8 @@ dropZone.ondragover = function(e) {
 dropZone.ondrop = function(e) {
   e.preventDefault();
 
+  console.log(e);
+
   txtDragAndDrop.remove();
 
   let afficherPopUp = false;
@@ -87,11 +93,19 @@ dropZone.ondrop = function(e) {
   for (let i = 0; i < e.dataTransfer.files.length; i++) {
     let qrFile = e.dataTransfer.files[i];
 
+  /*  //console.log(qrFile.path);
+    console.log(numFich);
+
+    store.set(`filePath${numFich}`,qrFile.path);
+    numFich ++;
+    store.set(`numFich`,numFich);*/
+
     controllerEnsemble.isUnique(qrFile, qrcode => {
       if (qrcode.getType() != "ensemble") {
         let words = qrFile.name.split(".");
         if (!controllerEnsemble.occurenceFichier(words[0])) {
           genererLigne(words[0]);
+          //store.set(`fichierDrop${numFich}`,words[0]);
           controllerEnsemble.recuperationQrCodeUnique(qrFile);
         } else {
           afficherPopUp = true;
@@ -110,6 +124,47 @@ dropZone.ondrop = function(e) {
   }
   activer_button();
 };
+
+//permet la continuité entre les onflet spécifiquement pour l'onglet ensemble
+function enregistrement(){
+
+/*  let facade = new FacadeController();
+
+  if(store.get(`numFich`)){
+    numFich = store.get(`numFich`);
+  }
+
+  //vérifier si un enregistrement du titre existe
+  if(store.get(`titreEnsemble`)){
+    document.getElementById('qrName').value = store.get(`titreEnsemble`);
+  }
+
+  for(var i =0; i < numFich; i++){
+
+    let qrFile ;
+    //qrFile = QRCodeLoader.loadImage(store.get(`fichierDrop${i}`),drawQRCodeImport);
+
+    var client = new XMLHttpRequest();
+    client.open("GET", store.get(`filePath$${i}`));
+    qrFile = client.send();
+
+    console.log(qrFile);
+
+    controllerEnsemble.isUnique(qrFile, qrcode => {
+      if (qrcode.getType() != "ensemble") {
+        if (!controllerEnsemble.occurenceFichier(store.get(`fichierDrop${i}`))) {
+          console.log(genererLigne(store.get(`fichierDrop${i}`)));
+          controllerEnsemble.recuperationQrCodeUnique(qrFile);
+        } else {
+          afficherPopUp = true;
+          nomFichierIdentique += "\t" + words[0] + "\n";
+        }
+      } else {
+        messageInfos("Impossible de mettre un qrcode ensemble dans un qrcode ensemble. Veuillez mettre que des qrcodes uniques", "danger");
+      }
+    });*/
+  }
+
 
 
 function setAttributes(el, attrs) {
@@ -209,6 +264,10 @@ function afficherQrCode(e) {
 
 // Supprime une ligne dans la zone de drop
 function effacerLigne() {
+
+  /*numFich--;
+  store.set(`numFich`,numFich);*/
+
   let id = this.parentNode.id;
   // let qrCodeTmp = [];
 
@@ -237,6 +296,11 @@ function affichageLigneParDefault() {
 
 // Active le button vider et generer apres avoir donne un nom au qrCode
 function activer_button() {
+  //Permet l'enregistrement du titre dans le store
+  store.delete(`titreEnsemble`);
+  var titre = document.getElementById('qrName').value;
+  store.set(`titreEnsemble`, titre);
+
   if (document.getElementById('qrName').value.length > 0) {
     $('#preview ,#empty').attr('disabled', false);
   }
