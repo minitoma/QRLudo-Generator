@@ -51,7 +51,7 @@
                   </td>
                   <td rowspan="2">
                     <div style="text-align: center;">
-                      <input id="isBonneRepCheckBox" type="checkbox" /> <label for="isBonneRepCheckBox"><em style='color:gray'>Cochez si c'est la bonne réponse</em></label>
+                      <div id="bonneRepCheckBox" style="float:left;"><input id="isBonneRepCheckBox" type="checkbox" /> <label for="isBonneRepCheckBox"><em style='color:gray'>Cochez si c'est la bonne réponse</em></label></div>
                       <br />
                       <button id="addNewRep" type="button" class="btn btn-outline-success">Ajouter Réponse</button>
                     </div>
@@ -79,12 +79,6 @@
       </div>
     </div>
     <div class="card-footer form-inline">
-      <div class="input-group  btn-unique-xl">
-        <div class="input-group-prepend">
-          <div class="input-group-text"><i class="fa fa-palette"></i></div>
-        </div>
-        <input type="color" id="qrColor" value="#000000">
-      </div>
       <button type="reset" class="btn btn-outline-success btn-unique-xl"><i class="fa fa-eraser"></i>&nbsp;&nbsp;Réinitialiser</button>
       <button id="importProjectBtnId" type="button" class="btn btn-outline-success btn-unique-xl"><i class="fa fa-upload"></i>&nbsp;&nbsp;Importer Un Projet Existant</button>
       <button type="button" class="btn btn-outline-success btn-unique-xl " id="saveQRCode" disabled>

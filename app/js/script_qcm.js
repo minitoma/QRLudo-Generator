@@ -58,7 +58,7 @@ $(document).ready(function() {
     //On verifie que le texte de la reponse n'est pas vide
     if ($('#newReponseText').val() === ""){
       $("#messageReponseVideError").show();
-      return false; // si le champ est vide on sort
+      return false;
     }
 
     //On verifie que le texte du retour vocal n'est pas vide
@@ -69,6 +69,11 @@ $(document).ready(function() {
 
     let isAnswer = false;
     if($("#isBonneRepCheckBox").is(":checked")) {
+      isAnswer = true;
+    }
+
+    //Si il y a trois reponses et aucune n'est une bonne reponse, alors on force la 4eme et derniere reponse à etre la reponse correct
+    if(projet.getReponses().length == 3 && !isReponseOk()) {
       isAnswer = true;
     }
 
@@ -92,16 +97,21 @@ $(document).ready(function() {
     projet.addReponse(new_rep);
     projet.getQuestion().addReponse(new_rep.getId(), new_rep_vocal);
 
-
     addReponseLine(new_rep);
 
-/*
+
+    console.log("----->DEBUG<-------");
     console.log(projet.getQuestion());
-    console.log("--------------------");
+    console.log("-------------------");
     console.log(projet.getReponses());
-    console.log("--------------------");
-    console.log(projet.getQuestion().getReponses());
-*/
+    console.log("----->FIN<--------\n");
+
+
+    //Si la reponse est la bonne et qu'elle a été ajouté dans erreurs alors on decoche la checkbox et on la cache (une seule reponse est possible)
+    if(isAnswer) {
+      $("#isBonneRepCheckBox").prop("checked", false);
+      $("#bonneRepCheckBox").hide();
+    }
 
     //Suppression des données dans les champs de tests pour ecrire une nouvelle reponses
     $('#newReponseText').val('');
@@ -148,9 +158,7 @@ $(document).ready(function() {
   });
 
   //Import d'un projet existant à partir d'un répertoire
-  $('#importProjectBtnId').click(function() {
-
-
+  $('#importProjectBtnId').click(function(){
     //Permet de sélectionner le répertoire du projet
     var dir_path = dialog.showOpenDialog({title: 'Sélectionnez le projet', properties: ['openDirectory']})[0];
     projet = new ProjetQCM();
@@ -202,7 +210,6 @@ $(document).ready(function() {
       reponse.setColor(color);
     });
   });
-
 });
 
 function addQuestionLine(question){
@@ -229,8 +236,13 @@ function addReponseLine(reponse){
   var newRepLine = "<div style='height:35px;' id='" + reponse.getId() + "'>" +
   "<li style='color:black;font-size:14px;'>" +
   "<label>" + reponse.getName() + "&nbsp&nbsp</label>" +
-  "<em style='color:gray'>" + infos_rep.message + "</em>" +
-  "<button class='btn btn-outline-success float-right' id='" + reponse.getId() + "' onclick='deleteReponse(this);'><i class='fa fa-trash-alt'></i></button>" +
+  "<em style='color:gray'>" + infos_rep.message + "&nbsp&nbsp&nbsp</em>";
+
+  if(reponse.getIsAnswer()) {
+    newRepLine += "<i class='fas fa-check-circle'></i>";
+  }
+
+  newRepLine += "<button class='btn btn-outline-success float-right' id='" + reponse.getId() + "' onclick='deleteReponse(this);'><i class='fa fa-trash-alt'></i></button>" +
   "<button class='btn btn-outline-success float-right' id='" + reponse.getId() + "' onclick='previewQRCodeReponse(this)' onmouseover='afficheInfoBtnQrCode(this,\"reponse\")' onmouseout='supprimeInfoBtnQrCode(this,\"reponse\")'><i class='fa fa-qrcode'></i></button>" +
   "<button class='btn btn-outline-success float-right' id='" + reponse.getId() + "' onclick='lireReponse(this);'><i class='fa fa-play'></i></button>" +
   "<div class='alert alert-success fade show float' role='alert' id='infoGenererQrCodeReponse" + reponse.getId() +"' style='display:none;font-size:15px;'>Ce bouton permet de pré-visualiser le Qr Code de la réponse</div>" +
@@ -270,10 +282,11 @@ function deleteQuestion(button){
   var id_question = $(button).attr('id');
   $("div#" + id_question + '.divQuestion').remove();
 
-  projet.removeQuestion(JSON.parse(id_question));
+  projet.removeQuestion();
 
-  //On peut ré-afficher le bouton pour ajouter une question
+  //On peut ré-afficher le bouton pour ajouter une question et pour cocher la bonne reponse
   $("#addNewQuesBtnId").show();
+  $("#bonneRepCheckBox").show();
 
   //On cache les erreurs des réponses si elles sont présentes
   $("#messageReponseSansQuestionError").hide();
@@ -287,6 +300,11 @@ function deleteQuestion(button){
 function deleteReponse(button){
   var id_reponse = $(button).attr('id');
 
+  //Si on supprime la bonne reponse, alors on ré-affiche la checkbox
+  if(projet.getReponseById(id_reponse).getIsAnswer()) {
+    $("#bonneRepCheckBox").show();
+  }
+
   projet.removeReponse(id_reponse);
   $("div#" + id_reponse).remove();
 
@@ -296,6 +314,7 @@ function deleteReponse(button){
 //Méthode appelée lors de l'import d'un qrcode QCM
 //Permet d'ajouter au projet les qrcodes importés
 function importQCM(qrcode){
+
   if(qrcode.getType()==='questionQCM'){
     // Si la qr code est la question, on l'ajoute au projet, on l'affiche et on cache le bouton d'ajout d'une nouvelle question
     projet.setQuestion(qrcode);
@@ -313,7 +332,6 @@ function importQCM(qrcode){
       // On ajoute la reponse a la question et on affiche la reponse
       addReponseLine(qrcode, infos_rep.message);
     }
-
   }
 }
 
@@ -362,7 +380,9 @@ function previewQRCode(qrcode, div) {
 
 function lireQuestion(button){
   var id_question = $(button).attr('id');
-  var text_question = $("label#" + id_question + ".questionNameLabel").text();
+  //var text_question = $("label#" + id_question + ".questionNameLabel").text();
+
+  var text_question = projet.getQuestion().getText();
 
   playTTS(text_question);
 }
@@ -373,4 +393,15 @@ function lireReponse(button){
   var text_retourVocal = $("div#" + id_reponse + " em").text();
 
   playTTS(text_reponse + text_retourVocal);
+}
+
+
+//Retourne vrai si il y a une bonne reponse, faux sinon
+function isReponseOk() {
+  for(let reponse of projet.getReponses()) {
+    if(reponse.getIsAnswer()) {
+      return true;
+    }
+  }
+  return false;
 }
