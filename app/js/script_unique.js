@@ -136,10 +136,6 @@ $(document).ready(function() {
     //aficher popup quand on click sur reinitialiser
     // cache le qr générer & desactivation du bouton exporter
 
-    //Les différents store sont clean ici
-    store.clear();
-    numTextArea = 1;
-
     var popUpQuiter = confirm("Etes vous sûr de vouloir réinitialiser?");
     if (popUpQuiter==true){
       $('#qrView').hide();
@@ -166,7 +162,9 @@ $(document).ready(function() {
 
     $("#ajouterTexte").attr('disabled', false);
 
-
+    //Les différents store sont clean ici
+    store.clear();
+    numTextArea = 1;
   });
 });
 
@@ -220,8 +218,8 @@ function enregistrement(){
     //Le nombre de zone texte mis à jour en fonction de ce qui a été enregistré précédement
     numTextArea = store.get(`numTextArea`);
 
-    if(store.get(`titre`)){
-      document.getElementById('qrName').value = store.get(`titre`);
+    if(store.get(`titreUnique`)){
+      document.getElementById('qrName').value = store.get(`titreUnique`);
     }
 
     //implémentation des différentes zones de txt enregistrées
@@ -397,9 +395,9 @@ function showError(modal, errorMsg, message = "Veuillez coller un lien de fichie
 //Le nom du QR Code doit contenir au moins un caractère, sinon le bouton generer n'est pas accessible
 function activer_button() {
   //Permet l'enregistrement du titre dans le store Titre
-  store.delete(`titre`);
+  store.delete(`titreUnique`);
   var titre = document.getElementById('qrName').value;
-  store.set(`titre`, titre);
+  store.set(`titreUnique`, titre);
 
 
   $('#preview').attr('disabled', true); //Par defaut le bouton generer est toujours activé, on le desactive dans la condition suivante si necessaire
@@ -409,10 +407,6 @@ function activer_button() {
   }
 }
 
-  }
-
-
-}
 
 //Ce compteur permet de compter le nombre de textarea pour differencier les id
 
@@ -480,6 +474,7 @@ function verifNombreCaractere1() {
   }
 }
 
+//supprimeun le textarea correspondant au numText
 function supprimerChampLegende(e, numText) {
 
   numTextArea--;
