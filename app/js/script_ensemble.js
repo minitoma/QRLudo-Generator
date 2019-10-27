@@ -7,6 +7,7 @@
 $().ready(function() {
 
   enregistrement();
+  store.delete(`numFich`);
   store.set(`numFich`,numFich);
 
   $("#play-sound-div").hide();
@@ -42,6 +43,22 @@ $().ready(function() {
       $('#qrName').val('');
       $(txtZone).empty();
       txtZone.appendChild(txtDragAndDrop);
+
+      //Permet la suppression des elements du store créé dans le script_ensemble
+      if(store.get(`numFich`)){
+        store.delete(`numFich`);
+      }
+
+      //vérifier si un enregistrement du titre existe
+      if(store.get(`titreEnsemble`)){
+        store.delete(`titreEnsemble`);
+      }
+
+      for(var i =0; i < numFich; i++){
+        if(store.get(`fichierDrop${i}`)){
+          store.delete(`fichierDrop${i}`);
+        }
+      }
     //});
   }
   $("#empty").click(viderZone);
@@ -123,21 +140,19 @@ dropZone.ondrop = function(e) {
 //permet la continuité entre les onflet spécifiquement pour l'onglet ensemble
 function enregistrement(){
 
-  let facade = new FacadeController();
-
   if(store.get(`numFich`)){
     numFich = store.get(`numFich`);
   }
 
   //vérifier si un enregistrement du titre existe
   if(store.get(`titreEnsemble`)){
-    document.getElementById('qrName').value = store.get(`titreEnsemble`);
+    $('#qrName').val(store.get(`titreEnsemble`));
   }
 
   for(var i =0; i < numFich; i++){
     if(store.get(`fichierDrop${i}`)){
       genererLigne(store.get(`fichierDrop${i}`));
-      controllerEnsemble.recuperationQrCodeUnique(qrFile);
+      //controllerEnsemble.recuperationQrCodeUnique(qrFile);
     }
   }
 }

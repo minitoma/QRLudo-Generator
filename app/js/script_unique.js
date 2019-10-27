@@ -24,6 +24,7 @@ $(document).ready(function() {
 
   //appel à la focntion qui permet de lire les enregistrement
   enregistrement();
+  store.delete(`numTextArea`);
   store.set(`numTextArea`,numTextArea);
 
   //Use to implement information on the audio import
@@ -133,38 +134,44 @@ $(document).ready(function() {
   });
 
   $('button#annuler').click(e => {
+    numTextArea = 1;
     //aficher popup quand on click sur reinitialiser
     // cache le qr générer & desactivation du bouton exporter
-
     var popUpQuiter = confirm("Etes vous sûr de vouloir réinitialiser?");
     if (popUpQuiter==true){
-      $('#qrView').hide();
-      $('#saveQRCode').attr('disabled', true);
-      $('#preview').attr('disabled', true);
-    }
+    //Les différents store sont clean ici
+      if(store.get(`titreUnique`)){
+        store.delete(`titreUnique`);
+        $("#qrName").val("");
+      }
 
-    e.preventDefault();
-    var settings = require("electron-settings");
-
-    if (settings.has("defaultColor")) {
-      $("#qrColor").val(settings.get("defaultColor"));
       let a = $('#legendeTextarea');
       $.each($(".qrData"), function(i, val) {
+
+        $(`#textarea${i}`).val("");
+        if (store.get(`text${i}`)){
+          store.delete(`text${i}`);
+        }
+
         $("#cible").empty();
+        if (store.get(`textZone${i+2}`)){
+          store.delete(`textZone${i+2}`);
+        }
       });
       $("#cible").append(a);
       $(a).children('button').attr('disabled', true);
-      $('#textarea1').val("");
-      $('#textarea2').val("");
-      $('#textarea3').val("");
-      $("#qrName").val("");
+      
+      $('#qrView').hide();
+      $('#saveQRCode').attr('disabled', true);
+      $('#preview').attr('disabled', true);
+
+      var settings = require("electron-settings");
+      if (settings.has("defaultColor")) {
+        $("#qrColor").val(settings.get("defaultColor"));
+      }
+
+      $("#ajouterTexte").attr('disabled', false);
     }
-
-    $("#ajouterTexte").attr('disabled', false);
-
-    //Les différents store sont clean ici
-    store.clear();
-    numTextArea = 1;
   });
 });
 
@@ -219,7 +226,7 @@ function enregistrement(){
     numTextArea = store.get(`numTextArea`);
 
     if(store.get(`titreUnique`)){
-      document.getElementById('qrName').value = store.get(`titreUnique`);
+      $('#qrName').val(store.get(`titreUnique`));
     }
 
     //implémentation des différentes zones de txt enregistrées
@@ -229,14 +236,14 @@ function enregistrement(){
         text.innerHTML = store.get(`textZone${i}`);
         text.setAttribute("class", "d-flex align-items-start legendeQR");
         text.setAttribute("id", "legendeTextarea");
-        document.getElementById('cible').appendChild(text);
+        $('#cible').append(text);
       }
     }
 
     //On parcours le store pour afficher les texte enregistré dans les zones correspondantes
     for(var i = 1; i<=numTextArea; i++){
       if (store.get(`text${i}`)){
-        document.getElementById('textarea'+(i)).value = store.get(`text${i}`);
+        $('#textarea'+(i)).val(store.get(`text${i}`));
       }
     }
   }
@@ -412,7 +419,7 @@ function activer_button() {
 
 //ajouter une nvlle legende (textarea) a chaque click sur button Texte (pour chaque textarea il faut rajouter à l'attribut class la valeur qrData class="... qrData")
 function ajouterChampLegende(valeur = "") {
-  //store.delete(`numTextArea`);
+  store.delete(`numTextArea`);
   numTextArea++; // Nouveau numero pour le prochain textarea
   store.set(`numTextArea`,numTextArea);
   //console.log(numTextArea);
@@ -476,7 +483,7 @@ function verifNombreCaractere1() {
 
 //supprimeun le textarea correspondant au numText
 function supprimerChampLegende(e, numText) {
-
+  store.delete(`numTextArea`);
   numTextArea--;
   //suppression dans le store de la zone de txt correspondante
   store.set(`numTextArea`,numTextArea);
