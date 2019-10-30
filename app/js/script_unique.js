@@ -24,7 +24,7 @@ $(document).ready(function() {
 
   //appel à la focntion qui permet de lire les enregistrement
   enregistrement();
-  store.delete(`numTextArea`);
+  store.delete(`numTextArea`)
   store.set(`numTextArea`,numTextArea);
 
   //Use to implement information on the audio import
@@ -134,11 +134,12 @@ $(document).ready(function() {
   });
 
   $('button#annuler').click(e => {
-    numTextArea = 1;
+
     //aficher popup quand on click sur reinitialiser
     // cache le qr générer & desactivation du bouton exporter
     var popUpQuiter = confirm("Etes vous sûr de vouloir réinitialiser?");
     if (popUpQuiter==true){
+      numTextArea = 1;
     //Les différents store sont clean ici
       if(store.get(`titreUnique`)){
         store.delete(`titreUnique`);
@@ -149,18 +150,20 @@ $(document).ready(function() {
       $.each($(".qrData"), function(i, val) {
 
         $(`#textarea${i}`).val("");
-        if (store.get(`text${i}`)){
-          store.delete(`text${i}`);
+        if (store.get(`text${i+1}`)){
+          store.delete(`text${i+1}`);
         }
 
         $("#cible").empty();
         if (store.get(`textZone${i+2}`)){
           store.delete(`textZone${i+2}`);
         }
+
+
       });
       $("#cible").append(a);
       $(a).children('button').attr('disabled', true);
-      
+
       $('#qrView').hide();
       $('#saveQRCode').attr('disabled', true);
       $('#preview').attr('disabled', true);
