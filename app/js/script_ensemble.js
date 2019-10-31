@@ -139,21 +139,21 @@ function genererLigne(name) {
 
 
   //fonctionatité bouton delete   &&
-  setAttributes(baliseIDelete, {"class": "fa fa-trash-alt", "height":"8px", "width":"8px"});
+  setAttributes(baliseIDelete, {"class": "fa fa-trash-alt ", "height":"8px", "width":"8px"});
   baliseButtonDelete.addEventListener("click", effacerLigne);
   baliseButtonDelete.setAttribute("class", "btn btn-outline-success align-self-center legendeQR-close-btn");
   baliseButtonDelete.setAttribute("padding", "10px 10px");
   baliseButtonDelete.appendChild(baliseIDelete);
 
   //fonctinalité bouton up  &&
-  setAttributes(baliseIUp, {"class": "fa fa-arrow-up", "height":"8px", "width":"8px"});
+  setAttributes(baliseIUp, {"class": "fa fa-arrow-up ", "height":"8px", "width":"8px"});
   baliseButtonUp.setAttribute("class","btn btn-outline-success align-self-center legendeQR-close-btn ");
   baliseButtonUp.appendChild(baliseIUp);
   baliseButtonUp.setAttribute("id", name+'Up');
   baliseButtonUp.addEventListener("click", upItem);
 
   //fonctinalité bouton down  &&
-  setAttributes(baliseIDown, {"class": "fa fa-arrow-down", "height":"8px", "width":"8px"});
+  setAttributes(baliseIDown, {"class": "fa fa-arrow-down ", "height":"8px", "width":"8px"});
   baliseButtonDown.setAttribute("class","btn btn-outline-success  ");
   baliseButtonDown.appendChild(baliseIDown);
   baliseButtonDown.setAttribute("id", name+'Down');
@@ -163,7 +163,7 @@ function genererLigne(name) {
   //fonctionatité nom qrcode
   baliseSpan.appendChild(textDiv);
   baliseSpan.setAttribute("style", "white-space: nowrap; padding:5px; font-size:0.7em;");
-  baliseSpan.setAttribute("class", "qrData ");
+  baliseSpan.setAttribute("class", "qrData text-left ");
   baliseSpan.setAttribute("name", "qrCode");
 
 
