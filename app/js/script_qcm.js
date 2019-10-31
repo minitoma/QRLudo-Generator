@@ -8,7 +8,7 @@
 var projet = new ProjetQCM();
 
 $(document).ready(function() {
-  $("#play-sound-div").show();
+  $("#play-sound-div").hide();
 
   //Ajout d'une nouvelle question
   $("#addNewQuesBtnId").click(function() {
@@ -213,17 +213,25 @@ $(document).ready(function() {
 });
 
 function addQuestionLine(question){
-  var newQuestLine = "<div class='form-control divQuestion' id='" + question.getId() + "' style='margin-top:10px;'>" +
-  "<div class='form-group'>" +
-  "<label class='control-label text-left questionNameLabel' id='" + question.getId() + "' style='text-align:left!important; color:black;'>" + question.getName() + "</label>" +
-  "<button class='btn btn-outline-success float-right' id='" + question.getId() + "' onclick='deleteQuestion();'><i class='fa fa-trash-alt'></i></button>" +
-  "<button class='btn btn-outline-success float-right' id='" + question.getId() + "' onclick='previewQRCodeQuestion();' onmouseover='afficheInfoBtnQrCode(this,\"question\")' onmouseout='supprimeInfoBtnQrCode(this,\"question\")'><i class='fa fa-qrcode'></i></button>" +
-  "<button class='btn btn-outline-success float-right' id='" + question.getId() + "' onclick='lireQuestion();'><i class='fa fa-play'></i></button>"  +
-  "<div class='alert alert-success fade show float' role='alert' id='infoGenererQrCodeQuestion' style='display:none;font-size:14px;'>Ce bouton permet de pré-visualiser le Qr Code de la question</div>" +
-  "</div>" +
-  "<label class='control-label'>Réponse(s)</label>" +
-  "<div class='reponseDiv' id='" + question.getId() + "'>" +
-  "</div>" +
+  var newQuestLine = "" +
+  "<div class='form-control divQuestion' id='" + question.getId() + "' style='margin-top:10px;'>" +
+    "<div class='form-group'>" +
+      "<label class='control-label text-left questionNameLabel' id='" + question.getId() + "' style='text-align:left!important; color:black;'>" + question.getName() + "</label>" +
+      "<button class='btn btn-outline-success float-right' id='" + question.getId() + "' onclick='deleteQuestion();'>" +
+        "<i class='fa fa-trash-alt'></i>" +
+      "</button>" + 
+      "<button class='btn btn-outline-success float-right' id='" + question.getId() + "' onclick='previewQRCodeQuestion();' onmouseover='afficheInfoBtnQrCode(this,\"question\")' onmouseout='supprimeInfoBtnQrCode(this,\"question\")'>" +
+        "<i class='fa fa-qrcode'></i>" +
+      "</button>" +
+      "<button class='btn btn-outline-success float-right' id='" + question.getId() + "' onclick='lireQuestion();'>" +
+        "<i class='fa fa-play'></i>" +
+      "</button>" +
+      "<div class='alert alert-success fade show float' role='alert' id='infoGenererQrCodeQuestion' style='display:none;font-size:14px;'>" +
+        "Ce bouton permet de pré-visualiser le Qr Code de la question" +
+      "</div>" +
+    "</div>" +
+    "<label class='control-label'>Réponse(s)</label>" +
+    "<div class='reponseDiv' id='" + question.getId() + "'></div>" +
   "</div>";
 
   $("#questionsDivLabelsId").append(newQuestLine);

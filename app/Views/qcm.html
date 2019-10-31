@@ -59,7 +59,7 @@
                   </td>
                   <td>
                     <div class="form-inline">
-                      <input type='text' class="form-control col-sm-11" id="newReponseVocalText" placeholder="Saisissez la réponse vocale"/>
+                      <input type='text' class="form-control col-sm-11" id="newReponseVocalText" placeholder="Saisissez la réponse vocale" maxlength="49"/>
                     </div>
                   </td>
                   <td>
@@ -78,9 +78,20 @@
       </div>
     </div>
     <div class="card-footer form-inline">
-      <button type="reset" class="btn btn-outline-success btn-unique-xl" onclick="deleteQuestion()"><i class="fa fa-eraser"></i>&nbsp;&nbsp;Réinitialiser</button>
-      <button id="importProjectBtnId" type="button" class="btn btn-outline-success btn-unique-xl"><i class="fa fa-upload"></i>&nbsp;&nbsp;Importer Un Projet Existant</button>
-      <button type="button" class="btn btn-outline-success btn-unique-xl " id="saveQRCode" disabled><i class="fa fa-download"></i>&nbsp;&nbsp;Exporter</button>
+      <div class="card col-md-auto "  >
+        <button type="reset" style="margin-top:10px" class="btn btn-outline-success btn-unique-xl" onclick="deleteQuestion()">
+          <i class="fa fa-eraser"></i>&nbsp;&nbsp;Réinitialiser
+        </button>
+      </div>
+      <div class="card col-md-auto">
+        <button type="button" class="btn btn-outline-success btn-unique-xl " id="importProjectBtnId">
+          <i class="fa fa-upload"></i>&nbsp;&nbsp;Importer Un Projet Existant
+        </button>
+        <button type="button" style="margin-top:10px" class="btn btn-outline-success btn-unique-xl" id="saveQRCode" disabled>
+          <i class="fa fa-download"></i>&nbsp;&nbsp;Exporter
+        </button>
+      </div>
+    
     </div>
   </form>
 </div>
