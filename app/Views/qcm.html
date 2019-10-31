@@ -49,12 +49,8 @@
                       <input type='text' class="form-control col-sm-11" id="newReponseText" placeholder="Saisissez la reponse"/>
                     </div>
                   </td>
-                  <td rowspan="2">
-                    <div style="text-align: center;">
-                      <div id="bonneRepCheckBox" style="float:left;"><input id="isBonneRepCheckBox" type="checkbox" /> <label for="isBonneRepCheckBox"><em style='color:gray'>Cochez si c'est la bonne réponse</em></label></div>
-                      <br />
-                      <button id="addNewRep" type="button" class="btn btn-outline-success">Ajouter Réponse</button>
-                    </div>
+                  <td>
+                    <div id="bonneRepCheckBox" style="margin-top:15px;"><input id="isBonneRepCheckBox" type="checkbox" /> <label for="isBonneRepCheckBox"><em style='color:gray'>Cochez si c'est la bonne réponse</em></label></div>
                   </td>
                 </tr>
                 <tr>
@@ -65,6 +61,9 @@
                     <div class="form-inline">
                       <input type='text' class="form-control col-sm-11" id="newReponseVocalText" placeholder="Saisissez la réponse vocale"/>
                     </div>
+                  </td>
+                  <td>
+                    <button id="addNewRep" type="button" class="btn btn-outline-success" style="margin-left:50px;margin-bottom:15px;">Ajouter Réponse</button>
                   </td>
                 </tr>
 
@@ -79,11 +78,9 @@
       </div>
     </div>
     <div class="card-footer form-inline">
-      <button type="reset" class="btn btn-outline-success btn-unique-xl"><i class="fa fa-eraser"></i>&nbsp;&nbsp;Réinitialiser</button>
+      <button type="reset" class="btn btn-outline-success btn-unique-xl" onclick="deleteQuestion()"><i class="fa fa-eraser"></i>&nbsp;&nbsp;Réinitialiser</button>
       <button id="importProjectBtnId" type="button" class="btn btn-outline-success btn-unique-xl"><i class="fa fa-upload"></i>&nbsp;&nbsp;Importer Un Projet Existant</button>
-      <button type="button" class="btn btn-outline-success btn-unique-xl " id="saveQRCode" disabled>
-        <i class="fa fa-download"></i>&nbsp;&nbsp;Exporter
-      </button>
+      <button type="button" class="btn btn-outline-success btn-unique-xl " id="saveQRCode" disabled><i class="fa fa-download"></i>&nbsp;&nbsp;Exporter</button>
     </div>
   </form>
 </div>
