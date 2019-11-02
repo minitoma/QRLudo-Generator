@@ -12,6 +12,9 @@ const store = new Store();
 //Déclaration de l'entier permettant l'implémentation des différentes zones de textes dans l'onglet qr unique
 numTextArea = 1;
 
+//nombre de fichier ajouté dans l'onglet ensemble
+numFich = 0;
+
 
 const path = require('path');
 const root = path.dirname(require.main.filename);
