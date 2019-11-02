@@ -12,105 +12,77 @@
 var projet = new Projet();
 var currentQuestion = null;
 
+
 $(document).ready(function() {
+
   $("#play-sound-div").hide();
 
-  //Ajout d'une nouvelle question
-  $("#addNewQuesBtnId").click(function() {
-    if ($('#newQuestionText').val() === ""){
-      $("#alertQuestionVideError").show();
-      setTimeout(function () {
-        $('#alertQuestionVideError').hide();
-      }, 10000);
-      return; // si le champ est vide on sort
+
+
+  $("#ajoutNewReponse").click(function(){
+    console.log("ajout");
+  //  $("#dialogAjoutReponse").style.display();
+  });
+/*
+
+*/
+
+  $("#preview").click(function() {
+
+    affichageLigneParDefault();
+
+    let qrColor = $("#qrColor").val();
+    controllerEnsemble.setQRCodeEnsemble(new QRCodeEnsembleJson(document.getElementById('qrName').value, [], qrColor));
+
+
+    // Ajoute les donnees json de chaque qrCode unique dans le qrCode ensemble
+    let qrcodes = controllerEnsemble.getQRCodeAtomiqueArray();
+    let qrcodeEns = controllerEnsemble.getQRCodeEnsemble();
+
+    for (let i = 0; i < qrcodes.length; i++) {
+      qrcodeEns.ajouterQrCode(qrcodes[i]);
     }
-    $("#alertQuestionVideError").hide();
-    $("#alertQuestionExistError").hide();
 
-    //sortir de la fonction si la question existe déjà
-    let existe = false;
-    $.each(projet.getQuestions(), function(i,val) {
-      if(val.getName() === $('#newQuestionText').val()) {
-        existe = true;
-        return;
-      }
-    });
-    if(existe) {
-      $("#alertQuestionExistError").show();
-      return false;
-    }
+    let facade = new FacadeController();
+    facade.genererQRCode($('#qrView')[0], qrcodeEns);
 
-    //Ajouter au projet la nouvelle question
-    let nouvques = new Question($('#newQuestionText').val(), [], $("#qrColor").val());
-    projet.addQuestion(nouvques);
-
-    addQuestionLine(nouvques);
-    currentQuestion = nouvques; //
-
-    $('#newQuestionText').val("");
-    return true;
+    $('#saveQRCode').attr('disabled', false);
   });
 
 
-  $("#addNewRep").click(function(e){
+
+  $('button#annuler').click(e => {
+
+    //aficher popup quand on click sur reinitialiser
+    // cache le qr générer & desactivation du bouton exporter
+    var popUpQuiter = confirm("Etes vous sûr de vouloir réinitialiser?");
+    if (popUpQuiter==true){
+      $('#qrView').hide();
+      $('#saveQRCode').attr('disabled', true);
+      $('#preview').attr('disabled', true);
+    }
+
     e.preventDefault();
-    $("#messageReponseSansQuestionError").hide();
-    $("#messageReponseVideError").hide();
-    $("#messageRetourVocalVideError").hide();
-    $("#messageReponseExistError").hide();
+    var settings = require("electron-settings");
 
-    //On verifie qu'il y a une question de créée
-    if (currentQuestion == null) {
-      $("#messageReponseSansQuestionError").show();
-      return false;
+    if (settings.has("defaultColor")) {
+      $("#qrColor").val(settings.get("defaultColor"));
+      let a = $('#legendeTextarea');
+      $.each($(".qrData"), function(i, val) {
+        $("#cible").empty();
+      });
     }
-
-    //On verifie que le texte de la reponse n'est pas vide
-    if ($('#newReponseText').val() === ""){
-      $("#messageReponseVideError").show();
-      return false; // si le champ est vide on sort
-    }
-
-    //On verifie que le texte du retour vocal n'est pas vide
-    if($('#newReponseVocalText').val() === "") {
-      $("#messageRetourVocalVideError").show();
-      return false;
-    }
-
-
-    var new_rep = new Reponse($('#newReponseText').val(), $("#qrColor").val());
-    var new_rep_vocal = $('#newReponseVocalText').val();
-
-    //sortir de la fonction si la reponse existe déjà pour la question courante
-    let existe = false;
-    $.each(projet.getReponsesFromQuestion(new_rep.getId(), currentQuestion.getId()), function(i, val) {
-      if (projet.getReponseById(val.id).getName() === $('#newReponseText').val()) {
-        existe = true;
-        return;
-      }
-    });
-    if (existe){
-      $("#messageReponseExistError").show();
-      return false;
-    }
-
-    //Ajouter au projet la nouvelle réponse
-    projet.addReponse(new_rep);
-
-    //Ajouter la reponse à la question courante
-    currentQuestion.addReponse(new_rep.getId(),new_rep_vocal);
-
-    //addReponseLine(new_rep);
-    addReponseLineToQuestionDiv(currentQuestion, new_rep);
-
-
-    //Suppression des données dans les champs de tests pour ecrire une nouvelle reponses
-    $('#newReponseText').val('');
-    $('#newReponseVocalText').val('');
-
-    return true;
   });
 
+
+});
+
+
+
+  // Redonne l'apparance par default d'une ligne
+  function affichageLigneParDefault() {
+    $('#txtZone').find('span').css('background-color', '')
+  }
 
   /*Permet d'exporter un Projet
   On enregistre toutes les questions et réponses du projet dans le répertoire sélectionné
@@ -151,61 +123,8 @@ $(document).ready(function() {
     }
   });
 
-  //Import d'un projet existant à partir d'un répertoire
-  $('#importProjectBtnId').click(function() {
-    //Permet de sélectionner le répertoire du projet
-    var dir_path = dialog.showOpenDialog({title: 'Sélectionnez le projet', properties: ['openDirectory']})[0];
-    projet = new Projet();
-    var path_split = dir_path.split(path.sep);
-    //On récupère le nom du projet
-    projet.setName(path_split[path_split.length-1]);
-    $("#projectId").val(path_split[path_split.length-1]);
-    $("#reponsesListModal").empty();
-    $("#questionsDivLabelsId").empty();
 
-    let facade = new FacadeController();
-
-    var fs = require('fs');
-
-    //Pour chaque fichier du répertoire
-    fs.readdir(dir_path, (err, files) => {
-      $.each(files, function(i, file){
-        console.log(file);
-        var file_path = path.join(dir_path,file);
-        let blob = null;
-        //On crée une requête xmlhttp pour récupérer le blob du fichier
-        let xhr = new XMLHttpRequest();
-        xhr.open("GET", file_path);
-        xhr.responseType = "blob";
-        xhr.onload = function() {
-          blob = xhr.response;
-          //Puis on importe le qrcode à partir du blob récupéré
-
-          //importQuestionReponse est un callback, il s'agit de la méthode appliquée
-          //par la façade sur le qrcode importé
-          //(cf méthode importQuestionReponse)
-          facade.importQRCode(blob, importQuestionReponse);
-        }
-        xhr.send();
-      });
-    });
-    $("#saveQRCode").attr('disabled', false);
-  });
-
-  //Changement couleur
-  $("#qrColor").on('change', function(){
-    var color = $(this).val();
-    $.each(projet.getQuestions(), function(i, question){
-      question.setColor(color);
-    });
-
-    $.each(projet.getReponses(), function(i, reponse){
-      reponse.setColor(color);
-    });
-  });
-
-});
-
+/*
 
 function addQuestionLine(question){
   var newQuestLine = "<div class='form-control divQuestion' id='" + question.getId() + "' style='margin-top:10px;'>" +
@@ -384,4 +303,123 @@ function lireReponse(button){
   var text_reponse = $("div#" + id_reponse).text();
 
   playTTS(text_reponse)
+}
+*/
+
+var dropZone = document.getElementById('dropZone');
+var txtZone = document.getElementById('txtZone');
+
+var txtDragAndDrop = document.createElement("P");
+
+txtDragAndDrop.setAttribute("id", "txtDragAndDrop");
+txtDragAndDrop.setAttribute("class", "col-sm-7");
+txtDragAndDrop.setAttribute("style", "text-align: center; margin-top: 15%");
+txtDragAndDrop.innerText = "Déposez vos fichiers ici";
+
+txtZone.appendChild(txtDragAndDrop);
+// Ce declenche quand un element entre dans la zone de drop
+dropZone.ondragenter = function(e) {};
+
+// Ce declenche quand un element quitte la zone de drop
+dropZone.ondragleave = function(e) {};
+
+// Ce declenche quand un element se deplace dans la zone de drop
+dropZone.ondragover = function(e) {
+  e.preventDefault();
+};
+
+// Ce declenche quand un element est depose dans la zone de drop
+dropZone.ondrop = function(e) {
+  e.preventDefault();
+
+  txtDragAndDrop.remove();
+
+  let afficherPopUp = false;
+  let nomFichierIdentique = "";
+
+  // Parcours le ou les fichiers drop dans la zone
+  for (let i = 0; i < e.dataTransfer.files.length; i++) {
+    let qrFile = e.dataTransfer.files[i];
+
+    controllerEnsemble.isUnique(qrFile, qrcode => {
+      if (qrcode.getType() != "ensemble") {
+        let words = qrFile.name.split(".");
+        if (!controllerEnsemble.occurenceFichier(words[0])) {
+          genererLigne(words[0]);
+          controllerEnsemble.recuperationQrCodeUnique(qrFile);
+        } else {
+          afficherPopUp = true;
+          nomFichierIdentique += "\t" + words[0] + "\n";
+        }
+      } else {
+        messageInfos("Impossible de mettre un qrcode ensemble dans un qrcode ensemble. Veuillez mettre que des qrcodes uniques", "danger");
+      }
+    });
+
+  }
+
+function setAttributes(el, attrs) {
+  for(var key in attrs) {
+    el.setAttribute(key, attrs[key]);
+  }
+}
+
+function genererLigne(name) {
+  let baliseDiv = document.createElement("DIV");
+  let baliseSpan = document.createElement("SPAN");
+  let textDiv = document.createTextNode(name);
+
+  let baliseButtonDelete = document.createElement("BUTTON");
+  let baliseIDelete = document.createElement("I");
+
+
+  let baliseButtonUp = document.createElement("BUTTON");
+  let baliseIUp = document.createElement("I");
+
+  let baliseButtonDown= document.createElement("BUTTON");
+  let baliseIDown = document.createElement("I");
+
+
+  //fonctionatité bouton delete   &&
+  setAttributes(baliseIDelete, {"class": "fa fa-trash-alt", "height":"8px", "width":"8px"});
+  baliseButtonDelete.addEventListener("click", effacerLigne);
+  baliseButtonDelete.setAttribute("class", "btn btn-outline-success align-self-center legendeQR-close-btn");
+  baliseButtonDelete.setAttribute("padding", "10px 10px");
+  baliseButtonDelete.appendChild(baliseIDelete);
+
+  //fonctinalité bouton up  &&
+  setAttributes(baliseIUp, {"class": "fa fa-arrow-up", "height":"8px", "width":"8px"});
+  baliseButtonUp.setAttribute("class","btn btn-outline-success align-self-center legendeQR-close-btn ");
+  baliseButtonUp.appendChild(baliseIUp);
+  baliseButtonUp.setAttribute("id", name+'Up');
+  baliseButtonUp.addEventListener("click", upItem);
+
+  //fonctinalité bouton down  &&
+  setAttributes(baliseIDown, {"class": "fa fa-arrow-down", "height":"8px", "width":"8px"});
+  baliseButtonDown.setAttribute("class","btn btn-outline-success  ");
+  baliseButtonDown.appendChild(baliseIDown);
+  baliseButtonDown.setAttribute("id", name+'Down');
+  baliseButtonDown.addEventListener("click", downItem);
+
+
+  //fonctionatité nom qrcode
+  baliseSpan.appendChild(textDiv);
+  baliseSpan.setAttribute("style", "white-space: nowrap; padding:5px; font-size:0.7em;");
+  baliseSpan.setAttribute("class", "qrData ");
+  baliseSpan.setAttribute("name", "qrCode");
+
+
+
+  baliseDiv.addEventListener("click", afficherQrCode);
+  baliseDiv.appendChild(baliseSpan);
+  baliseDiv.id = name;
+
+  baliseDiv.appendChild(baliseButtonDelete);
+  baliseDiv.appendChild(baliseButtonUp);
+  baliseDiv.appendChild(baliseButtonDown);
+
+  txtZone.appendChild(baliseDiv);
+
+
+}
 }
