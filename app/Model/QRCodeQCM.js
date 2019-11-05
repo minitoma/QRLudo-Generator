@@ -42,7 +42,6 @@ class ProjetQCM {
     }
   }
 
-
   removeQuestion(){
     //On supprime tout les reponses de la question
     for(let reponse of this.projet.question.qrcode.data) {
@@ -53,7 +52,6 @@ class ProjetQCM {
     this.projet.reponses = [];
     this.projet.question = null;
   }
-
 
   setName(nom) {
     this.projet.nom = nom;
@@ -131,7 +129,6 @@ class QuestionQCM {
     this.qrcode.text = this.qrcode.name;
 
     for(let i=0; i<this.qrcode.data.length; ++i) {
-      console.log("ok");
       this.qrcode.text += " réponse " + (i+1) + " " + this.qrcode.data[i].message + " ";
     }
   }
@@ -167,7 +164,6 @@ class QuestionQCM {
 
   addReponse(reponseUid, message) {
     this.qrcode.data.push({"id": reponseUid, "message":message});
-
 
     this.setText();
   }

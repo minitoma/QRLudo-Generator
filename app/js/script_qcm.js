@@ -268,17 +268,25 @@ function enregistrement(){
 }
 
 function addQuestionLine(question){
-  var newQuestLine = "<div class='form-control divQuestion' id='" + question.getId() + "' style='margin-top:10px;'>" +
-  "<div class='form-group'>" +
-  "<label class='control-label text-left questionNameLabel' id='" + question.getId() + "' style='text-align:left!important; color:black;'>" + question.getName() + "</label>" +
-  "<button class='btn btn-outline-success float-right' id='" + question.getId() + "' onclick='deleteQuestion(this);'><i class='fa fa-trash-alt'></i></button>" +
-  "<button class='btn btn-outline-success float-right' id='" + question.getId() + "' onclick='previewQRCodeQuestion()' onmouseover='afficheInfoBtnQrCode(this,\"question\")' onmouseout='supprimeInfoBtnQrCode(this,\"question\")'><i class='fa fa-qrcode'></i></button>" +
-  "<button class='btn btn-outline-success float-right' id='" + question.getId() + "' onclick='lireQuestion(this);'><i class='fa fa-play'></i></button>"  +
-  "<div class='alert alert-success fade show float' role='alert' id='infoGenererQrCodeQuestion' style='display:none;font-size:14px;'>Ce bouton permet de pré-visualiser le Qr Code de la question</div>" +
-  "</div>" +
-  "<label class='control-label'>Réponse(s)</label>" +
-  "<div class='reponseDiv' id='" + question.getId() + "'>" +
-  "</div>" +
+  var newQuestLine = "" +
+  "<div class='form-control divQuestion' id='" + question.getId() + "' style='margin-top:10px;'>" +
+    "<div class='form-group'>" +
+      "<label class='control-label text-left questionNameLabel' id='" + question.getId() + "' style='text-align:left!important; color:black;'>" + question.getName() + "</label>" +
+      "<button class='btn btn-outline-success float-right' id='" + question.getId() + "' onclick='deleteQuestion();'>" +
+        "<i class='fa fa-trash-alt'></i>" +
+      "</button>" + 
+      "<button class='btn btn-outline-success float-right' id='" + question.getId() + "' onclick='previewQRCodeQuestion();' onmouseover='afficheInfoBtnQrCode(this,\"question\")' onmouseout='supprimeInfoBtnQrCode(this,\"question\")'>" +
+        "<i class='fa fa-qrcode'></i>" +
+      "</button>" +
+      "<button class='btn btn-outline-success float-right' id='" + question.getId() + "' onclick='lireQuestion();'>" +
+        "<i class='fa fa-play'></i>" +
+      "</button>" +
+      "<div class='alert alert-success fade show float' role='alert' id='infoGenererQrCodeQuestion' style='display:none;font-size:14px;'>" +
+        "Ce bouton permet de pré-visualiser le Qr Code de la question" +
+      "</div>" +
+    "</div>" +
+    "<label class='control-label'>Réponse(s)</label>" +
+    "<div class='reponseDiv' id='" + question.getId() + "'></div>" +
   "</div>";
 
   $("#questionsDivLabelsId").append(newQuestLine);
@@ -336,7 +344,7 @@ function supprimeInfoBtnQrCode(button, cible){
 
 
 //Supprimer une question du projet
-function deleteQuestion(button){
+function deleteQuestion(){
   //Suppression dans le store de la question et des réponses alliées
   for(var i = 1 ; i<numReponseQCM+1; i++){
     if(store.get(`reponseQCM${i}`)){
@@ -348,7 +356,7 @@ function deleteQuestion(button){
   numReponseQCM = 0;
   store.delete("questionQCM");
 
-  var id_question = $(button).attr('id');
+  var id_question = projet.getQuestion().getId();
   $("div#" + id_question + '.divQuestion').remove();
 
   projet.removeQuestion();
@@ -466,11 +474,9 @@ function previewQRCode(qrcode, div) {
   facade.genererQRCode(div, qrcode);
 }
 
-function lireQuestion(button){
-  var id_question = $(button).attr('id');
-  //var text_question = $("label#" + id_question + ".questionNameLabel").text();
-
-  var text_question = projet.getQuestion().getText();
+function lireQuestion(){
+  var id_question = projet.getQuestion().getId();
+  var text_question = $("label#" + id_question + ".questionNameLabel").text();
 
   playTTS(text_question);
 }
