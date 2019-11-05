@@ -5,6 +5,11 @@
  */
 
 $().ready(function() {
+
+  enregistrement();
+  store.delete(`numFich`);
+  store.set(`numFich`,numFich);
+
   $("#play-sound-div").hide();
 
 
@@ -38,6 +43,22 @@ $().ready(function() {
       $('#qrName').val('');
       $(txtZone).empty();
       txtZone.appendChild(txtDragAndDrop);
+
+      //Permet la suppression des elements du store créé dans le script_ensemble
+      if(store.get(`numFich`)){
+        store.delete(`numFich`);
+      }
+
+      //vérifier si un enregistrement du titre existe
+      if(store.get(`titreEnsemble`)){
+        store.delete(`titreEnsemble`);
+      }
+
+      for(var i =0; i < numFich; i++){
+        if(store.get(`fichierDrop${i}`)){
+          store.delete(`fichierDrop${i}`);
+        }
+      }
     //});
   }
   $("#empty").click(viderZone);
@@ -78,6 +99,8 @@ dropZone.ondragover = function(e) {
 dropZone.ondrop = function(e) {
   e.preventDefault();
 
+  console.log(e);
+
   txtDragAndDrop.remove();
 
   let afficherPopUp = false;
@@ -92,6 +115,9 @@ dropZone.ondrop = function(e) {
         let words = qrFile.name.split(".");
         if (!controllerEnsemble.occurenceFichier(words[0])) {
           genererLigne(words[0]);
+          store.set(`fichierDrop${numFich}`,words[0]);
+          numFich ++;
+          store.set(`numFich`,numFich);
           controllerEnsemble.recuperationQrCodeUnique(qrFile);
         } else {
           afficherPopUp = true;
@@ -110,6 +136,27 @@ dropZone.ondrop = function(e) {
   }
   activer_button();
 };
+
+//permet la continuité entre les onflet spécifiquement pour l'onglet ensemble
+function enregistrement(){
+
+  if(store.get(`numFich`)){
+    numFich = store.get(`numFich`);
+  }
+
+  //vérifier si un enregistrement du titre existe
+  if(store.get(`titreEnsemble`)){
+    $('#qrName').val(store.get(`titreEnsemble`));
+  }
+
+  for(var i =0; i < numFich; i++){
+    if(store.get(`fichierDrop${i}`)){
+      genererLigne(store.get(`fichierDrop${i}`));
+      //controllerEnsemble.recuperationQrCodeUnique(qrFile);
+    }
+  }
+}
+
 
 
 function setAttributes(el, attrs) {
@@ -209,6 +256,10 @@ function afficherQrCode(e) {
 
 // Supprime une ligne dans la zone de drop
 function effacerLigne() {
+
+  /*numFich--;
+  store.set(`numFich`,numFich);*/
+
   let id = this.parentNode.id;
   // let qrCodeTmp = [];
 
@@ -237,6 +288,11 @@ function affichageLigneParDefault() {
 
 // Active le button vider et generer apres avoir donne un nom au qrCode
 function activer_button() {
+  //Permet l'enregistrement du titre dans le store
+  store.delete(`titreEnsemble`);
+  var titre = document.getElementById('qrName').value;
+  store.set(`titreEnsemble`, titre);
+
   if (document.getElementById('qrName').value.length > 0) {
     $('#preview ,#empty').attr('disabled', false);
   }
