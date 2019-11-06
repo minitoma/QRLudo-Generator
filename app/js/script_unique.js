@@ -349,9 +349,10 @@ function getMusicFromUrl() {
 
       if (this.status == 200) {
         let blob = this.response; // get binary data as a response
-        let contentType = xhr.getResponseHeader("content-type");
-
-        if (contentType == 'audio/mpeg') {
+        let contentType = xhr.getResponseHeader("content-type");        
+        console.log(contentType);
+        
+        if (contentType == 'audio/mpeg' || contentType == 'audio/mp3') {
           // get filename
           let filename = xhr.getResponseHeader("content-disposition").split(";")[1];
           filename = filename.replace('filename="', '');
