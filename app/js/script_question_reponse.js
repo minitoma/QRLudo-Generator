@@ -4,7 +4,7 @@
  * 2019
  */
 
-var projet = new ProjetQCM();
+var projet = new Projet();
 
 nombre_question=0;
 
@@ -76,7 +76,7 @@ $(document).ready(function() {
 
         addReponseLine(new_rep);
 
-        console.log(new_rep_vocal);
+      //  console.log(new_rep_vocal);
         console.log(projet.getQuestion());
         console.log("--------------------");
         console.log(projet.getReponses());
@@ -95,6 +95,8 @@ $(document).ready(function() {
     $('#qrView').show();
 
     let question= $('#newQuestionText').val();
+    let bonneReponse = $('#newBonneReponsenText').val();
+    let mauvaiseReponse = $('#newMauvaiseReponseText').val();
     let qrColor = $('#qrColor').val();
     let qrData = [];
 
@@ -103,10 +105,10 @@ $(document).ready(function() {
       alert("champ question vide");
           return; // si le champ est vide on sort
     }
-    qrData.push($("#newMauvaiseReponseText").val());
-    qrData.push($("#newBonneReponsenText").val());
+    //qrData.push($("#newMauvaiseReponseText").val());
+    //qrData.push($("#newBonneReponsenText").val());
 
-    let nouvQuestion = new Question (question,qrData , $("#qrColor").val());
+    let nouvQuestion = new Question (question,bonneReponse,mauvaiseReponse, qrData , $("#qrColor").val());
     projet.setQuestion(nouvQuestion);
 
     //addQuestionLine(nouvQuestion);
@@ -139,7 +141,6 @@ function addReponseLine(reponse){
   "<label>" + reponse.getName() + "&nbsp&nbsp</label>" +
   "<em style='color:gray'>" + infos_rep.message + "</em>" +
   "<button class='btn btn-outline-success float-right' id='" + reponse.getId() + "' onclick='deleteReponse(this);'><i class='fa fa-trash-alt'></i></button>" +
-  "<button class='btn btn-outline-success float-right' id='" + reponse.getId() + "' onclick='previewQRCodeReponse(this)' onmouseover='afficheInfoBtnQrCode(this,\"reponse\")' onmouseout='supprimeInfoBtnQrCode(this,\"reponse\")'><i class='fa fa-qrcode'></i></button>" +
   "<button class='btn btn-outline-success float-right' id='" + reponse.getId() + "' onclick='lireReponse(this);'><i class='fa fa-play'></i></button>" +
   "<div class='alert alert-success fade show float' role='alert' id='infoGenererQrCodeReponse" + reponse.getId() +"' style='display:none;font-size:15px;'>Ce bouton permet de pré-visualiser le Qr Code de la réponse</div>" +
   "</li>" +
@@ -204,78 +205,79 @@ function effacerLigne() {
   // Ce declenche quand un element est depose dans la zone de drop
   dropZone.ondrop = function(e) {
     e.preventDefault();
-
-    txtDragAndDrop.remove();
-
-    let afficherPopUp = false;
-    let nomFichierIdentique = "";
+    //On verifie qu'il y a une question de créée
+    if (projet.getQuestion() == null) {
+      alert ("pas de question");
+      return ;
+    }
+    else {
+      txtDragAndDrop.remove();
+    }
 
     // Parcours le ou les fichiers drop dans la zone
     for (let i = 0; i < e.dataTransfer.files.length; i++) {
       let qrFile = e.dataTransfer.files[i];
 
-      controllerEnsemble.isUnique(qrFile, qrcode => {
-        if (qrcode.getType() != "ensemble") {
-          let words = qrFile.name.split(".");
-          if (!controllerEnsemble.occurenceFichier(words[0])) {
-            genererLigne(words[0]);
-            controllerEnsemble.recuperationQrCodeUnique(qrFile);
-          } else {
-            afficherPopUp = true;
-            nomFichierIdentique += "\t" + words[0] + "\n";
+
+      //console.log(qrFile);
+      //var new_rep = new Reponse(identifiant, $("#qrColor").val());
+      //var new_rep_vocal = reponseVocale;
+
+      facade =  new FacadeController();
+      facade.importQRCode(qrFile, qrCode =>{
+        if (qrCode.getType() == 'xl' || qrCode.getType() == 'unique' || qrCode.getType() == 'reponse'){
+          let qrId = qrCode.getId();
+          let qrData = qrCode.getData();
+          let qrName = qrCode.getName();
+
+          console.log(qrId);
+          console.log( qrData);
+
+          var new_rep = new Reponse(qrName, $("#qrColor").val()); // cretation d'une nouvelle reponse
+          new_rep.setId(qrId);        // changemnt de l'id de la nouvelle reponse avec l'id du qr imprté
+          new_rep.setData(qrData);
+          var new_rep_vocal = qrData;
+
+          //sortir de la fonction si la reponse existe déjà pour la question
+          let existe = false;
+          $.each(projet.getReponses(), function(i, val) {
+            if (projet.getReponseById(val.getId()).getName() === qrName){
+              existe = true;
+            }
+          });
+          if (existe){
+            alert ("reponse exite deja");
+            return ;
           }
-        } else {
-          messageInfos("Impossible de mettre un qrcode ensemble dans un qrcode ensemble. Veuillez mettre que des qrcodes uniques", "danger");
+
+          //Ajouter au projet et à la question la nouvelle réponse
+          projet.addReponse(new_rep);
+          //console.log('id='+new_rep.getId() );
+
+          projet.getQuestion().addReponse( (new_rep.getId() ), new_rep_vocal);
+          //console.log(projet.getQuestion());
+
+          addReponseLine(new_rep);
+
+        //  console.log(new_rep_vocal);
+          console.log(projet.getQuestion());
+          console.log("--------------------");
+          console.log(projet.getReponses());
+          console.log("--------------------");
+          console.log(projet.getQuestion().getReponses());
+
         }
-      });
+        else
+          alert("mauvais format de qr Code");
+
+
+     });
+
 
     }
 
   };
 
-  function setAttributes(el, attrs) {
-    for(var key in attrs) {
-      el.setAttribute(key, attrs[key]);
-    }
-  }
-
-  /*
-   * Genere une ligne dans la zone de drop en fonction des fichiers drop dans la zone
-   * Chaque ligne est clickable pour affichier le qrCode unique
-   * Chaque ligne a un bouton pour supprimer la ligne
-   */
-  function genererLigne(name) {
-    let baliseDiv = document.createElement("DIV");
-    let baliseSpan = document.createElement("SPAN");
-    let textDiv = document.createTextNode(name);
-
-    let baliseButtonDelete = document.createElement("BUTTON");
-    let baliseIDelete = document.createElement("I");
-
-
-    //fonctionatité bouton delete   &&
-    setAttributes(baliseIDelete, {"class": "fa fa-trash-alt", "height":"8px", "width":"8px"});
-    baliseButtonDelete.addEventListener("click", effacerLigne);
-    baliseButtonDelete.setAttribute("class", "btn btn-outline-success align-self-center legendeQR-close-btn");
-    baliseButtonDelete.setAttribute("padding", "10px 10px");
-    baliseButtonDelete.appendChild(baliseIDelete);
-
-    //fonctionatité nom qrcode
-    baliseSpan.appendChild(textDiv);
-    baliseSpan.setAttribute("style", "white-space: nowrap; padding:5px; font-size:0.7em;");
-    baliseSpan.setAttribute("class", "qrData ");
-    baliseSpan.setAttribute("name", "qrCode");
-
-    baliseDiv.addEventListener("click", afficherQrCode);
-    baliseDiv.appendChild(baliseSpan);
-    baliseDiv.id = name;
-
-    baliseDiv.appendChild(baliseButtonDelete);
-
-    //txtZone.appendChild(baliseDiv);
-    $("#cible").append(baliseDiv);
-
-  }
 
   // Affiche le qrCode unique lie à la ligne cliquable
   function afficherQrCode(e) {
@@ -342,6 +344,10 @@ function deleteReponse(button){
 
   projet.removeReponse(id_reponse);
   $("div#" + id_reponse).remove();
+
+  console.log(projet.getQuestion());
+  console.log("--------------------");
+
 }
 
 

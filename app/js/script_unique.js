@@ -214,8 +214,10 @@ $('#preview').click(e => {
   // Generate in a div, the qrcode image for qrcode object
   let div = $('#qrView')[0];
 
+  let newQrUnique = new QRCodeUnique(qrName, qrData, qrColor);
+  console.log(newQrUnique);
   previewQRCode(qrName, qrData, qrColor, div);
-
+  //console.log();
   $('#annuler').attr('disabled', false);
 });
 

@@ -10,18 +10,28 @@
  * 2018
  **/
 
+ /**
+  * BAH Marouwane
+  * 2019
+**/
+
+
 /*
  *Classe permettant de creer un projet de questions_reponses
  */
 class Projet {
   //Constructeur d'un Projet
-  constructor(nom = "No_Name", questions = [], reponses = []) {
+  constructor(nom = "No_Name", questions = null, reponses = []) {
     this.projet = {
       id: new Date().getTime(),
       nom: nom,
       questions: questions,
       reponses: reponses
     };
+  }
+
+  setQuestion(question) {
+    this.projet.question = question;
   }
 
   addQuestion(question) {
@@ -33,11 +43,17 @@ class Projet {
   }
 
   removeReponse(reponseId){
+    //On supprime la reponse du projet
     for(let reponse of this.projet.reponses){
       if(reponse.qrcode.id == reponseId){
         var index = this.projet.reponses.indexOf(reponse);
         this.projet.reponses.splice(index, 1);
       }
+    }
+
+    //On supprime aussi la reponse dans la question
+    if(this.projet.question != null) {
+      this.projet.question.removeReponse(reponseId);
     }
   }
 
@@ -74,8 +90,9 @@ class Projet {
     return this.projet.nom;
   }
 
-  getQuestions() {
-    return this.projet.questions;
+
+  getQuestion() {
+    return this.projet.question;
   }
 
   getReponses() {
@@ -127,13 +144,15 @@ class Projet {
  */
 class Question {
   //Constructeur d'une Question
-  constructor(title, reponsesUIDs = [], color = '#000000') {
+  constructor(title, bonneReponse, mauvaiseReponse, reponsesUIDs = [], color = '#000000') {
     this.qrcode = {
       id: new Date().getTime(),
       name: title,
       data: reponsesUIDs,
       type: "question",
-      color: color
+      color: color,
+      text_bonne_reponse: bonneReponse,
+      text_mauvaise_reponse: mauvaiseReponse
     };
   }
 
@@ -227,13 +246,20 @@ class Reponse {
       id: new Date().getTime(),
       name: name,
       data: [],
-      type: "reponse",
+      type: "reponse",         //reponse ou unique  (meme chose)
       color: color
     };
   }
 
   setId(id) {
     this.qrcode.id = id;
+  }
+
+  setData(data) {
+      for ( var i=0; i<= data.length; ++i){
+        this.qrcode.data=data[i];
+      }
+
   }
 
   getId() {
