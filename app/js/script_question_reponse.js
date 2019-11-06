@@ -92,7 +92,8 @@ $(document).ready(function() {
 //fonction pour e
   $("#preview").click(function() {
 
-    $('#qrView').show();
+
+    $("#ajoutNewReponse").attr('disabled', false);
 
     let question= $('#newQuestionText').val();
     let bonneReponse = $('#newBonneReponsenText').val();
@@ -102,18 +103,26 @@ $(document).ready(function() {
 
     //On verifie si le texte de la question n'est pas vide
     if (question=== ""){
-      alert("champ question vide");
+      alert("Veuillez saisir une Question d'abord");
           return; // si le champ est vide on sort
     }
-    //qrData.push($("#newMauvaiseReponseText").val());
-    //qrData.push($("#newBonneReponsenText").val());
+    else if (bonneReponse=== ""){
+      alert("Veuillez saisir le message de bonne réponse à la  question");
+          return; // si le champ est vide on sort
+    }
+    else if (mauvaiseReponse=== ""){
+      alert("Veuillez saisir le message de mauvaise  réponse à la question");
+          return; // si le champ est vide on sort
+    }
+    else {
+      let nouvQuestion = new Question (question,bonneReponse,mauvaiseReponse, qrData , $("#qrColor").val());
+      projet.setQuestion(nouvQuestion);
 
-    let nouvQuestion = new Question (question,bonneReponse,mauvaiseReponse, qrData , $("#qrColor").val());
-    projet.setQuestion(nouvQuestion);
-
-    //addQuestionLine(nouvQuestion);
-    var questions = projet.getQuestion();
-    previewQRCode(questions, $('#qrView')[0]);
+      //addQuestionLine(nouvQuestion);
+      var questions = projet.getQuestion();
+      previewQRCode(questions, $('#qrView')[0]);
+      $('#qrView').show();
+    }
   });
 
 
@@ -124,7 +133,7 @@ $(document).ready(function() {
     if (popUpQuiter==true){
       $('#qrView').hide();
       $('#saveQRCode').attr('disabled', true);
-      $('#preview').attr('disabled', true);
+      $("#ajoutNewReponse").attr('disabled', true);
       viderZone();
     }
   });
