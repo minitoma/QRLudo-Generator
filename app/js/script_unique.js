@@ -23,9 +23,7 @@ var menu = new Menu();
 $(document).ready(function() {
 
   //appel à la focntion qui permet de lire les enregistrement
-  enregistrement();
-  store.delete(`numTextArea`)
-  store.set(`numTextArea`,numTextArea);
+  chargement();
 
   //Use to implement information on the audio import
   var info = document.createElement('div'); // balise div : contain html information
@@ -139,28 +137,38 @@ $(document).ready(function() {
     // cache le qr générer & desactivation du bouton exporter
     var popUpQuiter = confirm("Etes vous sûr de vouloir réinitialiser?");
     if (popUpQuiter==true){
-      numTextArea = 1;
+
     //Les différents store sont clean ici
       if(store.get(`titreUnique`)){
         store.delete(`titreUnique`);
         $("#qrName").val("");
       }
 
+      //implémentation des différentes zones de txt enregistrées
+      for(var i = 1; i<=numTextArea; i++){
+        if (store.get(`textZone${i}`)){
+          store.delete(`textZone${i}`);
+        }
+      }
+
+      //On parcours le store pour afficher les texte enregistré dans les zones correspondantes
+      for(var i = 1; i<=numTextArea; i++){
+        if (store.get(`text${i}`)){
+          store.delete(`text${i}`);
+        }
+      }
+
+      store.delete("numTextArea");
+      numTextArea = 0;
+      store.delete("numTextAreaCourant")
+      numTextAreaCourant = 0;
+
       let a = $('#legendeTextarea');
       $.each($(".qrData"), function(i, val) {
-
         $(`#textarea${i}`).val("");
-        if (store.get(`text${i+1}`)){
-          store.delete(`text${i+1}`);
-        }
-
         $("#cible").empty();
-        if (store.get(`textZone${i+2}`)){
-          store.delete(`textZone${i+2}`);
-        }
-
-
       });
+
       $("#cible").append(a);
       $(a).children('button').attr('disabled', true);
 
@@ -221,38 +229,50 @@ $('#preview').click(e => {
 
 
 //Fonction permettant la continuité entre les onglet avec la gestion de l'objet store
-function enregistrement(){
+function chargement(){
 
-  if(store.size > 0){
+  //nombre de zone texte courant
+  if(store.get(`numTextAreaCourant`))
+    numTextArea = store.get(`numTextAreaCourant`);
+  else
+    store.set(`numTextAreaCourant`,numTextAreaCourant);
 
-    //Le nombre de zone texte mis à jour en fonction de ce qui a été enregistré précédement
+  //On désactive le bouton de rejout de champtexte qi le nombre est superieur à celui recommandé
+  if(numTextAreaCourant > 2)
+    $("#ajouterTexte").attr('disabled', true);
+
+  //indice des zone texte presente, peut etre superieur au zone texte presente
+  if(store.get(`numTextArea`))
     numTextArea = store.get(`numTextArea`);
+  else
+    store.set(`numTextArea`,numTextArea);
 
-    if(store.get(`titreUnique`)){
-      $('#qrName').val(store.get(`titreUnique`));
-    }
+  if(store.get(`titreUnique`)){
+    $('#qrName').val(store.get(`titreUnique`));
+  }
 
-    //implémentation des différentes zones de txt enregistrées
-    for(var i = 2; i<=numTextArea; i++){
-      if (store.get(`textZone${i}`)){
-        var text = document.createElement('div');
-        text.innerHTML = store.get(`textZone${i}`);
-        text.setAttribute("class", "d-flex align-items-start legendeQR");
-        text.setAttribute("id", "legendeTextarea");
-        $('#cible').append(text);
-      }
-    }
-
-    //On parcours le store pour afficher les texte enregistré dans les zones correspondantes
-    for(var i = 1; i<=numTextArea; i++){
-      if (store.get(`text${i}`)){
-        $('#textarea'+(i)).val(store.get(`text${i}`));
-      }
+  //implémentation des différentes zones de txt enregistrées
+  for(var i = 1; i<=numTextArea; i++){
+    if (store.get(`textZone${i}`)){
+      var text = document.createElement('div');
+      text.innerHTML = store.get(`textZone${i}`);
+      text.setAttribute("class", "d-flex align-items-start legendeQR");
+      text.setAttribute("id", "legendeTextarea");
+      $('#cible').append(text);
     }
   }
 
+  //On parcours le store pour afficher les texte enregistré dans les zones correspondantes
+  for(var i = 1; i<=numTextArea; i++){
+    if (store.get(`text${i}`)){
+      $('#textarea'+(i)).val(store.get(`text${i}`));
+    }
+  }
 
-  return null;
+  //insertion du premier champ Texte
+  if(numTextAreaCourant == 0 && numTextArea == 0){
+    ajouterChampLegende();
+  }
 }
 
 // form validation return true if all fields are filled
@@ -425,7 +445,6 @@ function ajouterChampLegende(valeur = "") {
   store.delete(`numTextArea`);
   numTextArea++; // Nouveau numero pour le prochain textarea
   store.set(`numTextArea`,numTextArea);
-  //console.log(numTextArea);
 
   var textareaLegende = document.createElement('div');
   textareaLegende.innerHTML = `<i class='fa fa-play align-self-center icon-player'></i><i class="fa fa-pause align-self-center icon-player"></i>
@@ -433,9 +452,9 @@ function ajouterChampLegende(valeur = "") {
     <button type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='supprimerChampLegende(this, ${numTextArea});'>
     <div class="inline-block">
       <i class='fa fa-trash-alt'></i></button>
-      <button type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='moveUp(this);'>
+      <button type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='moveUp(this, ${numTextArea});'>
       <i class='fa fa-arrow-up'></i></button>
-      <button type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='moveDown(this);'>
+      <button type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='moveDown(this, ${numTextArea});'>
       <i class='fa fa-arrow-down'></i></button>`;
   textareaLegende.setAttribute("class", "d-flex align-items-start legendeQR");
   textareaLegende.setAttribute("id", "legendeTextarea");
@@ -449,10 +468,12 @@ function ajouterChampLegende(valeur = "") {
     $('#ajouterTexte').attr('disabled', true);
   }
 
+  //Permet d'enregistrer l'ajour de case texte
+  store.set(`textZone${numTextArea}`,textareaLegende.innerHTML);
 
-
-    //Permet d'enregistrer l'ajour de case texte
-    store.set(`textZone${numTextArea}`,textareaLegende.innerHTML);
+  store.delete(`numTextAreaCourant`);
+  numTextAreaCourant++; // Nouveau numero pour le prochain textarea
+  store.set(`numTextAreaCourant`,numTextAreaCourant);
 
 }
 
@@ -470,26 +491,20 @@ function verifNombreCaractere(num) {
   }
 }
 
-//veriefie le nmbr de caractère pour la zone de texte par defaut
-function verifNombreCaractere1() {
-  //Permet l'enregistrement du text dans le store
-  store.delete(`text1`);
-  var txt = document.getElementById('textarea1').value;
-  store.set(`text1`, txt);
-
-
-  $('#messages').empty();
-  if(document.getElementById('textarea1').value.length >= $('#textarea1').attr('maxlength')) {
-    messageInfos("La limite de caractère est atteinte (255 caractères)","warning");
-  }
-}
-
 //supprimeun le textarea correspondant au numText
 function supprimerChampLegende(e, numText) {
-  store.delete(`numTextArea`);
-  numTextArea--;
+
+  store.delete(`numTextAreaCourant`);
+  numTextAreaCourant--; // Nouveau numero pour le prochain textarea
+  store.set(`numTextAreaCourant`,numTextAreaCourant);
+
+  if(numTextAreaCourant == 0){
+    store.delete(`numTextArea`);
+    numTextArea = 0; // Nouveau numero pour le prochain textarea
+    store.set(`numTextArea`,numTextArea);
+  }
+
   //suppression dans le store de la zone de txt correspondante
-  store.set(`numTextArea`,numTextArea);
   store.delete(`text`+numText);
   store.delete(`textZone`+numText);
 
@@ -530,22 +545,42 @@ function supprimerChampSon(e) {
 }
 
 // déplacer au dessus du champ précédent
-function moveUp(e) {
+function moveUp(e, numTxt) {
   let prev = $(e).parents('.legendeQR').prev();
   let div = $(e).parents('.legendeQR');
 
+  let divVal = $(e).parents('.legendeQR').children('textarea').val();
+  let prevVal = $(e).parents('.legendeQR').prev().children('textarea').val()
+
   if (prev.length > 0) {
+
+    for(var i = 1; i<numTextArea+1; i++){
+      if(store.get("text"+i) == prevVal)
+        store.set("text"+i,divVal);
+    }
+    store.set("text"+numTxt,prevVal);
+
     div.remove();
     div.insertBefore(prev);
   }
 }
 
 // déplacer en dessous du champ suivant
-function moveDown(e) {
+function moveDown(e,numTxt) {
   let next = $(e).parents('.legendeQR').next();
   let div = $(e).parents('.legendeQR');
 
+  let divVal = $(e).parents('.legendeQR').children('textarea').val();
+  let nextVal = $(e).parents('.legendeQR').next().children('textarea').val();
+
   if (next.length > 0) {
+
+    for(var i = 1; i<numTextArea+1; i++){
+      if(store.get("text"+i) == nextVal)
+        store.set("text"+i,divVal);
+    }
+    store.set("text"+numTxt,nextVal);
+
     div.remove();
     div.insertAfter(next);
   }
