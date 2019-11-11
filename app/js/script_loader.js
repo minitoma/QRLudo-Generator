@@ -15,6 +15,9 @@ numTextArea = 1;
 //nombre de fichier ajouté dans l'onglet ensemble
 numFich = 0;
 
+//nombre de reponse soumises à la question dans l'onglet QCM
+numReponseQCM = 0;
+
 
 const path = require('path');
 const root = path.dirname(require.main.filename);

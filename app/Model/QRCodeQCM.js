@@ -28,6 +28,7 @@ class ProjetQCM {
   }
 
   removeReponse(reponseId){
+    //On supprime la reponse du projet
     for(let reponse of this.projet.reponses){
       if(reponse.qrcode.id == reponseId){
         var index = this.projet.reponses.indexOf(reponse);
@@ -41,17 +42,16 @@ class ProjetQCM {
     }
   }
 
-
-  removeQuestion(questionId){
+  removeQuestion(){
     //On supprime tout les reponses de la question
     for(let reponse of this.projet.question.qrcode.data) {
-      this.removeReponse(reponse.id);
+      this.projet.question.removeReponse(reponse.id);
     }
 
-    //Ensuite on supprime la question
+    //On supprime la question et les reponses du projet
+    this.projet.reponses = [];
     this.projet.question = null;
   }
-
 
   setName(nom) {
     this.projet.nom = nom;
@@ -98,7 +98,10 @@ class QuestionQCM {
       name: title,
       data: reponsesUIDs,
       type: "questionQCM",
-      color: color
+      color: color,
+      text: "",
+      text_bonne_reponse: "Bonne réponse",
+      text_mauvaise_reponse: "Mauvaise réponse"
     };
   }
 
@@ -116,6 +119,18 @@ class QuestionQCM {
 
   setName(name){
     this.qrcode.name = name;
+  }
+
+  getText(){
+    return this.qrcode.text;
+  }
+
+  setText(){
+    this.qrcode.text = this.qrcode.name;
+
+    for(let i=0; i<this.qrcode.data.length; ++i) {
+      this.qrcode.text += " réponse " + (i+1) + " " + this.qrcode.data[i].message + " ";
+    }
   }
 
   getReponses() {
@@ -149,6 +164,8 @@ class QuestionQCM {
 
   addReponse(reponseUid, message) {
     this.qrcode.data.push({"id": reponseUid, "message":message});
+
+    this.setText();
   }
 
   removeReponse(reponseUid){
@@ -158,6 +175,8 @@ class QuestionQCM {
         this.qrcode.data.splice(index, 1);
       }
     }
+
+    this.setText();
   }
 
   getDataString() {
@@ -170,13 +189,14 @@ class QuestionQCM {
  */
 class ReponseQCM {
   //Constructeur d'une Reponse
-  constructor(name, color = '#000000') {
+  constructor(name, isAnswer, color = '#000000') {
     this.qrcode = {
       id: new Date().getTime(),
       name: name,
       data: [],
       type: "reponseQCM",
-      color: color
+      color: color,
+      isAnswer: isAnswer
     };
   }
 
@@ -194,6 +214,10 @@ class ReponseQCM {
 
   getColor() {
     return this.qrcode.color;
+  }
+
+  getIsAnswer() {
+      return this.qrcode.isAnswer;
   }
 
   setColor(color){

@@ -8,9 +8,12 @@
 var projet = new ProjetQCM();
 
 $(document).ready(function() {
+
+  enregistrement();
+  store.delete(`numReponseQCM`);
+  store.set(`numReponseQCM`,numReponseQCM);
+
   $("#play-sound-div").hide();
-
-
 
   //Ajout d'une nouvelle question
   $("#addNewQuesBtnId").click(function() {
@@ -43,6 +46,7 @@ $(document).ready(function() {
     $("#messageReponseVideError").hide();
     $("#messageRetourVocalVideError").hide();
     $("#messageReponseExistError").hide();
+    $("#messageReponseMaxError").hide();
 
     //On verifie qu'il y a une question de créée
     if (projet.getQuestion() == null) {
@@ -50,10 +54,16 @@ $(document).ready(function() {
       return false;
     }
 
+    //On verifie la condition "4 reponses maximum"
+    if(projet.getReponses().length >= 4) {
+      $("#messageReponseMaxError").show();
+      return false;
+    }
+
     //On verifie que le texte de la reponse n'est pas vide
     if ($('#newReponseText').val() === ""){
       $("#messageReponseVideError").show();
-      return false; // si le champ est vide on sort
+      return false;
     }
 
     //On verifie que le texte du retour vocal n'est pas vide
@@ -62,8 +72,17 @@ $(document).ready(function() {
       return false;
     }
 
+    let isAnswer = false;
+    if($("#isBonneRepCheckBox").is(":checked")) {
+      isAnswer = true;
+    }
 
-    var new_rep = new ReponseQCM($('#newReponseText').val(), $("#qrColor").val());
+    //Si il y a trois reponses et aucune n'est une bonne reponse, alors on force la 4eme et derniere reponse à etre la reponse correct
+    if(projet.getReponses().length == 3 && !isReponseOk()) {
+      isAnswer = true;
+    }
+
+    var new_rep = new ReponseQCM($('#newReponseText').val(),isAnswer,$("#qrColor").val());
     var new_rep_vocal = $('#newReponseVocalText').val();
 
     //sortir de la fonction si la reponse existe déjà pour la question
@@ -84,15 +103,31 @@ $(document).ready(function() {
     projet.getQuestion().addReponse(new_rep.getId(), new_rep_vocal);
 
 
-    addReponseLine(new_rep);
+    //On gère la continuité sur l'ajour d'une reponse
+    var infos_rep = projet.getQuestion().getReponseById(new_rep.getId());
+
+    store.delete("numReponseQCM");
+    numReponseQCM ++;
+    store.set("numReponseQCM",numReponseQCM);
+    store.set(`reponseQCM${numReponseQCM}`,new_rep.getName());
+    store.set(`reponseMessageQCM${numReponseQCM}`,infos_rep.message);
+    store.set(`reponseQCMisAnswer${numReponseQCM}`,new_rep.getIsAnswer());
+
+    addReponseLine(new_rep, numReponseQCM);
 
 
+    console.log("----->DEBUG<-------");
     console.log(projet.getQuestion());
-    console.log("--------------------");
+    console.log("-------------------");
     console.log(projet.getReponses());
-    console.log("--------------------");
-    console.log(projet.getQuestion().getReponses());
+    console.log("----->FIN<--------\n");
 
+
+    //Si la reponse est la bonne et qu'elle a été ajouté dans erreurs alors on decoche la checkbox et on la cache (une seule reponse est possible)
+    if(isAnswer) {
+      $("#isBonneRepCheckBox").prop("checked", false);
+      $("#bonneRepCheckBox").hide();
+    }
 
     //Suppression des données dans les champs de tests pour ecrire une nouvelle reponses
     $('#newReponseText').val('');
@@ -100,7 +135,6 @@ $(document).ready(function() {
 
     return true;
   });
-
 
   /*Permet d'exporter un Projet
   On enregistre la questions et les réponses du projet dans le répertoire sélectionné
@@ -140,9 +174,7 @@ $(document).ready(function() {
   });
 
   //Import d'un projet existant à partir d'un répertoire
-  $('#importProjectBtnId').click(function() {
-
-
+  $('#importProjectBtnId').click(function(){
     //Permet de sélectionner le répertoire du projet
     var dir_path = dialog.showOpenDialog({title: 'Sélectionnez le projet', properties: ['openDirectory']})[0];
     projet = new ProjetQCM();
@@ -150,6 +182,7 @@ $(document).ready(function() {
     //On récupère le nom du projet
     projet.setName(path_split[path_split.length-1]);
     $("#projectId").val(path_split[path_split.length-1]);
+    store.set("titreQCM",$("#projectId").val());
     $("#reponsesListModal").empty();
     $("#questionsDivLabelsId").empty();
 
@@ -194,35 +227,87 @@ $(document).ready(function() {
       reponse.setColor(color);
     });
   });
-
 });
 
+//Permet de gérer la continuité dans l'application au chargement du script
+function enregistrement(){
+
+  if(store.get(`numReponseQCM`)){
+    numReponseQCM = store.get(`numReponseQCM`);
+  }
+
+  //verification pour le titre
+  if(store.get("titreQCM")){
+    projet.setName(store.get("titreQCM"));
+    $("#projectId").val(store.get("titreQCM"));
+  }
+
+  if(store.get("questionQCM")){
+    $("#addNewQuesBtnId").hide();
+  }
+
+  //verification pour la présence d'une // QUESTION:
+  if(store.get("questionQCM")){
+    let nouvques = new QuestionQCM(store.get("questionQCM"), [], $("#qrColor").val());
+    projet.setQuestion(nouvques);
+
+    addQuestionLine(nouvques);
+
+    $("#addNewQuesBtnId").hide();
+  }
+
+  for(var i = 1 ; i<numReponseQCM+1; i++){
+    if(store.get(`reponseQCM${i}`)){
+      var new_rep = new ReponseQCM(store.get(`reponseQCM${i}`),store.get(`reponseQCMisAnswer${i}`),$("#qrColor").val());
+
+      projet.addReponse(new_rep);
+      projet.getQuestion().addReponse(new_rep.getId(), store.get(`reponseMessageQCM${i}`));
+      addReponseLine(new_rep, i);
+    }
+  }
+}
+
 function addQuestionLine(question){
-  var newQuestLine = "<div class='form-control divQuestion' id='" + question.getId() + "' style='margin-top:10px;'>" +
-  "<div class='form-group'>" +
-  "<label class='control-label text-left questionNameLabel' id='" + question.getId() + "' style='text-align:left!important; color:black;'>" + question.getName() + "</label>" +
-  "<button class='btn btn-outline-success float-right' id='" + question.getId() + "' onclick='deleteQuestion(this);'><i class='fa fa-trash-alt'></i></button>" +
-  "<button class='btn btn-outline-success float-right' id='" + question.getId() + "' onclick='previewQRCodeQuestion()' onmouseover='afficheInfoBtnQrCode(this,\"question\")' onmouseout='supprimeInfoBtnQrCode(this,\"question\")'><i class='fa fa-qrcode'></i></button>" +
-  "<button class='btn btn-outline-success float-right' id='" + question.getId() + "' onclick='lireQuestion(this);'><i class='fa fa-play'></i></button>"  +
-  "<div class='alert alert-success fade show float' role='alert' id='infoGenererQrCodeQuestion' style='display:none;font-size:14px;'>Ce bouton permet de pré-visualiser le Qr Code de la question</div>" +
-  "</div>" +
-  "<label class='control-label'>Réponse(s)</label>" +
-  "<div class='reponseDiv' id='" + question.getId() + "'>" +
-  "</div>" +
+  var newQuestLine = "" +
+  "<div class='form-control divQuestion' id='" + question.getId() + "' style='margin-top:10px;'>" +
+    "<div class='form-group'>" +
+      "<label class='control-label text-left questionNameLabel' id='" + question.getId() + "' style='text-align:left!important; color:black;'>" + question.getName() + "</label>" +
+      "<button class='btn btn-outline-success float-right' id='" + question.getId() + "' onclick='deleteQuestion();'>" +
+        "<i class='fa fa-trash-alt'></i>" +
+      "</button>" + 
+      "<button class='btn btn-outline-success float-right' id='" + question.getId() + "' onclick='previewQRCodeQuestion();' onmouseover='afficheInfoBtnQrCode(this,\"question\")' onmouseout='supprimeInfoBtnQrCode(this,\"question\")'>" +
+        "<i class='fa fa-qrcode'></i>" +
+      "</button>" +
+      "<button class='btn btn-outline-success float-right' id='" + question.getId() + "' onclick='lireQuestion();'>" +
+        "<i class='fa fa-play'></i>" +
+      "</button>" +
+      "<div class='alert alert-success fade show float' role='alert' id='infoGenererQrCodeQuestion' style='display:none;font-size:14px;'>" +
+        "Ce bouton permet de pré-visualiser le Qr Code de la question" +
+      "</div>" +
+    "</div>" +
+    "<label class='control-label'>Réponse(s)</label>" +
+    "<div class='reponseDiv' id='" + question.getId() + "'></div>" +
   "</div>";
 
   $("#questionsDivLabelsId").append(newQuestLine);
+
+  //On gère la continuité sur l'ajout d'une question
+  store.set("questionQCM",question.getName());
 }
 
 //Ajout de la reponse dans le div d'une question
-function addReponseLine(reponse){
+function addReponseLine(reponse, idReponse){
   var infos_rep = projet.getQuestion().getReponseById(reponse.getId());
-
   var newRepLine = "<div style='height:35px;' id='" + reponse.getId() + "'>" +
   "<li style='color:black;font-size:14px;'>" +
   "<label>" + reponse.getName() + "&nbsp&nbsp</label>" +
-  "<em style='color:gray'>" + infos_rep.message + "</em>" +
-  "<button class='btn btn-outline-success float-right' id='" + reponse.getId() + "' onclick='deleteReponse(this);'><i class='fa fa-trash-alt'></i></button>" +
+  "<em style='color:gray'>" + infos_rep.message + "&nbsp&nbsp&nbsp</em>";
+
+  if(reponse.getIsAnswer()) {
+    newRepLine += "<i class='fas fa-check-circle'></i>";
+  }
+
+  newRepLine += "<button class='btn btn-outline-success float-right' id='" + reponse.getId() + "' onclick='deleteReponse(this,"+ idReponse +");'><i class='fa fa-trash-alt'></i></button>" +
   "<button class='btn btn-outline-success float-right' id='" + reponse.getId() + "' onclick='previewQRCodeReponse(this)' onmouseover='afficheInfoBtnQrCode(this,\"reponse\")' onmouseout='supprimeInfoBtnQrCode(this,\"reponse\")'><i class='fa fa-qrcode'></i></button>" +
   "<button class='btn btn-outline-success float-right' id='" + reponse.getId() + "' onclick='lireReponse(this);'><i class='fa fa-play'></i></button>" +
   "<div class='alert alert-success fade show float' role='alert' id='infoGenererQrCodeReponse" + reponse.getId() +"' style='display:none;font-size:15px;'>Ce bouton permet de pré-visualiser le Qr Code de la réponse</div>" +
@@ -230,6 +315,7 @@ function addReponseLine(reponse){
   "</div>";
 
   $("div#" + projet.getQuestion().getId() + " .reponseDiv").append(newRepLine);
+
 }
 
 
@@ -258,27 +344,60 @@ function supprimeInfoBtnQrCode(button, cible){
 
 
 //Supprimer une question du projet
-function deleteQuestion(button){
-  var id_question = $(button).attr('id');
+function deleteQuestion(){
+  //Suppression dans le store de la question et des réponses alliées
+  for(var i = 1 ; i<numReponseQCM+1; i++){
+    if(store.get(`reponseQCM${i}`)){
+      store.delete(`reponseQCM${i}`);
+      store.delete(`reponseMessageQCM${i}`);
+      store.delete(`reponseQCMisAnswer${i}`);
+    }
+  }
+  numReponseQCM = 0;
+  store.delete("questionQCM");
+
+  var id_question = projet.getQuestion().getId();
   $("div#" + id_question + '.divQuestion').remove();
 
-  projet.removeQuestion(JSON.parse(id_question));
+  projet.removeQuestion();
 
-  //On peut ré-afficher le bouton pour ajouter une question
+  //On peut ré-afficher le bouton pour ajouter une question et pour cocher la bonne reponse
   $("#addNewQuesBtnId").show();
+  $("#bonneRepCheckBox").show();
+
+  //On cache les erreurs des réponses si elles sont présentes
+  $("#messageReponseSansQuestionError").hide();
+  $("#messageReponseVideError").hide();
+  $("#messageRetourVocalVideError").hide();
+  $("#messageReponseExistError").hide();
+  $("#messageReponseMaxError").hide();
 }
 
 //Supprimer une réponse du projet
-function deleteReponse(button){
+function deleteReponse(button, idReponse){
+  numReponseQCM--;
+  //suppression des éléments permettant de contruire
+  store.delete(`reponseQCM${idReponse}`);
+  store.delete(`reponseMessageQCM${idReponse}`);
+  store.delete(`reponseQCMisAnswer${idReponse}`);
+
   var id_reponse = $(button).attr('id');
+
+  //Si on supprime la bonne reponse, alors on ré-affiche la checkbox
+  if(projet.getReponseById(id_reponse).getIsAnswer()) {
+    $("#bonneRepCheckBox").show();
+  }
 
   projet.removeReponse(id_reponse);
   $("div#" + id_reponse).remove();
+
+  $("#messageReponseMaxError").hide();
 }
 
 //Méthode appelée lors de l'import d'un qrcode QCM
 //Permet d'ajouter au projet les qrcodes importés
 function importQCM(qrcode){
+
   if(qrcode.getType()==='questionQCM'){
     // Si la qr code est la question, on l'ajoute au projet, on l'affiche et on cache le bouton d'ajout d'une nouvelle question
     projet.setQuestion(qrcode);
@@ -290,15 +409,20 @@ function importQCM(qrcode){
 
     // Si le qr code est une reponse, on l'ajoute au projet
     projet.addReponse(qrcode);
-
-
+    //On gère la continuité sur l'ajour d'une reponse
     var infos_rep = projet.getQuestion().getReponseById(qrcode.getId());
+
+    store.delete("numReponseQCM");
+    numReponseQCM ++;
+    store.set("numReponseQCM",numReponseQCM);
+    store.set(`reponseQCM${numReponseQCM}`,qrcode.getName());
+    store.set(`reponseMessageQCM${numReponseQCM}`,infos_rep.message);
+    store.set(`reponseQCMisAnswer${numReponseQCM}`,qrcode.getIsAnswer());
+
     if(infos_rep !== null) {
       // On ajoute la reponse a la question et on affiche la reponse
-      projet.getQuestion().addReponse(qrcode.getId(), infos_rep.message);
-      addReponseLine(qrcode, infos_rep.message);
+      addReponseLine(qrcode,numReponseQCM);
     }
-
   }
 }
 
@@ -318,6 +442,11 @@ function saveQRCodeImage(div, qrcode, directoryName) {
 }
 
 function activerSave(){
+  //enregistrement du titre dans le store permettant la continuité
+  store.delete('titreQCM');
+  var txt = $("#projectId").val();
+  store.set('titreQCM',txt);
+
   if($("#projectId").val().length > 0){
     $("#saveQRCode").attr('disabled', false);
   }
@@ -345,8 +474,8 @@ function previewQRCode(qrcode, div) {
   facade.genererQRCode(div, qrcode);
 }
 
-function lireQuestion(button){
-  var id_question = $(button).attr('id');
+function lireQuestion(){
+  var id_question = projet.getQuestion().getId();
   var text_question = $("label#" + id_question + ".questionNameLabel").text();
 
   playTTS(text_question);
@@ -358,4 +487,15 @@ function lireReponse(button){
   var text_retourVocal = $("div#" + id_reponse + " em").text();
 
   playTTS(text_reponse + text_retourVocal);
+}
+
+
+//Retourne vrai si il y a une bonne reponse, faux sinon
+function isReponseOk() {
+  for(let reponse of projet.getReponses()) {
+    if(reponse.getIsAnswer()) {
+      return true;
+    }
+  }
+  return false;
 }

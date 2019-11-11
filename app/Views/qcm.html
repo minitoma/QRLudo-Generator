@@ -37,6 +37,7 @@
             <div class="alert alert-danger" role="alert" id="messageReponseVideError" style="display:none;">Veuillez ajouter le texte de votre réponse.</div>
             <div class="alert alert-danger" role="alert" id="messageRetourVocalVideError" style="display:none;">Veuillez ajouter le texte de votre retour vocal.</div>
             <div class="alert alert-danger" role="alert" id="messageReponseExistError" style="display:none;">Cette réponse existe déjà.</div>
+            <div class="alert alert-danger" role="alert" id="messageReponseMaxError" style="display:none;">Le maximum est de quatres réponses</div>
             <div class="form-group">
               <table>
                 <tr>
@@ -48,12 +49,8 @@
                       <input type='text' class="form-control col-sm-11" id="newReponseText" placeholder="Saisissez la reponse"/>
                     </div>
                   </td>
-                  <td rowspan="2">
-                    <div style="text-align: center;">
-                      <input id="repCheckBox" type="checkbox" /> <label for="repCheckBox"><em style='color:gray'>Cochez si c'est la bonne réponse</em></label>
-                      <br />
-                      <button id="addNewRep" type="button" class="btn btn-outline-success">Ajouter Réponse</button>
-                    </div>
+                  <td>
+                    <div id="bonneRepCheckBox" style="margin-top:15px;"><input id="isBonneRepCheckBox" type="checkbox" /> <label for="isBonneRepCheckBox"><em style='color:gray'>Cochez si c'est la bonne réponse</em></label></div>
                   </td>
                 </tr>
                 <tr>
@@ -62,8 +59,11 @@
                   </td>
                   <td>
                     <div class="form-inline">
-                      <input type='text' class="form-control col-sm-11" id="newReponseVocalText" placeholder="Saisissez la réponse vocale"/>
+                      <input type='text' class="form-control col-sm-11" id="newReponseVocalText" placeholder="Saisissez la réponse vocale" maxlength="49"/>
                     </div>
+                  </td>
+                  <td>
+                    <button id="addNewRep" type="button" class="btn btn-outline-success" style="margin-left:50px;margin-bottom:15px;">Ajouter Réponse</button>
                   </td>
                 </tr>
 
@@ -78,15 +78,20 @@
       </div>
     </div>
     <div class="card-footer form-inline">
-      <div class="input-group  btn-unique-xl">
-        <div class="input-group-prepend">
-          <div class="input-group-text"><i class="fa fa-palette"></i></div>
-        </div>
-        <input type="color" id="qrColor" value="#000000">
+      <div class="card col-md-auto "  >
+        <button type="reset" style="margin-top:10px" class="btn btn-outline-success btn-unique-xl" onclick="deleteQuestion()">
+          <i class="fa fa-eraser"></i>&nbsp;&nbsp;Réinitialiser
+        </button>
       </div>
-      <button type="reset" class="btn btn-outline-success btn-unique-xl"><i class="fa fa-eraser"></i>&nbsp;&nbsp;Réinitialiser</button>
-      <button id="importProjectBtnId" type="button" class="btn btn-outline-success btn-unique-xl"><i class="fa fa-upload"></i>&nbsp;&nbsp;Importer Un Projet Existant</button>
-
+      <div class="card col-md-auto">
+        <button type="button" class="btn btn-outline-success btn-unique-xl " id="importProjectBtnId">
+          <i class="fa fa-upload"></i>&nbsp;&nbsp;Importer Un Projet Existant
+        </button>
+        <button type="button" style="margin-top:10px" class="btn btn-outline-success btn-unique-xl" id="saveQRCode" disabled>
+          <i class="fa fa-download"></i>&nbsp;&nbsp;Exporter
+        </button>
+      </div>
+    
     </div>
   </form>
 </div>

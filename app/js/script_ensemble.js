@@ -6,8 +6,9 @@
 
 $().ready(function() {
 
-/*  enregistrement();
-  store.set(`numFich`,numFich);*/
+  enregistrement();
+  store.delete(`numFich`);
+  store.set(`numFich`,numFich);
 
   $("#play-sound-div").hide();
 
@@ -42,6 +43,22 @@ $().ready(function() {
       $('#qrName').val('');
       $(txtZone).empty();
       txtZone.appendChild(txtDragAndDrop);
+
+      //Permet la suppression des elements du store créé dans le script_ensemble
+      if(store.get(`numFich`)){
+        store.delete(`numFich`);
+      }
+
+      //vérifier si un enregistrement du titre existe
+      if(store.get(`titreEnsemble`)){
+        store.delete(`titreEnsemble`);
+      }
+
+      for(var i =0; i < numFich; i++){
+        if(store.get(`fichierDrop${i}`)){
+          store.delete(`fichierDrop${i}`);
+        }
+      }
     //});
   }
   $("#empty").click(viderZone);
@@ -93,19 +110,14 @@ dropZone.ondrop = function(e) {
   for (let i = 0; i < e.dataTransfer.files.length; i++) {
     let qrFile = e.dataTransfer.files[i];
 
-  /*  //console.log(qrFile.path);
-    console.log(numFich);
-
-    store.set(`filePath${numFich}`,qrFile.path);
-    numFich ++;
-    store.set(`numFich`,numFich);*/
-
     controllerEnsemble.isUnique(qrFile, qrcode => {
       if (qrcode.getType() != "ensemble") {
         let words = qrFile.name.split(".");
         if (!controllerEnsemble.occurenceFichier(words[0])) {
           genererLigne(words[0]);
-          //store.set(`fichierDrop${numFich}`,words[0]);
+          store.set(`fichierDrop${numFich}`,words[0]);
+          numFich ++;
+          store.set(`numFich`,numFich);
           controllerEnsemble.recuperationQrCodeUnique(qrFile);
         } else {
           afficherPopUp = true;
@@ -128,42 +140,22 @@ dropZone.ondrop = function(e) {
 //permet la continuité entre les onflet spécifiquement pour l'onglet ensemble
 function enregistrement(){
 
-/*  let facade = new FacadeController();
-
   if(store.get(`numFich`)){
     numFich = store.get(`numFich`);
   }
 
   //vérifier si un enregistrement du titre existe
   if(store.get(`titreEnsemble`)){
-    document.getElementById('qrName').value = store.get(`titreEnsemble`);
+    $('#qrName').val(store.get(`titreEnsemble`));
   }
 
   for(var i =0; i < numFich; i++){
-
-    let qrFile ;
-    //qrFile = QRCodeLoader.loadImage(store.get(`fichierDrop${i}`),drawQRCodeImport);
-
-    var client = new XMLHttpRequest();
-    client.open("GET", store.get(`filePath$${i}`));
-    qrFile = client.send();
-
-    console.log(qrFile);
-
-    controllerEnsemble.isUnique(qrFile, qrcode => {
-      if (qrcode.getType() != "ensemble") {
-        if (!controllerEnsemble.occurenceFichier(store.get(`fichierDrop${i}`))) {
-          console.log(genererLigne(store.get(`fichierDrop${i}`)));
-          controllerEnsemble.recuperationQrCodeUnique(qrFile);
-        } else {
-          afficherPopUp = true;
-          nomFichierIdentique += "\t" + words[0] + "\n";
-        }
-      } else {
-        messageInfos("Impossible de mettre un qrcode ensemble dans un qrcode ensemble. Veuillez mettre que des qrcodes uniques", "danger");
-      }
-    });*/
+    if(store.get(`fichierDrop${i}`)){
+      genererLigne(store.get(`fichierDrop${i}`));
+      //controllerEnsemble.recuperationQrCodeUnique(qrFile);
+    }
   }
+}
 
 
 
@@ -194,21 +186,21 @@ function genererLigne(name) {
 
 
   //fonctionatité bouton delete   &&
-  setAttributes(baliseIDelete, {"class": "fa fa-trash-alt", "height":"8px", "width":"8px"});
+  setAttributes(baliseIDelete, {"class": "fa fa-trash-alt ", "height":"8px", "width":"8px"});
   baliseButtonDelete.addEventListener("click", effacerLigne);
   baliseButtonDelete.setAttribute("class", "btn btn-outline-success align-self-center legendeQR-close-btn");
   baliseButtonDelete.setAttribute("padding", "10px 10px");
   baliseButtonDelete.appendChild(baliseIDelete);
 
   //fonctinalité bouton up  &&
-  setAttributes(baliseIUp, {"class": "fa fa-arrow-up", "height":"8px", "width":"8px"});
+  setAttributes(baliseIUp, {"class": "fa fa-arrow-up ", "height":"8px", "width":"8px"});
   baliseButtonUp.setAttribute("class","btn btn-outline-success align-self-center legendeQR-close-btn ");
   baliseButtonUp.appendChild(baliseIUp);
   baliseButtonUp.setAttribute("id", name+'Up');
   baliseButtonUp.addEventListener("click", upItem);
 
   //fonctinalité bouton down  &&
-  setAttributes(baliseIDown, {"class": "fa fa-arrow-down", "height":"8px", "width":"8px"});
+  setAttributes(baliseIDown, {"class": "fa fa-arrow-down ", "height":"8px", "width":"8px"});
   baliseButtonDown.setAttribute("class","btn btn-outline-success  ");
   baliseButtonDown.appendChild(baliseIDown);
   baliseButtonDown.setAttribute("id", name+'Down');
@@ -218,7 +210,7 @@ function genererLigne(name) {
   //fonctionatité nom qrcode
   baliseSpan.appendChild(textDiv);
   baliseSpan.setAttribute("style", "white-space: nowrap; padding:5px; font-size:0.7em;");
-  baliseSpan.setAttribute("class", "qrData ");
+  baliseSpan.setAttribute("class", "qrData text-left ");
   baliseSpan.setAttribute("name", "qrCode");
 
 
