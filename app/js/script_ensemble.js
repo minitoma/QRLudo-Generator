@@ -161,7 +161,7 @@ function genererLigne(name, numLigne) {
 
   //fonctionatité bouton delete   &&
   setAttributes(baliseIDelete, {"class": "fa fa-trash-alt", "height":"8px", "width":"8px"});
-  baliseButtonDelete.addEventListener("click", effacerLigne(numLigne));
+  baliseButtonDelete.addEventListener("click", effacerLigne);
   baliseButtonDelete.setAttribute("class", "btn btn-outline-success align-self-center legendeQR-close-btn");
   baliseButtonDelete.setAttribute("padding", "10px 10px");
   baliseButtonDelete.appendChild(baliseIDelete);
@@ -229,11 +229,15 @@ function afficherQrCode(e) {
 
 
 // Supprime une ligne dans la zone de drop
-function effacerLigne(numLigne) {
+function effacerLigne() {
 
-  store.delete(`fichierDrop${numLigne}`);
+  let id = this.parentNode.id;
 
-  /*let id = this.parentNode.id;
+  for(var i =0; i < numFich; i++){
+    if(store.get(`fichierDrop${i}`) == id){
+      store.delete(`fichierDrop${i}`);
+    }
+  }
 
   // Supprime la ligne html lie au fichier
   for (let i = 0; i <= txtZone.childElementCount; i++) {
@@ -249,7 +253,7 @@ function effacerLigne(numLigne) {
   console.log(id);
   console.log(qrCodes.filter(item => item.getName() != id));
   controllerEnsemble.setQRCodeAtomiqueArray(qrCodes.filter(item => item.getName() != id));
-  console.log("after suppress", qrCodes);*/
+  console.log("after suppress", qrCodes);
 }
 
 // Vide les tableaux qrCodes, files et les lignes de la zone drop
@@ -325,11 +329,43 @@ function saveQRCodeImage() {
 //fonction deplacement de fichier vers le haut ou bas  &&&
 function upItem(e){
   let parentElement = $(this).parent();
+
+  //Gere la continuité sur le moveUp :
+  let parentElementVal = parentElement.attr('id');
+  let prevVal = $(parentElement).prev().attr('id');
+  //Permet de savoir le numFich qui correspond au fichier appelé avec le bouton
+  var tmpVal = 0 ;
+
+  for(var i = 0; i<numFich; i++){
+    if(store.get(`fichierDrop${i}`) == parentElementVal)
+      tmpVal = i;
+    if(store.get(`fichierDrop${i}`) == prevVal)
+      store.set(`fichierDrop${i}`,parentElementVal);
+  }
+  store.set(`fichierDrop${tmpVal}`, prevVal);
+
+
   $(parentElement).insertBefore($(parentElement).prev());
+
 }
 
 //fonction deplacement de fichier vers bas  &&&
 function downItem(e){
   let parentElement = $(this).parent();
+
+  //Gere la continuité sur le moveUp :
+  let parentElementVal = parentElement.attr('id');
+  let nextVal = $(parentElement).next().attr('id');
+  //Permet de savoir le numFich qui correspond au fichier appelé avec le bouton
+  var tmpVal = 0 ;
+
+  for(var i = 0; i<numFich; i++){
+    if(store.get(`fichierDrop${i}`) == parentElementVal)
+      tmpVal = i;
+    if(store.get(`fichierDrop${i}`) == nextVal)
+      store.set(`fichierDrop${i}`,parentElementVal);
+  }
+  store.set(`fichierDrop${tmpVal}`, nextVal);
+
   $(parentElement).insertAfter($(parentElement).next());
 }

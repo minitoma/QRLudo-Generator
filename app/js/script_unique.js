@@ -498,8 +498,11 @@ function supprimerChampLegende(e, numText) {
   numTextAreaCourant--; // Nouveau numero pour le prochain textarea
   store.set(`numTextAreaCourant`,numTextAreaCourant);
 
-  if(numTextAreaCourant == 0)
-    numTextArea = 0;
+  if(numTextAreaCourant == 0){
+    store.delete(`numTextArea`);
+    numTextArea = 0; // Nouveau numero pour le prochain textarea
+    store.set(`numTextArea`,numTextArea);
+  }
 
   //suppression dans le store de la zone de txt correspondante
   store.delete(`text`+numText);
