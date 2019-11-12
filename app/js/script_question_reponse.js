@@ -12,7 +12,6 @@ $(document).ready(function() {
 
   $("#play-sound-div").hide();
 
-
   //fonction pour ajouter un nouvelle reponse
   $("#validerDataDialog").click(function(){
 
@@ -87,12 +86,8 @@ $(document).ready(function() {
 
   });
 
-
-
 //fonction pour e
   $("#preview").click(function() {
-
-
     $("#ajoutNewReponse").attr('disabled', false);
 
     let question= $('#newQuestionText').val();
@@ -125,7 +120,6 @@ $(document).ready(function() {
     }
   });
 
-
   $('button#annuler').click(e => {
     //aficher popup quand on click sur reinitialiser
     // cache le qr générer & desactivation du bouton exporter
@@ -137,7 +131,6 @@ $(document).ready(function() {
       viderZone();
     }
   });
-
 });
 
 function addReponseLine(reponse){
@@ -191,7 +184,6 @@ function effacerLigne() {
 
   var dropZone = document.getElementById('dropZone');
   var txtZone = document.getElementById('txtZone');
-
   var txtDragAndDrop = document.createElement("P");
 
   txtDragAndDrop.setAttribute("id", "txtDragAndDrop");
@@ -227,11 +219,6 @@ function effacerLigne() {
     for (let i = 0; i < e.dataTransfer.files.length; i++) {
       let qrFile = e.dataTransfer.files[i];
 
-
-      //console.log(qrFile);
-      //var new_rep = new Reponse(identifiant, $("#qrColor").val());
-      //var new_rep_vocal = reponseVocale;
-
       facade =  new FacadeController();
       facade.importQRCode(qrFile, qrCode =>{
         if (qrCode.getType() == 'xl' || qrCode.getType() == 'unique' || qrCode.getType() == 'reponse'){
@@ -262,10 +249,8 @@ function effacerLigne() {
           //Ajouter au projet et à la question la nouvelle réponse
           projet.addReponse(new_rep);
           //console.log('id='+new_rep.getId() );
-
           projet.getQuestion().addReponse( (new_rep.getId() ), new_rep_vocal);
           //console.log(projet.getQuestion());
-
           addReponseLine(new_rep);
 
         //  console.log(new_rep_vocal);
@@ -274,17 +259,11 @@ function effacerLigne() {
           console.log(projet.getReponses());
           console.log("--------------------");
           console.log(projet.getQuestion().getReponses());
-
         }
         else
           alert("mauvais format de qr Code");
-
-
      });
-
-
     }
-
   };
 
 
@@ -295,7 +274,6 @@ function effacerLigne() {
     console.log(this);
     console.log(item);
     affichageLigneParDefault();
-
 
     this.querySelector("span").setAttribute("style", "white-space: nowrap; padding:5px; font-size:0.7em; background-color:#99cc00;");
 
@@ -312,16 +290,6 @@ function effacerLigne() {
     console.log(controllerEnsemble.getQRCodeSelectionne());
     // qrCodesUniqueSelectionne = this;
   }
-/*
-
-*/
-
-
-
-///////////////////
-
-
-
 
 
 //Permet d'afficher une information sur le bouton pour generer les qr code
@@ -346,7 +314,6 @@ function supprimeInfoBtnQrCode(button, cible){
   }
 }
 
-
 //Supprimer une réponse du projet
 function deleteReponse(button){
   var id_reponse = $(button).attr('id');
@@ -356,9 +323,7 @@ function deleteReponse(button){
 
   console.log(projet.getQuestion());
   console.log("--------------------");
-
 }
-
 
 //Cette fonction sauvegarde l'image du qrcode dans un div pour le pouvoir generer apres
 function saveQRCodeImage() {
@@ -370,7 +335,6 @@ function saveQRCodeImage() {
   // var data = img.replace(/^data:image\/\w+;base64,/, '');
 
   var data = img.replace(/^data:image\/[^;]/, 'data:application/octet-stream');
-
   var xhr = new XMLHttpRequest();
   xhr.responseType = 'blob';
   console.log(data);
@@ -385,8 +349,8 @@ function saveQRCodeImage() {
   }
 
   xhr.send();
-}
 
+}
 
 function previewQRCodeQuestion(){
   var question = projet.getQuestion();
@@ -406,7 +370,6 @@ function previewQRCode(qrcode, div) {
 
   facade.genererQRCode(div, qrcode);
 }
-
 
 function lireReponse(button){
   var id_reponse = $(button).attr('id');
