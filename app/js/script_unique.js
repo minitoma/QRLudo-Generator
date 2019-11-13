@@ -494,12 +494,12 @@ function supprimerChampLegende(e, numText) {
   store.set(`numTextArea`,numTextArea);
   store.delete(`text`+numText);
   store.delete(`textZone`+numText);
-
+  console.log(numTextArea);
   $(e).parents('div#legendeTextarea').remove();
   //degrisser bouton apres supression d'un champ
   if (numTextArea<3)
     $('#ajouterTexte').attr('disabled', false);
-  if (numTextArea==1)
+  if (numTextArea==0)
   {
     $('#legendeTextarea button').attr('disabled', true);
   }

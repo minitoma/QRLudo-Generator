@@ -19,20 +19,7 @@ $(document).ready(function() {
       let reponseVocale = $("#newContenuVocal").val();
       let qrColor = $('#qrColor').val();
       let qrData = [];
-/*
-      //On verifie si le texte de la question n'est pas vide
-      if (identifiant=== ""){
-        alert("champ Identifiant vide");
-            return; // si le champ est vide on sort
-      }
-      qrData.push($("#newContenuVocal").val());
 
-      let nouvQuestion = new Question (identifiant,qrData , $("#qrColor").val());
-      projet.setQuestion(nouvQuestion);
-
-      addQuestionLine(nouvQuestion);
-
-*/
         //On verifie qu'il y a une question de créée
         if (projet.getQuestion() == null) {
           alert ("pas de question");
@@ -62,7 +49,7 @@ $(document).ready(function() {
           }
         });
         if (existe){
-          alert ("reponse exite deja");
+          alert ("Cette Reponse exite deja");
           return false;
         }
 
