@@ -222,8 +222,10 @@ $('#preview').click(e => {
   // Generate in a div, the qrcode image for qrcode object
   let div = $('#qrView')[0];
 
+  let newQrUnique = new QRCodeUnique(qrName, qrData, qrColor);
+  console.log(newQrUnique);
   previewQRCode(qrName, qrData, qrColor, div);
-
+  //console.log();
   $('#annuler').attr('disabled', false);
 });
 
@@ -508,12 +510,12 @@ function supprimerChampLegende(e, numText) {
   //suppression dans le store de la zone de txt correspondante
   store.delete(`text`+numText);
   store.delete(`textZone`+numText);
-
+  console.log(numTextArea);
   $(e).parents('div#legendeTextarea').remove();
   //degrisser bouton apres supression d'un champ
   if (numTextArea<3)
     $('#ajouterTexte').attr('disabled', false);
-  if (numTextArea==1)
+  if (numTextArea==0)
   {
     $('#legendeTextarea button').attr('disabled', true);
   }
