@@ -132,13 +132,13 @@ $(document).ready(function() {
   });
 
   $('button#annuler').click(e => {
-
+    
     //aficher popup quand on click sur reinitialiser
     // cache le qr générer & desactivation du bouton exporter
     var popUpQuiter = confirm("Etes vous sûr de vouloir réinitialiser?");
-    if (popUpQuiter==true){
-
-    //Les différents store sont clean ici
+    if (popUpQuiter == true){      
+      
+      //Les différents store sont clean ici
       if(store.get(`titreUnique`)){
         store.delete(`titreUnique`);
         $("#qrName").val("");
@@ -163,6 +163,8 @@ $(document).ready(function() {
       store.delete("numTextAreaCourant")
       numTextAreaCourant = 0;
 
+      $("button#annuler").attr('type','reset');
+
       let a = $('#legendeTextarea');
       $.each($(".qrData"), function(i, val) {
         $(`#textarea${i}`).val("");
@@ -182,6 +184,9 @@ $(document).ready(function() {
       }
 
       $("#ajouterTexte").attr('disabled', false);
+    }
+    else {
+      $("button#annuler").removeAttr('type');
     }
   });
 });
@@ -275,8 +280,6 @@ function chargement(){
   if(numTextAreaCourant == 0){
     ajouterChampLegende();
   }
-
-  console.log(numTextArea);
   
   //On desactive le bouton supprimer quand il y a qu'un seul text area
   if(numTextAreaCourant == 1) { 
@@ -458,8 +461,6 @@ function ajouterChampLegende(valeur = "") {
   numTextArea++; // Nouveau numero pour le prochain textarea
   store.set(`numTextArea`,numTextArea);
 
-  console.log(numTextArea);
-
   var textareaLegende = document.createElement('div');
   textareaLegende.innerHTML = `<i class='fa fa-play align-self-center icon-player'></i><i class="fa fa-pause align-self-center icon-player"></i>
     <textarea id='textarea${numTextArea}' class='form-control qrData' rows='3' name='legendeQR' placeholder='Mettre la légende (255 caractères maximum)' maxlength='255' onkeyup="verifNombreCaractere(${numTextArea});">${valeur}</textarea>
@@ -503,7 +504,6 @@ function verifNombreCaractere(num) {
 
 //supprimeun le textarea correspondant au numText
 function supprimerChampLegende(e, numText) {
-  console.log(numTextArea);
 
   store.delete(`numTextAreaCourant`);
   numTextAreaCourant--; // Nouveau numero pour le prochain textarea
@@ -512,7 +512,7 @@ function supprimerChampLegende(e, numText) {
   //suppression dans le store de la zone de txt correspondante
   store.delete(`text`+numText);
   store.delete(`textZone`+numText);
-  console.log(numTextArea);
+
   $(e).parents('div#legendeTextarea').remove();
   
   $('#ajouterTexte').attr('disabled', false);
