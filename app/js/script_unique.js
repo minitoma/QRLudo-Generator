@@ -222,8 +222,10 @@ $('#preview').click(e => {
   // Generate in a div, the qrcode image for qrcode object
   let div = $('#qrView')[0];
 
+  let newQrUnique = new QRCodeUnique(qrName, qrData, qrColor);
+  console.log(newQrUnique);
   previewQRCode(qrName, qrData, qrColor, div);
-
+  //console.log();
   $('#annuler').attr('disabled', false);
 });
 
@@ -376,9 +378,10 @@ function getMusicFromUrl() {
 
       if (this.status == 200) {
         let blob = this.response; // get binary data as a response
-        let contentType = xhr.getResponseHeader("content-type");
-
-        if (contentType == 'audio/mpeg') {
+        let contentType = xhr.getResponseHeader("content-type");        
+        console.log(contentType);
+        
+        if (contentType == 'audio/mpeg' || contentType == 'audio/mp3') {
           // get filename
           let filename = xhr.getResponseHeader("content-disposition").split(";")[1];
           filename = filename.replace('filename="', '');
@@ -509,7 +512,7 @@ function supprimerChampLegende(e, numText) {
   //suppression dans le store de la zone de txt correspondante
   store.delete(`text`+numText);
   store.delete(`textZone`+numText);
-
+  console.log(numTextArea);
   $(e).parents('div#legendeTextarea').remove();
   
   $('#ajouterTexte').attr('disabled', false);
