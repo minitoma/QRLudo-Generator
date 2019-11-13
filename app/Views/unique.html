@@ -30,28 +30,6 @@
           <div class="form-group">
             <div class="col-sm-10">
               <div id="cible">
-                <div class="d-flex align-items-start legendeQR" id="legendeTextarea">
-                  <svg class="svg-inline--fa fa-play fa-w-14 align-self-center icon-player" aria-hidden="true" data-prefix="fa" data-icon="play" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg="">
-                    <path fill="currentColor" d="M424.4 214.7L72.4 6.6C43.8-10.3 0 6.1 0 47.9V464c0 37.5 40.7 60.1 72.4 41.3l352-208c31.4-18.5 31.5-64.1 0-82.6z"></path>
-                  </svg><!-- <i class="fa fa-play align-self-center icon-player"></i> -->
-                  <svg class="svg-inline--fa fa-pause fa-w-14 align-self-center icon-player" aria-hidden="true" data-prefix="fa" data-icon="pause" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg="">
-                    <path fill="currentColor" d="M144 479H48c-26.5 0-48-21.5-48-48V79c0-26.5 21.5-48 48-48h96c26.5 0 48 21.5 48 48v352c0 26.5-21.5 48-48 48zm304-48V79c0-26.5-21.5-48-48-48h-96c-26.5 0-48 21.5-48 48v352c0 26.5 21.5 48 48 48h96c26.5 0 48-21.5 48-48z"></path>
-                  </svg><!-- <i class="fa fa-pause align-self-center icon-player"></i> -->
-                  <textarea id="textarea1" class="form-control qrData" rows="3" name="legendeQR" placeholder="Mettre la légende (255 caractères maximum)" maxlength="255" onkeyup="verifNombreCaractere1();"></textarea>
-                  <button type="button" class="btn btn-outline-success align-self-center legendeQR-close-btn" onclick="moveUp(this);">
-                    <svg class="svg-inline--fa fa-arrow-up fa-w-14" aria-hidden="true" data-prefix="fa" data-icon="arrow-up" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg="">
-                      <path fill="currentColor" d="M34.9 289.5l-22.2-22.2c-9.4-9.4-9.4-24.6 0-33.9L207 39c9.4-9.4 24.6-9.4 33.9 0l194.3 194.3c9.4 9.4 9.4 24.6 0 33.9L413 289.4c-9.5 9.5-25 9.3-34.3-.4L264 168.6V456c0 13.3-10.7 24-24 24h-32c-13.3 0-24-10.7-24-24V168.6L69.2 289.1c-9.3 9.8-24.8 10-34.3.4z"></path>
-                    </svg><!-- <i class="fa fa-arrow-up"></i> -->
-                  </button>
-                  <button type="button" class="btn btn-outline-success align-self-center legendeQR-close-btn" disabled="true" onclick="moveUp(this);">
-                        <svg class="svg-inline--fa fa-arrow-up fa-w-14" aria-hidden="true" data-prefix="fa" data-icon="arrow-up" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg=""><path fill="currentColor" d="M34.9 289.5l-22.2-22.2c-9.4-9.4-9.4-24.6 0-33.9L207 39c9.4-9.4 24.6-9.4 33.9 0l194.3 194.3c9.4 9.4 9.4 24.6 0 33.9L413 289.4c-9.5 9.5-25 9.3-34.3-.4L264 168.6V456c0 13.3-10.7 24-24 24h-32c-13.3 0-24-10.7-24-24V168.6L69.2 289.1c-9.3 9.8-24.8 10-34.3.4z"></path>
-                        </svg><!-- <i class="fa fa-arrow-up"></i> -->
-                  </button>
-                  <button type="button" class="btn btn-outline-success align-self-center legendeQR-close-btn" disabled="true" onclick="moveDown(this);">
-                    <svg class="svg-inline--fa fa-arrow-down fa-w-14" aria-hidden="true" data-prefix="fa" data-icon="arrow-down" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 448 512" data-fa-i2svg=""><path fill="currentColor" d="M413.1 222.5l22.2 22.2c9.4 9.4 9.4 24.6 0 33.9L241 473c-9.4 9.4-24.6 9.4-33.9 0L12.7 278.6c-9.4-9.4-9.4-24.6 0-33.9l22.2-22.2c9.5-9.5 25-9.3 34.3.4L184 343.4V56c0-13.3 10.7-24 24-24h32c13.3 0 24 10.7 24 24v287.4l114.8-120.5c9.3-9.8 24.8-10 34.3-.4z"></path>
-                    </svg><!-- <i class="fa fa-arrow-down"></i> -->
-                  </button>
-                </div>
 
               </div>
               <div class="ajoutZoneTexte" align="right" >
