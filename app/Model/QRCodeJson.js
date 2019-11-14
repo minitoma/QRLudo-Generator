@@ -84,6 +84,9 @@ class QRCodeUnique {
   setData(data) {
     this.qrcode.data = data;
   }
+  setId(id) {
+    this.qrcode.id = id;
+  }
 
   addData(element) {
     this.qrcode.data.push(element);
