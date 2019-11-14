@@ -38,10 +38,12 @@ class QRCodeLoaderJson {
       switch (JSON.parse(qrcodeString).type) {
         case "unique":
           qrcode = new QRCodeUnique(qr.name, qr.data, qr.color);
+          qrcode.setId(qr.id);
           break;
 
         case "xl":
           qrcode = new QRCodeXL(qr.name, qr.data, qr.color);
+          qrcode.setId(qr.id);
           break;
 
         case "ensemble":

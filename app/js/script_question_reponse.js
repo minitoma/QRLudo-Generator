@@ -206,8 +206,9 @@ function effacerLigne() {
     for (let i = 0; i < e.dataTransfer.files.length; i++) {
       let qrFile = e.dataTransfer.files[i];
 
+
       facade =  new FacadeController();
-      facade.importQRCode(qrFile, qrCode =>{
+      facade.importQRCodeJson(qrFile, qrCode =>{
         if (qrCode.getType() == 'xl' || qrCode.getType() == 'unique' || qrCode.getType() == 'reponse'){
           let qrId = qrCode.getId();
           let qrData = qrCode.getData();
@@ -229,7 +230,13 @@ function effacerLigne() {
             }
           });
           if (existe){
-            alert ("reponse exite deja");
+            alert ("Cette Reponse exite deja");
+            return ;
+          }
+
+          //verification que le QR code a un id     &&
+          if(qrCode.getId() == null){
+            alert ("Votre Qr Code n'a pas d'identifiant ERROR!");
             return ;
           }
 
@@ -248,35 +255,13 @@ function effacerLigne() {
           console.log(projet.getQuestion().getReponses());
         }
         else
-          alert("mauvais format de qr Code");
+          alert("Mauvais format de qr Code ! ");
      });
     }
   };
 
 
-  // Affiche le qrCode unique lie à la ligne cliquable
-  function afficherQrCode(e) {
-    let item = e.target;
-    let id = this.id;
-    console.log(this);
-    console.log(item);
-    affichageLigneParDefault();
 
-    this.querySelector("span").setAttribute("style", "white-space: nowrap; padding:5px; font-size:0.7em; background-color:#99cc00;");
-
-    let qrcodes = controllerEnsemble.getQRCodeAtomiqueArray();
-    // Affiche le qrCode que l'on vien de selectionner
-    for (let i = 0; i < qrcodes.length; i++) {
-      if (qrcodes[i].getName() == id) {
-        let facade = new FacadeController();
-        facade.genererQRCode($('#qrView')[0], qrcodes[i]);
-        controllerEnsemble.setQRCodeSelectionne(qrcodes[i]);
-      }
-    }
-
-    console.log(controllerEnsemble.getQRCodeSelectionne());
-    // qrCodesUniqueSelectionne = this;
-  }
 
 
 //Permet d'afficher une information sur le bouton pour generer les qr code
