@@ -132,13 +132,13 @@ $(document).ready(function() {
   });
 
   $('button#annuler').click(e => {
-
+    
     //aficher popup quand on click sur reinitialiser
     // cache le qr générer & desactivation du bouton exporter
     var popUpQuiter = confirm("Etes vous sûr de vouloir réinitialiser?");
-    if (popUpQuiter==true){
-
-    //Les différents store sont clean ici
+    if (popUpQuiter == true){      
+      
+      //Les différents store sont clean ici
       if(store.get(`titreUnique`)){
         store.delete(`titreUnique`);
         $("#qrName").val("");
@@ -163,6 +163,8 @@ $(document).ready(function() {
       store.delete("numTextAreaCourant")
       numTextAreaCourant = 0;
 
+      $("button#annuler").attr('type','reset');
+
       let a = $('#legendeTextarea');
       $.each($(".qrData"), function(i, val) {
         $(`#textarea${i}`).val("");
@@ -182,6 +184,9 @@ $(document).ready(function() {
       }
 
       $("#ajouterTexte").attr('disabled', false);
+    }
+    else {
+      $("button#annuler").removeAttr('type');
     }
   });
 });
@@ -239,11 +244,11 @@ function chargement(){
   else
     store.set(`numTextAreaCourant`,numTextAreaCourant);
 
-  //On désactive le bouton de rejout de champtexte qi le nombre est superieur à celui recommandé
-  if(numTextAreaCourant > 2)
+  //On désactive le bouton de rajout de champtexte si le nombre est superieur à celui recommandé
+  if(numTextAreaCourant >= 3)
     $("#ajouterTexte").attr('disabled', true);
 
-  //indice des zone texte presente, peut etre superieur au zone texte presente
+  //indice des zones textes presente, peut etre superieur au zone texte presente
   if(store.get(`numTextArea`))
     numTextArea = store.get(`numTextArea`);
   else
@@ -272,8 +277,13 @@ function chargement(){
   }
 
   //insertion du premier champ Texte
-  if(numTextAreaCourant == 0 && numTextArea == 0){
+  if(numTextAreaCourant == 0){
     ajouterChampLegende();
+  }
+  
+  //On desactive le bouton supprimer quand il y a qu'un seul text area
+  if(numTextAreaCourant == 1) { 
+    disabledButtonDelete();
   }
 }
 
@@ -441,10 +451,12 @@ function activer_button() {
 }
 
 
-//Ce compteur permet de compter le nombre de textarea pour differencier les id
-
 //ajouter une nvlle legende (textarea) a chaque click sur button Texte (pour chaque textarea il faut rajouter à l'attribut class la valeur qrData class="... qrData")
 function ajouterChampLegende(valeur = "") {
+  store.delete(`numTextAreaCourant`);
+  numTextAreaCourant++; // Nouveau numero pour le prochain textarea
+  store.set(`numTextAreaCourant`,numTextAreaCourant);
+
   store.delete(`numTextArea`);
   numTextArea++; // Nouveau numero pour le prochain textarea
   store.set(`numTextArea`,numTextArea);
@@ -452,7 +464,7 @@ function ajouterChampLegende(valeur = "") {
   var textareaLegende = document.createElement('div');
   textareaLegende.innerHTML = `<i class='fa fa-play align-self-center icon-player'></i><i class="fa fa-pause align-self-center icon-player"></i>
     <textarea id='textarea${numTextArea}' class='form-control qrData' rows='3' name='legendeQR' placeholder='Mettre la légende (255 caractères maximum)' maxlength='255' onkeyup="verifNombreCaractere(${numTextArea});">${valeur}</textarea>
-    <button type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='supprimerChampLegende(this, ${numTextArea});'>
+    <button id='delete${numTextArea}' type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='supprimerChampLegende(this, ${numTextArea});'>
     <div class="inline-block">
       <i class='fa fa-trash-alt'></i></button>
       <button type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='moveUp(this, ${numTextArea});'>
@@ -464,20 +476,16 @@ function ajouterChampLegende(valeur = "") {
 
   document.getElementById('cible').appendChild(textareaLegende);
 
-  //degrisser boutons premiere zonne de texte apres ajout d'une nouvelle zonne
+  //degrisser boutons premiere zone de texte apres ajout d'une nouvelle zone
   $($("#legendeTextarea").children()).attr('disabled', false);
-  //limiter zone de de texte &&
-  if (numTextArea>=3){
+
+  //Permet d'enregistrer l'ajout de case texte
+  store.set(`textZone${numTextArea}`,textareaLegende.innerHTML);
+  
+  //limiter zone de de texte
+  if (numTextAreaCourant>=3){
     $('#ajouterTexte').attr('disabled', true);
   }
-
-  //Permet d'enregistrer l'ajour de case texte
-  store.set(`textZone${numTextArea}`,textareaLegende.innerHTML);
-
-  store.delete(`numTextAreaCourant`);
-  numTextAreaCourant++; // Nouveau numero pour le prochain textarea
-  store.set(`numTextAreaCourant`,numTextAreaCourant);
-
 }
 
 //verifier si le nombre de caractère maximal est respecté, si ce n'est pas le cas on affiche une pop up d'informations
@@ -501,23 +509,24 @@ function supprimerChampLegende(e, numText) {
   numTextAreaCourant--; // Nouveau numero pour le prochain textarea
   store.set(`numTextAreaCourant`,numTextAreaCourant);
 
-  if(numTextAreaCourant == 0){
-    store.delete(`numTextArea`);
-    numTextArea = 0; // Nouveau numero pour le prochain textarea
-    store.set(`numTextArea`,numTextArea);
-  }
-
   //suppression dans le store de la zone de txt correspondante
   store.delete(`text`+numText);
   store.delete(`textZone`+numText);
-  console.log(numTextArea);
+
   $(e).parents('div#legendeTextarea').remove();
-  //degrisser bouton apres supression d'un champ
-  if (numTextArea<3)
-    $('#ajouterTexte').attr('disabled', false);
-  if (numTextArea==0)
-  {
-    $('#legendeTextarea button').attr('disabled', true);
+  
+  $('#ajouterTexte').attr('disabled', false);
+
+  if(numTextAreaCourant == 1) {
+    disabledButtonDelete();
+  }
+}
+
+//Permet de desactiver le bouton supprimer du texte area restant 
+function disabledButtonDelete() {
+  for(var i = 1; i<numTextArea+1; i++){
+    if(store.get(`textZone${i}`))
+      $("#delete" + i).attr('disabled', true);
   }
 }
 
