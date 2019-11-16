@@ -261,9 +261,6 @@ function effacerLigne() {
   };
 
 
-
-
-
 //Permet d'afficher une information sur le bouton pour generer les qr code
 function afficheInfoBtnQrCode(button, cible){
   if(cible == "question") {
