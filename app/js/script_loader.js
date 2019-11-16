@@ -9,11 +9,11 @@
 const Store = require('electron-store');
 const store = new Store();
 
-//Déclaration de l'entier renseignat le nombre de zones textes dans l'onglet qr unique
-numTextAreaCourant = 0;
+//Déclaration de l'entier renseignant le nombre de zones de donnee dans l'onglet qr unique (les zones de textes ou les fichier audio)
+nbZoneDonne = 0;
 
-//Déclaration de l'entier permettant l'implémentation des différentes zones de textes dans l'onglet qr unique
-numTextArea = 0;
+//Déclaration de l'entier permettant l'implémentation des différentes zones de données dans l'onglet qr unique
+numZoneCourante = 0;
 
 //nombre de fichier ajouté dans l'onglet ensemble
 numFich = 0;
