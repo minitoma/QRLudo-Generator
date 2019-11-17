@@ -5,7 +5,13 @@
  */
 
 $().ready(function() {
+
+  enregistrement();
+  store.delete(`numFich`);
+  store.set(`numFich`,numFich);
+
   $("#play-sound-div").hide();
+
 
   // Genere le qrCode Ensemble
   $("#preview").click(function() {
@@ -30,13 +36,8 @@ $().ready(function() {
     $('#saveQRCode').attr('disabled', false);
   });
 
-  // Vide les tableaux qrCodes, files et les lignes de la zone drop
-  $("#empty").click(function() {
-    controllerEnsemble = new ControllerEnsemble();
-    $('#qrName').val('');
-    $(txtZone).empty();
-    txtZone.appendChild(txtDragAndDrop);
-  });
+  $("#empty").click(viderZone);
+
 
   $("#saveQRCode").click(e => {
     saveQRCodeImage();
@@ -73,6 +74,8 @@ dropZone.ondragover = function(e) {
 dropZone.ondrop = function(e) {
   e.preventDefault();
 
+  console.log(e);
+
   txtDragAndDrop.remove();
 
   let afficherPopUp = false;
@@ -86,7 +89,10 @@ dropZone.ondrop = function(e) {
       if (qrcode.getType() != "ensemble") {
         let words = qrFile.name.split(".");
         if (!controllerEnsemble.occurenceFichier(words[0])) {
-          genererLigne(words[0]);
+          genererLigne(words[0], numFich);
+          store.set(`fichierDrop${numFich}`,words[0]);
+          numFich ++;
+          store.set(`numFich`,numFich);
           controllerEnsemble.recuperationQrCodeUnique(qrFile);
         } else {
           afficherPopUp = true;
@@ -106,36 +112,94 @@ dropZone.ondrop = function(e) {
   activer_button();
 };
 
+//permet la continuité entre les onflet spécifiquement pour l'onglet ensemble
+function enregistrement(){
+
+  if(store.get(`numFich`)){
+    numFich = store.get(`numFich`);
+  }
+
+  //vérifier si un enregistrement du titre existe
+  if(store.get(`titreEnsemble`)){
+    $('#qrName').val(store.get(`titreEnsemble`));
+  }
+
+  for(var i =0; i < numFich; i++){
+    if(store.get(`fichierDrop${i}`)){
+      genererLigne(store.get(`fichierDrop${i}`));
+    }
+  }
+}
+
+
+
+function setAttributes(el, attrs) {
+  for(var key in attrs) {
+    el.setAttribute(key, attrs[key]);
+  }
+}
 /*
  * Genere une ligne dans la zone de drop en fonction des fichiers drop dans la zone
  * Chaque ligne est clickable pour affichier le qrCode unique
  * Chaque ligne a un bouton pour supprimer la ligne
  */
-function genererLigne(name) {
+function genererLigne(name, numLigne) {
   let baliseDiv = document.createElement("DIV");
   let baliseSpan = document.createElement("SPAN");
-  let baliseButton = document.createElement("BUTTON");
-  let baliseI = document.createElement("I");
   let textDiv = document.createTextNode(name);
 
-  baliseI.setAttribute("class", "fa fa-eraser");
-  baliseI.setAttribute("style", "height:12px; width:12px;");
+  let baliseButtonDelete = document.createElement("BUTTON");
+  let baliseIDelete = document.createElement("I");
 
-  baliseButton.addEventListener("click", effacerLigne);
-  baliseButton.setAttribute("class", "btn btn-outline-success");
-  baliseButton.appendChild(baliseI);
 
+  let baliseButtonUp = document.createElement("BUTTON");
+  let baliseIUp = document.createElement("I");
+
+  let baliseButtonDown= document.createElement("BUTTON");
+  let baliseIDown = document.createElement("I");
+
+
+  //fonctionatité bouton delete   &&
+  setAttributes(baliseIDelete, {"class": "fa fa-trash-alt ", "height":"8px", "width":"8px"});
+  baliseButtonDelete.addEventListener("click", effacerLigne);
+  baliseButtonDelete.setAttribute("class", "btn btn-outline-success align-self-center legendeQR-close-btn");
+  baliseButtonDelete.setAttribute("padding", "10px 10px");
+  baliseButtonDelete.appendChild(baliseIDelete);
+
+  //fonctinalité bouton up  &&
+  setAttributes(baliseIUp, {"class": "fa fa-arrow-up ", "height":"8px", "width":"8px"});
+  baliseButtonUp.setAttribute("class","btn btn-outline-success align-self-center legendeQR-close-btn ");
+  baliseButtonUp.appendChild(baliseIUp);
+  baliseButtonUp.setAttribute("id", name+'Up');
+  baliseButtonUp.addEventListener("click", upItem);
+
+  //fonctinalité bouton down  &&
+  setAttributes(baliseIDown, {"class": "fa fa-arrow-down ", "height":"8px", "width":"8px"});
+  baliseButtonDown.setAttribute("class","btn btn-outline-success  ");
+  baliseButtonDown.appendChild(baliseIDown);
+  baliseButtonDown.setAttribute("id", name+'Down');
+  baliseButtonDown.addEventListener("click", downItem);
+
+
+  //fonctionatité nom qrcode
   baliseSpan.appendChild(textDiv);
   baliseSpan.setAttribute("style", "white-space: nowrap; padding:5px; font-size:0.7em;");
-  baliseSpan.setAttribute("class", "qrData");
+  baliseSpan.setAttribute("class", "qrData text-left ");
   baliseSpan.setAttribute("name", "qrCode");
 
+
+
   baliseDiv.addEventListener("click", afficherQrCode);
-  baliseDiv.appendChild(baliseButton);
   baliseDiv.appendChild(baliseSpan);
   baliseDiv.id = name;
 
+  baliseDiv.appendChild(baliseButtonDelete);
+  baliseDiv.appendChild(baliseButtonUp);
+  baliseDiv.appendChild(baliseButtonDown);
+
   txtZone.appendChild(baliseDiv);
+
+
 }
 
 // Affiche le qrCode unique lie à la ligne cliquable
@@ -145,6 +209,7 @@ function afficherQrCode(e) {
   console.log(this);
   console.log(item);
   affichageLigneParDefault();
+
 
   this.querySelector("span").setAttribute("style", "white-space: nowrap; padding:5px; font-size:0.7em; background-color:#99cc00;");
 
@@ -165,14 +230,21 @@ function afficherQrCode(e) {
 
 // Supprime une ligne dans la zone de drop
 function effacerLigne() {
+
   let id = this.parentNode.id;
-  // let qrCodeTmp = [];
+
+  for(var i =0; i < numFich; i++){
+    if(store.get(`fichierDrop${i}`) == id){
+      store.delete(`fichierDrop${i}`);
+    }
+  }
 
   // Supprime la ligne html lie au fichier
-  for (let i = 1; i <= txtZone.childElementCount; i++) {
+  for (let i = 0; i <= txtZone.childElementCount; i++) {
     if (txtZone.childNodes[i].id == id) {
       txtZone.removeChild(txtZone.childNodes[i]);
     }
+
   }
 
   // Supprime le fichier dans le tableau files
@@ -184,6 +256,30 @@ function effacerLigne() {
   console.log("after suppress", qrCodes);
 }
 
+// Vide les tableaux qrCodes, files et les lignes de la zone drop
+function viderZone(){
+  controllerEnsemble = new ControllerEnsemble();
+  $('#qrName').val('');
+  $(txtZone).empty();
+  txtZone.appendChild(txtDragAndDrop);
+
+  //Permet la suppression des elements du store créé dans le script_ensemble
+  if(store.get(`numFich`)){
+    store.delete(`numFich`);
+  }
+
+  //vérifier si un enregistrement du titre existe
+  if(store.get(`titreEnsemble`)){
+    store.delete(`titreEnsemble`);
+  }
+
+  for(var i =0; i < numFich; i++){
+    if(store.get(`fichierDrop${i}`)){
+      store.delete(`fichierDrop${i}`);
+    }
+  }
+  numFich = 0;
+}
 
 // Redonne l'apparance par default d'une ligne
 function affichageLigneParDefault() {
@@ -192,6 +288,11 @@ function affichageLigneParDefault() {
 
 // Active le button vider et generer apres avoir donne un nom au qrCode
 function activer_button() {
+  //Permet l'enregistrement du titre dans le store
+  store.delete(`titreEnsemble`);
+  var titre = document.getElementById('qrName').value;
+  store.set(`titreEnsemble`, titre);
+
   if (document.getElementById('qrName').value.length > 0) {
     $('#preview ,#empty').attr('disabled', false);
   }
@@ -222,4 +323,49 @@ function saveQRCodeImage() {
   }
 
   xhr.send();
+}
+
+
+//fonction deplacement de fichier vers le haut ou bas  &&&
+function upItem(e){
+  let parentElement = $(this).parent();
+
+  //Gere la continuité sur le moveUp :
+  let parentElementVal = parentElement.attr('id');
+  let prevVal = $(parentElement).prev().attr('id');
+  //Permet de savoir le numFich qui correspond au fichier appelé avec le bouton
+  var tmpVal = 0 ;
+
+  for(var i = 0; i<numFich; i++){
+    if(store.get(`fichierDrop${i}`) == parentElementVal)
+      tmpVal = i;
+    if(store.get(`fichierDrop${i}`) == prevVal)
+      store.set(`fichierDrop${i}`,parentElementVal);
+  }
+  store.set(`fichierDrop${tmpVal}`, prevVal);
+
+
+  $(parentElement).insertBefore($(parentElement).prev());
+
+}
+
+//fonction deplacement de fichier vers bas  &&&
+function downItem(e){
+  let parentElement = $(this).parent();
+
+  //Gere la continuité sur le moveUp :
+  let parentElementVal = parentElement.attr('id');
+  let nextVal = $(parentElement).next().attr('id');
+  //Permet de savoir le numFich qui correspond au fichier appelé avec le bouton
+  var tmpVal = 0 ;
+
+  for(var i = 0; i<numFich; i++){
+    if(store.get(`fichierDrop${i}`) == parentElementVal)
+      tmpVal = i;
+    if(store.get(`fichierDrop${i}`) == nextVal)
+      store.set(`fichierDrop${i}`,parentElementVal);
+  }
+  store.set(`fichierDrop${tmpVal}`, nextVal);
+
+  $(parentElement).insertAfter($(parentElement).next());
 }

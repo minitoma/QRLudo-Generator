@@ -35,6 +35,7 @@ class FacadeController {
     return new QRCodeEnsemble();
   }
 
+
   //Génère une image QRCode à partir d'un objet QRCode dans le div passé en paramètre
   genererQRCode(divImg, qrcode) {
     try {
@@ -43,7 +44,7 @@ class FacadeController {
       }
 
       var rawconstants = fs.readFileSync(`${root}/constants.json`);
-      
+
       var constants = JSON.parse(rawconstants);
       qrcode.qrcode.version = constants.version;
 

@@ -22,6 +22,14 @@ var menu = new Menu();
 
 $(document).ready(function() {
 
+  //appel à la focntion qui permet de lire les enregistrement
+  chargement();
+
+  //Use to implement information on the audio import
+  var info = document.createElement('div'); // balise div : contain html information
+  var info_activ = false; // boolean : give the etat of info (up/off)
+
+
   // desactiver les boutons s'il y a rien à lire ou generer
   if (document.getElementById('qrName').value.length === 0) {
     $('#preview').attr('disabled', true);
@@ -51,30 +59,144 @@ $(document).ready(function() {
 
   $('input#musicUrl').contextmenu(e => {
     menu.popup(remote.getCurrentWindow())
+    if(info_activ == true){
+      document.getElementById('elementsAudio').removeChild(info);
+      info_activ = false;
+    }
   });
-
+   //Show the information about the audio file import (help)
   $('button#showInfo').click(e => {
     e.preventDefault();
-    ipcRenderer.send('showInfoWindow', null);
+    if (info_activ==false){
+        info.innerHTML = ` <div id="info-audio" class="info-content">
+        <h5><a href="#copyLink">Copier le lien téléchargeable de la musique</a></h5>
+          <div id="copyLink" class="info-content">
+            <h6><a href="#google">Google Drive</a></h6>
+            <div id="google" class="info-content">
+              <ul class="list components">
+                <li>
+                  Aller sur internet, se rendre sur son compte Google Drive (https://drive.google.com), se connecter éventuellement
+                </li>
+                <li>
+                  Faire clic-droit sur le fichier audio en question
+                </li>
+                <li>
+                  Cliquer sur "Obtenir le lien partageable"
+                </li>
+                <li>
+                  Revenir sur l'application QRLudo
+                </li>
+                <li>
+                  Vidéo résumant les étapes ci dessus
+                </li>
+              </ul>
+            </div>
+
+            <h6><a href="#dropbox">Dropbox</a></h6>
+            <div id="dropbox" class="info-content">
+              <ul class="list components">
+                <li>
+                  Aller sur internet, se rendre sur son compte Dropbox (https://www.dropbox.com), se connecter éventuellement
+                </li>
+                <li>
+                  Survoller avec la souris le fichier audio en question
+                </li>
+                <li>
+                  Cliquer sur "Partager", un popup va s'ouvrir
+                </li>
+                <li>
+                  En bas à droite du popup ouvert, cliquer sur "Créer un lien"
+                </li>
+                <li>
+                  Toujours sur le popup, cliquer sur "Copier le lien" en bas à droite
+                </li>
+                <li>
+                  Revenir sur l'application QRLudo
+                </li>
+                <li>
+                  Vidéo résumant les étapes ci dessus
+                </li>
+              </ul>
+            </div>
+          </div>
+        </div>`;
+      console.log("test");
+      document.getElementById('elementsAudio').appendChild(info);
+      info_activ = true;
+    }
+    else {
+      document.getElementById('elementsAudio').removeChild(info);
+      info_activ = false;
+    }
+    //ipcRenderer.send('showInfoWindow', null);
   });
 
   $('button#annuler').click(e => {
-    e.preventDefault();
-    var settings = require("electron-settings");
+    
+    //aficher popup quand on click sur reinitialiser
+    // cache le qr générer & desactivation du bouton exporter
+    var popUpQuiter = confirm("Etes vous sûr de vouloir réinitialiser?");
+    if (popUpQuiter == true){      
+      
+      //Les différents store sont clean ici
+      if(store.get(`titreUnique`)){
+        store.delete(`titreUnique`);
+        $("#qrName").val("");
+      }
 
-    if (settings.has("defaultColor")) {
-      $("#qrColor").val(settings.get("defaultColor"));
+      //implémentation des différentes zones de txt enregistrées
+      for(var i = 1; i<=numZoneCourante; i++){
+        if (store.get(`zone${i}`)){
+          store.delete(`zone${i}`);
+        }
+      }
+
+      //On parcours le store pour afficher les texte enregistré dans les zones correspondantes
+      for(var i = 1; i<=numZoneCourante; i++){
+        if (store.get(`text${i}`)){
+          store.delete(`text${i}`);
+        }
+      }
+
+      store.delete("numZoneCourante");
+      numZoneCourante = 0;
+      store.delete("nbZoneDonne")
+      nbZoneDonne = 0;
+
+      $("button#annuler").attr('type','reset');
+
+      let a = $('#legendeTextarea');
       $.each($(".qrData"), function(i, val) {
+        $(`#textarea${i}`).val("");
         $("#cible").empty();
       });
-      $("#qrName").val("");
+
+      $("#cible").append(a);
+      $(a).children('button').attr('disabled', true);
+
+      $('#qrView').hide();
+      $('#saveQRCode').attr('disabled', true);
+      $('#preview').attr('disabled', true);
+
+      var settings = require("electron-settings");
+      if (settings.has("defaultColor")) {
+        $("#qrColor").val(settings.get("defaultColor"));
+      }
+
+      $("#ajouterTexte").attr('disabled', false);
+    }
+    else {
+      $("button#annuler").removeAttr('type');
     }
   });
-
 });
 
 // trigger preview qrcode action
 $('#preview').click(e => {
+
+  //re-afficher le qr generer si le bouton est reinitialiser a deja été utilisé
+  $("#qrView").show();
+
   console.log('preview');
   //enlever les messages en haut de page
   initMessages();
@@ -105,11 +227,73 @@ $('#preview').click(e => {
   // Generate in a div, the qrcode image for qrcode object
   let div = $('#qrView')[0];
 
+  let newQrUnique = new QRCodeUnique(qrName, qrData, qrColor);
+  console.log(newQrUnique);
   previewQRCode(qrName, qrData, qrColor, div);
-
+  //console.log();
   $('#annuler').attr('disabled', false);
 });
 
+
+//Fonction permettant la continuité entre les onglet avec la gestion de l'objet store
+function chargement(){
+
+  //nombre de zone texte courant
+  if(store.get(`nbZoneDonne`))
+    numZoneCourante = store.get(`nbZoneDonne`);
+  else
+    store.set(`nbZoneDonne`,nbZoneDonne);
+
+  if(nbZoneDonne >= 3) {
+    disableButtonAddNewData();
+  }
+
+  //indice des zones textes presente, peut etre superieur au zone texte presente
+  if(store.get(`numZoneCourante`))
+    numZoneCourante = store.get(`numZoneCourante`);
+  else
+    store.set(`numZoneCourante`,numZoneCourante);
+
+  if(store.get(`titreUnique`)){
+    $('#qrName').val(store.get(`titreUnique`));
+  }
+
+  //implémentation des différentes zones de txt enregistrées
+  for(var i = 1; i<=numZoneCourante; i++){
+    if (store.get(`zone${i}`)){
+      var text = document.createElement('div');
+      text.innerHTML = store.get(`zone${i}`);
+      text.setAttribute("class", "d-flex align-items-start legendeQR");
+
+      // L'id du div est différent si c'est une zone de texte ou un fichier audio
+      if(store.get(`zone${i}`).indexOf("textarea") != -1) {
+        text.setAttribute("id", "legendeTextarea");
+      }
+      else {
+        text.setAttribute("id", "inputAudio");
+      }
+
+      $('#cible').append(text);
+    }
+  }
+
+  //On parcours le store pour afficher les texte enregistré dans les zones correspondantes
+  for(var i = 1; i<=numZoneCourante; i++){
+    if (store.get(`text${i}`)){
+      $('#textarea'+(i)).val(store.get(`text${i}`));
+    }
+  }
+
+  //insertion du premier champ Texte
+  if(nbZoneDonne == 0){
+    ajouterChampLegende();
+  }
+  
+  //On desactive le bouton supprimer quand il y a qu'un seul text area
+  if(nbZoneDonne == 1) { 
+    disableButtonDelete();
+  }
+}
 
 // form validation return true if all fields are filled
 function validateForm(inputArray) {
@@ -165,11 +349,14 @@ function saveQRCodeImage() {
     if (xhr.readyState == xhr.DONE) {
       var filesaver = require('file-saver');
       console.log(xhr.response);
-      filesaver.saveAs(xhr.response, qrcode.getName() + '.jpeg');
-      messageInfos("Le QR code a bien été enregistré", "success"); //message a afficher en haut de la page
+      //Dans les deux cas filsaver.saveAs renvoie rien qui s'apparente à un bolléen
+      if(filesaver.saveAs(xhr.response, qrcode.getName() + '.jpeg') == true ){
+        console.log(filesaver.saveAs(xhr.response, qrcode.getName() + '.jpeg').getName);
+        messageInfos("Le QR code a bien été enregistré", "success"); //message a afficher en haut de la page
+      }
+
     }
   }
-
   xhr.send();
 }
 
@@ -202,9 +389,10 @@ function getMusicFromUrl() {
 
       if (this.status == 200) {
         let blob = this.response; // get binary data as a response
-        let contentType = xhr.getResponseHeader("content-type");
-
-        if (contentType == 'audio/mpeg') {
+        let contentType = xhr.getResponseHeader("content-type");        
+        console.log(contentType);
+        
+        if (contentType == 'audio/mpeg' || contentType == 'audio/mp3') {
           // get filename
           let filename = xhr.getResponseHeader("content-disposition").split(";")[1];
           filename = filename.replace('filename="', '');
@@ -255,46 +443,100 @@ function showError(modal, errorMsg, message = "Veuillez coller un lien de fichie
 }
 
 //verifier le champ qrName du formulaire myFormActive puis activer le button generer
+//Le nom du QR Code doit contenir au moins un caractère, sinon le bouton generer n'est pas accessible
 function activer_button() {
+  //Permet l'enregistrement du titre dans le store Titre
+  store.delete(`titreUnique`);
+  var titre = document.getElementById('qrName').value;
+  store.set(`titreUnique`, titre);
+
+
+  $('#preview').attr('disabled', true); //Par defaut le bouton generer est toujours activé, on le desactive dans la condition suivante si necessaire
   if (document.getElementById('qrName').value.length > 0) {
-    $('#preview, #annuler, #ajouterTexte, #showAudio').attr('disabled', false);
+
+    $('#preview, #annuler, #showAudio').attr('disabled', false);
   }
 }
 
+
 //ajouter une nvlle legende (textarea) a chaque click sur button Texte (pour chaque textarea il faut rajouter à l'attribut class la valeur qrData class="... qrData")
 function ajouterChampLegende(valeur = "") {
+  incrementerNbZoneDonne();
+
+  incrementerNumZoneCourante();
 
   var textareaLegende = document.createElement('div');
-  textareaLegende.innerHTML = `<i class='fa fa-play align-self-center icon-player'></i><i class="fa fa-pause align-self-center icon-player"></i><textarea id='testtexxtarea' class='form-control qrData' rows='3' name='legendeQR' placeholder='Mettre la légende'>${valeur}</textarea>
-  <button type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='supprimerChampLegende(this);'>
-  <div class="inline-block">
-    <i class='fa fa-trash-alt'></i></button>
-    <button type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='moveUp(this);'>
-    <i class='fa fa-arrow-up'></i></button>
-    <button type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='moveDown(this);'>
-    <i class='fa fa-arrow-down'></i></button>
-  </div>`;
+  textareaLegende.innerHTML = `<i class='fa fa-play align-self-center icon-player'></i><i class="fa fa-pause align-self-center icon-player"></i>
+    <textarea id='textarea${numZoneCourante}' class='form-control qrData' rows='3' name='legendeQR' placeholder='Mettre la légende (255 caractères maximum)' maxlength='255' onkeyup="verifNombreCaractere(${numZoneCourante});">${valeur}</textarea>
+    <button id='delete${numZoneCourante}' type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='supprimerChampLegende(this, ${numZoneCourante});'>
+    <div class="inline-block">
+      <i class='fa fa-trash-alt'></i></button>
+      <button type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='moveUp(this, ${numZoneCourante});'>
+      <i class='fa fa-arrow-up'></i></button>
+      <button type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='moveDown(this, ${numZoneCourante});'>
+      <i class='fa fa-arrow-down'></i></button>`;
   textareaLegende.setAttribute("class", "d-flex align-items-start legendeQR");
-  textareaLegende.setAttribute("id", "legendeTexarea");
+  textareaLegende.setAttribute("id", "legendeTextarea");
 
   document.getElementById('cible').appendChild(textareaLegende);
+
+  activateAllButtonDelete();
+
+  //Permet d'enregistrer l'ajout de case texte
+  store.set(`zone${numZoneCourante}`,textareaLegende.innerHTML);
+  
+  //limiter zone de texte
+  if (nbZoneDonne>=3){
+    disableButtonAddNewData();
+  }
 }
 
-function supprimerChampLegende(e) {
-  $(e).parents('div#legendeTexarea').remove();
+//verifier si le nombre de caractère maximal est respecté, si ce n'est pas le cas on affiche une pop up d'informations
+function verifNombreCaractere(num) {
+  //Permet l'enregistrement du text dans le store
+  store.delete(`text${num}`);
+  var txt = document.getElementById('textarea'+num).value;
+  store.set(`text${num}`, txt);
+
+
+  $('#messages').empty();
+  if(document.getElementById('textarea'+num).value.length >= $('#textarea'+num).attr('maxlength')) {
+    messageInfos("La limite de caractère est atteinte (255 caractères)","warning");
+  }
+}
+
+//supprimeun le textarea correspondant au numText
+function supprimerChampLegende(e, numText) {
+  decrementerNbZoneDonne();
+
+  //suppression dans le store de la zone de txt correspondante
+  store.delete(`text`+numText);
+  store.delete(`zone`+numText);
+
+  $(e).parents('div#legendeTextarea').remove();
+  
+  activateButtonAddNewData();
+
+  if(nbZoneDonne == 1) {    
+    disableButtonDelete();
+  }
 }
 
 //generer un input 'pour un fichier audio' -> nom de fichier + url (pour chaque input il faut rajouter à l'attribut class la valeur qrData class=".. qrData")
 function ajouterChampSon(nom, url) {
+  incrementerNbZoneDonne();
+
+  incrementerNumZoneCourante();
 
   var inputSon = document.createElement('div');
-  inputSon.innerHTML = `<i class='fa fa-play align-self-center icon-player'></i><i class='fa fa-pause align-self-center icon-player'></i><input type='text' id='${url}' name='AudioName' class='form-control qrData' value='${nom}' readonly>
-    <button type='button' class='btn btn-outline-success legendeQR-close-btn align-self-center' onclick='supprimerChampSon(this);'>
+  inputSon.innerHTML = `<i class='fa fa-play align-self-center icon-player'></i><i class='fa fa-pause align-self-center icon-player'></i>
+    <input type='text' id='${url}' name='AudioName' class='form-control qrData' value='${nom}' readonly>
+    <button id='delete${numZoneCourante}' type='button' class='btn btn-outline-success legendeQR-close-btn align-self-center' onclick='supprimerChampSon(this,${numZoneCourante});'>
     <div class="inline-block">
       <i class='fa fa-trash-alt'></i></button>
-      <button type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='moveUp(this);'>
+      <button type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='moveUp(this,${numZoneCourante});'>
       <i class='fa fa-arrow-up'></i></button>
-      <button type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='moveDown(this);'>
+      <button type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='moveDown(this,${numZoneCourante});'>
       <i class='fa fa-arrow-down'></i></button>
     </div>`;
   inputSon.setAttribute("class", "d-flex align-items-start legendeQR");
@@ -303,31 +545,126 @@ function ajouterChampSon(nom, url) {
 
   $('#listeMusic .close').click();
 
+  store.set(`zone${numZoneCourante}`,inputSon.innerHTML);
+
+  activateAllButtonDelete();
+
+  if (nbZoneDonne>=3){
+    disableButtonAddNewData();
+  }
 }
 
 //supprimer un champ Audio -> event onclick
-function supprimerChampSon(e) {
+function supprimerChampSon(e, numText) {
+  decrementerNbZoneDonne();
+
+  //suppression dans le store de la zone de txt correspondante
+  store.delete(`text`+numText);
+  store.delete(`zone`+numText);
+
   $(e).parents('div#inputAudio').remove();
+
+  activateButtonAddNewData();
+
+  if(nbZoneDonne == 1) {
+    disableButtonDelete();
+  }
 }
 
 // déplacer au dessus du champ précédent
-function moveUp(e) {
+function moveUp(e, numTxt) {
   let prev = $(e).parents('.legendeQR').prev();
   let div = $(e).parents('.legendeQR');
 
+  let divVal = $(e).parents('.legendeQR').children('textarea').val();
+  let prevVal = $(e).parents('.legendeQR').prev().children('textarea').val()
+
   if (prev.length > 0) {
+
+    for(var i = 1; i<numZoneCourante+1; i++){
+      if(store.get("text"+i) == prevVal)
+        store.set("text"+i,divVal);
+    }
+    store.set("text"+numTxt,prevVal);
+
     div.remove();
     div.insertBefore(prev);
   }
 }
 
 // déplacer en dessous du champ suivant
-function moveDown(e) {
+function moveDown(e,numTxt) {
   let next = $(e).parents('.legendeQR').next();
   let div = $(e).parents('.legendeQR');
 
+  let divVal = $(e).parents('.legendeQR').children('textarea').val();
+  let nextVal = $(e).parents('.legendeQR').next().children('textarea').val();
+
   if (next.length > 0) {
+
+    for(var i = 1; i<numZoneCourante+1; i++){
+      if(store.get("text"+i) == nextVal)
+        store.set("text"+i,divVal);
+    }
+    store.set("text"+numTxt,nextVal);
+
     div.remove();
     div.insertAfter(next);
   }
+
+
 }
+
+// Fonction qui incremente de 1 le nombre de zones de données
+function incrementerNbZoneDonne() {
+  store.delete(`nbZoneDonne`);
+  nbZoneDonne++; // Nouveau numero pour le prochain textarea
+  store.set(`nbZoneDonne`,nbZoneDonne);
+}
+
+// Fonction qui décremente de 1 le nombre de zones de données
+function decrementerNbZoneDonne() {
+  store.delete(`nbZoneDonne`);
+  nbZoneDonne--; // Nouveau numero pour le prochain textarea
+  store.set(`nbZoneDonne`,nbZoneDonne);
+}
+
+//Permet de set le numero de la nouvelle zone de donnée courante
+function incrementerNumZoneCourante() {
+  store.delete(`numZoneCourante`);
+  numZoneCourante++; // Nouveau numero pour le prochain textarea
+  store.set(`numZoneCourante`,numZoneCourante);
+}
+
+//Permet de desactiver le bouton supprimer de la zone de donnée restante
+function disableButtonDelete() {
+  for(var i = 1; i<numZoneCourante+1; i++){    
+    if(store.get(`zone${i}`))
+      $("#delete" + i).attr('disabled', true);
+  }
+}
+
+//Permet d'activer tous les boutons supprimer des zones de données
+function activateAllButtonDelete() {
+  for(var i = 1; i<numZoneCourante+1; i++){    
+    if(store.get(`zone${i}`))
+      $("#delete" + i).attr('disabled', false);
+  }
+}
+
+//Permet d'activer les boutons qui ajoutes des nouvelles zones de données
+// => Le bouton 'Ajouter Nouveau Contenu' et le bouton 'Audio'
+function activateButtonAddNewData() {
+  $('#ajouterTexte').attr('disabled', false);
+  $('#showAudio').attr('disabled', false);
+}
+
+//Permet de desactiver les boutons qui ajoutes des nouvelles zones de données
+// => Le bouton 'Ajouter Nouveau Contenu' et le bouton 'Audio'
+function disableButtonAddNewData() {
+  $('#ajouterTexte').attr('disabled', true);
+  $('#showAudio').attr('disabled', true);
+}
+
+
+ 

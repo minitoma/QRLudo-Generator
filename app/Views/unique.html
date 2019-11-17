@@ -32,6 +32,11 @@
               <div id="cible">
 
               </div>
+              <div class="ajoutZoneTexte" align="right" >
+                <button style="margin-top:10px" type="button" class="btn btn-outline-success btn-unique-xl" name="ajouterTexte" id="ajouterTexte" onclick="ajouterChampLegende();">
+                  <i class="fa fa-file-alt"></i>&nbsp;&nbsp;Ajouter Nouveau contenu
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -39,20 +44,24 @@
 
     </div>
     <div class="card-footer form-inline">
-      <button type="button" class="btn btn-outline-success btn-unique-xl" name="ajouterTexte" id="ajouterTexte" onclick="ajouterChampLegende();">
-        <i class="fa fa-file-alt"></i>&nbsp;&nbsp;Texte
-      </button>
-      <button type="button" id="showAudio" class="btn btn-outline-success btn-unique-xl" name="ajouterSon" data-toggle="modal" data-target="#listeMusic">
-        <i class="fa fa-music"></i>&nbsp;&nbsp;Audio
-      </button>
-      <div class="input-group  btn-unique-xl">
-        <div class="input-group-prepend">
-          <div class="input-group-text"><i class="fa fa-palette"></i></div>
-        </div>
-        <input type="color" id="qrColor" value="#000000">
+      <div class="card col-md-auto "  >
+        <button type="button" id="showAudio" class="btn btn-outline-success btn-unique-xl  " name="ajouterSon" data-toggle="modal" data-target="#listeMusic">
+          <i class="fa fa-music"></i>&nbsp;&nbsp;Audio
+        </button>
+        <button style="margin-top:10px" class="btn btn-outline-success btn-unique-xl  " id="annuler">
+          <i class="fa fa-sync"></i>&nbsp;&nbsp;Réinitialiser
+        </button>
       </div>
-      <button type="reset" class="btn btn-outline-success btn-unique-xl" id="annuler"><i class="fa fa-sync"></i>&nbsp;&nbsp;Réinitialiser</button>
-      <button type="submit" class="btn btn-outline-success" id="preview"><i class="fa fa-cogs"></i>&nbsp;&nbsp;Générer</button>
+      <div class="card col-md-auto">
+        <button type="button" class="btn btn-outline-success btn-unique-xl " id="saveQRCode" disabled>
+          <i class="fa fa-download"></i>&nbsp;&nbsp;Exporter
+        </button>
+        <button type="submit" style="margin-top:10px" class="btn btn-outline-success btn-unique-xl" id="preview">
+          <i class="fa fa-cogs"></i>&nbsp;&nbsp;Générer
+        </button>
+      </div>
+
+
     </div>
   </form>
 </div>
@@ -104,13 +113,16 @@
       <div class="modal-body scrollbar-success">
         <div class="list-group" id="elementsAudio">
           <div class="form-group">
-            <button type="button" class="btn btn-outline-success" id="showInfo" title="Afficher aide">
-              <i class="fa fa-info-circle"></i>
-            </button>
+
             <label class="col-sm-12 control-label" style="color:#28a745;padding-top:10px;">Veuillez copier et coller le lien téléchargeable du fichier audio</label>
             <div class="col-sm-12">
               <input type="text" id="musicUrl" name="musicUrl" class="form-control" onpaste="getMusicFromUrl()">
             </div>
+            <br>
+            <button type="button" class="btn btn-outline-success" id="showInfo" title="Afficher aide">
+              <i class="fa fa-info-circle"></i>
+            </button>
+
           </div>
         </div>
       </div>

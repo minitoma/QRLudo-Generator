@@ -33,6 +33,7 @@ class QRCodeUnique {
   // color = the qrcode color
   constructor(name = "", data = [], color = "") {
     this.qrcode = {
+      id: new Date().getTime(), // ajout de id pour les QR unique &&
       name: name,
       type: "unique",
       data: data,
@@ -42,6 +43,9 @@ class QRCodeUnique {
 
   getQRCode() {
     return this.qrcode;
+  }
+  getId() {
+    return this.qrcode.id;
   }
 
   getName() {
@@ -79,6 +83,9 @@ class QRCodeUnique {
 
   setData(data) {
     this.qrcode.data = data;
+  }
+  setId(id) {
+    this.qrcode.id = id;
   }
 
   addData(element) {

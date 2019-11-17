@@ -5,6 +5,23 @@
  * @Last modified time: 2019-01-28T01:41:24+01:00
  */
 
+//Déclaration du store permettant la continuité entre les differents onglets
+const Store = require('electron-store');
+const store = new Store();
+
+//Déclaration de l'entier renseignant le nombre de zones de donnee dans l'onglet qr unique (les zones de textes ou les fichier audio)
+nbZoneDonne = 0;
+
+//Déclaration de l'entier permettant l'implémentation des différentes zones de données dans l'onglet qr unique
+numZoneCourante = 0;
+
+//nombre de fichier ajouté dans l'onglet ensemble
+numFich = 0;
+
+//nombre de reponse soumises à la question dans l'onglet QCM
+numReponseQCM = 0;
+
+
 const path = require('path');
 const root = path.dirname(require.main.filename);
 const piexif = require('piexifjs');
@@ -166,6 +183,12 @@ const {
   Reponse,
   Question
 } = require(`${root}/Model/QRCodeQuestionReponse`);
+
+const {
+  ProjetQCM,
+  ReponseQCM,
+  QuestionQCM
+} = require(`${root}/Model/QRCodeQCM`);
 
 // Instanciate object
 let controllerEnsemble = new ControllerEnsemble();

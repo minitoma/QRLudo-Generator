@@ -8,6 +8,7 @@ install-full:
 	@echo "Installation des librairies requises"
 	sudo npm install electron --unsafe-perm=true --allow-root
 	sudo npm install
+	sudo npm install electron-store
 	@echo "Installation de jquery-qrcode-0.14.0"
 	sudo mkdir jquery-qrcode-temp
 	sudo wget -q https://release.larsjung.de/jquery-qrcode/jquery-qrcode-0.14.0.zip

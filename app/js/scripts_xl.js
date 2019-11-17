@@ -105,7 +105,7 @@
                        +"<i class='fa fa-trash-alt'></i>"
                        +"</button>";
      textareaLegende.setAttribute("class", "d-flex align-items-start legendeQR");
-     textareaLegende.setAttribute("id", "legendeTexarea");
+     textareaLegende.setAttribute("id", "legendeTextarea");
      if(valeur != null){
        textareaLegende.setAttribute("value",valeur);
      }
@@ -115,7 +115,7 @@
 
    //supprimer la legende selectionnée -> event onclick
    function supprimerChampLegende(e){
-       $(e).parents('div#legendeTexarea').remove();
+       $(e).parents('div#legendeTextarea').remove();
      }
 
      //generer un input 'pour un fichier audio' -> nom de fichier + url (pour chaque input il faut rajouter à l'attribut class la valeur qrData class=".. qrData")
