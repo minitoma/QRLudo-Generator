@@ -15,15 +15,30 @@
   * 2019
 **/
 
+const {
+  MdFiveConverter
+} = require(`${root}/Controller/MDFiveConverter`);
 
 /*
  *Classe permettant de creer un projet de questions_reponses
  */
 class Projet {
   //Constructeur d'un Projet
-  constructor(nom = "No_Name", questions = null, reponses = []) {
+  constructor(nom = "No_Name", questions = [], reponses = []) {
+    //Génération de l'id unique
+    var dataString =  nom;
+    for (var i = 0; i < questions.length; i++) {
+      dataString += question[i];
+    }
+    //TODO Envoyer id uniquement
+    for (var i = 0; i < reponses.length; i++) {
+      dataString += reponse[i];
+    }
+
+    var md5Value = MDFiveConverter.convert(dataString);
+
     this.projet = {
-      id: new Date().getTime(),
+      id: md5Value,
       nom: nom,
       questions: questions,
       reponses: reponses

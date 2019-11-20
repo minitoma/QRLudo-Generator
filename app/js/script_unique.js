@@ -141,23 +141,23 @@ $(document).ready(function() {
       }
 
       //implémentation des différentes zones de txt enregistrées
-      for(var i = 1; i<=numTextArea; i++){
-        if (store.get(`textZone${i}`)){
-          store.delete(`textZone${i}`);
+      for(var i = 1; i<=numZoneCourante; i++){
+        if (store.get(`zone${i}`)){
+          store.delete(`zone${i}`);
         }
       }
 
       //On parcours le store pour afficher les texte enregistré dans les zones correspondantes
-      for(var i = 1; i<=numTextArea; i++){
+      for(var i = 1; i<=numZoneCourante; i++){
         if (store.get(`text${i}`)){
           store.delete(`text${i}`);
         }
       }
 
-      store.delete("numTextArea");
-      numTextArea = 0;
-      store.delete("numTextAreaCourant")
-      numTextAreaCourant = 0;
+      store.delete("numZoneCourante");
+      numZoneCourante = 0;
+      store.delete("nbZoneDonne")
+      nbZoneDonne = 0;
 
       $("button#annuler").attr('type','reset');
 
@@ -235,51 +235,59 @@ $('#preview').click(e => {
 function chargement(){
 
   //nombre de zone texte courant
-  if(store.get(`numTextAreaCourant`))
-    numTextArea = store.get(`numTextAreaCourant`);
+  if(store.get(`nbZoneDonne`))
+    numZoneCourante = store.get(`nbZoneDonne`);
   else
-    store.set(`numTextAreaCourant`,numTextAreaCourant);
+    store.set(`nbZoneDonne`,nbZoneDonne);
 
-  //On désactive le bouton de rajout de champtexte si le nombre est superieur à celui recommandé
-  if(numTextAreaCourant >= 3)
-    $("#ajouterTexte").attr('disabled', true);
+  if(nbZoneDonne >= 3) {
+    disableButtonAddNewData();
+  }
 
   //indice des zones textes presente, peut etre superieur au zone texte presente
-  if(store.get(`numTextArea`))
-    numTextArea = store.get(`numTextArea`);
+  if(store.get(`numZoneCourante`))
+    numZoneCourante = store.get(`numZoneCourante`);
   else
-    store.set(`numTextArea`,numTextArea);
+    store.set(`numZoneCourante`,numZoneCourante);
 
   if(store.get(`titreUnique`)){
     $('#qrName').val(store.get(`titreUnique`));
   }
 
   //implémentation des différentes zones de txt enregistrées
-  for(var i = 1; i<=numTextArea; i++){
-    if (store.get(`textZone${i}`)){
+  for(var i = 1; i<=numZoneCourante; i++){
+    if (store.get(`zone${i}`)){
       var text = document.createElement('div');
-      text.innerHTML = store.get(`textZone${i}`);
+      text.innerHTML = store.get(`zone${i}`);
       text.setAttribute("class", "d-flex align-items-start legendeQR");
-      text.setAttribute("id", "legendeTextarea");
+
+      // L'id du div est différent si c'est une zone de texte ou un fichier audio
+      if(store.get(`zone${i}`).indexOf("textarea") != -1) {
+        text.setAttribute("id", "legendeTextarea");
+      }
+      else {
+        text.setAttribute("id", "inputAudio");
+      }
+
       $('#cible').append(text);
     }
   }
 
   //On parcours le store pour afficher les texte enregistré dans les zones correspondantes
-  for(var i = 1; i<=numTextArea; i++){
+  for(var i = 1; i<=numZoneCourante; i++){
     if (store.get(`text${i}`)){
       $('#textarea'+(i)).val(store.get(`text${i}`));
     }
   }
 
   //insertion du premier champ Texte
-  if(numTextAreaCourant == 0){
+  if(nbZoneDonne == 0){
     ajouterChampLegende();
   }
 
   //On desactive le bouton supprimer quand il y a qu'un seul text area
-  if(numTextAreaCourant == 1) {
-    disabledButtonDelete();
+  if(nbZoneDonne == 1) { 
+    disableButtonDelete();
   }
 }
 
@@ -449,38 +457,33 @@ function activer_button() {
 
 //ajouter une nvlle legende (textarea) a chaque click sur button Texte (pour chaque textarea il faut rajouter à l'attribut class la valeur qrData class="... qrData")
 function ajouterChampLegende(valeur = "") {
-  store.delete(`numTextAreaCourant`);
-  numTextAreaCourant++; // Nouveau numero pour le prochain textarea
-  store.set(`numTextAreaCourant`,numTextAreaCourant);
+  incrementerNbZoneDonne();
 
-  store.delete(`numTextArea`);
-  numTextArea++; // Nouveau numero pour le prochain textarea
-  store.set(`numTextArea`,numTextArea);
+  incrementerNumZoneCourante();
 
   var textareaLegende = document.createElement('div');
   textareaLegende.innerHTML = `<i class='fa fa-play align-self-center icon-player'></i><i class="fa fa-pause align-self-center icon-player"></i>
-    <textarea id='textarea${numTextArea}' class='form-control qrData' rows='3' name='legendeQR' placeholder='Tapez votre texte (255 caractères maximum)' maxlength='255' onkeyup="verifNombreCaractere(${numTextArea});">${valeur}</textarea>
-    <button id='delete${numTextArea}' type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='supprimerChampLegende(this, ${numTextArea});'>
+    <textarea id='textarea${numZoneCourante}' class='form-control qrData' rows='3' name='legendeQR' placeholder='Mettre la légende (255 caractères maximum)' maxlength='255' onkeyup="verifNombreCaractere(${numZoneCourante});">${valeur}</textarea>
+    <button id='delete${numZoneCourante}' type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='supprimerChampLegende(this, ${numZoneCourante});'>
     <div class="inline-block">
       <i class='fa fa-trash-alt'></i></button>
-      <button type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='moveUp(this, ${numTextArea});'>
+      <button type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='moveUp(this, ${numZoneCourante});'>
       <i class='fa fa-arrow-up'></i></button>
-      <button type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='moveDown(this, ${numTextArea});'>
+      <button type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='moveDown(this, ${numZoneCourante});'>
       <i class='fa fa-arrow-down'></i></button>`;
   textareaLegende.setAttribute("class", "d-flex align-items-start legendeQR");
   textareaLegende.setAttribute("id", "legendeTextarea");
 
   document.getElementById('cible').appendChild(textareaLegende);
 
-  //degrisser boutons premiere zone de texte apres ajout d'une nouvelle zone
-  $($("#legendeTextarea").children()).attr('disabled', false);
+  activateAllButtonDelete();
 
   //Permet d'enregistrer l'ajout de case texte
-  store.set(`textZone${numTextArea}`,textareaLegende.innerHTML);
-
-  //limiter zone de de texte
-  if (numTextAreaCourant>=3){
-    $('#ajouterTexte').attr('disabled', true);
+  store.set(`zone${numZoneCourante}`,textareaLegende.innerHTML);
+  
+  //limiter zone de texte
+  if (nbZoneDonne>=3){
+    disableButtonAddNewData();
   }
 }
 
@@ -500,43 +503,36 @@ function verifNombreCaractere(num) {
 
 //supprimeun le textarea correspondant au numText
 function supprimerChampLegende(e, numText) {
-
-  store.delete(`numTextAreaCourant`);
-  numTextAreaCourant--; // Nouveau numero pour le prochain textarea
-  store.set(`numTextAreaCourant`,numTextAreaCourant);
+  decrementerNbZoneDonne();
 
   //suppression dans le store de la zone de txt correspondante
   store.delete(`text`+numText);
-  store.delete(`textZone`+numText);
+  store.delete(`zone`+numText);
 
   $(e).parents('div#legendeTextarea').remove();
+  
+  activateButtonAddNewData();
 
-  $('#ajouterTexte').attr('disabled', false);
-
-  if(numTextAreaCourant == 1) {
-    disabledButtonDelete();
-  }
-}
-
-//Permet de desactiver le bouton supprimer du texte area restant
-function disabledButtonDelete() {
-  for(var i = 1; i<numTextArea+1; i++){
-    if(store.get(`textZone${i}`))
-      $("#delete" + i).attr('disabled', true);
+  if(nbZoneDonne == 1) {    
+    disableButtonDelete();
   }
 }
 
 //generer un input 'pour un fichier audio' -> nom de fichier + url (pour chaque input il faut rajouter à l'attribut class la valeur qrData class=".. qrData")
 function ajouterChampSon(nom, url) {
+  incrementerNbZoneDonne();
+
+  incrementerNumZoneCourante();
 
   var inputSon = document.createElement('div');
-  inputSon.innerHTML = `<i class='fa fa-play align-self-center icon-player'></i><i class='fa fa-pause align-self-center icon-player'></i><input type='text' id='${url}' name='AudioName' class='form-control qrData' value='${nom}' readonly>
-    <button type='button' class='btn btn-outline-success legendeQR-close-btn align-self-center' onclick='supprimerChampSon(this);'>
+  inputSon.innerHTML = `<i class='fa fa-play align-self-center icon-player'></i><i class='fa fa-pause align-self-center icon-player'></i>
+    <input type='text' id='${url}' name='AudioName' class='form-control qrData' value='${nom}' readonly>
+    <button id='delete${numZoneCourante}' type='button' class='btn btn-outline-success legendeQR-close-btn align-self-center' onclick='supprimerChampSon(this,${numZoneCourante});'>
     <div class="inline-block">
       <i class='fa fa-trash-alt'></i></button>
-      <button type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='moveUp(this);'>
+      <button type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='moveUp(this,${numZoneCourante});'>
       <i class='fa fa-arrow-up'></i></button>
-      <button type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='moveDown(this);'>
+      <button type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='moveDown(this,${numZoneCourante});'>
       <i class='fa fa-arrow-down'></i></button>
     </div>`;
   inputSon.setAttribute("class", "d-flex align-items-start legendeQR");
@@ -545,11 +541,30 @@ function ajouterChampSon(nom, url) {
 
   $('#listeMusic .close').click();
 
+  store.set(`zone${numZoneCourante}`,inputSon.innerHTML);
+
+  activateAllButtonDelete();
+
+  if (nbZoneDonne>=3){
+    disableButtonAddNewData();
+  }
 }
 
 //supprimer un champ Audio -> event onclick
-function supprimerChampSon(e) {
+function supprimerChampSon(e, numText) {
+  decrementerNbZoneDonne();
+
+  //suppression dans le store de la zone de txt correspondante
+  store.delete(`text`+numText);
+  store.delete(`zone`+numText);
+
   $(e).parents('div#inputAudio').remove();
+
+  activateButtonAddNewData();
+
+  if(nbZoneDonne == 1) {
+    disableButtonDelete();
+  }
 }
 
 // déplacer au dessus du champ précédent
@@ -562,7 +577,7 @@ function moveUp(e, numTxt) {
 
   if (prev.length > 0) {
 
-    for(var i = 1; i<numTextArea+1; i++){
+    for(var i = 1; i<numZoneCourante+1; i++){
       if(store.get("text"+i) == prevVal)
         store.set("text"+i,divVal);
     }
@@ -583,7 +598,7 @@ function moveDown(e,numTxt) {
 
   if (next.length > 0) {
 
-    for(var i = 1; i<numTextArea+1; i++){
+    for(var i = 1; i<numZoneCourante+1; i++){
       if(store.get("text"+i) == nextVal)
         store.set("text"+i,divVal);
     }
@@ -595,3 +610,57 @@ function moveDown(e,numTxt) {
 
 
 }
+
+// Fonction qui incremente de 1 le nombre de zones de données
+function incrementerNbZoneDonne() {
+  store.delete(`nbZoneDonne`);
+  nbZoneDonne++; // Nouveau numero pour le prochain textarea
+  store.set(`nbZoneDonne`,nbZoneDonne);
+}
+
+// Fonction qui décremente de 1 le nombre de zones de données
+function decrementerNbZoneDonne() {
+  store.delete(`nbZoneDonne`);
+  nbZoneDonne--; // Nouveau numero pour le prochain textarea
+  store.set(`nbZoneDonne`,nbZoneDonne);
+}
+
+//Permet de set le numero de la nouvelle zone de donnée courante
+function incrementerNumZoneCourante() {
+  store.delete(`numZoneCourante`);
+  numZoneCourante++; // Nouveau numero pour le prochain textarea
+  store.set(`numZoneCourante`,numZoneCourante);
+}
+
+//Permet de desactiver le bouton supprimer de la zone de donnée restante
+function disableButtonDelete() {
+  for(var i = 1; i<numZoneCourante+1; i++){    
+    if(store.get(`zone${i}`))
+      $("#delete" + i).attr('disabled', true);
+  }
+}
+
+//Permet d'activer tous les boutons supprimer des zones de données
+function activateAllButtonDelete() {
+  for(var i = 1; i<numZoneCourante+1; i++){    
+    if(store.get(`zone${i}`))
+      $("#delete" + i).attr('disabled', false);
+  }
+}
+
+//Permet d'activer les boutons qui ajoutes des nouvelles zones de données
+// => Le bouton 'Ajouter Nouveau Contenu' et le bouton 'Audio'
+function activateButtonAddNewData() {
+  $('#ajouterTexte').attr('disabled', false);
+  $('#showAudio').attr('disabled', false);
+}
+
+//Permet de desactiver les boutons qui ajoutes des nouvelles zones de données
+// => Le bouton 'Ajouter Nouveau Contenu' et le bouton 'Audio'
+function disableButtonAddNewData() {
+  $('#ajouterTexte').attr('disabled', true);
+  $('#showAudio').attr('disabled', true);
+}
+
+
+ 
