@@ -72,6 +72,10 @@ class QRCodeUnique {
     return this.qrcode.data; // return all data
   }
 
+  getDataAll(){
+    return this.qrcode.data;
+  }
+
   setData(data) {
     this.qrcode.data = data;
   }

@@ -223,7 +223,7 @@ class Question {
       message = settings.get("defaultBonneReponse")
     }
 
-    this.qrcode.data.push({"id": reponseUid});
+    this.qrcode.data.push({"id": reponseUid });
   }
 
   removeReponse(reponseUid){
