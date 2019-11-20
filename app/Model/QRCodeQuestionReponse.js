@@ -217,14 +217,19 @@ class Question {
     return null;
   }
 
+  addData(element) {
+    this.qrcode.data.push(element);
+  }
   addReponse(reponseUid, message='') {
     if(message===''){
       var settings = require("electron-settings");
       message = settings.get("defaultBonneReponse")
     }
 
-    this.qrcode.data.push({"id": reponseUid });
+    this.addData(reponseUid);
   }
+
+
 
   removeReponse(reponseUid){
     for(let rep of this.qrcode.data){

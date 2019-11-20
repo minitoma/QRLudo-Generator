@@ -130,7 +130,7 @@ $(document).ready(function() {
     // cache le qr générer & desactivation du bouton exporter
     var popUpQuiter = confirm("Etes vous sûr de vouloir réinitialiser?");
     if (popUpQuiter==true){
-      // masquage du lecteur de qr code 
+      // masquage du lecteur de qr code
       $('#qrView').hide();
 
       //grissage des bouton qui etais grissé de basse
