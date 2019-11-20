@@ -86,9 +86,7 @@ $(document).ready(function() {
                 <li>
                   Revenir sur l'application QRLudo
                 </li>
-                <li>
-                  Vidéo résumant les étapes ci dessus
-                </li>
+
               </ul>
             </div>
 
@@ -113,9 +111,7 @@ $(document).ready(function() {
                 <li>
                   Revenir sur l'application QRLudo
                 </li>
-                <li>
-                  Vidéo résumant les étapes ci dessus
-                </li>
+
               </ul>
             </div>
           </div>
@@ -132,12 +128,12 @@ $(document).ready(function() {
   });
 
   $('button#annuler').click(e => {
-    
+
     //aficher popup quand on click sur reinitialiser
     // cache le qr générer & desactivation du bouton exporter
     var popUpQuiter = confirm("Etes vous sûr de vouloir réinitialiser?");
-    if (popUpQuiter == true){      
-      
+    if (popUpQuiter == true){
+
       //Les différents store sont clean ici
       if(store.get(`titreUnique`)){
         store.delete(`titreUnique`);
@@ -280,9 +276,9 @@ function chargement(){
   if(numTextAreaCourant == 0){
     ajouterChampLegende();
   }
-  
+
   //On desactive le bouton supprimer quand il y a qu'un seul text area
-  if(numTextAreaCourant == 1) { 
+  if(numTextAreaCourant == 1) {
     disabledButtonDelete();
   }
 }
@@ -381,9 +377,9 @@ function getMusicFromUrl() {
 
       if (this.status == 200) {
         let blob = this.response; // get binary data as a response
-        let contentType = xhr.getResponseHeader("content-type");        
+        let contentType = xhr.getResponseHeader("content-type");
         console.log(contentType);
-        
+
         if (contentType == 'audio/mpeg' || contentType == 'audio/mp3') {
           // get filename
           let filename = xhr.getResponseHeader("content-disposition").split(";")[1];
@@ -463,7 +459,7 @@ function ajouterChampLegende(valeur = "") {
 
   var textareaLegende = document.createElement('div');
   textareaLegende.innerHTML = `<i class='fa fa-play align-self-center icon-player'></i><i class="fa fa-pause align-self-center icon-player"></i>
-    <textarea id='textarea${numTextArea}' class='form-control qrData' rows='3' name='legendeQR' placeholder='Mettre la légende (255 caractères maximum)' maxlength='255' onkeyup="verifNombreCaractere(${numTextArea});">${valeur}</textarea>
+    <textarea id='textarea${numTextArea}' class='form-control qrData' rows='3' name='legendeQR' placeholder='Tapez votre texte (255 caractères maximum)' maxlength='255' onkeyup="verifNombreCaractere(${numTextArea});">${valeur}</textarea>
     <button id='delete${numTextArea}' type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='supprimerChampLegende(this, ${numTextArea});'>
     <div class="inline-block">
       <i class='fa fa-trash-alt'></i></button>
@@ -481,7 +477,7 @@ function ajouterChampLegende(valeur = "") {
 
   //Permet d'enregistrer l'ajout de case texte
   store.set(`textZone${numTextArea}`,textareaLegende.innerHTML);
-  
+
   //limiter zone de de texte
   if (numTextAreaCourant>=3){
     $('#ajouterTexte').attr('disabled', true);
@@ -514,7 +510,7 @@ function supprimerChampLegende(e, numText) {
   store.delete(`textZone`+numText);
 
   $(e).parents('div#legendeTextarea').remove();
-  
+
   $('#ajouterTexte').attr('disabled', false);
 
   if(numTextAreaCourant == 1) {
@@ -522,7 +518,7 @@ function supprimerChampLegende(e, numText) {
   }
 }
 
-//Permet de desactiver le bouton supprimer du texte area restant 
+//Permet de desactiver le bouton supprimer du texte area restant
 function disabledButtonDelete() {
   for(var i = 1; i<numTextArea+1; i++){
     if(store.get(`textZone${i}`))

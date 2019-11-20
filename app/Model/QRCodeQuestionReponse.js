@@ -144,11 +144,12 @@ class Projet {
  */
 class Question {
   //Constructeur d'une Question
-  constructor(title, bonneReponse, mauvaiseReponse, reponsesUIDs = [], color = '#000000') {
+  constructor(title, bonneReponse, mauvaiseReponse, reponsesUIDs = [], nombreMinReponse, color = '#000000') {
     this.qrcode = {
       id: new Date().getTime(),
       name: title,
       data: reponsesUIDs,
+      nb_min_reponses : nombreMinReponse,
       type: "question",
       color: color,
       text_bonne_reponse: bonneReponse,
@@ -207,7 +208,7 @@ class Question {
       message = settings.get("defaultBonneReponse")
     }
 
-    this.qrcode.data.push({"id": reponseUid, "message":message});
+    this.qrcode.data.push({"id": reponseUid});
   }
 
   removeReponse(reponseUid){

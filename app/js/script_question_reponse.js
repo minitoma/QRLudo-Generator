@@ -11,6 +11,8 @@ nombre_question=0;
 $(document).ready(function() {
 
   $("#play-sound-div").hide();
+  $("#dropZone").hide();
+
 
   //fonction pour ajouter un nouvelle reponse
   $("#validerDataDialog").click(function(){
@@ -75,14 +77,23 @@ $(document).ready(function() {
 
 //fonction pour e
   $("#preview").click(function() {
+      previewQRCodeQuestion();
+      $('#qrView').show();
+
+  });
+
+  $("#genererQestion").click(function() {
     $("#ajoutNewReponse").attr('disabled', false);
 
     let question= $('#newQuestionText').val();
     let bonneReponse = $('#newBonneReponsenText').val();
     let mauvaiseReponse = $('#newMauvaiseReponseText').val();
+    let nbMinBoneReponse = $('#newNbMinimalBonneReponse').val();
     let qrColor = $('#qrColor').val();
     let qrData = [];
 
+    console.log(nbMinBoneReponse);
+    console.log("-------------------");
     //On verifie si le texte de la question n'est pas vide
     if (question=== ""){
       alert("Veuillez saisir une Question d'abord");
@@ -96,16 +107,24 @@ $(document).ready(function() {
       alert("Veuillez saisir le message de mauvaise  réponse à la question");
           return; // si le champ est vide on sort
     }
+    else if (nbMinBoneReponse=== ""){
+      alert("Veuillez saisir le nombre de bonne reponse minimum");
+          return; // si le champ est vide on sort
+    }
     else {
-      let nouvQuestion = new Question (question,bonneReponse,mauvaiseReponse, qrData , $("#qrColor").val());
+      let nouvQuestion = new Question (question,bonneReponse,mauvaiseReponse, qrData ,nbMinBoneReponse, $("#qrColor").val());
       projet.setQuestion(nouvQuestion);
 
       //addQuestionLine(nouvQuestion);
       var questions = projet.getQuestion();
-      previewQRCode(questions, $('#qrView')[0]);
-      $('#qrView').show();
+
+      //affichage de la zone de question
+      $("#dropZone").show();
+      $("#genererQestion").hide();
     }
   });
+
+
 
   $('button#annuler').click(e => {
     //aficher popup quand on click sur reinitialiser
@@ -115,16 +134,18 @@ $(document).ready(function() {
       $('#qrView').hide();
       $('#saveQRCode').attr('disabled', true);
       $("#ajoutNewReponse").attr('disabled', true);
+      $("#preview").attr('disabled', true);
       viderZone();
     }
   });
 });
 
+// fonction qui ajoute la ligne de la reponse sur la zone prévu a cet effet
 function addReponseLine(reponse){
+
+  $("#preview").attr("disabled", false);
   txtDragAndDrop.remove();
-
   var infos_rep = projet.getQuestion().getReponseById(reponse.getId());
-
   var newRepLine = "<div style='height:35px;' id='" + reponse.getId() + "'>" +
   "<li style='color:black;font-size:14px;'>" +
   "<label>" + reponse.getName() + "&nbsp&nbsp</label>" +
@@ -137,10 +158,12 @@ function addReponseLine(reponse){
 
   nombre_question++;
   $("#cible").append(newRepLine);
+
+
 }
 
 function viderZone(){
-    controllerEnsemble = new ControllerEnsemble();
+
     $('#qrName').val('');
     $(txtZone).empty();
     $("#cible").empty();
@@ -176,7 +199,7 @@ function effacerLigne() {
   txtDragAndDrop.setAttribute("id", "txtDragAndDrop");
   txtDragAndDrop.setAttribute("class", "col-sm-7");
   txtDragAndDrop.setAttribute("style", "text-align: center; margin-top: 15%");
-  txtDragAndDrop.innerText = "Déposez vos fichiers ici";
+  txtDragAndDrop.innerText = "Déposez vos réponses ici";
 
   txtZone.appendChild(txtDragAndDrop);
   // Ce declenche quand un element entre dans la zone de drop
@@ -205,7 +228,6 @@ function effacerLigne() {
     // Parcours le ou les fichiers drop dans la zone
     for (let i = 0; i < e.dataTransfer.files.length; i++) {
       let qrFile = e.dataTransfer.files[i];
-
 
       facade =  new FacadeController();
       facade.importQRCodeJson(qrFile, qrCode =>{
