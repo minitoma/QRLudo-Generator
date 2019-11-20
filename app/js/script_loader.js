@@ -137,13 +137,16 @@ const {
 } = require(`${root}/Controller/JsonCompressor`);
 
 const {
+  MDFiveConverter
+} = require(`${root}/Controller/MDFiveConverter`);
+
+const {
   QRCodeLoader
 } = require(`${root}/Controller/QRCodeLoader`);
 
 const {
   QRCodeLoaderJson
 } = require(`${root}/Controller/QRCodeLoaderJson`);
-
 
 const {
   DictionnaireXml
