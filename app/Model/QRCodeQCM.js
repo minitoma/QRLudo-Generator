@@ -19,8 +19,8 @@ class ProjetQCM {
     for (var i = 0; i < question.length; i++) {
       dataString += question[i];
     }
-    for (var i = 0; i < reponse.length; i++) {
-      dataString += reponse[i];
+    for (var i = 0; i < reponses.length; i++) {
+      dataString += reponses[i];
     }
 
     var md5Value = MDFiveConverter.convert(dataString);
