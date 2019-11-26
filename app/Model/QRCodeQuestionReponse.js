@@ -230,10 +230,9 @@ class Question {
   }
 
 
-
   removeReponse(reponseUid){
     for(let rep of this.qrcode.data){
-      if(rep.id == reponseUid){
+      if(rep == reponseUid){
         var index = this.qrcode.data.indexOf(rep);
         this.qrcode.data.splice(index, 1);
       }

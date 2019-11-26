@@ -129,6 +129,11 @@ $(document).ready(function() {
 
   $('button#annuler').click(e => {
 
+    //mise ajour des données sur le progress bar
+    $("#progressbarId").attr('aria-valuenow',0);
+    $("#progressbarId").attr("style","width:"+0+"%");
+    $("#progressbarId").text(0);
+    //FIN progress bar gestion
     //aficher popup quand on click sur reinitialiser
     // cache le qr générer & desactivation du bouton exporter
     var popUpQuiter = confirm("Etes vous sûr de vouloir réinitialiser?");
@@ -286,7 +291,7 @@ function chargement(){
   }
 
   //On desactive le bouton supprimer quand il y a qu'un seul text area
-  if(nbZoneDonne == 1) { 
+  if(nbZoneDonne == 1) {
     disableButtonDelete();
   }
 }
@@ -458,12 +463,12 @@ function activer_button() {
 //ajouter une nvlle legende (textarea) a chaque click sur button Texte (pour chaque textarea il faut rajouter à l'attribut class la valeur qrData class="... qrData")
 function ajouterChampLegende(valeur = "") {
   incrementerNbZoneDonne();
-
+  //console.log(totatCaractere);
   incrementerNumZoneCourante();
 
   var textareaLegende = document.createElement('div');
   textareaLegende.innerHTML = `<i class='fa fa-play align-self-center icon-player'></i><i class="fa fa-pause align-self-center icon-player"></i>
-    <textarea id='textarea${numZoneCourante}' class='form-control qrData' rows='3' name='legendeQR' placeholder='Mettre la légende (255 caractères maximum)' maxlength='255' onkeyup="verifNombreCaractere(${numZoneCourante});">${valeur}</textarea>
+    <textarea id='textarea${numZoneCourante}' class='form-control qrData' rows='3' name='legendeQR' placeholder='Mettre la légende (255 caractères maximum)' maxlength='255' onkeydown="verifNombreCaractere(${numZoneCourante});">${valeur}</textarea>
     <button id='delete${numZoneCourante}' type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='supprimerChampLegende(this, ${numZoneCourante});'>
     <div class="inline-block">
       <i class='fa fa-trash-alt'></i></button>
@@ -480,11 +485,37 @@ function ajouterChampLegende(valeur = "") {
 
   //Permet d'enregistrer l'ajout de case texte
   store.set(`zone${numZoneCourante}`,textareaLegende.innerHTML);
-  
-  //limiter zone de texte
+
+  //limiter zone de texte a 3 par example
   if (nbZoneDonne>=3){
-    disableButtonAddNewData();
+    //disableButtonAddNewData();
   }
+  //reasignation du nombre total de caractère restant pour la nouvelle zone
+  var totatCaractere= SetProgressBar();
+  $('#textarea'+numZoneCourante).attr('maxlength',(255-totatCaractere));
+}
+
+
+
+//foncion qui  calcule le nombre de caractère dans les zones de texte et met la valeur sur les progress bar
+function SetProgressBar() {
+  //progress bar gestion
+  var total = 0;
+  var nombreCaratereMAX=255;
+
+  $("#cible textarea").each( function(){
+     total += $(this).val().length;
+     //console.log(total);
+  });
+  var totalSeted = Math.round((total  * 100)/nombreCaratereMAX) ;
+
+
+  //mise ajour des données sur le progress bar
+  $("#progressbarId").attr('aria-valuenow',totalSeted);
+  $("#progressbarId").attr("style","width:"+totalSeted+"%");
+  $("#progressbarId").text(totalSeted+"%");
+  //FIN progress bar gestion
+    return total;
 }
 
 //verifier si le nombre de caractère maximal est respecté, si ce n'est pas le cas on affiche une pop up d'informations
@@ -494,15 +525,34 @@ function verifNombreCaractere(num) {
   var txt = document.getElementById('textarea'+num).value;
   store.set(`text${num}`, txt);
 
+  var nombreCaratereMAX =255;
+  //progress bar gestion
+   var total = SetProgressBar();
 
+  //console.log($('#textarea'+num).attr('maxlength'));
   $('#messages').empty();
-  if(document.getElementById('textarea'+num).value.length >= $('#textarea'+num).attr('maxlength')) {
+  if( total >= nombreCaratereMAX)  {
     messageInfos("La limite de caractère est atteinte (255 caractères)","warning");
+    disableButtonAddNewData();
+    //si nombre de caractére max attein toute les zone de texte sont fermer a l'jout de caractère
+    $("#cible textarea").each( function(){
+      $(this).attr('maxlength',0);
+    });
+  }
+  else {
+    activateButtonAddNewData();
+    //reassignation du nombre de caractére disponible pour toutes les zones
+    $("#cible textarea").each( function(){
+      $(this).attr('maxlength',255);
+    });
   }
 }
 
+
 //supprimeun le textarea correspondant au numText
 function supprimerChampLegende(e, numText) {
+
+
   decrementerNbZoneDonne();
 
   //suppression dans le store de la zone de txt correspondante
@@ -510,18 +560,19 @@ function supprimerChampLegende(e, numText) {
   store.delete(`zone`+numText);
 
   $(e).parents('div#legendeTextarea').remove();
-  
+
   activateButtonAddNewData();
 
-  if(nbZoneDonne == 1) {    
+  if(nbZoneDonne == 1) {
     disableButtonDelete();
   }
+  //calcul et mise a jour de la bar de progression
+  SetProgressBar();
 }
 
 //generer un input 'pour un fichier audio' -> nom de fichier + url (pour chaque input il faut rajouter à l'attribut class la valeur qrData class=".. qrData")
 function ajouterChampSon(nom, url) {
   incrementerNbZoneDonne();
-
   incrementerNumZoneCourante();
 
   var inputSon = document.createElement('div');
@@ -634,7 +685,7 @@ function incrementerNumZoneCourante() {
 
 //Permet de desactiver le bouton supprimer de la zone de donnée restante
 function disableButtonDelete() {
-  for(var i = 1; i<numZoneCourante+1; i++){    
+  for(var i = 1; i<numZoneCourante+1; i++){
     if(store.get(`zone${i}`))
       $("#delete" + i).attr('disabled', true);
   }
@@ -642,7 +693,7 @@ function disableButtonDelete() {
 
 //Permet d'activer tous les boutons supprimer des zones de données
 function activateAllButtonDelete() {
-  for(var i = 1; i<numZoneCourante+1; i++){    
+  for(var i = 1; i<numZoneCourante+1; i++){
     if(store.get(`zone${i}`))
       $("#delete" + i).attr('disabled', false);
   }
@@ -661,6 +712,3 @@ function disableButtonAddNewData() {
   $('#ajouterTexte').attr('disabled', true);
   $('#showAudio').attr('disabled', true);
 }
-
-
- 
