@@ -72,6 +72,11 @@ class ControllerEnsemble {
     });
   }
 
+  //fonction qui ajouter un qr code dans l'ensemble des qrcode utile pour ajouter un qr code avec le bouton qui crée un nouveau
+  ajoutQRcode(qrCode) {
+      controllerEnsemble.qrCodes.push(qrCode);
+  }
+
   // Type de qrcode du fichier
   isUnique(file, callback) {
     let facade = new FacadeController();
