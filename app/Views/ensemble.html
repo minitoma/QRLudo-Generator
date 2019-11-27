@@ -10,7 +10,7 @@
                 <a class="nav-link active" data-toggle="tab" href="#qrCodes">QR - Ensemble</a>
             </li>
             <div id="textPresentation">
-              &nbsp;&nbsp;&nbsp;Dans cette partie vous pouvez créer des QR-codes de type Multiple <br>
+              &nbsp;&nbsp; Dans cette partie vous pouvez créer des QR-codes de type Multiple <br>
               &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (plusieur QR-codes unique dans un même QR-Code)
             </div >
         </ul>
@@ -45,13 +45,13 @@
         <!--Parcourir&hellip; <input type="file" style="display: none;"> -->
         <!--</label>-->
         <div class="card col-md-auto">
-          <button type="submit" class="btn btn-outline-success btn-unique-xl" id="empty"><i class="fa fa-eraser"></i>&nbsp;&nbsp;Réinitialiser</button>
-          <button style="margin-top:10px" type="button" class="btn btn-outline-success btn-unique-xl " id="saveQRCode" disabled>
-            <i class="fa fa-download"></i>&nbsp;&nbsp;Exporter
-          </button>
+          <button  type="button" class="btn btn-outline-success btn-unique-xl " id="addNewQR" data-toggle="modal"  data-target="#dialogAjoutNewQrcode" ><i class="fa fa-plus-square"></i>&nbsp;&nbsp;Créer QR-Code</button>
+
+          <button style="margin-top:10px" type="submit" class="btn btn-outline-success btn-unique-xl" id="empty"><i class="fa fa-eraser"></i>&nbsp;&nbsp;Réinitialiser</button>
         </div>
         <div class="card col-md-auto">
-          <button  type="submit" class="btn btn-outline-success btn-lg" id="preview"><i class="fa fa-cogs"></i>&nbsp;&nbsp;Générer</button>
+          <button type="button" class="btn btn-outline-success btn-unique-xl " id="saveQRCode" disabled><i class="fa fa-download"></i>&nbsp;&nbsp;Exporter</button>
+          <button  style="margin-top:10px" type="submit" class="btn btn-outline-success btn-unique-xl" id="preview"><i class="fa fa-cogs"></i>&nbsp;&nbsp;Générer</button>
         </div>
     </div>
 </div>
@@ -64,6 +64,54 @@
     </script>
 </div>
 <!--/.Panel-->
+
+
+<!-- debut fenetre  pour ajouter nouveaux qr code   -->
+<div class="modal fade" id="dialogAjoutNewQrcode" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" align="right" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <table>
+          <tr>
+            <td>
+              <label class="control-label" style="color:#28a745;padding-top:10px;">Nom du QR code </label>
+            </td>
+            <td>
+              <div class="form-inline">
+                  <input type="text" class="form-control col-sm-12" id="nomQR" placeholder="Saisissez Nom QrCode ">
+              </div>
+            </td>
+            </tr>
+            <tr>
+              <td>
+                <label class="control-label" style="color:#28a745;padding-top:10px;">Contenue QR code </label>
+              </td>
+              <td>
+                <div class="form-inline">
+                    <input type="text" class="form-control col-sm-12" id="ContenuQR" placeholder="Saisissez le contenue du qrcode ">
+                </div>
+              </td>
+            </tr>
+
+        </table>
+
+      </div>
+    <div class="modal-footer">
+      <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" id="fermeSansEnregistrer">Annuler</button>
+      <button type="button" class="btn btn-outline-success" data-dismiss="modal" id="validerDataDialog" onclick="ajoutQrCcode()">Valider</button>
+    </div>
+  </div>
+</div>
+</div>
+<!-- fin fenetre pour ajouter nouvelle reponse  -->
+
 <!-- Fin contenu page ensemble -->
+
+
 
 <script src="js/script_ensemble.js"></script>

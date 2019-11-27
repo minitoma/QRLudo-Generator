@@ -4,6 +4,7 @@
  * @Last modified time: 2019-01-16T23:37:53+01:00
  */
 
+
 $().ready(function() {
 
   enregistrement();
@@ -32,6 +33,7 @@ $().ready(function() {
 
     let facade = new FacadeController();
     facade.genererQRCode($('#qrView')[0], qrcodeEns);
+    console.log($('#qrView')[0]);
 
     $('#saveQRCode').attr('disabled', false);
   });
@@ -90,6 +92,7 @@ dropZone.ondrop = function(e) {
         let words = qrFile.name.split(".");
         if (!controllerEnsemble.occurenceFichier(words[0])) {
           genererLigne(words[0], numFich);
+          console.log(numFich);
           store.set(`fichierDrop${numFich}`,words[0]);
           numFich ++;
           store.set(`numFich`,numFich);
@@ -111,6 +114,28 @@ dropZone.ondrop = function(e) {
   }
   activer_button();
 };
+
+function ajoutQrCcode(){
+
+  txtDragAndDrop.remove();
+
+  let qrColor = $('#qrColor').val();
+  var qrName = $("#nomQR").val();
+  var donne = $("#ContenuQR").val();
+  var qrData = [];
+  qrData.push(donne);
+
+  let newQrUnique = new QRCodeUnique(qrName, qrData, qrColor);
+  console.log(newQrUnique);
+  genererLigne(qrName, numFich);
+
+  store.set(`fichierDrop${numFich}`,qrName);
+  numFich ++;
+  store.set(`numFich`,numFich);
+
+  controllerEnsemble.ajoutQRcode(newQrUnique);
+
+}
 
 //permet la continuité entre les onflet spécifiquement pour l'onglet ensemble
 function enregistrement(){
