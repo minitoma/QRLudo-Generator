@@ -24,7 +24,8 @@ $(document).ready(function() {
   $("#play-sound-div").hide();
 
   //Ajout d'une nouvelle question
-  $("#addNewQuesBtnId").click(function() {
+  $("#addNewQuesBtnId").click(function(e) {
+
     //On verifie si le texte de la question n'est pas vide
     if ($('#newQuestionText').val() === ""){
       $("#alertQuestionVideError").show();
@@ -47,7 +48,7 @@ $(document).ready(function() {
     addQuestionLine(nouvques);
 
     $('#newQuestionText').val("");
-    return true;
+   return true;
   });
 
 
@@ -267,7 +268,7 @@ function enregistrement(){
     addQuestionLine(nouvques);
 
     $("#addNewQuesBtnId").hide();
-    //si question deja générer on affiche toujour ajout de reponse   &&&  
+    //si question deja générer on affiche toujour ajout de reponse   &&&
     $('#zoneReponse').show();
 
   }

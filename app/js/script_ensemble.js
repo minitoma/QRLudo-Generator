@@ -27,13 +27,15 @@ $().ready(function() {
     let qrcodes = controllerEnsemble.getQRCodeAtomiqueArray();
     let qrcodeEns = controllerEnsemble.getQRCodeEnsemble();
 
+
     for (let i = 0; i < qrcodes.length; i++) {
       qrcodeEns.ajouterQrCode(qrcodes[i]);
     }
-
+    console.log("-----------------");
+    console.log(qrcodes);
     let facade = new FacadeController();
     facade.genererQRCode($('#qrView')[0], qrcodeEns);
-    console.log($('#qrView')[0]);
+    //console.log($('#qrView')[0]);
 
     $('#saveQRCode').attr('disabled', false);
   });
@@ -78,8 +80,6 @@ dropZone.ondrop = function(e) {
 
   console.log(e);
 
-  txtDragAndDrop.remove();
-
   let afficherPopUp = false;
   let nomFichierIdentique = "";
 
@@ -108,16 +108,16 @@ dropZone.ondrop = function(e) {
 
   }
 
+    console.log(controllerEnsemble.getQRCodeAtomiqueArray());
+
   // Affiche un popup avec le nom des fichiers qui n'ont pu être ajouté
   if (afficherPopUp) {
     messageInfos("Un ou plusieurs fichiers ont le même nom : " + nomFichierIdentique, "warning");
   }
-  activer_button();
+  //activer_button();
 };
 
 function ajoutQrCcode(){
-
-  txtDragAndDrop.remove();
 
   let qrColor = $('#qrColor').val();
   var qrName = $("#nomQR").val();
@@ -134,6 +134,8 @@ function ajoutQrCcode(){
   store.set(`numFich`,numFich);
 
   controllerEnsemble.ajoutQRcode(newQrUnique);
+
+  console.log(controllerEnsemble.getQRCodeAtomiqueArray());
 
 }
 
@@ -169,6 +171,8 @@ function setAttributes(el, attrs) {
  * Chaque ligne a un bouton pour supprimer la ligne
  */
 function genererLigne(name, numLigne) {
+  $('#txtDragAndDrop').hide();
+
   let baliseDiv = document.createElement("DIV");
   let baliseSpan = document.createElement("SPAN");
   let textDiv = document.createTextNode(name);
@@ -187,20 +191,20 @@ function genererLigne(name, numLigne) {
   //fonctionatité bouton delete   &&
   setAttributes(baliseIDelete, {"class": "fa fa-trash-alt ", "height":"8px", "width":"8px"});
   baliseButtonDelete.addEventListener("click", effacerLigne);
-  baliseButtonDelete.setAttribute("class", "btn btn-outline-success align-self-center legendeQR-close-btn");
+  baliseButtonDelete.setAttribute("class", "btn btn-outline-success float-right");
   baliseButtonDelete.setAttribute("padding", "10px 10px");
   baliseButtonDelete.appendChild(baliseIDelete);
 
   //fonctinalité bouton up  &&
   setAttributes(baliseIUp, {"class": "fa fa-arrow-up ", "height":"8px", "width":"8px"});
-  baliseButtonUp.setAttribute("class","btn btn-outline-success align-self-center legendeQR-close-btn ");
+  baliseButtonUp.setAttribute("class","btn btn-outline-success float-right ");
   baliseButtonUp.appendChild(baliseIUp);
   baliseButtonUp.setAttribute("id", name+'Up');
   baliseButtonUp.addEventListener("click", upItem);
 
   //fonctinalité bouton down  &&
   setAttributes(baliseIDown, {"class": "fa fa-arrow-down ", "height":"8px", "width":"8px"});
-  baliseButtonDown.setAttribute("class","btn btn-outline-success  ");
+  baliseButtonDown.setAttribute("class","btn btn-outline-success float-right ");
   baliseButtonDown.appendChild(baliseIDown);
   baliseButtonDown.setAttribute("id", name+'Down');
   baliseButtonDown.addEventListener("click", downItem);
@@ -215,6 +219,7 @@ function genererLigne(name, numLigne) {
 
 
   baliseDiv.addEventListener("click", afficherQrCode);
+  baliseDiv.setAttribute("style","height:35px");
   baliseDiv.appendChild(baliseSpan);
   baliseDiv.id = name;
 
@@ -223,6 +228,7 @@ function genererLigne(name, numLigne) {
   baliseDiv.appendChild(baliseButtonDown);
 
   txtZone.appendChild(baliseDiv);
+
 
 
 }
@@ -272,6 +278,7 @@ function effacerLigne() {
 
   }
 
+
   // Supprime le fichier dans le tableau files
   let qrCodes = controllerEnsemble.getQRCodeAtomiqueArray();
   console.log("before suppress", qrCodes);
@@ -279,6 +286,12 @@ function effacerLigne() {
   console.log(qrCodes.filter(item => item.getName() != id));
   controllerEnsemble.setQRCodeAtomiqueArray(qrCodes.filter(item => item.getName() != id));
   console.log("after suppress", qrCodes);
+
+  //verification qu'il ne reste plus delement pour remetre le text du dop
+  if($("#txtZone div").length==0){
+    console.log("coucou");
+    $('#txtDragAndDrop').show();
+  }
 }
 
 // Vide les tableaux qrCodes, files et les lignes de la zone drop
@@ -287,6 +300,7 @@ function viderZone(){
   $('#qrName').val('');
   $(txtZone).empty();
   txtZone.appendChild(txtDragAndDrop);
+  $('#txtDragAndDrop').show();
 
   //Permet la suppression des elements du store créé dans le script_ensemble
   if(store.get(`numFich`)){

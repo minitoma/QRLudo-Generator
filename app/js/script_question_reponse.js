@@ -10,6 +10,8 @@ nombre_reponse=0;
 
 $(document).ready(function() {
 
+  enregistrement();
+
   $("#play-sound-div").hide();
   $("#dropZone").hide();
 
@@ -164,7 +166,6 @@ function addReponseLine(reponse){
   "<em style='color:gray'>" + reponse.getDataAll() + "</em>" +
   "<button class='btn btn-outline-success float-right' id='" + reponse.getId() + "' onclick='deleteReponse(this);'><i class='fa fa-trash-alt'></i></button>" +
   "<button class='btn btn-outline-success float-right' id='" + reponse.getId() + "' onclick='lireReponse(this);'><i class='fa fa-play'></i></button>" +
-  "<div class='alert alert-success fade show float' role='alert' id='infoGenererQrCodeReponse" + reponse.getId() +"' style='display:none;font-size:15px;'>Ce bouton permet de pré-visualiser le Qr Code de la réponse</div>" +
   "</li>" +
   "</div>";
 
@@ -172,6 +173,7 @@ function addReponseLine(reponse){
   //compteur du nombre de reponse pour  pouvoir reinitliser la zone de drad and drop
   nombre_reponse++;
 }
+
 
 function viderZone(){
 
@@ -341,6 +343,20 @@ function deleteReponse(button){
 
 }
 
+function enregistrement(){
+
+  if(store.get(`questionQRExerixe`) ) {
+    $("#newQuestionText").val(store.get(`questionQRExerixe`));
+  }
+  if(store.get(`bonneReponseQRExerixe`) ) {
+    $("#newReponseText").val(store.get(`bonneReponseQRExerixe`));
+  }
+
+  //$("#newReponseText").val(store.get(`mauvaiseReponseQRExerixe`));
+  //$("#newNbMinimalBonneReponse").val(store.get(`nbQuestQRExerixe`));
+
+}
+
 //Cette fonction sauvegarde l'image du qrcode dans un div pour le pouvoir generer apres
 function saveQRCodeImage() {
   const fs = require('fs');
@@ -360,7 +376,7 @@ function saveQRCodeImage() {
     if (xhr.readyState == xhr.DONE) {
       var filesaver = require('file-saver');
       console.log(xhr.response);
-      filesaver.saveAs(xhr.response, qrcode.getName() + '.jpeg');
+      filesaver.saveAs(xhr.response, $('#newQuestionText').val()+'.jpeg');
     }
   }
 
@@ -393,4 +409,25 @@ function lireReponse(button){
   var text_retourVocal = $("div#" + id_reponse + " em").text();
 
   playTTS(text_reponse + text_retourVocal);
+}
+
+
+function activerSave(){
+
+  store.delete(`questionQRExerixe`);
+  //store.delete(`bonneReponseQRExerixe`);
+  //store.delete('mauvaiseReponseQRExerixe');
+  //store.delete('nbQuestQRExerixe');
+
+  var question = $("#newQuestionText").val();
+  var bonneReponse = $("#newReponseText").val();
+  var mauvaiseReponse = $("#newReponseText").val();
+  var nombreReponse  = $("#newNbMinimalBonneReponse").val();
+
+  store.set('questionQRExerixe',question);
+  //store.set('bonneReponseQRExerixe',bonneReponse);
+  //store.set('mauvaiseReponseQRExerixe',mauvaiseReponse);
+  //store.set('nbQuestQRExerixe',nombreReponse);
+
+
 }
