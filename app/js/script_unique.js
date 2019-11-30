@@ -24,6 +24,7 @@ $(document).ready(function() {
 
   //appel à la focntion qui permet de lire les enregistrement
   chargement();
+  SetProgressBar();
 
   //Use to implement information on the audio import
   var info = document.createElement('div'); // balise div : contain html information

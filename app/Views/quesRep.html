@@ -2,8 +2,11 @@
 <!-- contenu page QuesRep -->
 <!--Panel-->
 
-
 <div class="col-sm-12 card">
+  <div class="text-center" id="textPresentation">
+      Dans cette partie vous pouvez créer des QR-codes de type Exercice <br>
+     ( des QR-codes contenant des reponses(id des bonnes reponses) )
+  </div >
   <form id="formulaireQesRep" onsubmit="return false;">
     <div class="card-body">
       <h6 class="card-title"></h6>
@@ -11,10 +14,7 @@
         <li class="nav-item">
           <a class="nav-link active" data-toggle="tab" href="#newProject">QR - Exercice </a>
         </li>
-        <li id="textPresentation">
-          &nbsp;&nbsp;&nbsp;Dans cette partie vous pouvez créer des QR-codes de type Exercice <br>
-          &nbsp;&nbsp;&nbsp;&nbsp; ( des QR-codes contenant des reponses(id des bonnes reponses) )
-        </li >
+
       </ul>
     <div style=" margin-top:15px;">
       <div id="newProject" class="tab-pane fade in active show" role="tabpanel">
@@ -26,7 +26,7 @@
               </td>
               <td>
                 <div class="form-inline">
-                  <input type='text' class="form-control col-sm-14" id="newQuestionText" name="nomQuest" placeholder="Saisissez la question"/>
+                  <input type='text' class="form-control col-sm-14" id="newQuestionText" onkeyup="activerSave();" name="nomQuest" placeholder="Saisissez la question"/>
                 </div>
               </td>
             </tr>
@@ -36,7 +36,7 @@
               </td>
               <td >
                 <div class="form-inline">
-                    <input type='text' class="form-control col-sm-14" id="newBonneReponsenText" name="nomQuest" placeholder="Saisissez la bonne réponse"/>
+                    <input type='text' class="form-control col-sm-14" id="newBonneReponsenText" name="nomQuest" onkeyup="activerSave();" placeholder="Saisissez la bonne réponse"/>
                 </div>
               </td>
             </tr>
@@ -46,7 +46,7 @@
               </td>
               <td >
                 <div class="form-inline">
-                  <input type='text' class="form-control col-sm-14" id="newMauvaiseReponseText" name="nomQuest" placeholder="Saisissez la mauvaise réponse"/>
+                  <input type='text' class="form-control col-sm-14" id="newMauvaiseReponseText" name="nomQuest" onkeyup="activerSave();" placeholder="Saisissez la mauvaise réponse"/>
                 </div>
               </td>
             </tr>
@@ -56,7 +56,7 @@
               </td>
               <td >
                 <div class="form-inline">
-                  <input type='number' class="form-control col-sm-14" id="newNbMinimalBonneReponse" name="nomQuest" placeholder="Nombre minimal de bonne reponse"/>
+                  <input type='number' class="form-control col-sm-14" id="newNbMinimalBonneReponse" name="nomQuest" onkeyup="activerSave();" placeholder="Nombre minimal de bonne reponse"/>
                 </div>
               </td>
             </tr>

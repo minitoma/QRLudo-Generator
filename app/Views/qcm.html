@@ -3,6 +3,10 @@
 <!--Panel-->
 
 <div class="col-sm-12 card">
+  <div class="text-center" id="textPresentation">
+      Dans cette partie vous pouvez créer des QR-codes de type QCM <br>
+      (des QR-codes contenant des reponses(QR-Code) )
+  </div >
   <div class="alert alert-success" role="alert" id="alertExportationOk" style="display:none;">  Votre projet a bien été enregistré. </div>
   <div class="alert alert-danger" role="alert" id="alertQuestionVideError" style="display:none;"> Veuillez saisir le texte de votre question. </div>
   <div class="alert alert-danger" role="alert" id="alertQuestionExistError" style="display:none"> La question existe déjà. </div>
@@ -13,10 +17,6 @@
         <li class="nav-item">
           <a class="nav-link active" data-toggle="tab" href="#newProject">QR - QCM</a>
         </li>
-        <li id="textPresentation">
-          &nbsp;&nbsp;&nbsp;Dans cette partie vous pouvez créer des QR-codes de type QCM <br>
-          &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; (des QR-codes contenant des reponses(QR-Code) )
-        </li >
       </ul>
 
       <div class="tab-content scrollbar-success" style="height:600px; overflow-y: scroll; margin-top:15px;">
@@ -30,7 +30,7 @@
           <div class="form-group" >
             <label class="control-label" style="color:#28a745;padding-top:10px;">Question : </label>
             <div class="form-inline">
-              <input type='text' class="form-control col-sm-6" id="newQuestionText" name="nomQuest" placeholder="Saisissez la question"/>
+              <input type="text" class="form-control col-sm-6" id="newQuestionText" name="nomQuest" placeholder="Saisissez la question"/>
               <button id="addNewQuesBtnId" type="button" class="btn btn-outline-success">
                 Nouvelle Question
               </button>
