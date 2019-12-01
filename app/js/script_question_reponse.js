@@ -10,6 +10,7 @@ nombre_reponse=0;
 
 $(document).ready(function() {
 
+  //méthode gérant la continuité
   enregistrement();
 
   //fonction pour ajouter un nouvelle reponse
@@ -40,6 +41,7 @@ $(document).ready(function() {
         var new_rep = new QRCodeUnique(identifiant, qrData,  qrColor);
         var new_rep_vocal = reponseVocale;
 
+        //Récuperation des inforamtion de la question pour gérer la continuité
         numReponse ++;
         deleteStore('numReponse');
         store.set('numReponse',numReponse);
@@ -189,7 +191,7 @@ function addReponseLine(reponse){
 
 }
 
-
+//Permet de vider la zone Exercice ainsi que les éléméent enregistré dans le store
 function viderZone(){
 
   deleteStore(`newQuestionText`);
@@ -293,6 +295,7 @@ function affichageLigneParDefault() {
           new_rep.setData(qrData);
           var new_rep_vocal = qrData;
 
+          //Récuperation des inforamtion de la question pour gérer la continuité
           numReponse ++;
           deleteStore('numReponse');
           store.set('numReponse',numReponse);
@@ -393,7 +396,7 @@ function deleteReponse(button){
     txtZone.appendChild(txtDragAndDrop);
   }
 
-
+  //Permet de gérer la conuité en suppriant la "bonne" reponse du store
   for(var i = 1; i<numReponse+1; i++){
     if(store.get('reponseId'+i) == id_reponse ){
       deleteStore('reponse'+i);
@@ -405,6 +408,7 @@ function deleteReponse(button){
 
 }
 
+//Méthode appliqué au chargement pour récupérer les élément enregistrés
 function enregistrement(){
 
   //nombre de zone texte courant
@@ -425,6 +429,7 @@ function enregistrement(){
   if(store.get('newNbMinimalBonneReponse'))
     $('#newNbMinimalBonneReponse').val(store.get('newNbMinimalBonneReponse'));
 
+  //créé une nouvelles question si le nombre de réponse est superieur à 0
   if(numReponse > 0){
     let nouvQuestion = new Question (store.get(`newQuestionText`), store.get(`newBonneReponseText`), store.get('newMauvaiseReponseText'), [], store.get('newNbMinimalBonneReponse'), $("#qrColor").val());
     projet.setQuestion(nouvQuestion);
@@ -438,7 +443,7 @@ function enregistrement(){
     $("#play-sound-div").hide();
   }
 
-
+  //recréation des question
   for(var i = 1; i<numReponse+1; i++){
     if(store.get('reponse'+i)){
 
@@ -508,7 +513,7 @@ function lireReponse(button){
   playTTS(text_reponse + text_retourVocal);
 }
 
-
+//méthode gérant al continuité sur les eones de texte Question, Bonne Reponse, Mauvaise Reponse et nb reponse
 function activerSave(text){
   deleteStore(text);
 
@@ -517,6 +522,7 @@ function activerSave(text){
   store.set(text,newText);
 }
 
+//methode de suppression dans le store
 function deleteStore(del){
   if(store.get(del) )
     store.delete(del);
