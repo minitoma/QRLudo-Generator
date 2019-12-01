@@ -26,7 +26,7 @@
               </td>
               <td>
                 <div class="form-inline">
-                  <input type='text' class="form-control col-sm-14" id="newQuestionText" onkeyup="activerSave();" name="nomQuest" placeholder="Saisissez la question"/>
+                  <input type='text' class="form-control col-sm-14" id="newQuestionText" onkeyup="activerSave('newQuestionText');" name="nomQuest" placeholder="Saisissez la question"/>
                 </div>
               </td>
             </tr>
@@ -36,7 +36,7 @@
               </td>
               <td >
                 <div class="form-inline">
-                    <input type='text' class="form-control col-sm-14" id="newBonneReponsenText" name="nomQuest" onkeyup="activerSave();" placeholder="Saisissez la bonne réponse"/>
+                    <input type='text' class="form-control col-sm-14" id="newBonneReponseText" name="nomQuest" onkeyup="activerSave('newBonneReponseText');" placeholder="Saisissez la bonne réponse"/>
                 </div>
               </td>
             </tr>
@@ -46,7 +46,7 @@
               </td>
               <td >
                 <div class="form-inline">
-                  <input type='text' class="form-control col-sm-14" id="newMauvaiseReponseText" name="nomQuest" onkeyup="activerSave();" placeholder="Saisissez la mauvaise réponse"/>
+                  <input type='text' class="form-control col-sm-14" id="newMauvaiseReponseText" name="nomQuest" onkeyup="activerSave('newMauvaiseReponseText');" placeholder="Saisissez la mauvaise réponse"/>
                 </div>
               </td>
             </tr>
@@ -56,7 +56,7 @@
               </td>
               <td >
                 <div class="form-inline">
-                  <input type='number' class="form-control col-sm-14" id="newNbMinimalBonneReponse" name="nomQuest" onkeyup="activerSave();" placeholder="Nombre minimal de bonne reponse"/>
+                  <input type='number' class="form-control col-sm-14" id="newNbMinimalBonneReponse" name="nomQuest" onkeyup="activerSave('newNbMinimalBonneReponse');" placeholder="Nombre minimal de bonne reponse" min="1" />
                 </div>
               </td>
             </tr>
