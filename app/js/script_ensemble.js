@@ -385,8 +385,9 @@ function upItem(e){
   }
   store.set(`fichierDrop${tmpVal}`, prevVal);
 
-
   $(parentElement).insertBefore($(parentElement).prev());
+
+  
 
 }
 
