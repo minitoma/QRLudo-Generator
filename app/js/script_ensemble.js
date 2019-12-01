@@ -187,6 +187,10 @@ function genererLigne(name, numLigne) {
   let baliseButtonDown= document.createElement("BUTTON");
   let baliseIDown = document.createElement("I");
 
+  let baliseLabel= document.createElement("LABEL");
+  baliseLabel.setAttribute("class","btn");
+  baliseLabel.innerHTML= name;
+
 
   //fonctionatité bouton delete   &&
   setAttributes(baliseIDelete, {"class": "fa fa-trash-alt ", "height":"8px", "width":"8px"});
@@ -211,7 +215,7 @@ function genererLigne(name, numLigne) {
 
 
   //fonctionatité nom qrcode
-  baliseSpan.appendChild(textDiv);
+  baliseSpan.appendChild(baliseLabel);
   baliseSpan.setAttribute("style", "white-space: nowrap; padding:5px; font-size:0.7em;");
   baliseSpan.setAttribute("class", "qrData text-left ");
   baliseSpan.setAttribute("name", "qrCode");
@@ -219,7 +223,7 @@ function genererLigne(name, numLigne) {
 
 
   baliseDiv.addEventListener("click", afficherQrCode);
-  baliseDiv.setAttribute("style","height:35px");
+  baliseDiv.setAttribute("style","height:40px");
   baliseDiv.appendChild(baliseSpan);
   baliseDiv.id = name;
 
@@ -228,8 +232,6 @@ function genererLigne(name, numLigne) {
   baliseDiv.appendChild(baliseButtonDown);
 
   txtZone.appendChild(baliseDiv);
-
-
 
 }
 
@@ -383,8 +385,9 @@ function upItem(e){
   }
   store.set(`fichierDrop${tmpVal}`, prevVal);
 
-
   $(parentElement).insertBefore($(parentElement).prev());
+
+  
 
 }
 

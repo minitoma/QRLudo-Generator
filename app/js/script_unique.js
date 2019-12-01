@@ -469,7 +469,7 @@ function ajouterChampLegende(valeur = "") {
 
   var textareaLegende = document.createElement('div');
   textareaLegende.innerHTML = `<i class='fa fa-play align-self-center icon-player'></i><i class="fa fa-pause align-self-center icon-player"></i>
-    <textarea id='textarea${numZoneCourante}' class='form-control qrData' rows='3' name='legendeQR' placeholder='Tapez votre texte (255 caractères maximum)' maxlength='255' onkeydown="verifNombreCaractere(${numZoneCourante});">${valeur}</textarea>
+    <textarea id='textarea${numZoneCourante}' class='form-control qrData' rows='3' name='legendeQR' placeholder='Tapez votre texte (255 caractères maximum)' maxlength='255'  onkeydown="verifNombreCaractere(${numZoneCourante});" onchange="verifNombreCaractere(${numZoneCourante});">${valeur}</textarea>
     <button id='delete${numZoneCourante}' type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='supprimerChampLegende(this, ${numZoneCourante});'>
     <div class="inline-block">
       <i class='fa fa-trash-alt'></i></button>
@@ -508,6 +508,7 @@ function SetProgressBar() {
      total += $(this).val().length;
      //console.log(total);
   });
+  //$("#cible input").val().length;
   var totalSeted = Math.round((total  * 100)/nombreCaratereMAX) ;
 
 
@@ -578,7 +579,8 @@ function ajouterChampSon(nom, url) {
 
   var inputSon = document.createElement('div');
   inputSon.innerHTML = `<i class='fa fa-play align-self-center icon-player'></i><i class='fa fa-pause align-self-center icon-player'></i>
-    <input type='text' id='${url}' name='AudioName' class='form-control qrData' value='${nom}' readonly>
+      <!-- <input type='text' id='${url}' name='AudioName' class='form-control qrData' value='${nom}' readonly>  -->
+    <textarea id='${url}' class='form-control qrData'  name='AudioName'  maxlength='255'  readonly>${nom}'</textarea>
     <button id='delete${numZoneCourante}' type='button' class='btn btn-outline-success legendeQR-close-btn align-self-center' onclick='supprimerChampSon(this,${numZoneCourante});'>
     <div class="inline-block">
       <i class='fa fa-trash-alt'></i></button>
@@ -598,13 +600,16 @@ function ajouterChampSon(nom, url) {
   activateAllButtonDelete();
 
   if (nbZoneDonne>=3){
-    disableButtonAddNewData();
+    //disableButtonAddNewData();
   }
+   //calcul et mise a jour de la bar de progression
+    SetProgressBar();
 }
 
 //supprimer un champ Audio -> event onclick
 function supprimerChampSon(e, numText) {
   decrementerNbZoneDonne();
+
 
   //suppression dans le store de la zone de txt correspondante
   store.delete(`text`+numText);
@@ -617,6 +622,7 @@ function supprimerChampSon(e, numText) {
   if(nbZoneDonne == 1) {
     disableButtonDelete();
   }
+  SetProgressBar();
 }
 
 // déplacer au dessus du champ précédent
