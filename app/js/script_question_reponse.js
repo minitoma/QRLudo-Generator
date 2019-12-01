@@ -201,7 +201,6 @@ function viderZone(){
   deleteStore('newNbMinimalBonneReponse');
 
   for(var i=1; i<numReponse+1; i++){
-    console.log(i);
     deleteStore('reponse'+i);
     deleteStore(''+i);
     deleteStore('reponseId'+i);
@@ -210,7 +209,6 @@ function viderZone(){
 
   deleteStore('numReponse');
   numReponse = 0;
-  console.log(numReponse);
 
 
     $('#qrName').val('');
@@ -408,7 +406,7 @@ function deleteReponse(button){
 }
 
 function enregistrement(){
-  console.log(store.get(`numReponse`));
+
   //nombre de zone texte courant
   if(store.get(`numReponse`))
     numReponse = store.get(`numReponse`);
