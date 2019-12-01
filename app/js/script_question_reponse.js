@@ -149,6 +149,7 @@ $(document).ready(function() {
       $("#genererQestion").show();
 
       viderZone();
+      store.delete(`questionQRExerixe`);
     }
   });
 });
