@@ -460,31 +460,51 @@ function enregistrement(){
   }
 }
 
+
 //Cette fonction sauvegarde l'image du qrcode dans un div pour le pouvoir generer apres
-function saveQRCodeImage() {
-  const fs = require('fs');
 
-  let qrcode = controllerEnsemble.getQRCodeEnsemble();
-  let img = $('#qrView img')[0].src;
-
-  // var data = img.replace(/^data:image\/\w+;base64,/, '');
-
-  var data = img.replace(/^data:image\/[^;]/, 'data:application/octet-stream');
-  var xhr = new XMLHttpRequest();
-  xhr.responseType = 'blob';
-  console.log(data);
-  xhr.open('GET', data, true);
-
-  xhr.onreadystatechange = function() {
-    if (xhr.readyState == xhr.DONE) {
-      var filesaver = require('file-saver');
-      console.log(xhr.response);
-      filesaver.saveAs(xhr.response, $('#newQuestionText').val()+'.jpeg');
+function saveQRCodeImages(div, qrcode, directoryName) {
+  let img = $(div).children()[0].src;
+  //let data = img.replace(/^data:image\/\w+;base64,/, '');
+  let matches = img.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+  let data = new Buffer(matches[2], 'base64');
+  var file_name = qrcode.getName().replace(/[^a-zA-Z0-9]+/g, "") + '.jpeg';
+  fs.writeFile(path.join(directoryName, file_name), data, (err) => {
+    if (err){
+      $("#questionsDivLabelsId").append("<div>" + err + "</div>");
     }
+    console.log('The file has been saved!');
+  });
+}
+
+function saveQRCodeImage() {
+
+
+  var dir_path = dialog.showOpenDialog({title: 'Sélectionnez un dossier', properties: ['openDirectory']})[0];
+  if(dir_path !== undefined){
+    var facade = new FacadeController();
+    projet.setName($("#newQuestionText").val());
+
+    var dir_path = path.join(dir_path, projet.getName());
+
+    var fs = require('fs');
+    if(!fs.existsSync(dir_path)){
+      fs.mkdirSync(dir_path);
+    }
+
+    //On enregistre la question
+    let div = document.createElement('div');
+    facade.genererQRCode(div, projet.getQuestion());
+    saveQRCodeImages(div, projet.getQuestion(), dir_path);
+
+
+    //Idem pour les réponses
+    $.each(projet.getReponses(), function(id, reponse){
+      let div = document.createElement('div');
+      facade.genererQRCode(div, reponse);
+      saveQRCodeImages(div, reponse, dir_path);
+    });
   }
-
-  xhr.send();
-
 }
 
 function previewQRCodeQuestion(){

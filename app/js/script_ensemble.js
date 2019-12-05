@@ -114,7 +114,7 @@ dropZone.ondrop = function(e) {
   if (afficherPopUp) {
     messageInfos("Un ou plusieurs fichiers ont le même nom : " + nomFichierIdentique, "warning");
   }
-  //activer_button();
+  activer_button();
 };
 
 function ajoutQrCcode(){
@@ -136,7 +136,7 @@ function ajoutQrCcode(){
   controllerEnsemble.ajoutQRcode(newQrUnique);
 
   console.log(controllerEnsemble.getQRCodeAtomiqueArray());
-
+  activer_button();
 }
 
 //permet la continuité entre les onflet spécifiquement pour l'onglet ensemble
@@ -334,9 +334,9 @@ function activer_button() {
   var titre = document.getElementById('qrName').value;
   store.set(`titreEnsemble`, titre);
 
-  if (document.getElementById('qrName').value.length > 0) {
+  //if (document.getElementById('qrName').value.length > 0) {
     $('#preview ,#empty').attr('disabled', false);
-  }
+  //}
 }
 
 // save image qr code
@@ -387,7 +387,7 @@ function upItem(e){
 
   $(parentElement).insertBefore($(parentElement).prev());
 
-  
+
 
 }
 
