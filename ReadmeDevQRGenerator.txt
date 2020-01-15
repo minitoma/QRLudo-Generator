@@ -5,12 +5,18 @@ Pour installer tous les outils nécessaires pour la programmation de QRLudo-Gene
 Dans un terminal dans le projet, lancer:
 npm install --unsafe-perm=true
 
-Pour lancer le logiciel
+3) Lancement du projet
 npm start
 
-#Pour créer un exécutable Ubuntu
-# TODO
-#Pour créer un exécutable Windows
-# TODO
-# Pour créer un exécutable MacOs
-# TODO
+# Déploiement
+# Deb pour installation Ubuntu + Dossier d'exécutable
+yarn pack-linux
+
+# Pour créer un exécutable Windows
+# Architecture x86
+yarn pack-win32
+# Architecture x64
+yarn pack-win64
+# NOTE: Au premier déploiement, Wine demandera d'installer des éléments
+# supplémentaires. Après installation de ces éléments, le déploiement
+# peut crash. Relancer le déploiement corrige le problème.
