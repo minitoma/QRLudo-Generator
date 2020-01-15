@@ -13,6 +13,9 @@ $(document).ready(function() {
   //méthode gérant la continuité
   enregistrement();
 
+  if (numReponse > 0)
+    document.getElementById("ajoutNewReponse").disabled = false;
+
   //fonction pour ajouter un nouvelle reponse
   $("#validerDataDialog").click(function(){
 
@@ -105,7 +108,7 @@ $(document).ready(function() {
     $("#ajoutNewReponse").attr('disabled', false);
 
     let question= $('#newQuestionText').val();
-    let bonneReponse = $('#newBonneReponsenText').val();
+    let bonneReponse = $('#newBonneReponseText').val();
     let mauvaiseReponse = $('#newMauvaiseReponseText').val();
     let nbMinBoneReponse = $('#newNbMinimalBonneReponse').val();
     let qrColor = $('#qrColor').val();
@@ -114,15 +117,15 @@ $(document).ready(function() {
 
     //On verifie si le texte de la question n'est pas vide
     if (question=== ""){
-      alert("Veuillez saisir une Question d'abord");
+      alert("Veuillez d'abord saisir une question");
           return; // si le champ est vide on sort
     }
     else if (bonneReponse=== ""){
-      alert("Veuillez saisir le message de bonne réponse à la  question");
+      alert("Veuillez saisir le message de bonne réponse à la question");
           return; // si le champ est vide on sort
     }
     else if (mauvaiseReponse=== ""){
-      alert("Veuillez saisir le message de mauvaise  réponse à la question");
+      alert("Veuillez saisir le message de mauvaise réponse à la question");
           return; // si le champ est vide on sort
     }
     else if (nbMinBoneReponse=== ""){

@@ -6,10 +6,9 @@
 
 
 $().ready(function() {
-
   enregistrement();
   store.delete(`numFich`);
-  store.set(`numFich`,numFich);
+  store.set(`numFich`,numFich)
 
   $("#play-sound-div").hide();
 
@@ -50,6 +49,9 @@ $().ready(function() {
   if (document.getElementById('qrName').value.length === 0) {
     $('#preview #empty').attr('disabled', true);
   }
+
+  if (numFich > 0)
+    document.getElementById('preview').disabled = false;
 });
 
 var dropZone = document.getElementById('dropZone');
@@ -141,6 +143,8 @@ function ajoutQrCcode(){
 
   console.log(controllerEnsemble.getQRCodeAtomiqueArray());
   activer_button();
+
+  document.getElementById("saveQRCode").disabled = true;
 }
 
 //permet la continuité entre les onflet spécifiquement pour l'onglet ensemble
