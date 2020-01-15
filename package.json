@@ -44,8 +44,8 @@
     "debug": "electron-builder start"
   },
   "build": {
-    "appId": "testelectron",
-    "icon": "build/32x32.png",
+    "appId": "app-qrludo-generator",
+    "icon": "build/256x256.png",
     "linux": {
       "target": [
         "deb"
