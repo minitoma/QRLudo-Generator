@@ -121,9 +121,13 @@ function ajoutQrCcode(){
 
   let qrColor = $('#qrColor').val();
   var qrName = $("#nomQR").val();
-  var donne = $("#ContenuQR").val();
+  var donnee = $("#ContenuQR").val();
   var qrData = [];
-  qrData.push(donne);
+  qrData.push(donnee);
+
+  //Reset de la boite de dialogue
+  document.getElementById("nomQR").value = "";
+  document.getElementById("ContenuQR").value = "";
 
   let newQrUnique = new QRCodeUnique(qrName, qrData, qrColor);
   console.log(newQrUnique);

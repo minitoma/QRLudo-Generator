@@ -21,6 +21,9 @@ $(document).ready(function() {
       let qrColor = $('#qrColor').val();
       let qrData = [];
 
+      document.getElementById("newContenuVocal").value = "";
+      document.getElementById("newId").value = "";
+
         //On verifie qu'il y a une question de créée
         if (projet.getQuestion() == null) {
           alert ("pas de question");
@@ -67,7 +70,7 @@ $(document).ready(function() {
           }
         });
         if (existe){
-          alert ("Cette Reponse exite deja");
+          alert ("Cette Reponse existe deja");
           return false;
         }
 
@@ -173,7 +176,6 @@ $(document).ready(function() {
 
 // fonction qui ajoute la ligne de la reponse sur la zone prévu a cet effet
 function addReponseLine(reponse){
-
   $("#preview").attr("disabled", false);
   txtDragAndDrop.remove();
   var infos_rep = projet.getQuestion().getReponseById(reponse.getId());
