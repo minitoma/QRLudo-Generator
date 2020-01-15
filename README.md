@@ -25,7 +25,7 @@ QR Ludo Generateur a été développée à l'aide du framework Electron basé su
 ## Mise en place
 
 ### Installation des outils
-Pour installer tous les outils nécessaires pour la programmation de QRLudo-Generator, lancez le script InstallationOutilQRG.sh.
+Pour installer tous les outils nécessaires pour la programmation de QRLudo-Generator, lancez le script InstallationOutilQRG<span>.sh.
 
 ### Compilation du projet
 Dans un terminal dans le projet, lancer:
