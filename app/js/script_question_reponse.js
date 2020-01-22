@@ -13,6 +13,9 @@ $(document).ready(function() {
   //méthode gérant la continuité
   enregistrement();
 
+  if (numReponse > 0)
+    document.getElementById("ajoutNewReponse").disabled = false;
+
   //fonction pour ajouter un nouvelle reponse
   $("#validerDataDialog").click(function(){
 
@@ -20,6 +23,9 @@ $(document).ready(function() {
       let reponseVocale = $("#newContenuVocal").val();
       let qrColor = $('#qrColor').val();
       let qrData = [];
+
+      document.getElementById("newContenuVocal").value = "";
+      document.getElementById("newId").value = "";
 
         //On verifie qu'il y a une question de créée
         if (projet.getQuestion() == null) {
@@ -67,7 +73,7 @@ $(document).ready(function() {
           }
         });
         if (existe){
-          alert ("Cette Reponse exite deja");
+          alert ("Cette Reponse existe deja");
           return false;
         }
 
@@ -102,7 +108,7 @@ $(document).ready(function() {
     $("#ajoutNewReponse").attr('disabled', false);
 
     let question= $('#newQuestionText').val();
-    let bonneReponse = $('#newBonneReponsenText').val();
+    let bonneReponse = $('#newBonneReponseText').val();
     let mauvaiseReponse = $('#newMauvaiseReponseText').val();
     let nbMinBoneReponse = $('#newNbMinimalBonneReponse').val();
     let qrColor = $('#qrColor').val();
@@ -111,15 +117,15 @@ $(document).ready(function() {
 
     //On verifie si le texte de la question n'est pas vide
     if (question=== ""){
-      alert("Veuillez saisir une Question d'abord");
+      alert("Veuillez d'abord saisir une question");
           return; // si le champ est vide on sort
     }
     else if (bonneReponse=== ""){
-      alert("Veuillez saisir le message de bonne réponse à la  question");
+      alert("Veuillez saisir le message de bonne réponse à la question");
           return; // si le champ est vide on sort
     }
     else if (mauvaiseReponse=== ""){
-      alert("Veuillez saisir le message de mauvaise  réponse à la question");
+      alert("Veuillez saisir le message de mauvaise réponse à la question");
           return; // si le champ est vide on sort
     }
     else if (nbMinBoneReponse=== ""){
@@ -173,7 +179,6 @@ $(document).ready(function() {
 
 // fonction qui ajoute la ligne de la reponse sur la zone prévu a cet effet
 function addReponseLine(reponse){
-
   $("#preview").attr("disabled", false);
   txtDragAndDrop.remove();
   var infos_rep = projet.getQuestion().getReponseById(reponse.getId());

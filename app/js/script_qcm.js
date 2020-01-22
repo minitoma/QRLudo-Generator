@@ -31,6 +31,14 @@ $(document).ready(function() {
       $("#alertQuestionVideError").show();
       return; // si le champ est vide on sort
     }
+
+    //On vérifie si le texte du nombre de réponses n'est pas vide ou incorrect
+    if ($('#nombreReponse').val() === "" || parseInt($('#nombreReponse').val(),10) < 2 || parseInt($('#nombreReponse').val(),10) > 4 ){
+      $("#alertNombreReponseVideError").show();
+      return; // si le champ est vide on sort
+    }
+
+    $("#alertNombreReponseVideError").hide();
     $("#alertQuestionVideError").hide();
     $("#alertQuestionExistError").hide();
 
@@ -42,7 +50,7 @@ $(document).ready(function() {
 
 
     //Creation de la question dans le projet
-    let nouvques = new QuestionQCM($('#newQuestionText').val(), [], $("#qrColor").val());
+    let nouvques = new QuestionQCM($('#newQuestionText').val(), $('#nombreReponse').val(), [], $("#qrColor").val());
     projet.setQuestion(nouvques);
 
     addQuestionLine(nouvques);

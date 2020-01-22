@@ -106,10 +106,11 @@ class ProjetQCM {
  */
 class QuestionQCM {
   //Constructeur d'une Question
-  constructor(title, reponsesUIDs = [], color = '#000000') {
+  constructor(title, nombreReponse, reponsesUIDs = [], color = '#000000') {
     this.qrcode = {
       id: new Date().getTime(),
       name: title,
+      nbReponse: nombreReponse,
       data: reponsesUIDs,
       type: "questionQCM",
       color: color,
