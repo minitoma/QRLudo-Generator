@@ -22,15 +22,15 @@ const {
 } = require(`${root}/Model/DictionnaireXml`);
 
 /*
- *Classe permettant de stocker et d'accéder au données contenues dans un QRCode de type Ensemble
+ *Classe permettant de stocker et d'accéder au données contenues dans un QRCode de type multiple
  */
-class QRCodeEnsemble extends QRCode {
+class QRCodeMultiple extends QRCode {
 
   constructor() {
     super();
 
     //On enregistre le type de qrcode comme attribut du noeud donneesUtilisateur
-    this.donneesUtilisateur.setAttribute(DictionnaireXml.getAttTypeQRCode(), DictionnaireXml.getValTypeEnsemble());
+    this.donneesUtilisateur.setAttribute(DictionnaireXml.getAttTypeQRCode(), DictionnaireXml.getValTypeMultiple());
   }
 
   /*
@@ -52,7 +52,7 @@ class QRCodeEnsemble extends QRCode {
    * Ajoute dans la base le lien passé en paramètre
    */
   ajouterLien(url, nom) {
-    //On ajoute le lien que s'il n'est pas déjà contenu dans le QRCodeEnsemble
+    //On ajoute le lien que s'il n'est pas déjà contenu dans le QRCodemultiple
     if (!this.__lienContenu(url)) {
       var noeud = document.createElement(DictionnaireXml.getTagFichier());
       noeud.setAttribute(DictionnaireXml.getAttUrlFichier(), url);
@@ -66,17 +66,17 @@ class QRCodeEnsemble extends QRCode {
    * Supprime de la base le lien passé en paramètre
    */
   supprimerLien(url) {
-    var listeLiensEnsemble = this.donneesUtilisateur.getElementsByTagName(DictionnaireXml.getTagFichier());
-    for (var i = 0; i < listeLiensEnsemble.length; i++) {
+    var listeLiensMultiple = this.donneesUtilisateur.getElementsByTagName(DictionnaireXml.getTagFichier());
+    for (var i = 0; i < listeLiensMultiple.length; i++) {
 
-      if (listeLiensEnsemble[i].getAttribute(DictionnaireXml.getAttUrlFichier()) == url) {
-        this.donneesUtilisateur.getElementsByTagName(DictionnaireXml.getTagContenu())[0].removeChild(listeLiensEnsemble[i]);
+      if (listeLiensMultiple[i].getAttribute(DictionnaireXml.getAttUrlFichier()) == url) {
+        this.donneesUtilisateur.getElementsByTagName(DictionnaireXml.getTagContenu())[0].removeChild(listeLiensMultiple[i]);
       }
 
     }
   }
 
-  //Retourne le nombre de liens contenus dans le QRCodeEnsemble
+  //Retourne le nombre de liens contenus dans le QRCodemultiple
   getNbLiens() {
     return this.donneesUtilisateur.getElementsByTagName(DictionnaireXml.getTagFichier()).length;
   }
@@ -90,12 +90,12 @@ class QRCodeEnsemble extends QRCode {
   }
 
   /*
-   * Vérifie si un lien est déjà contenu dans le QRCodeEnsemble
+   * Vérifie si un lien est déjà contenu dans le QRCodemultiple
    */
   __lienContenu(url) {
-    var listeLiensEnsemble = this.donneesUtilisateur.getElementsByTagName(DictionnaireXml.getTagFichier());
-    for (var j = 0; j < listeLiensEnsemble.length; j++) {
-      if (listeLiensEnsemble[j].getAttribute(DictionnaireXml.getAttUrlFichier()) == url) {
+    var listeLiensMultiple = this.donneesUtilisateur.getElementsByTagName(DictionnaireXml.getTagFichier());
+    for (var j = 0; j < listeLiensMultiple.length; j++) {
+      if (listeLiensMultiple[j].getAttribute(DictionnaireXml.getAttUrlFichier()) == url) {
         return true;
       }
     }
@@ -106,7 +106,7 @@ class QRCodeEnsemble extends QRCode {
 }
 
 module.exports = {
-  QRCodeEnsemble
+  QRCodeMultiple
 };
 
 /**

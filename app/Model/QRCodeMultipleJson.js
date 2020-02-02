@@ -8,8 +8,8 @@
 // This class is a representation oj QRCode in JSON format
 
 
-// type = ensemble
-class QRCodeEnsembleJson {
+// type = multiple
+class QRCodeMultipleJson {
   // name = name of qrcode
   // data = an array which contains all input music provided from form
   // data = [
@@ -20,6 +20,9 @@ class QRCodeEnsembleJson {
   constructor(name = "", data = [], color = "") {
     this.qrcode = {
       name: name,
+      //TODO CHANGER EN MULTIPLE LORSQUE VOUS REPRENDREZ L'APPLICATION MOBILE
+      //L'APPLICATION DETECTE POUR L'INSTANT LE TYPE "ensemble". IL FAUDRA FAIRE EN SORTE
+      //QUE L'APPLICATION DETECTE "multiple" ET CHANGER LA LIGNE SUIVANTE EN "multiple"
       type: "ensemble",
       data: data,
       color: color
@@ -80,5 +83,5 @@ class QRCodeEnsembleJson {
 }
 
 module.exports = {
-  QRCodeEnsembleJson
+  QRCodeMultipleJson
 };
