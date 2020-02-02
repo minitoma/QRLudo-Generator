@@ -463,7 +463,7 @@ input[type="color"]::-webkit-color-swatch {
 
 .modalMusic, .modalAjoutReponse, .champReponse, .modalAjoutReponseCreerReponse,
 .modalAjoutReponseReponseAjoutee, .importerProjetDialog, .projetImporte,
-.exporterProjetDialog, .modalCharger, .zoneEnsemble {
+.exporterProjetDialog, .modalCharger, .zonemultiple {
   display: block;
 }
 
@@ -471,11 +471,11 @@ input[type="color"]::-webkit-color-swatch {
 
   .modalMusic, .modalAjoutReponse, .champReponse, .modalAjoutReponseCreerReponse,
   .modalAjoutReponseReponseAjoutee, .importerProjetDialog, .projetImporte,
-  .exporterProjetDialog, .modalCharger, .zoneEnsemble {
+  .exporterProjetDialog, .modalCharger, .zonemultiple {
     display: none;
   }
 
-  #info-Ensemble>ul>li:nth-child(5)>video {
+  #info-multiple>ul>li:nth-child(5)>video {
     height: 250px;
   }
 }

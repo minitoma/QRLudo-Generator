@@ -30,9 +30,9 @@ class FacadeController {
     return new QRCodeAtomique();
   }
 
-  //Renvoie un nouveau QRCodeEnsemble
-  creerQRCodeEnsemble() {
-    return new QRCodeEnsemble();
+  //Renvoie un nouveau QRCodemultiple
+  creerQRCodeMultiple() {
+    return new QRCodeMultiple();
   }
 
 

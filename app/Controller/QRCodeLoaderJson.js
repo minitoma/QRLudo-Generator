@@ -46,8 +46,8 @@ class QRCodeLoaderJson {
           qrcode.setId(qr.id);
           break;
 
-        case "ensemble":
-          qrcode = new QRCodeEnsembleJson(qr.name, qr.data, qr.color);
+        case "multiple":
+          qrcode = new QRCodeMultipleJson(qr.name, qr.data, qr.color);
           break;
 
         case "question":

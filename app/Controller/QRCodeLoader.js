@@ -71,6 +71,7 @@ class QRCodeLoader {
       case "atomique":
         qrcode = new QRCodeUnique("", data, color);
         break;
+        //TODO Ici pour changer le type
       case "ensemble":
         break;
       default:
@@ -150,8 +151,8 @@ class QRCodeLoader {
         qrcode = new QRCodeAtomique();
         qrcode.setNoeudRacine(xmlNode);
         break;
-      case DictionnaireXml.getValTypeEnsemble():
-        qrcode = new QRCodeEnsemble();
+      case DictionnaireXml.getValTypeMultiple():
+        qrcode = new QRCodeMultiple();
         qrcode.setNoeudRacine(xmlNode);
         break;
       default:

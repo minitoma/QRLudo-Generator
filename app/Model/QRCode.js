@@ -39,7 +39,7 @@ class QRCode {
     this.donneesUtilisateur.appendChild(document.createElement(DictionnaireXml.getTagContenu()));
 
     //On ajoute le noeud fichiers aux metadonnees
-    this.metadonnees.appendChild(document.createElement(DictionnaireXml.getTagEnsembleFichiers()));
+    this.metadonnees.appendChild(document.createElement(DictionnaireXml.getTagMultipleFichiers()));
 
   }
 
@@ -125,13 +125,13 @@ class QRCode {
     noeud.setAttribute(DictionnaireXml.getAttUrlFichier(), url);
     noeud.setAttribute(DictionnaireXml.getAttNomFichier(), nom);
 
-    this.metadonnees.getElementsByTagName(DictionnaireXml.getTagEnsembleFichiers())[0].appendChild(noeud);
+    this.metadonnees.getElementsByTagName(DictionnaireXml.getTagMultipleFichiers())[0].appendChild(noeud);
   }
 
   //Renvoie le nom du fichier sauvegardé dans le qrcode ayant pour url la chaîne passée en paramètres
   getNomFichier(url) {
 
-    var noeudsFichier = this.metadonnees.getElementsByTagName(DictionnaireXml.getTagEnsembleFichiers())[0].childNodes;
+    var noeudsFichier = this.metadonnees.getElementsByTagName(DictionnaireXml.getTagMultipleFichiers())[0].childNodes;
 
     //On itère sur tous les fichiers du qrcode
     for (var i = 0; i < noeudsFichier.length; i++) {
@@ -147,7 +147,7 @@ class QRCode {
     throw "Le fichier n'est pas présent dans le QRCode";
   }
 
-  //Retourne la chaîne contenant le type de qrcode (atomique ou ensemble)
+  //Retourne la chaîne contenant le type de qrcode (atomique ou multiple)
   getTypeQR() {
     console.log("okfef");
     return this.donneesUtilisateur.getAttribute(DictionnaireXml.getAttTypeQRCode());

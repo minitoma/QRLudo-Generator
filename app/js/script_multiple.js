@@ -13,18 +13,18 @@ $().ready(function() {
   $("#play-sound-div").hide();
 
 
-  // Genere le qrCode Ensemble
+  // Genere le qrCode multiple
   $("#preview").click(function() {
 
     affichageLigneParDefault();
 
     let qrColor = $("#qrColor").val();
-    controllerEnsemble.setQRCodeEnsemble(new QRCodeEnsembleJson(document.getElementById('qrName').value, [], qrColor));
+    controllerMultiple.setQRCodeMultiple(new QRCodeMultipleJson(document.getElementById('qrName').value, [], qrColor));
 
 
-    // Ajoute les donnees json de chaque qrCode unique dans le qrCode ensemble
-    let qrcodes = controllerEnsemble.getQRCodeAtomiqueArray();
-    let qrcodeEns = controllerEnsemble.getQRCodeEnsemble();
+    // Ajoute les donnees json de chaque qrCode unique dans le qrCode multiple
+    let qrcodes = controllerMultiple.getQRCodeAtomiqueArray();
+    let qrcodeEns = controllerMultiple.getQRCodeMultiple();
 
 
     for (let i = 0; i < qrcodes.length; i++) {
@@ -89,28 +89,29 @@ dropZone.ondrop = function(e) {
   for (let i = 0; i < e.dataTransfer.files.length; i++) {
     let qrFile = e.dataTransfer.files[i];
 
-    controllerEnsemble.isUnique(qrFile, qrcode => {
+    controllerMultiple.isUnique(qrFile, qrcode => {
+      //TODO Ici changer le "ensemble" en "multiple"
       if (qrcode.getType() != "ensemble") {
         let words = qrFile.name.split(".");
-        if (!controllerEnsemble.occurenceFichier(words[0])) {
+        if (!controllerMultiple.occurenceFichier(words[0])) {
           genererLigne(words[0], numFich);
           console.log(numFich);
           store.set(`fichierDrop${numFich}`,words[0]);
           numFich ++;
           store.set(`numFich`,numFich);
-          controllerEnsemble.recuperationQrCodeUnique(qrFile);
+          controllerMultiple.recuperationQrCodeUnique(qrFile);
         } else {
           afficherPopUp = true;
           nomFichierIdentique += "\t" + words[0] + "\n";
         }
       } else {
-        messageInfos("Impossible de mettre un qrcode ensemble dans un qrcode ensemble. Veuillez mettre que des qrcodes uniques", "danger");
+        messageInfos("Impossible de mettre un qrcode multiple dans un qrcode multiple. Veuillez mettre que des qrcodes uniques", "danger");
       }
     });
 
   }
 
-    console.log(controllerEnsemble.getQRCodeAtomiqueArray());
+    console.log(controllerMultiple.getQRCodeAtomiqueArray());
 
   // Affiche un popup avec le nom des fichiers qui n'ont pu être ajouté
   if (afficherPopUp) {
@@ -139,15 +140,15 @@ function ajoutQrCcode(){
   numFich ++;
   store.set(`numFich`,numFich);
 
-  controllerEnsemble.ajoutQRcode(newQrUnique);
+  controllerMultiple.ajoutQRcode(newQrUnique);
 
-  console.log(controllerEnsemble.getQRCodeAtomiqueArray());
+  console.log(controllerMultiple.getQRCodeAtomiqueArray());
   activer_button();
 
   document.getElementById("saveQRCode").disabled = true;
 }
 
-//permet la continuité entre les onflet spécifiquement pour l'onglet ensemble
+//permet la continuité entre les onflet spécifiquement pour l'onglet multiple
 function enregistrement(){
 
   if(store.get(`numFich`)){
@@ -155,8 +156,8 @@ function enregistrement(){
   }
 
   //vérifier si un enregistrement du titre existe
-  if(store.get(`titreEnsemble`)){
-    $('#qrName').val(store.get(`titreEnsemble`));
+  if(store.get(`titremultiple`)){
+    $('#qrName').val(store.get(`titremultiple`));
   }
 
   for(var i =0; i < numFich; i++){
@@ -254,17 +255,17 @@ function afficherQrCode(e) {
 
   this.querySelector("span").setAttribute("style", "white-space: nowrap; padding:5px; font-size:0.7em; background-color:#99cc00;");
 
-  let qrcodes = controllerEnsemble.getQRCodeAtomiqueArray();
+  let qrcodes = controllerMultiple.getQRCodeAtomiqueArray();
   // Affiche le qrCode que l'on vien de selectionner
   for (let i = 0; i < qrcodes.length; i++) {
     if (qrcodes[i].getName() == id) {
       let facade = new FacadeController();
       facade.genererQRCode($('#qrView')[0], qrcodes[i]);
-      controllerEnsemble.setQRCodeSelectionne(qrcodes[i]);
+      controllerMultiple.setQRCodeSelectionne(qrcodes[i]);
     }
   }
 
-  console.log(controllerEnsemble.getQRCodeSelectionne());
+  console.log(controllerMultiple.getQRCodeSelectionne());
   // qrCodesUniqueSelectionne = this;
 }
 
@@ -290,11 +291,11 @@ function effacerLigne() {
 
 
   // Supprime le fichier dans le tableau files
-  let qrCodes = controllerEnsemble.getQRCodeAtomiqueArray();
+  let qrCodes = controllerMultiple.getQRCodeAtomiqueArray();
   console.log("before suppress", qrCodes);
   console.log(id);
   console.log(qrCodes.filter(item => item.getName() != id));
-  controllerEnsemble.setQRCodeAtomiqueArray(qrCodes.filter(item => item.getName() != id));
+  controllerMultiple.setQRCodeAtomiqueArray(qrCodes.filter(item => item.getName() != id));
   console.log("after suppress", qrCodes);
 
   //verification qu'il ne reste plus delement pour remetre le text du dop
@@ -306,20 +307,20 @@ function effacerLigne() {
 
 // Vide les tableaux qrCodes, files et les lignes de la zone drop
 function viderZone(){
-  controllerEnsemble = new ControllerEnsemble();
+  controllerMultiple = new ControllerMultiple();
   $('#qrName').val('');
   $(txtZone).empty();
   txtZone.appendChild(txtDragAndDrop);
   $('#txtDragAndDrop').show();
 
-  //Permet la suppression des elements du store créé dans le script_ensemble
+  //Permet la suppression des elements du store créé dans le script_multiple
   if(store.get(`numFich`)){
     store.delete(`numFich`);
   }
 
   //vérifier si un enregistrement du titre existe
-  if(store.get(`titreEnsemble`)){
-    store.delete(`titreEnsemble`);
+  if(store.get(`titremultiple`)){
+    store.delete(`titremultiple`);
   }
 
   for(var i =0; i < numFich; i++){
@@ -338,9 +339,9 @@ function affichageLigneParDefault() {
 // Active le button vider et generer apres avoir donne un nom au qrCode
 function activer_button() {
   //Permet l'enregistrement du titre dans le store
-  store.delete(`titreEnsemble`);
+  store.delete(`titremultiple`);
   var titre = document.getElementById('qrName').value;
-  store.set(`titreEnsemble`, titre);
+  store.set(`titremultiple`, titre);
 
   //if (document.getElementById('qrName').value.length > 0) {
     $('#preview ,#empty').attr('disabled', false);
@@ -351,7 +352,7 @@ function activer_button() {
 function saveQRCodeImage() {
   const fs = require('fs');
 
-  let qrcode = controllerEnsemble.getQRCodeEnsemble();
+  let qrcode = controllerMultiple.getQRCodeMultiple();
   let img = $('#qrView img')[0].src;
 
   // var data = img.replace(/^data:image\/\w+;base64,/, '');
