@@ -38,7 +38,7 @@ function drawQRCodeImport(qrcode) {
       drawQRCodeData(qrcode);
     });
   } else if (qrcode.getType() == 'ensemble') {
-    $("#charger-page").load(path.join(__dirname, "Views/ensemble.html"), function() {
+    $("#charger-page").load(path.join(__dirname, "Views/multiple.html"), function() {
       $('input#qrColor').val(qrcode.getColor()); // restaurer la couleur du qrcode
       $('input#qrName').val(qrcode.getName()); //restaurer le nom du qrcodeensemble
       controllerEnsemble.setQRCodeEnsemble(qrcode);
