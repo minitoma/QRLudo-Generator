@@ -96,8 +96,6 @@ app.on('window-all-closed', () => {
           console.error(`exec error: ${error}`);
           return;
         }
-        alert(`stdout: ${stdout}`);
-        alert(`stderr: ${stderr}`);
       });
 
       break;
