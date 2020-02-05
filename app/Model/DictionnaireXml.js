@@ -68,7 +68,7 @@ class DictionnaireXml {
     return "valeur";
   }
 
-  static getTagEnsembleFichiers() {
+  static getTagMultipleFichiers() {
     return "fichiers";
   }
 
@@ -82,8 +82,8 @@ class DictionnaireXml {
     return "atomique";
   }
 
-  static getValTypeEnsemble() {
-    return "ensemble";
+  static getValTypeMultiple() {
+    return "multiple";
   }
 
   static getAttUrlFichier() {

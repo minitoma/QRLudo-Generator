@@ -24,6 +24,7 @@ $(document).ready(function() {
 
   //appel à la focntion qui permet de lire les enregistrement
   chargement();
+  SetProgressBar();
 
   //Use to implement information on the audio import
   var info = document.createElement('div'); // balise div : contain html information
@@ -68,59 +69,16 @@ $(document).ready(function() {
   $('button#showInfo').click(e => {
     e.preventDefault();
     if (info_activ==false){
-        info.innerHTML = ` <div id="info-audio" class="info-content">
-        <h5><a href="#copyLink">Copier le lien téléchargeable de la musique</a></h5>
-          <div id="copyLink" class="info-content">
-            <h6><a href="#google">Google Drive</a></h6>
-            <div id="google" class="info-content">
-              <ul class="list components">
-                <li>
-                  Aller sur internet, se rendre sur son compte Google Drive (https://drive.google.com), se connecter éventuellement
-                </li>
-                <li>
-                  Faire clic-droit sur le fichier audio en question
-                </li>
-                <li>
-                  Cliquer sur "Obtenir le lien partageable"
-                </li>
-                <li>
-                  Revenir sur l'application QRLudo
-                </li>
-                <li>
-                  Vidéo résumant les étapes ci dessus
-                </li>
-              </ul>
-            </div>
-
-            <h6><a href="#dropbox">Dropbox</a></h6>
-            <div id="dropbox" class="info-content">
-              <ul class="list components">
-                <li>
-                  Aller sur internet, se rendre sur son compte Dropbox (https://www.dropbox.com), se connecter éventuellement
-                </li>
-                <li>
-                  Survoller avec la souris le fichier audio en question
-                </li>
-                <li>
-                  Cliquer sur "Partager", un popup va s'ouvrir
-                </li>
-                <li>
-                  En bas à droite du popup ouvert, cliquer sur "Créer un lien"
-                </li>
-                <li>
-                  Toujours sur le popup, cliquer sur "Copier le lien" en bas à droite
-                </li>
-                <li>
-                  Revenir sur l'application QRLudo
-                </li>
-                <li>
-                  Vidéo résumant les étapes ci dessus
-                </li>
-              </ul>
-            </div>
-          </div>
-        </div>`;
-      console.log("test");
+      info.innerHTML = ``;
+      fetch('Views/unique/audioinfo.html').then(function(response) {
+        return response.text();
+      }).then(function(string) {
+        // console.log(string);
+        info.innerHTML = string;
+      }).catch(function(err) {
+        console.log(info.innerHTML);
+        info.innerHTML = `Erreur`;
+      });
       document.getElementById('elementsAudio').appendChild(info);
       info_activ = true;
     }
@@ -132,12 +90,17 @@ $(document).ready(function() {
   });
 
   $('button#annuler').click(e => {
-    
+
+    //mise ajour des données sur le progress bar
+    $("#progressbarId").attr('aria-valuenow',0);
+    $("#progressbarId").attr("style","width:"+0+"%");
+    $("#progressbarId").text(0);
+    //FIN progress bar gestion
     //aficher popup quand on click sur reinitialiser
     // cache le qr générer & desactivation du bouton exporter
     var popUpQuiter = confirm("Etes vous sûr de vouloir réinitialiser?");
-    if (popUpQuiter == true){      
-      
+    if (popUpQuiter == true){
+
       //Les différents store sont clean ici
       if(store.get(`titreUnique`)){
         store.delete(`titreUnique`);
@@ -288,9 +251,9 @@ function chargement(){
   if(nbZoneDonne == 0){
     ajouterChampLegende();
   }
-  
+
   //On desactive le bouton supprimer quand il y a qu'un seul text area
-  if(nbZoneDonne == 1) { 
+  if(nbZoneDonne == 1) {
     disableButtonDelete();
   }
 }
@@ -389,9 +352,9 @@ function getMusicFromUrl() {
 
       if (this.status == 200) {
         let blob = this.response; // get binary data as a response
-        let contentType = xhr.getResponseHeader("content-type");        
+        let contentType = xhr.getResponseHeader("content-type");
         console.log(contentType);
-        
+
         if (contentType == 'audio/mpeg' || contentType == 'audio/mp3') {
           // get filename
           let filename = xhr.getResponseHeader("content-disposition").split(";")[1];
@@ -462,12 +425,12 @@ function activer_button() {
 //ajouter une nvlle legende (textarea) a chaque click sur button Texte (pour chaque textarea il faut rajouter à l'attribut class la valeur qrData class="... qrData")
 function ajouterChampLegende(valeur = "") {
   incrementerNbZoneDonne();
-
+  //console.log(totatCaractere);
   incrementerNumZoneCourante();
 
   var textareaLegende = document.createElement('div');
   textareaLegende.innerHTML = `<i class='fa fa-play align-self-center icon-player'></i><i class="fa fa-pause align-self-center icon-player"></i>
-    <textarea id='textarea${numZoneCourante}' class='form-control qrData' rows='3' name='legendeQR' placeholder='Mettre la légende (255 caractères maximum)' maxlength='255' onkeyup="verifNombreCaractere(${numZoneCourante});">${valeur}</textarea>
+    <textarea id='textarea${numZoneCourante}' class='form-control qrData' rows='3' name='legendeQR' placeholder='Tapez votre texte (255 caractères maximum)' maxlength='255'  onkeydown="verifNombreCaractere(${numZoneCourante});" onchange="verifNombreCaractere(${numZoneCourante});">${valeur}</textarea>
     <button id='delete${numZoneCourante}' type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='supprimerChampLegende(this, ${numZoneCourante});'>
     <div class="inline-block">
       <i class='fa fa-trash-alt'></i></button>
@@ -484,11 +447,38 @@ function ajouterChampLegende(valeur = "") {
 
   //Permet d'enregistrer l'ajout de case texte
   store.set(`zone${numZoneCourante}`,textareaLegende.innerHTML);
-  
-  //limiter zone de texte
+
+  //limiter zone de texte a 3 par example
   if (nbZoneDonne>=3){
-    disableButtonAddNewData();
+    //disableButtonAddNewData();
   }
+  //reasignation du nombre total de caractère restant pour la nouvelle zone
+  var totatCaractere= SetProgressBar();
+  $('#textarea'+numZoneCourante).attr('maxlength',(255-totatCaractere));
+}
+
+
+
+//foncion qui  calcule le nombre de caractère dans les zones de texte et met la valeur sur les progress bar
+function SetProgressBar() {
+  //progress bar gestion
+  var total = 0;
+  var nombreCaratereMAX=255;
+
+  $("#cible textarea").each( function(){
+     total += $(this).val().length;
+     //console.log(total);
+  });
+  //$("#cible input").val().length;
+  var totalSeted = Math.round((total  * 100)/nombreCaratereMAX) ;
+
+
+  //mise ajour des données sur le progress bar
+  $("#progressbarId").attr('aria-valuenow',totalSeted);
+  $("#progressbarId").attr("style","width:"+totalSeted+"%");
+  $("#progressbarId").text(totalSeted+"%");
+  //FIN progress bar gestion
+    return total;
 }
 
 //verifier si le nombre de caractère maximal est respecté, si ce n'est pas le cas on affiche une pop up d'informations
@@ -498,15 +488,34 @@ function verifNombreCaractere(num) {
   var txt = document.getElementById('textarea'+num).value;
   store.set(`text${num}`, txt);
 
+  var nombreCaratereMAX =255;
+  //progress bar gestion
+   var total = SetProgressBar();
 
+  //console.log($('#textarea'+num).attr('maxlength'));
   $('#messages').empty();
-  if(document.getElementById('textarea'+num).value.length >= $('#textarea'+num).attr('maxlength')) {
+  if( total >= nombreCaratereMAX)  {
     messageInfos("La limite de caractère est atteinte (255 caractères)","warning");
+    disableButtonAddNewData();
+    //si nombre de caractére max attein toute les zone de texte sont fermer a l'jout de caractère
+    $("#cible textarea").each( function(){
+      $(this).attr('maxlength',0);
+    });
+  }
+  else {
+    activateButtonAddNewData();
+    //reassignation du nombre de caractére disponible pour toutes les zones
+    $("#cible textarea").each( function(){
+      $(this).attr('maxlength',255);
+    });
   }
 }
 
+
 //supprimeun le textarea correspondant au numText
 function supprimerChampLegende(e, numText) {
+
+
   decrementerNbZoneDonne();
 
   //suppression dans le store de la zone de txt correspondante
@@ -514,23 +523,25 @@ function supprimerChampLegende(e, numText) {
   store.delete(`zone`+numText);
 
   $(e).parents('div#legendeTextarea').remove();
-  
+
   activateButtonAddNewData();
 
-  if(nbZoneDonne == 1) {    
+  if(nbZoneDonne == 1) {
     disableButtonDelete();
   }
+  //calcul et mise a jour de la bar de progression
+  SetProgressBar();
 }
 
 //generer un input 'pour un fichier audio' -> nom de fichier + url (pour chaque input il faut rajouter à l'attribut class la valeur qrData class=".. qrData")
 function ajouterChampSon(nom, url) {
   incrementerNbZoneDonne();
-
   incrementerNumZoneCourante();
 
   var inputSon = document.createElement('div');
   inputSon.innerHTML = `<i class='fa fa-play align-self-center icon-player'></i><i class='fa fa-pause align-self-center icon-player'></i>
-    <input type='text' id='${url}' name='AudioName' class='form-control qrData' value='${nom}' readonly>
+      <!-- <input type='text' id='${url}' name='AudioName' class='form-control qrData' value='${nom}' readonly>  -->
+    <textarea id='${url}' class='form-control qrData'  name='AudioName'  maxlength='255'  readonly>${nom}'</textarea>
     <button id='delete${numZoneCourante}' type='button' class='btn btn-outline-success legendeQR-close-btn align-self-center' onclick='supprimerChampSon(this,${numZoneCourante});'>
     <div class="inline-block">
       <i class='fa fa-trash-alt'></i></button>
@@ -550,13 +561,16 @@ function ajouterChampSon(nom, url) {
   activateAllButtonDelete();
 
   if (nbZoneDonne>=3){
-    disableButtonAddNewData();
+    //disableButtonAddNewData();
   }
+   //calcul et mise a jour de la bar de progression
+    SetProgressBar();
 }
 
 //supprimer un champ Audio -> event onclick
 function supprimerChampSon(e, numText) {
   decrementerNbZoneDonne();
+
 
   //suppression dans le store de la zone de txt correspondante
   store.delete(`text`+numText);
@@ -569,6 +583,7 @@ function supprimerChampSon(e, numText) {
   if(nbZoneDonne == 1) {
     disableButtonDelete();
   }
+  SetProgressBar();
 }
 
 // déplacer au dessus du champ précédent
@@ -638,7 +653,7 @@ function incrementerNumZoneCourante() {
 
 //Permet de desactiver le bouton supprimer de la zone de donnée restante
 function disableButtonDelete() {
-  for(var i = 1; i<numZoneCourante+1; i++){    
+  for(var i = 1; i<numZoneCourante+1; i++){
     if(store.get(`zone${i}`))
       $("#delete" + i).attr('disabled', true);
   }
@@ -646,7 +661,7 @@ function disableButtonDelete() {
 
 //Permet d'activer tous les boutons supprimer des zones de données
 function activateAllButtonDelete() {
-  for(var i = 1; i<numZoneCourante+1; i++){    
+  for(var i = 1; i<numZoneCourante+1; i++){
     if(store.get(`zone${i}`))
       $("#delete" + i).attr('disabled', false);
   }
@@ -665,6 +680,3 @@ function disableButtonAddNewData() {
   $('#ajouterTexte').attr('disabled', true);
   $('#showAudio').attr('disabled', true);
 }
-
-
- 

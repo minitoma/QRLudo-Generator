@@ -4,15 +4,29 @@
  * @Last modified time: 2018-12-04T21:01:33+01:00
  */
 
+ const {
+   MdFiveConverter
+ } = require(`${root}/Controller/MDFiveConverter`);
 
 /*
  *Classe permettant de creer un projet de QCM
  */
 class ProjetQCM {
   //Constructeur d'un Projet
-  constructor(nom = "No_Name", question = null, reponses = []) {
+  constructor(nom = "No_Name", question = [], reponses = []) {
+    //Génération de l'id unique
+    var dataString =  nom;
+    for (var i = 0; i < question.length; i++) {
+      dataString += question[i];
+    }
+    for (var i = 0; i < reponses.length; i++) {
+      dataString += reponses[i];
+    }
+
+    var md5Value = MDFiveConverter.convert(dataString);
+
     this.projet = {
-      id: new Date().getTime(),
+      id: md5Value,
       nom: nom,
       question: question,
       reponses: reponses
@@ -92,10 +106,11 @@ class ProjetQCM {
  */
 class QuestionQCM {
   //Constructeur d'une Question
-  constructor(title, reponsesUIDs = [], color = '#000000') {
+  constructor(title, nombreReponse, reponsesUIDs = [], color = '#000000') {
     this.qrcode = {
       id: new Date().getTime(),
       name: title,
+      nbReponse: nombreReponse,
       data: reponsesUIDs,
       type: "questionQCM",
       color: color,

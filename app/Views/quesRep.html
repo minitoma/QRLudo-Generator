@@ -2,17 +2,21 @@
 <!-- contenu page QuesRep -->
 <!--Panel-->
 
-
 <div class="col-sm-12 card">
+  <div class="text-center" id="textPresentation">
+      Création de QR Code Exercice.<br>
+      Les exercices permettent de prendre connaissance des réponses avant validation.<br>
+      Plusieurs réponses peuvent être acceptées !
+  </div >
   <form id="formulaireQesRep" onsubmit="return false;">
     <div class="card-body">
       <h6 class="card-title"></h6>
       <ul class="nav nav-tabs">
         <li class="nav-item">
-          <a class="nav-link active" data-toggle="tab" href="#newProject">QR - Questions Reponses</a>
+          <a class="nav-link active" data-toggle="tab" href="#newProject">QR - Exercice </a>
         </li>
-      </ul>
 
+      </ul>
     <div style=" margin-top:15px;">
       <div id="newProject" class="tab-pane fade in active show" role="tabpanel">
         <div class="form-group">
@@ -23,35 +27,59 @@
               </td>
               <td>
                 <div class="form-inline">
-                  <input type='text' class="form-control col-sm-14" id="newQuestionText" name="nomQuest" placeholder="Saisissez la question"/>
+                  <input type='text' class="form-control col-sm-14" id="newQuestionText" onkeyup="activerSave('newQuestionText');" name="nomQuest" placeholder="Saisissez la question"/>
                 </div>
               </td>
             </tr>
             <tr>
               <td>
-                <label class="control-label col-md-auto  " style="color:#28a745;padding-top:5px;">Bonne réponse  &nbsp; </label>
+                <label class="control-label col-md-auto  " style="color:#28a745;padding-top:5px;">Message Bonne réponse  &nbsp; </label>
               </td>
               <td >
                 <div class="form-inline">
-                    <input type='text' class="form-control col-sm-14" id="newBonneReponsenText" name="nomQuest" placeholder="Saisissez la bonne réponse"/>
+                    <input type='text' class="form-control col-sm-14" id="newBonneReponseText" name="nomQuest" onkeyup="activerSave('newBonneReponseText');" placeholder="Saisissez la bonne réponse"/>
                 </div>
               </td>
             </tr>
             <tr>
               <td>
-                <label class="control-label col-md-auto " style="color:#28a745;">Mauvaise réponse &nbsp; </label>
+                <label class="control-label col-md-auto " style="color:#28a745;padding-top:10px"> Message Mauvaise réponse &nbsp; </label>
               </td>
               <td >
                 <div class="form-inline">
-                  <input type='text' class="form-control col-sm-14" id="newMauvaiseReponseText" name="nomQuest" placeholder="Saisissez la mauvaise réponse"/>
+                  <input type='text' class="form-control col-sm-14" id="newMauvaiseReponseText" name="nomQuest" onkeyup="activerSave('newMauvaiseReponseText');" placeholder="Saisissez la mauvaise réponse"/>
                 </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+                <label class="control-label col-md-auto " style="color:#28a745;padding-top:10px;">Nombre de bonne réponse &nbsp; </label>
+              </td>
+              <td >
+                <div class="form-inline">
+                  <input type='number' class="form-control col-sm-14" id="newNbMinimalBonneReponse" name="nomQuest" onkeyup="activerSave('newNbMinimalBonneReponse');" placeholder="Nombre minimal de bonne reponse" min="1" />
+                </div>
+              </td>
+            </tr>
+            <tr>
+              <td>
+              </td>
+              <td>
+                <button type="submit" style="margin-top:10px" class="btn btn-outline-success " id="genererQestion" >
+                  <i class="fa fa-cogs"></i>&nbsp;&nbsp; Créer l'exercice
+                </button>
               </td>
             </tr>
           </table>
         </div>
-        <hr>
+
         <div class="tab-content scrollbar-success" id="dropZone" style="height:300px; overflow-y: scroll; margin-top:15px;">
-            <div id="texte" class="tab-pane fade in active show">
+          <ul class="nav nav-tabs">
+            <li class="nav-item">
+              <a class="nav-link active" data-toggle="tab" href="#newProject"> Bonne(s) Reponse(s) </a>
+            </li>
+          </ul>
+          <div id="texte" class="tab-pane fade in active show">
 
                 <div class="form-group">
                     <div class="col-sm-10">
@@ -71,15 +99,15 @@
     </div>
     <div class="card-footer form-inline">
       <div class="card col-md-auto ">
-        <button  type="reset" class="btn btn-outline-success" data-toggle="modal" data-target="#dialogAjoutReponse" id= "ajoutNewReponse" disabled ><i class="fa fa-plus-square"  ></i>&nbsp;&nbsp;Ajouter Réponse</button>
-        <button style="margin-top:10px" type="reset" class="btn btn-outline-success" id="annuler"><i class="fa fa-eraser"></i>&nbsp;&nbsp;Réinitialiser</button>
+        <button  type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#dialogAjoutReponse" id= "ajoutNewReponse" disabled ><i class="fa fa-plus-square"  ></i>&nbsp;&nbsp;Ajouter Réponse</button>
+        <button style="margin-top:10px" type="reset" class="btn btn-outline-success" id="annuler"><i class="fa fa-undo"></i>&nbsp;&nbsp;Réinitialiser</button>
       </div>
       <div class="card col-md-auto">
         <button  type="button" class="btn btn-outline-success " id="saveQRCode" disabled>
           <i class="fa fa-download"></i>&nbsp;&nbsp;Exporter
         </button>
-        <button type="submit" style="margin-top:10px" class="btn btn-outline-success " id="preview" >
-          <i class="fa fa-cogs"></i>&nbsp;&nbsp;Générer
+        <button type="submit" style="margin-top:10px" class="btn btn-outline-success " id="preview" disabled >
+          <i class="fa fa-cogs"></i>&nbsp;&nbsp; Générer
         </button>
       </div>
     </div>
@@ -98,7 +126,7 @@
     </script>
 </div>
 
-<!-- debut Popup pour ajouter nouvelle reponse  -->
+<!-- debut fenetre  pour ajouter nouvelle reponse  -->
 <div class="modal fade" id="dialogAjoutReponse" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
@@ -111,7 +139,7 @@
         <table>
           <tr>
             <td>
-              <label class="control-label" style="color:#28a745;padding-top:10px;">Identifiant</label>
+              <label class="control-label" style="color:#28a745;padding-top:10px;">Nom QR Code</label>
             </td>
             <td>
               <div class="form-inline">
@@ -121,7 +149,7 @@
             </tr>
             <tr>
               <td>
-                <label class="control-label" style="color:#28a745;padding-top:10px;">Contenu vocal</label>
+                <label class="control-label" style="color:#28a745;padding-top:10px;">Contenu QR Code</label>
               </td>
               <td>
                 <div class="form-inline">
@@ -140,7 +168,7 @@
   </div>
 </div>
 </div>
-<!-- fin Popup pour ajouter nouvelle reponse  -->
+<!-- fin fenetre pour ajouter nouvelle reponse  -->
 
 <!-- Js pour la parti des question et reponse l -->
 <script src="./js/script_question_reponse.js"></script>

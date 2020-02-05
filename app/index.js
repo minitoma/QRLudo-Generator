@@ -82,10 +82,6 @@ function createInfoWindow() {
 app.on('ready', createWindow);
 
 app.on('window-all-closed', () => {
-  if (process.platform !== 'darwin') {
-    app.quit();
-  }
-
   // delete local folder QRLudo
   const fs = require('fs');
   const path = require('path');
@@ -129,6 +125,10 @@ app.on('window-all-closed', () => {
   const store = new Store();
   //Le store est clean ici
   store.clear();
+
+  if (process.platform !== 'darwin') {
+    app.quit();
+  }
 });
 
 

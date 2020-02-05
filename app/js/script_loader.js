@@ -15,11 +15,14 @@ nbZoneDonne = 0;
 //Déclaration de l'entier permettant l'implémentation des différentes zones de données dans l'onglet qr unique
 numZoneCourante = 0;
 
-//nombre de fichier ajouté dans l'onglet ensemble
+//nombre de fichier ajouté dans l'onglet multiple
 numFich = 0;
 
 //nombre de reponse soumises à la question dans l'onglet QCM
 numReponseQCM = 0;
+
+//numero de la reponse dans QR Exercice
+numReponse = 0;
 
 
 const path = require('path');
@@ -117,8 +120,8 @@ const {
 } = require(`${root}/Controller/CompresseurTexte`);
 
 const {
-  ControllerEnsemble
-} = require(`${root}/Controller/ControllerEnsemble`);
+  ControllerMultiple
+} = require(`${root}/Controller/ControllerMultiple`);
 
 const {
   FacadeController
@@ -137,13 +140,16 @@ const {
 } = require(`${root}/Controller/JsonCompressor`);
 
 const {
+  MDFiveConverter
+} = require(`${root}/Controller/MDFiveConverter`);
+
+const {
   QRCodeLoader
 } = require(`${root}/Controller/QRCodeLoader`);
 
 const {
   QRCodeLoaderJson
 } = require(`${root}/Controller/QRCodeLoaderJson`);
-
 
 const {
   DictionnaireXml
@@ -162,12 +168,12 @@ const {
 } = require(`${root}/Model/QRCodeAtomique`);
 
 const {
-  QRCodeEnsemble
-} = require(`${root}/Model/QRCodeEnsemble`);
+  QRCodeMultiple
+} = require(`${root}/Model/QRCodeMultiple`);
 
 const {
-  QRCodeEnsembleJson
-} = require(`${root}/Model/QRCodeEnsembleJson`);
+  QRCodeMultipleJson
+} = require(`${root}/Model/QRCodeMultipleJson`);
 
 const {
   QRCodeUnique,
@@ -191,4 +197,4 @@ const {
 } = require(`${root}/Model/QRCodeQCM`);
 
 // Instanciate object
-let controllerEnsemble = new ControllerEnsemble();
+let controllerMultiple = new ControllerMultiple();

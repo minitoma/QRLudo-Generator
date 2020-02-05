@@ -3,8 +3,14 @@
 <!--Panel-->
 
 <div class="col-sm-12 card">
+  <div class="text-center" id="textPresentation">
+      Création de QR Code QCM.<br>
+      Une question possède plusieurs réponses. Si la bonne est donnée,<br>
+       c'est gagné, sinon c'est perdu !
+  </div >
   <div class="alert alert-success" role="alert" id="alertExportationOk" style="display:none;">  Votre projet a bien été enregistré. </div>
   <div class="alert alert-danger" role="alert" id="alertQuestionVideError" style="display:none;"> Veuillez saisir le texte de votre question. </div>
+  <div class="alert alert-danger" role="alert" id="alertNombreReponseVideError" style="display:none;"> Veuillez saisir un nombre de réponses correct. </div>
   <div class="alert alert-danger" role="alert" id="alertQuestionExistError" style="display:none"> La question existe déjà. </div>
   <form id="formulaireQCM" onsubmit="return false;">
     <div class="card-body">
@@ -23,22 +29,30 @@
               <input type="text" class="form-control col-sm-6" id="projectId" rows="2" name="nomprojet" placeholder="Nom Du Projet" onkeyup="activerSave();"/>
             </div>
           </div>
-          <div class="form-group">
-            <label class="control-label" style="color:#28a745;padding-top:10px;">Question : </label>
+          <div class="form-group" >
+            <label class="control-label" style="color:#28a745;padding-top:10px;">Question </label>
             <div class="form-inline">
-              <input type='text' class="form-control col-sm-6" id="newQuestionText" name="nomQuest" placeholder="Saisissez la question"/>
-              <button id="addNewQuesBtnId" type="button" class="btn btn-outline-success">
-                Nouvelle Question
-              </button>
+              <input type="text" class="form-control col-sm-6" id="newQuestionText" name="nomQuest" placeholder="Saisissez la question"/>
             </div>
+
+            <div class="form-group">
+              <label class="control-label" style="color:#28a745;padding-top:10px;">Nombre de réponses (2-4)</label>
+              <div class="form-inline">
+                <input type="text" class="form-control col-sm-6" id="nombreReponse" rows="2" name="nombreReponse" placeholder="Nombre de réponses au QCM" onkeyup="activerSave();"/>
+              </div>
+            </div>
+
+            <button id="addNewQuesBtnId" type="button" style="display:block;margin:auto;" class="btn btn-outline-success">
+              Nouvelle Question
+            </button>
 
             <hr>
             <div class="alert alert-danger" role="alert" id="messageReponseSansQuestionError" style="display:none;">Vous devez d'abord créer une question.</div>
             <div class="alert alert-danger" role="alert" id="messageReponseVideError" style="display:none;">Veuillez ajouter le texte de votre réponse.</div>
             <div class="alert alert-danger" role="alert" id="messageRetourVocalVideError" style="display:none;">Veuillez ajouter le texte de votre retour vocal.</div>
             <div class="alert alert-danger" role="alert" id="messageReponseExistError" style="display:none;">Cette réponse existe déjà.</div>
-            <div class="alert alert-danger" role="alert" id="messageReponseMaxError" style="display:none;">Le maximum est de quatres réponses</div>
-            <div class="form-group">
+            <div class="alert alert-danger" role="alert" id="messageReponseMaxError" style="display:none;">Le maximum de réponses est atteint.</div>
+            <div class="form-group" id="zoneReponse">
               <table>
                 <tr>
                   <td>
@@ -73,14 +87,13 @@
             <div id="questionsDivLabelsId" class="form-group">
             </div>
           </div>
-
         </div>
       </div>
     </div>
     <div class="card-footer form-inline">
       <div class="card col-md-auto "  >
         <button type="reset" style="margin-top:10px" class="btn btn-outline-success btn-unique-xl" onclick="deleteQuestion()">
-          <i class="fa fa-eraser"></i>&nbsp;&nbsp;Réinitialiser
+          <i class="fa fa-undo"></i>&nbsp;&nbsp;Réinitialiser
         </button>
       </div>
       <div class="card col-md-auto">
@@ -91,7 +104,7 @@
           <i class="fa fa-download"></i>&nbsp;&nbsp;Exporter
         </button>
       </div>
-    
+
     </div>
   </form>
 </div>

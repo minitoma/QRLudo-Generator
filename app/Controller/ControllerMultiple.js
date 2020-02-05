@@ -4,17 +4,17 @@
  * @Last modified time: 2018-12-11T23:14:13+01:00
  */
 
-class ControllerEnsemble {
+class ControllerMultiple {
 
   constructor() {
-    this.qrCodes = []; // array of qrcode contained in qrcode ensemble data
-    this.qrCodeEnsemble = new QRCodeEnsembleJson();
+    this.qrCodes = []; // array of qrcode contained in qrcode multiple data
+    this.qrCodeMultiple = new QRCodeMultipleJson();
     this.qrCodesSelectionne = null; // qrcode corresponding to the clicked line
   }
 
-  // setting qrcode ensemble
-  setQRCodeEnsemble(qrcode) {
-    this.qrCodeEnsemble = qrcode;
+  // setting qrcode multiple
+  setQRCodeMultiple(qrcode) {
+    this.qrCodeMultiple = qrcode;
   }
 
   // setting an entry in qrcode array
@@ -32,9 +32,9 @@ class ControllerEnsemble {
     this.qrCodesSelectionne = qrcode;
   }
 
-  // return qrcode ensemble
-  getQRCodeEnsemble() {
-    return this.qrCodeEnsemble;
+  // return qrcode multiple
+  getQRCodeMultiple() {
+    return this.qrCodeMultiple;
   }
 
   // return selected qrcode
@@ -68,8 +68,13 @@ class ControllerEnsemble {
   recuperationQrCodeUnique(file) {
     let facade = new FacadeController();
     facade.importQRCode(file, function(qrcode) {
-      controllerEnsemble.qrCodes.push(qrcode);
+      controllerMultiple.qrCodes.push(qrcode);
     });
+  }
+
+  //fonction qui ajouter un qr code dans l'multiple des qrcode utile pour ajouter un qr code avec le bouton qui crée un nouveau
+  ajoutQRcode(qrCode) {
+      controllerMultiple.qrCodes.push(qrCode);
   }
 
   // Type de qrcode du fichier
@@ -79,12 +84,12 @@ class ControllerEnsemble {
   }
 
   /*
-   * Recupere un QR Code ensemble pour le supprimer ou rajouter des données
+   * Recupere un QR Code multiple pour le supprimer ou rajouter des données
    */
-  recuperationQrCodeEnsemble(file) {
+  recuperationQrCodeMultiple(file) {
     let facade = new FacadeController();
     facade.importQRCode(file, function(qrCode) {
-      controllerEnsemble.qrCodeEnsemble = qrCode;
+      controllerMultiple.qrCodeMultiple = qrCode;
     });
 
     // setTimeout(suiteTraitement, 400);
@@ -94,5 +99,5 @@ class ControllerEnsemble {
 }
 
 module.exports = {
-  ControllerEnsemble
+  ControllerMultiple
 };

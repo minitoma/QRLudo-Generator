@@ -4,34 +4,37 @@
  * @Last modified time: 2019-01-16T23:37:53+01:00
  */
 
-$().ready(function() {
 
+$().ready(function() {
   enregistrement();
   store.delete(`numFich`);
-  store.set(`numFich`,numFich);
+  store.set(`numFich`,numFich)
 
   $("#play-sound-div").hide();
 
 
-  // Genere le qrCode Ensemble
+  // Genere le qrCode multiple
   $("#preview").click(function() {
 
     affichageLigneParDefault();
 
     let qrColor = $("#qrColor").val();
-    controllerEnsemble.setQRCodeEnsemble(new QRCodeEnsembleJson(document.getElementById('qrName').value, [], qrColor));
+    controllerMultiple.setQRCodeMultiple(new QRCodeMultipleJson(document.getElementById('qrName').value, [], qrColor));
 
 
-    // Ajoute les donnees json de chaque qrCode unique dans le qrCode ensemble
-    let qrcodes = controllerEnsemble.getQRCodeAtomiqueArray();
-    let qrcodeEns = controllerEnsemble.getQRCodeEnsemble();
+    // Ajoute les donnees json de chaque qrCode unique dans le qrCode multiple
+    let qrcodes = controllerMultiple.getQRCodeAtomiqueArray();
+    let qrcodeEns = controllerMultiple.getQRCodeMultiple();
+
 
     for (let i = 0; i < qrcodes.length; i++) {
       qrcodeEns.ajouterQrCode(qrcodes[i]);
     }
-
+    console.log("-----------------");
+    console.log(qrcodes);
     let facade = new FacadeController();
     facade.genererQRCode($('#qrView')[0], qrcodeEns);
+    //console.log($('#qrView')[0]);
 
     $('#saveQRCode').attr('disabled', false);
   });
@@ -46,6 +49,9 @@ $().ready(function() {
   if (document.getElementById('qrName').value.length === 0) {
     $('#preview #empty').attr('disabled', true);
   }
+
+  if (numFich > 0)
+    document.getElementById('preview').disabled = false;
 });
 
 var dropZone = document.getElementById('dropZone');
@@ -76,8 +82,6 @@ dropZone.ondrop = function(e) {
 
   console.log(e);
 
-  txtDragAndDrop.remove();
-
   let afficherPopUp = false;
   let nomFichierIdentique = "";
 
@@ -85,25 +89,29 @@ dropZone.ondrop = function(e) {
   for (let i = 0; i < e.dataTransfer.files.length; i++) {
     let qrFile = e.dataTransfer.files[i];
 
-    controllerEnsemble.isUnique(qrFile, qrcode => {
+    controllerMultiple.isUnique(qrFile, qrcode => {
+      //TODO Ici changer le "ensemble" en "multiple"
       if (qrcode.getType() != "ensemble") {
         let words = qrFile.name.split(".");
-        if (!controllerEnsemble.occurenceFichier(words[0])) {
+        if (!controllerMultiple.occurenceFichier(words[0])) {
           genererLigne(words[0], numFich);
+          console.log(numFich);
           store.set(`fichierDrop${numFich}`,words[0]);
           numFich ++;
           store.set(`numFich`,numFich);
-          controllerEnsemble.recuperationQrCodeUnique(qrFile);
+          controllerMultiple.recuperationQrCodeUnique(qrFile);
         } else {
           afficherPopUp = true;
           nomFichierIdentique += "\t" + words[0] + "\n";
         }
       } else {
-        messageInfos("Impossible de mettre un qrcode ensemble dans un qrcode ensemble. Veuillez mettre que des qrcodes uniques", "danger");
+        messageInfos("Impossible de mettre un qrcode multiple dans un qrcode multiple. Veuillez mettre que des qrcodes uniques", "danger");
       }
     });
 
   }
+
+    console.log(controllerMultiple.getQRCodeAtomiqueArray());
 
   // Affiche un popup avec le nom des fichiers qui n'ont pu être ajouté
   if (afficherPopUp) {
@@ -112,7 +120,35 @@ dropZone.ondrop = function(e) {
   activer_button();
 };
 
-//permet la continuité entre les onflet spécifiquement pour l'onglet ensemble
+function ajoutQrCcode(){
+
+  let qrColor = $('#qrColor').val();
+  var qrName = $("#nomQR").val();
+  var donnee = $("#ContenuQR").val();
+  var qrData = [];
+  qrData.push(donnee);
+
+  //Reset de la boite de dialogue
+  document.getElementById("nomQR").value = "";
+  document.getElementById("ContenuQR").value = "";
+
+  let newQrUnique = new QRCodeUnique(qrName, qrData, qrColor);
+  console.log(newQrUnique);
+  genererLigne(qrName, numFich);
+
+  store.set(`fichierDrop${numFich}`,qrName);
+  numFich ++;
+  store.set(`numFich`,numFich);
+
+  controllerMultiple.ajoutQRcode(newQrUnique);
+
+  console.log(controllerMultiple.getQRCodeAtomiqueArray());
+  activer_button();
+
+  document.getElementById("saveQRCode").disabled = true;
+}
+
+//permet la continuité entre les onflet spécifiquement pour l'onglet multiple
 function enregistrement(){
 
   if(store.get(`numFich`)){
@@ -120,8 +156,8 @@ function enregistrement(){
   }
 
   //vérifier si un enregistrement du titre existe
-  if(store.get(`titreEnsemble`)){
-    $('#qrName').val(store.get(`titreEnsemble`));
+  if(store.get(`titremultiple`)){
+    $('#qrName').val(store.get(`titremultiple`));
   }
 
   for(var i =0; i < numFich; i++){
@@ -144,6 +180,8 @@ function setAttributes(el, attrs) {
  * Chaque ligne a un bouton pour supprimer la ligne
  */
 function genererLigne(name, numLigne) {
+  $('#txtDragAndDrop').hide();
+
   let baliseDiv = document.createElement("DIV");
   let baliseSpan = document.createElement("SPAN");
   let textDiv = document.createTextNode(name);
@@ -158,31 +196,35 @@ function genererLigne(name, numLigne) {
   let baliseButtonDown= document.createElement("BUTTON");
   let baliseIDown = document.createElement("I");
 
+  let baliseLabel= document.createElement("LABEL");
+  baliseLabel.setAttribute("class","btn");
+  baliseLabel.innerHTML= name;
+
 
   //fonctionatité bouton delete   &&
   setAttributes(baliseIDelete, {"class": "fa fa-trash-alt ", "height":"8px", "width":"8px"});
   baliseButtonDelete.addEventListener("click", effacerLigne);
-  baliseButtonDelete.setAttribute("class", "btn btn-outline-success align-self-center legendeQR-close-btn");
+  baliseButtonDelete.setAttribute("class", "btn btn-outline-success float-right");
   baliseButtonDelete.setAttribute("padding", "10px 10px");
   baliseButtonDelete.appendChild(baliseIDelete);
 
   //fonctinalité bouton up  &&
   setAttributes(baliseIUp, {"class": "fa fa-arrow-up ", "height":"8px", "width":"8px"});
-  baliseButtonUp.setAttribute("class","btn btn-outline-success align-self-center legendeQR-close-btn ");
+  baliseButtonUp.setAttribute("class","btn btn-outline-success float-right ");
   baliseButtonUp.appendChild(baliseIUp);
   baliseButtonUp.setAttribute("id", name+'Up');
   baliseButtonUp.addEventListener("click", upItem);
 
   //fonctinalité bouton down  &&
   setAttributes(baliseIDown, {"class": "fa fa-arrow-down ", "height":"8px", "width":"8px"});
-  baliseButtonDown.setAttribute("class","btn btn-outline-success  ");
+  baliseButtonDown.setAttribute("class","btn btn-outline-success float-right ");
   baliseButtonDown.appendChild(baliseIDown);
   baliseButtonDown.setAttribute("id", name+'Down');
   baliseButtonDown.addEventListener("click", downItem);
 
 
   //fonctionatité nom qrcode
-  baliseSpan.appendChild(textDiv);
+  baliseSpan.appendChild(baliseLabel);
   baliseSpan.setAttribute("style", "white-space: nowrap; padding:5px; font-size:0.7em;");
   baliseSpan.setAttribute("class", "qrData text-left ");
   baliseSpan.setAttribute("name", "qrCode");
@@ -190,6 +232,7 @@ function genererLigne(name, numLigne) {
 
 
   baliseDiv.addEventListener("click", afficherQrCode);
+  baliseDiv.setAttribute("style","height:40px");
   baliseDiv.appendChild(baliseSpan);
   baliseDiv.id = name;
 
@@ -198,7 +241,6 @@ function genererLigne(name, numLigne) {
   baliseDiv.appendChild(baliseButtonDown);
 
   txtZone.appendChild(baliseDiv);
-
 
 }
 
@@ -213,17 +255,17 @@ function afficherQrCode(e) {
 
   this.querySelector("span").setAttribute("style", "white-space: nowrap; padding:5px; font-size:0.7em; background-color:#99cc00;");
 
-  let qrcodes = controllerEnsemble.getQRCodeAtomiqueArray();
+  let qrcodes = controllerMultiple.getQRCodeAtomiqueArray();
   // Affiche le qrCode que l'on vien de selectionner
   for (let i = 0; i < qrcodes.length; i++) {
     if (qrcodes[i].getName() == id) {
       let facade = new FacadeController();
       facade.genererQRCode($('#qrView')[0], qrcodes[i]);
-      controllerEnsemble.setQRCodeSelectionne(qrcodes[i]);
+      controllerMultiple.setQRCodeSelectionne(qrcodes[i]);
     }
   }
 
-  console.log(controllerEnsemble.getQRCodeSelectionne());
+  console.log(controllerMultiple.getQRCodeSelectionne());
   // qrCodesUniqueSelectionne = this;
 }
 
@@ -247,30 +289,38 @@ function effacerLigne() {
 
   }
 
+
   // Supprime le fichier dans le tableau files
-  let qrCodes = controllerEnsemble.getQRCodeAtomiqueArray();
+  let qrCodes = controllerMultiple.getQRCodeAtomiqueArray();
   console.log("before suppress", qrCodes);
   console.log(id);
   console.log(qrCodes.filter(item => item.getName() != id));
-  controllerEnsemble.setQRCodeAtomiqueArray(qrCodes.filter(item => item.getName() != id));
+  controllerMultiple.setQRCodeAtomiqueArray(qrCodes.filter(item => item.getName() != id));
   console.log("after suppress", qrCodes);
+
+  //verification qu'il ne reste plus delement pour remetre le text du dop
+  if($("#txtZone div").length==0){
+    console.log("coucou");
+    $('#txtDragAndDrop').show();
+  }
 }
 
 // Vide les tableaux qrCodes, files et les lignes de la zone drop
 function viderZone(){
-  controllerEnsemble = new ControllerEnsemble();
+  controllerMultiple = new ControllerMultiple();
   $('#qrName').val('');
   $(txtZone).empty();
   txtZone.appendChild(txtDragAndDrop);
+  $('#txtDragAndDrop').show();
 
-  //Permet la suppression des elements du store créé dans le script_ensemble
+  //Permet la suppression des elements du store créé dans le script_multiple
   if(store.get(`numFich`)){
     store.delete(`numFich`);
   }
 
   //vérifier si un enregistrement du titre existe
-  if(store.get(`titreEnsemble`)){
-    store.delete(`titreEnsemble`);
+  if(store.get(`titremultiple`)){
+    store.delete(`titremultiple`);
   }
 
   for(var i =0; i < numFich; i++){
@@ -289,20 +339,20 @@ function affichageLigneParDefault() {
 // Active le button vider et generer apres avoir donne un nom au qrCode
 function activer_button() {
   //Permet l'enregistrement du titre dans le store
-  store.delete(`titreEnsemble`);
+  store.delete(`titremultiple`);
   var titre = document.getElementById('qrName').value;
-  store.set(`titreEnsemble`, titre);
+  store.set(`titremultiple`, titre);
 
-  if (document.getElementById('qrName').value.length > 0) {
+  //if (document.getElementById('qrName').value.length > 0) {
     $('#preview ,#empty').attr('disabled', false);
-  }
+  //}
 }
 
 // save image qr code
 function saveQRCodeImage() {
   const fs = require('fs');
 
-  let qrcode = controllerEnsemble.getQRCodeEnsemble();
+  let qrcode = controllerMultiple.getQRCodeMultiple();
   let img = $('#qrView img')[0].src;
 
   // var data = img.replace(/^data:image\/\w+;base64,/, '');
@@ -344,8 +394,9 @@ function upItem(e){
   }
   store.set(`fichierDrop${tmpVal}`, prevVal);
 
-
   $(parentElement).insertBefore($(parentElement).prev());
+
+
 
 }
 

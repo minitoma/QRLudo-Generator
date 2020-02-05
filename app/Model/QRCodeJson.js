@@ -7,33 +7,24 @@
 
 // This class is a representation of QRCode unique in JSON format
 
+const {
+  MdFiveConverter
+} = require(`${root}/Controller/MDFiveConverter`);
+
 class QRCodeUnique {
 
-  // type = unique, xl
-  // name = name of qrcode
-  // data = an array which contains all input (text, music) provided from form
-  // data = [
-  // if element is a text
-  //   {
-  //     type: texte,
-  //     value: "value"
-  //   },
-  //   if element is a music
-  //   {
-  //     type: "music",
-  //     url: "music url",
-  //     name: "music name"
-  //   },
-  //   if element is a file case qr code xl
-  //   {
-  //     type: "file",
-  //     url: "file url"
-  //   }
-  // ]
-  // color = the qrcode color
   constructor(name = "", data = [], color = "") {
+
+    //Génération de l'id unique
+    var dataString =  name + "unique" + color;
+    for (var i = 0; i < data.length; i++) {
+      dataString += data[i];
+    }
+
+    var md5Value = MDFiveConverter.convert(dataString);
+
     this.qrcode = {
-      id: new Date().getTime(), // ajout de id pour les QR unique &&
+      id: md5Value, // ajout de id pour les QR unique &&
       name: name,
       type: "unique",
       data: data,
@@ -79,6 +70,10 @@ class QRCodeUnique {
     }
     // console.log("tous");
     return this.qrcode.data; // return all data
+  }
+
+  getDataAll(){
+    return this.qrcode.data;
   }
 
   setData(data) {

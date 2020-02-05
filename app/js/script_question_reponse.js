@@ -6,11 +6,15 @@
 
 var projet = new Projet();
 
-nombre_question=0;
+nombre_reponse=0;
 
 $(document).ready(function() {
 
-  $("#play-sound-div").hide();
+  //méthode gérant la continuité
+  enregistrement();
+
+  if (numReponse > 0)
+    document.getElementById("ajoutNewReponse").disabled = false;
 
   //fonction pour ajouter un nouvelle reponse
   $("#validerDataDialog").click(function(){
@@ -19,6 +23,9 @@ $(document).ready(function() {
       let reponseVocale = $("#newContenuVocal").val();
       let qrColor = $('#qrColor').val();
       let qrData = [];
+
+      document.getElementById("newContenuVocal").value = "";
+      document.getElementById("newId").value = "";
 
         //On verifie qu'il y a une question de créée
         if (projet.getQuestion() == null) {
@@ -36,9 +43,26 @@ $(document).ready(function() {
           alert("pas de reponse volacal");
           return;
         }
-
-        var new_rep = new Reponse(identifiant, $("#qrColor").val());
+        qrData.push(reponseVocale);
+        var new_rep = new QRCodeUnique(identifiant, qrData,  qrColor);
         var new_rep_vocal = reponseVocale;
+
+        //Récuperation des inforamtion de la question pour gérer la continuité
+        numReponse ++;
+        deleteStore('numReponse');
+        store.set('numReponse',numReponse);
+
+        deleteStore("reponse"+numReponse);
+        store.set("reponse"+numReponse,new_rep.getName());
+
+        deleteStore("data"+numReponse);
+        store.set("data"+numReponse,qrData);
+
+        deleteStore("reponseId"+numReponse);
+        store.set("reponseId"+numReponse,new_rep.getId());
+
+        deleteStore("reponseColor"+numReponse);
+        store.set("reponseColor"+numReponse,qrColor);
 
         //sortir de la fonction si la reponse existe déjà pour la question
         let existe = false;
@@ -49,7 +73,7 @@ $(document).ready(function() {
           }
         });
         if (existe){
-          alert ("Cette Reponse exite deja");
+          alert ("Cette Reponse existe deja");
           return false;
         }
 
@@ -62,7 +86,7 @@ $(document).ready(function() {
 
         addReponseLine(new_rep);
 
-      //  console.log(new_rep_vocal);
+        // console.log(new_rep_vocal);
         console.log(projet.getQuestion());
         console.log("--------------------");
         console.log(projet.getReponses());
@@ -75,72 +99,126 @@ $(document).ready(function() {
 
 //fonction pour e
   $("#preview").click(function() {
+      previewQRCodeQuestion();
+      $('#qrView').show();
+
+  });
+
+  $("#genererQestion").click(function() {
     $("#ajoutNewReponse").attr('disabled', false);
 
     let question= $('#newQuestionText').val();
-    let bonneReponse = $('#newBonneReponsenText').val();
+    let bonneReponse = $('#newBonneReponseText').val();
     let mauvaiseReponse = $('#newMauvaiseReponseText').val();
+    let nbMinBoneReponse = $('#newNbMinimalBonneReponse').val();
     let qrColor = $('#qrColor').val();
     let qrData = [];
 
+
     //On verifie si le texte de la question n'est pas vide
     if (question=== ""){
-      alert("Veuillez saisir une Question d'abord");
+      alert("Veuillez d'abord saisir une question");
           return; // si le champ est vide on sort
     }
     else if (bonneReponse=== ""){
-      alert("Veuillez saisir le message de bonne réponse à la  question");
+      alert("Veuillez saisir le message de bonne réponse à la question");
           return; // si le champ est vide on sort
     }
     else if (mauvaiseReponse=== ""){
-      alert("Veuillez saisir le message de mauvaise  réponse à la question");
+      alert("Veuillez saisir le message de mauvaise réponse à la question");
+          return; // si le champ est vide on sort
+    }
+    else if (nbMinBoneReponse=== ""){
+      alert("Veuillez saisir le nombre de bonne reponse minimum");
           return; // si le champ est vide on sort
     }
     else {
-      let nouvQuestion = new Question (question,bonneReponse,mauvaiseReponse, qrData , $("#qrColor").val());
+      let nouvQuestion = new Question (question,bonneReponse,mauvaiseReponse, qrData ,nbMinBoneReponse, $("#qrColor").val());
       projet.setQuestion(nouvQuestion);
 
       //addQuestionLine(nouvQuestion);
       var questions = projet.getQuestion();
-      previewQRCode(questions, $('#qrView')[0]);
-      $('#qrView').show();
+
+      //affichage de la zone de question
+      $("#dropZone").show();
+
+      //on cache le bouton question
+      $("#genererQestion").hide();
+
     }
   });
+
+
 
   $('button#annuler').click(e => {
     //aficher popup quand on click sur reinitialiser
     // cache le qr générer & desactivation du bouton exporter
     var popUpQuiter = confirm("Etes vous sûr de vouloir réinitialiser?");
     if (popUpQuiter==true){
+      // masquage du lecteur de qr code
       $('#qrView').hide();
+
+      //grissage des bouton qui etais grissé de basse
       $('#saveQRCode').attr('disabled', true);
       $("#ajoutNewReponse").attr('disabled', true);
+      $("#preview").attr('disabled', true);
+
+      //masquage de la zone bonne reponse
+      $("#dropZone").hide();
+
+      //reinitialisation de projet qui contient les questions
+      projet = new Projet();
+      //affichage du bouton question
+      $("#genererQestion").show();
+
       viderZone();
+      store.delete(`questionQRExerixe`);
     }
   });
 });
 
+// fonction qui ajoute la ligne de la reponse sur la zone prévu a cet effet
 function addReponseLine(reponse){
+  $("#preview").attr("disabled", false);
   txtDragAndDrop.remove();
-
   var infos_rep = projet.getQuestion().getReponseById(reponse.getId());
 
   var newRepLine = "<div style='height:35px;' id='" + reponse.getId() + "'>" +
   "<li style='color:black;font-size:14px;'>" +
   "<label>" + reponse.getName() + "&nbsp&nbsp</label>" +
-  "<em style='color:gray'>" + infos_rep.message + "</em>" +
+  "<em style='color:gray'>" + reponse.getDataAll() + "</em>" +
   "<button class='btn btn-outline-success float-right' id='" + reponse.getId() + "' onclick='deleteReponse(this);'><i class='fa fa-trash-alt'></i></button>" +
   "<button class='btn btn-outline-success float-right' id='" + reponse.getId() + "' onclick='lireReponse(this);'><i class='fa fa-play'></i></button>" +
-  "<div class='alert alert-success fade show float' role='alert' id='infoGenererQrCodeReponse" + reponse.getId() +"' style='display:none;font-size:15px;'>Ce bouton permet de pré-visualiser le Qr Code de la réponse</div>" +
   "</li>" +
   "</div>";
 
-  nombre_question++;
   $("#cible").append(newRepLine);
+  //compteur du nombre de reponse pour  pouvoir reinitliser la zone de drad and drop
+
 }
 
+//Permet de vider la zone Exercice ainsi que les éléméent enregistré dans le store
 function viderZone(){
-    controllerEnsemble = new ControllerEnsemble();
+
+  deleteStore(`newQuestionText`);
+
+  deleteStore(`newBonneReponseText`);
+
+  deleteStore('newMauvaiseReponseText');
+
+  deleteStore('newNbMinimalBonneReponse');
+
+  for(var i=1; i<numReponse+1; i++){
+    deleteStore('reponse'+i);
+    deleteStore(''+i);
+    deleteStore('reponseId'+i);
+    deleteStore('reponseColor'+i);
+  }
+
+  deleteStore('numReponse');
+  numReponse = 0;
+
+
     $('#qrName').val('');
     $(txtZone).empty();
     $("#cible").empty();
@@ -149,6 +227,7 @@ function viderZone(){
 
 // Supprime une ligne dans la zone de drop
 function effacerLigne() {
+
   //recuperation de id de l'element
   let idElement = $($(this).parent()).attr('id');
 
@@ -157,8 +236,8 @@ function effacerLigne() {
 
 }
 
-  // Redonne l'apparance par default d'une ligne
-  function affichageLigneParDefault() {
+// Redonne l'apparance par default d'une ligne
+function affichageLigneParDefault() {
     $('#txtZone').find('span').css('background-color', '')
   }
 
@@ -176,7 +255,7 @@ function effacerLigne() {
   txtDragAndDrop.setAttribute("id", "txtDragAndDrop");
   txtDragAndDrop.setAttribute("class", "col-sm-7");
   txtDragAndDrop.setAttribute("style", "text-align: center; margin-top: 15%");
-  txtDragAndDrop.innerText = "Déposez vos fichiers ici";
+  txtDragAndDrop.innerText = "Déposez vos réponses ici";
 
   txtZone.appendChild(txtDragAndDrop);
   // Ce declenche quand un element entre dans la zone de drop
@@ -206,21 +285,40 @@ function effacerLigne() {
     for (let i = 0; i < e.dataTransfer.files.length; i++) {
       let qrFile = e.dataTransfer.files[i];
 
-
       facade =  new FacadeController();
       facade.importQRCodeJson(qrFile, qrCode =>{
         if (qrCode.getType() == 'xl' || qrCode.getType() == 'unique' || qrCode.getType() == 'reponse'){
           let qrId = qrCode.getId();
-          let qrData = qrCode.getData();
+          let qrDatad = qrCode.getData();
           let qrName = qrCode.getName();
+          let qrData =[];
 
-          console.log(qrId);
-          console.log( qrData);
+          //console.log(qrDatad[0]);
 
-          var new_rep = new Reponse(qrName, $("#qrColor").val()); // cretation d'une nouvelle reponse
+          qrData.push(qrDatad);
+          var new_rep = new QRCodeUnique(qrName,qrData, $("#qrColor").val()); // cretation d'une nouvelle reponse
           new_rep.setId(qrId);        // changemnt de l'id de la nouvelle reponse avec l'id du qr imprté
           new_rep.setData(qrData);
           var new_rep_vocal = qrData;
+
+          //Récuperation des inforamtion de la question pour gérer la continuité
+          numReponse ++;
+          deleteStore('numReponse');
+          store.set('numReponse',numReponse);
+
+          deleteStore("reponse"+numReponse);
+          store.set("reponse"+numReponse,new_rep.getName());
+
+          deleteStore("data"+numReponse);
+          store.set("data"+numReponse,qrData);
+
+          deleteStore("reponseId"+numReponse);
+          store.set("reponseId"+numReponse,qrId);
+
+          deleteStore("reponseColor"+numReponse);
+          store.set("reponseColor"+numReponse,$("#qrColor").val());
+
+          console.log(qrData);
 
           //sortir de la fonction si la reponse existe déjà pour la question
           let existe = false;
@@ -246,6 +344,7 @@ function effacerLigne() {
           projet.getQuestion().addReponse( (new_rep.getId() ), new_rep_vocal);
           //console.log(projet.getQuestion());
           addReponseLine(new_rep);
+
 
         //  console.log(new_rep_vocal);
           console.log(projet.getQuestion());
@@ -283,42 +382,134 @@ function supprimeInfoBtnQrCode(button, cible){
   }
 }
 
-//Supprimer une réponse du projet
+//fonction pour Supprimer une réponse du     &&
 function deleteReponse(button){
   var id_reponse = $(button).attr('id');
 
   projet.removeReponse(id_reponse);
   $("div#" + id_reponse).remove();
 
-  console.log(projet.getQuestion());
-  console.log("--------------------");
-}
+  //retour a l'initiale quand toutes les reponses sont suprimées
+  nombre_reponse--;
+  console.log(nombre_reponse);
+          console.log(projet.getQuestion());
+  if(nombre_reponse==0)
+  {
+    txtDragAndDrop.setAttribute("id", "txtDragAndDrop");
+    txtDragAndDrop.setAttribute("class", "col-sm-7");
+    txtDragAndDrop.setAttribute("style", "text-align: center; margin-top: 15%");
+    txtDragAndDrop.innerText = "Déposez vos réponses ici";
+    txtZone.appendChild(txtDragAndDrop);
+  }
 
-//Cette fonction sauvegarde l'image du qrcode dans un div pour le pouvoir generer apres
-function saveQRCodeImage() {
-  const fs = require('fs');
-
-  let qrcode = controllerEnsemble.getQRCodeEnsemble();
-  let img = $('#qrView img')[0].src;
-
-  // var data = img.replace(/^data:image\/\w+;base64,/, '');
-
-  var data = img.replace(/^data:image\/[^;]/, 'data:application/octet-stream');
-  var xhr = new XMLHttpRequest();
-  xhr.responseType = 'blob';
-  console.log(data);
-  xhr.open('GET', data, true);
-
-  xhr.onreadystatechange = function() {
-    if (xhr.readyState == xhr.DONE) {
-      var filesaver = require('file-saver');
-      console.log(xhr.response);
-      filesaver.saveAs(xhr.response, qrcode.getName() + '.jpeg');
+  //Permet de gérer la conuité en suppriant la "bonne" reponse du store
+  for(var i = 1; i<numReponse+1; i++){
+    if(store.get('reponseId'+i) == id_reponse ){
+      deleteStore('reponse'+i);
+      deleteStore('data'+i);
+      deleteStore('reponseId'+i);
+      deleteStore('reponseColor'+i);
     }
   }
 
-  xhr.send();
+}
 
+//Méthode appliqué au chargement pour récupérer les élément enregistrés
+function enregistrement(){
+
+  //nombre de zone texte courant
+  if(store.get(`numReponse`))
+    numReponse = store.get(`numReponse`);
+  else
+    store.set(`numReponse`,numReponse);
+
+  if(store.get(`newQuestionText`) )
+    $("#newQuestionText").val(store.get(`newQuestionText`));
+
+  if(store.get(`newBonneReponseText`) )
+    $("#newBonneReponseText").val(store.get(`newBonneReponseText`));
+
+  if(store.get('newMauvaiseReponseText'))
+    $("#newMauvaiseReponseText").val(store.get('newMauvaiseReponseText'));
+
+  if(store.get('newNbMinimalBonneReponse'))
+    $('#newNbMinimalBonneReponse').val(store.get('newNbMinimalBonneReponse'));
+
+  //créé une nouvelles question si le nombre de réponse est superieur à 0
+  if(numReponse > 0){
+    let nouvQuestion = new Question (store.get(`newQuestionText`), store.get(`newBonneReponseText`), store.get('newMauvaiseReponseText'), [], store.get('newNbMinimalBonneReponse'), $("#qrColor").val());
+    projet.setQuestion(nouvQuestion);
+    //affichage de la zone de question
+    $("#dropZone").show();
+    //on cache le bouton question
+    $("#genererQestion").hide();
+  }
+  else{
+    $("#dropZone").hide();
+    $("#play-sound-div").hide();
+  }
+
+  //recréation des question
+  for(var i = 1; i<numReponse+1; i++){
+    if(store.get('reponse'+i)){
+
+
+      var new_rep = new QRCodeUnique(store.get('reponse'+i),store.get('data'+i), store.get('reponseColor'+i)); // cretation d'une nouvelle reponse
+      new_rep.setId(store.get('reponseId'+i));
+      projet.addReponse(new_rep);
+
+      projet.getQuestion().addReponse(new_rep.getId(), new_rep.getData());
+      addReponseLine(new_rep);
+
+    }
+  }
+}
+
+
+//Cette fonction sauvegarde l'image du qrcode dans un div pour le pouvoir generer apres
+
+function saveQRCodeImages(div, qrcode, directoryName) {
+  let img = $(div).children()[0].src;
+  //let data = img.replace(/^data:image\/\w+;base64,/, '');
+  let matches = img.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+  let data = new Buffer(matches[2], 'base64');
+  var file_name = qrcode.getName().replace(/[^a-zA-Z0-9]+/g, "") + '.jpeg';
+  fs.writeFile(path.join(directoryName, file_name), data, (err) => {
+    if (err){
+      $("#questionsDivLabelsId").append("<div>" + err + "</div>");
+    }
+    console.log('The file has been saved!');
+  });
+}
+
+function saveQRCodeImage() {
+
+
+  var dir_path = dialog.showOpenDialog({title: 'Sélectionnez un dossier', properties: ['openDirectory']})[0];
+  if(dir_path !== undefined){
+    var facade = new FacadeController();
+    projet.setName($("#newQuestionText").val());
+
+    var dir_path = path.join(dir_path, projet.getName());
+
+    var fs = require('fs');
+    if(!fs.existsSync(dir_path)){
+      fs.mkdirSync(dir_path);
+    }
+
+    //On enregistre la question
+    let div = document.createElement('div');
+    facade.genererQRCode(div, projet.getQuestion());
+    saveQRCodeImages(div, projet.getQuestion(), dir_path);
+
+
+    //Idem pour les réponses
+    $.each(projet.getReponses(), function(id, reponse){
+      let div = document.createElement('div');
+      facade.genererQRCode(div, reponse);
+      saveQRCodeImages(div, reponse, dir_path);
+    });
+  }
 }
 
 function previewQRCodeQuestion(){
@@ -346,4 +537,19 @@ function lireReponse(button){
   var text_retourVocal = $("div#" + id_reponse + " em").text();
 
   playTTS(text_reponse + text_retourVocal);
+}
+
+//méthode gérant al continuité sur les eones de texte Question, Bonne Reponse, Mauvaise Reponse et nb reponse
+function activerSave(text){
+  deleteStore(text);
+
+  var newText = $("#"+text).val();
+
+  store.set(text,newText);
+}
+
+//methode de suppression dans le store
+function deleteStore(del){
+  if(store.get(del) )
+    store.delete(del);
 }

@@ -7,36 +7,59 @@
 
 var projet = new ProjetQCM();
 
+
 $(document).ready(function() {
+
+  var nombreReponsesAttendues;
+
+  //con cache la zonne de la reponse    &&
+  $('#zoneReponse').hide();
 
   enregistrement();
   store.delete(`numReponseQCM`);
   store.set(`numReponseQCM`,numReponseQCM);
 
+  //$('#zoneReponse').hide();
+
+
+
   $("#play-sound-div").hide();
 
   //Ajout d'une nouvelle question
-  $("#addNewQuesBtnId").click(function() {
+  $("#addNewQuesBtnId").click(function(e) {
+
     //On verifie si le texte de la question n'est pas vide
     if ($('#newQuestionText').val() === ""){
       $("#alertQuestionVideError").show();
       return; // si le champ est vide on sort
     }
+
+    //On vérifie si le texte du nombre de réponses n'est pas vide ou incorrect
+    if ($('#nombreReponse').val() === "" || parseInt($('#nombreReponse').val(),10) < 2 || parseInt($('#nombreReponse').val(),10) > 4 ){
+      $("#alertNombreReponseVideError").show();
+      return; // si le champ est vide on sort
+    }
+
+    $("#alertNombreReponseVideError").hide();
     $("#alertQuestionVideError").hide();
     $("#alertQuestionExistError").hide();
 
+    //afficher la zone cahé     &&
+    $('#zoneReponse').show();
 
     //On cache le bouton car un QCM ne contient qu'une seule question
     $("#addNewQuesBtnId").hide();
 
+
     //Creation de la question dans le projet
-    let nouvques = new QuestionQCM($('#newQuestionText').val(), [], $("#qrColor").val());
+    nombreReponsesAttendues = $('#nombreReponse').val();
+    let nouvques = new QuestionQCM($('#newQuestionText').val(), $('#nombreReponse').val(), [], $("#qrColor").val());
     projet.setQuestion(nouvques);
 
     addQuestionLine(nouvques);
 
     $('#newQuestionText').val("");
-    return true;
+   return true;
   });
 
 
@@ -54,8 +77,8 @@ $(document).ready(function() {
       return false;
     }
 
-    //On verifie la condition "4 reponses maximum"
-    if(projet.getReponses().length >= 4) {
+    //On verifie la condition que l'on a pas plus de réponse qu'attendu
+    if(projet.getReponses().length >= nombreReponsesAttendues) {
       $("#messageReponseMaxError").show();
       return false;
     }
@@ -78,7 +101,7 @@ $(document).ready(function() {
     }
 
     //Si il y a trois reponses et aucune n'est une bonne reponse, alors on force la 4eme et derniere reponse à etre la reponse correct
-    if(projet.getReponses().length == 3 && !isReponseOk()) {
+    if(projet.getReponses().length == nombreReponsesAttendues-1 && !isReponseOk()) {
       isAnswer = true;
     }
 
@@ -236,6 +259,10 @@ function enregistrement(){
     numReponseQCM = store.get(`numReponseQCM`);
   }
 
+  if(store.get(`nombreReponsesAttendues`)){
+    nombreReponsesAttendues = store.get(`nombreReponsesAttendues`);
+  }
+
   //verification pour le titre
   if(store.get("titreQCM")){
     projet.setName(store.get("titreQCM"));
@@ -244,6 +271,7 @@ function enregistrement(){
 
   if(store.get("questionQCM")){
     $("#addNewQuesBtnId").hide();
+    $('#zoneReponse').show();
   }
 
   //verification pour la présence d'une // QUESTION:
@@ -254,6 +282,9 @@ function enregistrement(){
     addQuestionLine(nouvques);
 
     $("#addNewQuesBtnId").hide();
+    //si question deja générer on affiche toujour ajout de reponse   &&&
+    $('#zoneReponse').show();
+
   }
 
   for(var i = 1 ; i<numReponseQCM+1; i++){
@@ -274,7 +305,7 @@ function addQuestionLine(question){
       "<label class='control-label text-left questionNameLabel' id='" + question.getId() + "' style='text-align:left!important; color:black;'>" + question.getName() + "</label>" +
       "<button class='btn btn-outline-success float-right' id='" + question.getId() + "' onclick='deleteQuestion();'>" +
         "<i class='fa fa-trash-alt'></i>" +
-      "</button>" + 
+      "</button>" +
       "<button class='btn btn-outline-success float-right' id='" + question.getId() + "' onclick='previewQRCodeQuestion();' onmouseover='afficheInfoBtnQrCode(this,\"question\")' onmouseout='supprimeInfoBtnQrCode(this,\"question\")'>" +
         "<i class='fa fa-qrcode'></i>" +
       "</button>" +
@@ -345,6 +376,10 @@ function supprimeInfoBtnQrCode(button, cible){
 
 //Supprimer une question du projet
 function deleteQuestion(){
+
+  //on cache la zone de reponse   &&&
+  $('#zoneReponse').hide();
+
   //Suppression dans le store de la question et des réponses alliées
   for(var i = 1 ; i<numReponseQCM+1; i++){
     if(store.get(`reponseQCM${i}`)){
@@ -415,6 +450,7 @@ function importQCM(qrcode){
     store.delete("numReponseQCM");
     numReponseQCM ++;
     store.set("numReponseQCM",numReponseQCM);
+    store.set("nombreReponsesAttendues",nombreReponsesAttendues);
     store.set(`reponseQCM${numReponseQCM}`,qrcode.getName());
     store.set(`reponseMessageQCM${numReponseQCM}`,infos_rep.message);
     store.set(`reponseQCMisAnswer${numReponseQCM}`,qrcode.getIsAnswer());
