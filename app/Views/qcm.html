@@ -38,12 +38,12 @@
             <div class="form-group">
               <label class="control-label" style="color:#28a745;padding-top:10px;">Nombre de réponses (2-4)</label>
               <div class="form-inline">
-                <input type="text" class="form-control col-sm-6" id="nombreReponse" rows="2" name="nombreReponse" placeholder="Nombre de réponses au QCM" onkeyup="activerSave();"/>
+                <input type="number" class="form-control col-sm-6" id="nombreReponse" rows="2" name="nombreReponse" placeholder="Nombre de réponses au QCM" onkeyup="activerSave();"/>
               </div>
             </div>
 
             <button id="addNewQuesBtnId" type="button" style="display:block;margin:auto;" class="btn btn-outline-success">
-              Nouvelle Question
+              Valider la question
             </button>
 
             <hr>
@@ -56,7 +56,7 @@
               <table>
                 <tr>
                   <td>
-                    <label class="control-label" style="color:#28a745;padding-top:10px;">Reponse :</label>
+                    <label class="control-label" style="color:#28a745;padding-top:10px;">Réponse :</label>
                   </td>
                   <td>
                     <div class="form-inline">
@@ -69,7 +69,7 @@
                 </tr>
                 <tr>
                   <td style='width: 115px;'>
-                    <label class="control-label" style="color:#28a745;padding-top:10px;">Retour Vocal :</label>
+                    <label class="control-label" style="color:#28a745;padding-top:10px;">Retour vocal :</label>
                   </td>
                   <td>
                     <div class="form-inline">
@@ -77,7 +77,7 @@
                     </div>
                   </td>
                   <td>
-                    <button id="addNewRep" type="button" class="btn btn-outline-success" style="margin-left:50px;margin-bottom:15px;">Ajouter Réponse</button>
+                    <button id="addNewRep" type="button" class="btn btn-outline-success" style="margin-left:50px;margin-bottom:15px;">Ajouter réponse</button>
                   </td>
                 </tr>
 
@@ -98,7 +98,7 @@
       </div>
       <div class="card col-md-auto">
         <button type="button" class="btn btn-outline-success btn-unique-xl " id="importProjectBtnId">
-          <i class="fa fa-upload"></i>&nbsp;&nbsp;Importer Un Projet Existant
+          <i class="fa fa-upload"></i>&nbsp;&nbsp;Importer un projet existant
         </button>
         <button type="button" style="margin-top:10px" class="btn btn-outline-success btn-unique-xl" id="saveQRCode" disabled>
           <i class="fa fa-download"></i>&nbsp;&nbsp;Exporter
