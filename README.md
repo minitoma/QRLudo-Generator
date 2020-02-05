@@ -51,12 +51,12 @@ yarn pack-linux
 #### Architecture x86
 Dans le dossier du projet, lancer un un terminal et lancer la commande:
 ```bash
-yarn pack-win32
+yarn dist-win32
 ```
 #### Architecture x64
 Dans le dossier du projet, lancer un un terminal et lancer la commande:
 ```bash
-yarn pack-win64
+yarn dist-win64
 ```
 > NOTE: Au premier déploiement, Wine demandera d'installer des éléments supplémentaires. Après installation de ces éléments, le déploiement peut crash. Relancer le déploiement corrige le problème.
 
