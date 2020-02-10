@@ -5,15 +5,27 @@
   <div class="col-sm-12 card">
 
     <nav class="nav nav-tabs">
-      <a class="nav-item nav-link active" href="#info-MusicInput">Musique</a>
-      <a class="nav-item nav-link" href="#info-Import">Import</a>
+      <a class="nav-item nav-link active" href="#info-unique">Unique</a>
       <a class="nav-item nav-link" href="#info-multiple">Multiple</a>
       <a class="nav-item nav-link" href="#info-Exercice">Exercice</a>
       <a class="nav-item nav-link" href="#info-QCM">QCM</a>
+      <a class="nav-item nav-link" href="#info-MusicInput">Musique</a>
+      <a class="nav-item nav-link" href="#info-Import">Import</a>
     </nav>
 
     <div class="tab-content">
-      <div class="tab-pane active" id="info-MusicInput">
+      <div class="tab-pane active" id="info-unique">
+        <h5>Comment utiliser les QR Unique ?</h5>
+        <hr>
+        
+        <h5><a href="#openModal">Vidéo explicative</a></h5>
+        <div id="openModal" class="info-content">
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/C0DPdy98e4c" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+      </div>
+
+
+      <div class="tab-pane" id="info-MusicInput">
         <h5>Comment mettre une musique dans un qrcode ? </h5>
         <hr>
 
@@ -120,24 +132,30 @@
         <h5>Créer un QR-Code Multiple</h5>
         <hr>
 
-        <ul>
-          <li>Cliquer sur le bouton <img src="./Views/assets/images/infos_multiple/boutonmultiple.png"></li>
-          <li>
-            La zone correspondante à la création de QR-Code Multiple va s'afficher </br>
-            <img class="zonemultiple" src="./Views/assets/images/infos_multiple/zonemultiple.png">
-          </li>
-          <li>Saisir le nom du QR-Code</li>
-          <li>
-            Depuis votre ordinateur Glisser les QR-Codes uniques à ajouter et les déposer sur l'appplication, sur la zone
-            <img src="./Views/assets/images/infos_multiple/deposermultiple.png">
-          </li>
-          <li>
-            <video width="auto" height="500" controls loop>
-              <source src="./Views/assets/images/infos_multiple/multiple.mp4" type="video/mp4">
-            </video>
-          </li>
-        </ul>
-
+        <h5><a href="#affichageVideo">Vidéo explicative</a></h5>
+        <div id="affichageVideo" class="info-content">
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/C0DPdy98e4c" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+        <h5><a href="#affichageTexte">Texte explicatif</a></h5>
+        <div id="affichageTexte" class="info-content">
+          <ul>
+            <li>Cliquer sur le bouton <img src="./Views/assets/images/infos_multiple/boutonmultiple.png"></li>
+            <li>
+              La zone correspondante à la création de QR-Code Multiple va s'afficher </br>
+              <img class="zonemultiple" src="./Views/assets/images/infos_multiple/zonemultiple.png">
+            </li>
+            <li>Saisir le nom du QR-Code</li>
+            <li>
+              Depuis votre ordinateur Glisser les QR-Codes uniques à ajouter et les déposer sur l'appplication, sur la zone
+              <img src="./Views/assets/images/infos_multiple/deposermultiple.png">
+            </li>
+            <li>
+              <video width="auto" height="500" controls loop>
+                <source src="./Views/assets/images/infos_multiple/multiple.mp4" type="video/mp4">
+              </video>
+            </li>
+          </ul>
+        </div>
       </div>
 
       <div class="tab-pane" id="info-Exercice">
