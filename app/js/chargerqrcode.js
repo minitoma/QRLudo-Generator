@@ -37,13 +37,14 @@ function drawQRCodeImport(qrcode) {
       $('#preview, #empty').attr('disabled', false);
       drawQRCodeData(qrcode);
     });
+    //TODO Changer ici en multiple quand le type sera bien défini
   } else if (qrcode.getType() == 'ensemble') {
-    $("#charger-page").load(path.join(__dirname, "Views/ensemble.html"), function() {
+    $("#charger-page").load(path.join(__dirname, "Views/multiple.html"), function() {
       $('input#qrColor').val(qrcode.getColor()); // restaurer la couleur du qrcode
-      $('input#qrName').val(qrcode.getName()); //restaurer le nom du qrcodeensemble
-      controllerEnsemble.setQRCodeEnsemble(qrcode);
+      $('input#qrName').val(qrcode.getName()); //restaurer le nom du qrcodemultiple
+      controllerMultiple.setQRCodeMultiple(qrcode);
       $('#preview, #empty').attr('disabled', false);
-      drawQRCodeEnsembleUnique(qrcode);
+      drawQRCodeMultipleUnique(qrcode);
       $('#txtDragAndDrop').remove();
 
     });
@@ -70,8 +71,8 @@ function drawQRCodeData(qrcode) {
   }
 }
 
-// recréer les qrcode unique d'un qrcode ensemble
-function drawQRCodeEnsembleUnique(qrcode) {
+// recréer les qrcode unique d'un qrcode multiple
+function drawQRCodeMultipleUnique(qrcode) {
   for (var i = 0; i < qrcode.getData().length; i++) {
     let qrJson = qrcode.getData()[i].qrcode;
     let qr = null;
@@ -81,10 +82,10 @@ function drawQRCodeEnsembleUnique(qrcode) {
     else if (qrJson.type == "xl")
       qr = new QRCodeXL(qrJson.name, qrJson.data, qrJson.color);
     else if (qrJson.type == "ensemble")
-      qr = new QRCodeEnsembleJson(qrJson.name, qrJson.data, qrJson.color);
+      qr = new QRCodemultipleJson(qrJson.name, qrJson.data, qrJson.color);
 
     genererLigne(qr.getName());
-    controllerEnsemble.setQRCodeAtomiqueInArray(qr);
+    controllerMultiple.setQRCodeAtomiqueInArray(qr);
   }
   // recuperationQrCodeUnique(qrcode);
 }

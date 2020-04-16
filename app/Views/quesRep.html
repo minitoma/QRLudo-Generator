@@ -4,8 +4,9 @@
 
 <div class="col-sm-12 card">
   <div class="text-center" id="textPresentation">
-      Dans cette partie vous pouvez créer des QR-codes de type Exercice <br>
-     ( des QR-codes contenant des reponses(id des bonnes reponses) )
+      Création de QR Code Exercice.<br>
+      Les exercices permettent de prendre connaissance des réponses avant validation.<br>
+      Plusieurs réponses peuvent être acceptées !
   </div >
   <form id="formulaireQesRep" onsubmit="return false;">
     <div class="card-body">
@@ -65,7 +66,7 @@
               </td>
               <td>
                 <button type="submit" style="margin-top:10px" class="btn btn-outline-success " id="genererQestion" >
-                  <i class="fa fa-cogs"></i>&nbsp;&nbsp; Créer question
+                  <i class="fa fa-cogs"></i>&nbsp;&nbsp; Créer l'exercice
                 </button>
               </td>
             </tr>
@@ -98,7 +99,7 @@
     </div>
     <div class="card-footer form-inline">
       <div class="card col-md-auto ">
-        <button  type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#dialogAjoutReponse" id= "ajoutNewReponse" disabled ><i class="fa fa-plus-square"  ></i>&nbsp;&nbsp;Ajouter Réponse</button>
+        <button  type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#dialogAjoutReponse" id= "ajoutNewReponse" disabled ><i class="fa fa-plus-square"  ></i>&nbsp;&nbsp;Ajouter réponse</button>
         <button style="margin-top:10px" type="reset" class="btn btn-outline-success" id="annuler"><i class="fa fa-undo"></i>&nbsp;&nbsp;Réinitialiser</button>
       </div>
       <div class="card col-md-auto">
@@ -138,7 +139,7 @@
         <table>
           <tr>
             <td>
-              <label class="control-label" style="color:#28a745;padding-top:10px;">Identifiant</label>
+              <label class="control-label" style="color:#28a745;padding-top:10px;">Nom QR Code</label>
             </td>
             <td>
               <div class="form-inline">
@@ -148,7 +149,7 @@
             </tr>
             <tr>
               <td>
-                <label class="control-label" style="color:#28a745;padding-top:10px;">Contenu vocal</label>
+                <label class="control-label" style="color:#28a745;padding-top:10px;">Contenu QR Code</label>
               </td>
               <td>
                 <div class="form-inline">

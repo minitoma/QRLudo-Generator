@@ -9,8 +9,8 @@ $().ready(function() {
   $("#unique-html").click(function() {
     $("#charger-page").load(path.join(__dirname, "Views/unique.html"), loadDefaultColor);
   });
-  $("#ensemble-html").click(function() {
-    $("#charger-page").load(path.join(__dirname, "Views/ensemble.html"), loadDefaultColor);
+  $("#multiple-html").click(function() {
+    $("#charger-page").load(path.join(__dirname, "Views/multiple.html"), loadDefaultColor);
   });
   $("#quesRep-html").click(function() {
     $("#charger-page").load(path.join(__dirname, "Views/quesRep.html"), loadDefaultColor);

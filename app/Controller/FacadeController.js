@@ -30,9 +30,9 @@ class FacadeController {
     return new QRCodeAtomique();
   }
 
-  //Renvoie un nouveau QRCodeEnsemble
-  creerQRCodeEnsemble() {
-    return new QRCodeEnsemble();
+  //Renvoie un nouveau QRCodemultiple
+  creerQRCodeMultiple() {
+    return new QRCodeMultiple();
   }
 
 
@@ -70,6 +70,11 @@ class FacadeController {
       // else{
       // compress qrcode when length reaches more than 117
       // compression is interesting only when qrcode reaches more than 117 car
+      if (qrcode.getType() == "reponseQCM")
+      {
+        args.push(qrcode.getDataString());
+        ImageGeneratorJson.genererQRCode(args);
+      }
       if (qrcode.getDataString().length > 117) {
         JsonCompressor.compress(qrcode.getDataString(), ImageGeneratorJson.genererQRCode, args);
       } else {

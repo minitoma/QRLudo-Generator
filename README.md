@@ -24,24 +24,41 @@ QR Ludo Generateur a été développée à l'aide du framework Electron basé su
 
 ## Mise en place
 
-[nodejs et npm](https://doc.ubuntu-fr.org/nodejs)
-Nodejs et npm doivent être installés sur votre poste.
+### Installation des outils
+Pour installer tous les outils nécessaires pour la programmation de QRLudo-Generator, lancez le script InstallationOutilQRG<span>.sh.
 
-Ensuite, il suffit de lancer la commande npm install dans le dossier racine du projet pour installer toutes les dépendances nécessaires au projet.
+### Compilation du projet
+Dans un terminal dans le projet, lancer:
+```bash
+npm install --unsafe-perm=true
+```
 
-## Génération de l'installeur de l'application
+### Lancement du projet
+```bash
+npm start
+```
 
-### Pour Linux
+## Déploiement
 
-sudo npm run dist-linux
+### Linux
+Dans le dossier du projet, lancer un un terminal et lancer la commande:
+```bash
+yarn pack-linux
+```
 
-### Pour Windows (7,8, 10)
+### Windows
 
-sudo npm run dist-win32
-
-ou
-
-sudo npm run dist-win64
+#### Architecture x86
+Dans le dossier du projet, lancer un un terminal et lancer la commande:
+```bash
+yarn dist-win32
+```
+#### Architecture x64
+Dans le dossier du projet, lancer un un terminal et lancer la commande:
+```bash
+yarn dist-win64
+```
+> NOTE: Au premier déploiement, Wine demandera d'installer des éléments supplémentaires. Après installation de ces éléments, le déploiement peut crash. Relancer le déploiement corrige le problème.
 
 ## Information et liens utiles
 
@@ -53,8 +70,8 @@ sudo npm run dist-win64
 
 # Licence
 
-Copyright (C) 2019  Thibault Condemine, Alassane Diop, Hanane Hadji, Abdessabour Harboul, Florian Lherbeil,
-Jérôme Martins Mosca, Valentine Rahier, Salim Youssef
+Copyright (C) 2020  MOHR Anaïs, PIGACHE Bastien, DESNOES Mathis, RANDRIAMAMONJISOA Andry, CHOVEAU Etienne, BALAVOINE Kevin, BAH Marouwane
+Copyright (C) 2019 Thibault Condemine, Alassane Diop, Hanane Hadji, Abdessabour Harboul, Florian Lherbeil, Jérôme Martins Mosca, Valentine Rahier, Salim Youssef
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by

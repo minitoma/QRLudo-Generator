@@ -5,14 +5,36 @@
   <div class="col-sm-12 card">
 
     <nav class="nav nav-tabs">
-      <a class="nav-item nav-link active" href="#info-MusicInput">Musique</a>
+      <a class="nav-item nav-link" href="#info-unique">Unique</a>
+      <a class="nav-item nav-link" href="#info-multiple">Multiple</a>
+      <a class="nav-item nav-link" href="#info-Exercice">Exercice</a>
+      <a class="nav-item nav-link" href="#info-QCM">QCM</a>
+      <a class="nav-item nav-link" href="#info-MusicInput">Musique</a>
       <a class="nav-item nav-link" href="#info-Import">Import</a>
-      <a class="nav-item nav-link" href="#info-Ensemble">Ensemble</a>
-      <a class="nav-item nav-link" href="#info-QuestionReponse">Question / Réponse</a>
     </nav>
 
     <div class="tab-content">
-      <div class="tab-pane active" id="info-MusicInput">
+      <div class="tab-pane" id="info-unique">
+        <h5>Comment utiliser les QR Unique ?</h5>
+        <hr>
+
+        <h5><a href="#affichageVideoUnique">Vidéo explicative</a></h5>
+        <div id="affichageVideoUnique" class="info-content">
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/9VIE4R7dDs4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+      </div>
+
+      <div class="tab-pane" id="info-QCM">
+        <h5>Comment utiliser les QR QCM ?</h5>
+        <hr>
+
+        <h5><a href="#affichageVideoQCM">Vidéo explicative</a></h5>
+        <div id="affichageVideoQCM" class="info-content">
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/NQzfOvANMo4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
+      </div>
+
+      <div class="tab-pane" id="info-MusicInput">
         <h5>Comment mettre une musique dans un qrcode ? </h5>
         <hr>
 
@@ -91,7 +113,7 @@
 
       <div class="tab-pane" id="info-Import">
 
-        <h5>Importer un QR-Code Unique ou Ensemble</h5>
+        <h5>Importer un QR-Code Unique ou Multiple</h5>
         <hr>
 
         <ul>
@@ -115,33 +137,48 @@
 
       </div>
 
-      <div class="tab-pane" id="info-Ensemble">
-        <h5>Créer un QR-Code Ensemble</h5>
+      <div class="tab-pane" id="info-multiple">
+        <h5>Créer un QR-Code Multiple</h5>
         <hr>
 
-        <ul>
-          <li>Cliquer sur le bouton <img src="./Views/assets/images/infos_ensemble/boutonEnsemble.png"></li>
-          <li>
-            La zone correspondante à la création de QR-Code Ensemble va s'afficher </br>
-            <img class="zoneEnsemble" src="./Views/assets/images/infos_ensemble/zoneEnsemble.png">
-          </li>
-          <li>Saisir le nom du QR-Code</li>
-          <li>
-            Depuis votre ordinateur Glisser les QR-Codes uniques à ajouter et les déposer sur l'appplication, sur la zone
-            <img src="./Views/assets/images/infos_ensemble/deposerEnsemble.png">
-          </li>
-          <li>
-            <video width="auto" height="500" controls loop>
-              <source src="./Views/assets/images/infos_ensemble/ensemble.mp4" type="video/mp4">
-            </video>
-          </li>
-        </ul>
+        <h5><a href="#affichageVideoMultiple">Vidéo explicative</a></h5>
+        <div id="affichageVideoMultiple" class="info-content">
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/Wv6BuHnAXQM" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+        </div>
 
+        <h5><a href="#affichageTexte">Texte explicatif</a></h5>
+        <div id="affichageTexte" class="info-content">
+          <ul>
+            <li>Cliquer sur le bouton <img src="./Views/assets/images/infos_multiple/boutonmultiple.png"></li>
+            <li>
+              La zone correspondante à la création de QR-Code Multiple va s'afficher </br>
+              <img class="zonemultiple" src="./Views/assets/images/infos_multiple/zonemultiple.png">
+            </li>
+            <li>Saisir le nom du QR-Code</li>
+            <li>
+              Depuis votre ordinateur Glisser les QR-Codes uniques à ajouter et les déposer sur l'appplication, sur la zone
+              <img src="./Views/assets/images/infos_multiple/deposermultiple.png">
+            </li>
+            <li>
+              <video width="auto" height="500" controls loop>
+                <source src="./Views/assets/images/infos_multiple/multiple.mp4" type="video/mp4">
+              </video>
+            </li>
+          </ul>
+        </div>
       </div>
 
-      <div class="tab-pane" id="info-QuestionReponse">
+      <div class="tab-pane" id="info-Exercice">
+        <div class="tab-pane" id="info-unique">
+          <h5>Comment utiliser les QR Exercice ?</h5>
+          <hr>
 
-        <h5><a href="#ajoutQuestion">Ajouter une question au projet</a></h5>
+          <h5><a href="#affichageVideoExercice">Vidéo explicative</a></h5>
+          <div id="affichageVideoExercice" class="info-content">
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/2PGPMnRpgwE" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          </div>
+        </div>
+      <!--   <h5><a href="#ajoutQuestion">Ajouter une question au projet</a></h5>
         <div id="ajoutQuestion" class="info-content">
           <ul>
             <li>
@@ -335,7 +372,7 @@
               <img class="projetImporte" src="./Views/assets/images/infos_questions_reponses/projetImporte.png" />
             </li>
           </ul>
-        </div>
+        </div> -->
 
       </div>
     </div>

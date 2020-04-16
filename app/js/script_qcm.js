@@ -10,6 +10,8 @@ var projet = new ProjetQCM();
 
 $(document).ready(function() {
 
+  var nombreReponsesAttendues;
+
   //con cache la zonne de la reponse    &&
   $('#zoneReponse').hide();
 
@@ -31,6 +33,14 @@ $(document).ready(function() {
       $("#alertQuestionVideError").show();
       return; // si le champ est vide on sort
     }
+
+    //On vérifie si le texte du nombre de réponses n'est pas vide ou incorrect
+    if ($('#nombreReponse').val() === "" || parseInt($('#nombreReponse').val(),10) < 2 || parseInt($('#nombreReponse').val(),10) > 4 ){
+      $("#alertNombreReponseVideError").show();
+      return; // si le champ est vide on sort
+    }
+
+    $("#alertNombreReponseVideError").hide();
     $("#alertQuestionVideError").hide();
     $("#alertQuestionExistError").hide();
 
@@ -42,7 +52,8 @@ $(document).ready(function() {
 
 
     //Creation de la question dans le projet
-    let nouvques = new QuestionQCM($('#newQuestionText').val(), [], $("#qrColor").val());
+    nombreReponsesAttendues = $('#nombreReponse').val();
+    let nouvques = new QuestionQCM($('#newQuestionText').val(), $('#nombreReponse').val(), [], $("#qrColor").val());
     projet.setQuestion(nouvques);
 
     addQuestionLine(nouvques);
@@ -66,8 +77,8 @@ $(document).ready(function() {
       return false;
     }
 
-    //On verifie la condition "4 reponses maximum"
-    if(projet.getReponses().length >= 4) {
+    //On verifie la condition que l'on a pas plus de réponse qu'attendu
+    if(projet.getReponses().length >= nombreReponsesAttendues) {
       $("#messageReponseMaxError").show();
       return false;
     }
@@ -90,7 +101,7 @@ $(document).ready(function() {
     }
 
     //Si il y a trois reponses et aucune n'est une bonne reponse, alors on force la 4eme et derniere reponse à etre la reponse correct
-    if(projet.getReponses().length == 3 && !isReponseOk()) {
+    if(projet.getReponses().length == nombreReponsesAttendues-1 && !isReponseOk()) {
       isAnswer = true;
     }
 
@@ -246,7 +257,10 @@ function enregistrement(){
 
   if(store.get(`numReponseQCM`)){
     numReponseQCM = store.get(`numReponseQCM`);
+  }
 
+  if(store.get(`nombreReponsesAttendues`)){
+    nombreReponsesAttendues = store.get(`nombreReponsesAttendues`);
   }
 
   //verification pour le titre
@@ -436,6 +450,7 @@ function importQCM(qrcode){
     store.delete("numReponseQCM");
     numReponseQCM ++;
     store.set("numReponseQCM",numReponseQCM);
+    store.set("nombreReponsesAttendues",nombreReponsesAttendues);
     store.set(`reponseQCM${numReponseQCM}`,qrcode.getName());
     store.set(`reponseMessageQCM${numReponseQCM}`,infos_rep.message);
     store.set(`reponseQCMisAnswer${numReponseQCM}`,qrcode.getIsAnswer());
