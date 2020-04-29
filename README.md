@@ -45,7 +45,6 @@ Dans le dossier du projet, lancer un un terminal et lancer la commande:
 ```bash
 yarn pack-linux
 ```
-
 ### Windows
 
 #### Architecture x86
