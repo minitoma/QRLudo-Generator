@@ -73,8 +73,8 @@ function play(){
   //Si l'état n'est pas en pause, alors on commence une nouvelle lecture
   //Sinon on reprend là où la lecture s'était arrêtée
   if(!paused){
-    if(getCurrentRead().name==='AudioName'){
-      playSound(getCurrentRead().value);
+    if(getCurrentRead().name==='AudioName'){      
+      playSound(getCurrentRead().value.substring(0, getCurrentRead().value.length - 1));
     }
     else if (getCurrentRead().name==='legendeQR') {
       if(getCurrentRead().value !== ''){

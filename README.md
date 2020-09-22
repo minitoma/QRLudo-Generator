@@ -18,6 +18,7 @@ Ce projet a eu lieu dans le cadre des modules d'enseignement Management de Proje
 
 # Pour les développeurs
 
+
 ## Langages
 
 QR Ludo Generateur a été développée à l'aide du framework Electron basé sur du Javascript. Il utilise les langages du web HTML, Javascript et CSS. Il utilise NodeJS pour l'ajout et la gestion des dépendances.
@@ -84,3 +85,4 @@ GNU General Public License for more details.
 
 You should have received a copy of the GNU General Public License
 along with this program.  If not, see <https://www.gnu.org/licenses/>.
+
