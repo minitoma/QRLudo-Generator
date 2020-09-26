@@ -213,6 +213,23 @@ a.article:hover {
   border: 1px solid white;
 }
 
+#infos {
+  margin-left: 25px;
+  margin-bottom: 10px;
+  background-color: white;
+}
+
+#infos:hover {
+  background-color: #28a745;
+  border: 1px solid white;
+}
+.btn-bottom {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 1030;
+}
+
 /* ---------------------------------------------------
     CONTENT STYLE
 ----------------------------------------------------- */

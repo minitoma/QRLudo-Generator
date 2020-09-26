@@ -17,14 +17,14 @@ $().ready(function() {
   });
   $("#qcm-html").click(function() {
     $("#charger-page").load(path.join(__dirname, "Views/qcm.html"), loadDefaultColor);
-  })
-  $("#info-html").click(function() {
-    $("#charger-page").load(path.join(__dirname, "Views/info.html"));
   });
-
   $("#parametres").click(function(){
     $("#charger-page").load(path.join(__dirname, "Views/parametres.html"));
-  })
+  });
+  $("#infos").click(function(){
+    $("#charger-page").load(path.join(__dirname, "Views/info.html"));
+  });
+  
 
 
   //l'element du menu courant -> class="... active"

@@ -420,3 +420,9 @@ function downItem(e){
 
   $(parentElement).insertAfter($(parentElement).next());
 }
+
+//pour ouvrir la page info.html quand on clique sur le bouton info du haut
+$("#infos-multiple").click(function () {
+  require('electron').remote.getGlobal('sharedObject').someProperty = 'multiple'
+  $("#charger-page").load(path.join(__dirname, "Views/info.html"));
+});
