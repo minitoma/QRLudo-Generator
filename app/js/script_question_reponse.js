@@ -171,6 +171,7 @@ $(document).ready(function() {
       //affichage du bouton question
       $("#genererQestion").show();
 
+      viderChamps();
       viderZone();
       store.delete(`questionQRExerixe`);
     }
@@ -223,6 +224,13 @@ function viderZone(){
     $(txtZone).empty();
     $("#cible").empty();
     txtZone.appendChild(txtDragAndDrop);
+}
+
+function viderChamps(){
+  document.getElementById("newQuestionText").value = "";
+  document.getElementById("newBonneReponseText").value = "";
+  document.getElementById("newMauvaiseReponseText").value = "";
+  document.getElementById("newNbMinimalBonneReponse").value = "";
 }
 
 // Supprime une ligne dans la zone de drop
