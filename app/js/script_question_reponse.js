@@ -18,7 +18,7 @@ $(document).ready(function() {
 
   //fonction pour ajouter un nouvelle reponse
   $("#validerDataDialog").click(function(){
-
+      var x=0;
       let identifiant= $('#newId').val();
       let reponseVocale = $("#newContenuVocal").val();
       let qrColor = $('#qrColor').val();
@@ -26,6 +26,7 @@ $(document).ready(function() {
 
       document.getElementById("newContenuVocal").value = "";
       document.getElementById("newId").value = "";
+      x = x++;
 
         //On verifie qu'il y a une question de créée
         if (projet.getQuestion() == null) {
@@ -104,6 +105,7 @@ $(document).ready(function() {
 
   });
 
+  //var nbMinBoneReponse = 0;
   $("#genererQestion").click(function() {
     $("#ajoutNewReponse").attr('disabled', false);
 
@@ -178,10 +180,16 @@ $(document).ready(function() {
 });
 
 // fonction qui ajoute la ligne de la reponse sur la zone prévu a cet effet
+
+//let numBonne = parseInt(nbMinBoneReponse);
 function addReponseLine(reponse){
-  $("#preview").attr("disabled", false);
+  //pour verfier que le nombre de reponse et egale le nombre attendus 
+  if ($('#newNbMinimalBonneReponse').val() <= numReponse) {
+  $("#preview").attr("disabled", false);}
   txtDragAndDrop.remove();
   var infos_rep = projet.getQuestion().getReponseById(reponse.getId());
+
+
 
   var newRepLine = "<div style='height:35px;' id='" + reponse.getId() + "'>" +
   "<li style='color:black;font-size:14px;'>" +
@@ -193,9 +201,19 @@ function addReponseLine(reponse){
   "</div>";
 
   $("#cible").append(newRepLine);
-  //compteur du nombre de reponse pour  pouvoir reinitliser la zone de drad and drop
 
+  //$("#nbreponse").innerHTML = "nombre de bonne reponse :"+compteur+";
 }
+
+    
+    
+
+
+
+
+
+
+
 
 //Permet de vider la zone Exercice ainsi que les éléméent enregistré dans le store
 function viderZone(){
