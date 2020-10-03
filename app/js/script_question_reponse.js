@@ -9,7 +9,6 @@ var projet = new Projet();
 nombre_reponse=0;
 
 $(document).ready(function() {
-
   //méthode gérant la continuité
   enregistrement();
 
@@ -40,7 +39,7 @@ $(document).ready(function() {
           return ; // si le champ est vide on sort
         }
         //On verifie que le texte du retour vocal n'est pas vide
-        if(reponseVocale=== "") {
+        if(reponseVocale === "") {
           alert("pas de reponse volacal");
           return;
         }
@@ -48,7 +47,7 @@ $(document).ready(function() {
         var new_rep = new QRCodeUnique(identifiant, qrData,  qrColor);
         var new_rep_vocal = reponseVocale;
 
-        //Récuperation des inforamtion de la question pour gérer la continuité
+        //Récuperation des information de la question pour gérer la continuité
         numReponse ++;
         deleteStore('numReponse');
         store.set('numReponse',numReponse);
@@ -173,6 +172,7 @@ $(document).ready(function() {
       //affichage du bouton question
       $("#genererQestion").show();
 
+      viderChamps();
       viderZone();
       store.delete(`questionQRExerixe`);
     }
@@ -217,7 +217,6 @@ function addReponseLine(reponse){
 
 //Permet de vider la zone Exercice ainsi que les éléméent enregistré dans le store
 function viderZone(){
-
   deleteStore(`newQuestionText`);
 
   deleteStore(`newBonneReponseText`);
@@ -241,6 +240,14 @@ function viderZone(){
     $(txtZone).empty();
     $("#cible").empty();
     txtZone.appendChild(txtDragAndDrop);
+}
+
+//Permet d'effacer la valeur des champs dans la zone Exercice
+function viderChamps(){
+  document.getElementById("newQuestionText").value="";
+  document.getElementById("newBonneReponseText").value="";
+  document.getElementById("newMauvaiseReponseText").value="";
+  document.getElementById("newNbMinimalBonneReponse").value="";
 }
 
 // Supprime une ligne dans la zone de drop
@@ -557,10 +564,9 @@ function lireReponse(button){
   playTTS(text_reponse + text_retourVocal);
 }
 
-//méthode gérant al continuité sur les eones de texte Question, Bonne Reponse, Mauvaise Reponse et nb reponse
+//méthode gérant la continuité sur les zones de texte Question, Bonne Reponse, Mauvaise Reponse et nb reponse
 function activerSave(text){
   deleteStore(text);
-
   var newText = $("#"+text).val();
 
   store.set(text,newText);
