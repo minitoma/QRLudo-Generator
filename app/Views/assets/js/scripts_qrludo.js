@@ -18,6 +18,9 @@ $().ready(function() {
   $("#qcm-html").click(function() {
     $("#charger-page").load(path.join(__dirname, "Views/qcm.html"), loadDefaultColor);
   });
+  $("#serious-html").click(function() {
+    $("#charger-page").load(path.join(__dirname, "Views/serious-game.html"), loadDefaultColor);
+  });
   $("#parametres").click(function(){
     $("#charger-page").load(path.join(__dirname, "Views/parametres.html"));
   });

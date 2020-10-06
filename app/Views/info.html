@@ -7,17 +7,16 @@
     <nav class="nav nav-tabs">
       <a class="nav-item nav-link" id="unique-info" href="#info-unique">Unique</a>
       <a class="nav-item nav-link" id="multiple-info" href="#info-multiple">Multiple</a>
-      <a class="nav-item nav-link" id="questRep-info" href="#info-Exercice">Exercice</a>
-      <a class="nav-item nav-link" id="qcm" href="#info-QCM">QCM</a>
-      <a class="nav-item nav-link" id="music" href="#info-MusicInput">Musique</a>
-      <a class="nav-item nav-link" id="info" href="#info-Import">Import</a>
+      <a class="nav-item nav-link" id="questRep-info" href="#info-exercice">Exercice</a>
+      <a class="nav-item nav-link" id="qcm-info" href="#info-QCM">QCM</a>
+      <a class="nav-item nav-link" id="music-info" href="#info-MusicInput">Musique</a>
+      <a class="nav-item nav-link" id="info-info" href="#info-Import">Import</a>
     </nav>
 
-    <div class="tab-content">
+    <div class="tab-content" id="myInfo">
       <div class="tab-pane" id="info-unique">
         <h5>Comment utiliser les QR Unique ?</h5>
         <hr>
-
         <h5><a href="#affichageVideoUnique">Vidéo explicative</a></h5>
         <div id="affichageVideoUnique" class="info-content">
           <iframe width="560" height="315" src="https://www.youtube.com/embed/9VIE4R7dDs4" frameborder="0"
@@ -175,7 +174,7 @@
       </div>
 
       <div class="tab-pane" id="info-exercice">
-        <div class="tab-pane" id="info-unique">
+        <div class="tab-pane" id="info-exo">
           <h5>Comment utiliser les QR Exercice ?</h5>
           <hr>
 
@@ -186,24 +185,6 @@
           </div>
         </div>
 
-
-
-        <script>
-          switch (require('electron').remote.getGlobal('sharedObject').someProperty) {
-            case 'unique':
-              document.getElementById("unique-info").classList.add("active");
-              document.getElementById("info-unique").style.display = "block";
-              break;
-            case 'multiple':
-              document.getElementById("multiple-info").classList.add("active");
-              document.getElementById("info-multiple").style.display = "block";
-              break;
-            case 'questRep':
-              document.getElementById("questRep-info").classList.add("active");
-              document.getElementById("info-exercice").style.display = "block";
-              break;
-          }
-        </script>
         <!--   <h5><a href="#ajoutQuestion">Ajouter une question au projet</a></h5>
         <div id="ajoutQuestion" class="info-content">
           <ul>
@@ -407,5 +388,24 @@
 
   </div>
 </div>
+
+<script>
+  $(document).ready(function () {
+    switch (require('electron').remote.getGlobal('sharedObject').someProperty) {
+      case 'unique':
+        document.getElementById("unique-info").classList.add("active");
+        document.getElementById("info-unique").style.display = "block";
+        break;
+      case 'multiple':
+        document.getElementById("multiple-info").classList.add("active");
+        document.getElementById("info-multiple").style.display = "block";
+        break;
+      case 'questRep':
+        document.getElementById("questRep-info").classList.add("active");
+        document.getElementById("info-exercice").style.display = "block";
+        break;
+    }
+  });
+</script>
 
 <script type="text/javascript" src="./js/script_info.js"></script>
