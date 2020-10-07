@@ -40,7 +40,7 @@ $(document).ready(function() {
         }
         //On verifie que le texte du retour vocal n'est pas vide
         if(reponseVocale === "") {
-          alert("pas de reponse volacal");
+          alert("pas de reponse vocale");
           return;
         }
         qrData.push(reponseVocale);
@@ -154,6 +154,8 @@ $(document).ready(function() {
   $('button#annuler').click(e => {
     //aficher popup quand on click sur reinitialiser
     // cache le qr générer & desactivation du bouton exporter
+    var numReponse=0;
+    document.getElementById('Nbbonne').innerHTML = numReponse;
     var popUpQuiter = confirm("Etes vous sûr de vouloir réinitialiser?");
     if (popUpQuiter==true){
       // masquage du lecteur de qr code
@@ -183,16 +185,12 @@ $(document).ready(function() {
 
 //let numBonne = parseInt(nbMinBoneReponse);
 
-
 function addReponseLine(reponse){
   //pour verfier que le nombre de reponse et egale le nombre attendus 
   if ($('#newNbMinimalBonneReponse').val() <= numReponse) {
   $("#preview").attr("disabled", false);}
   txtDragAndDrop.remove();
   var infos_rep = projet.getQuestion().getReponseById(reponse.getId());
-
-
-
   var newRepLine = "<div style='height:35px;' id='" + reponse.getId() + "'>" +
   "<li style='color:black;font-size:14px;'>" +
   "<label>" + reponse.getName() + "&nbsp&nbsp</label>" +
@@ -412,8 +410,6 @@ function supprimeInfoBtnQrCode(button, cible){
 function deleteReponse(button){
   var k = $('#newNbMinimalBonneReponse').val();
   var id_reponse = $(button).attr('id');
-  numReponse--;
-  document.getElementById('Nbbonne').innerHTML = numReponse;
   console.log(k);
   console.log(numReponse);
   if (k > numReponse) {
@@ -443,8 +439,12 @@ function deleteReponse(button){
       deleteStore('reponseId'+i);
       deleteStore('reponseColor'+i);
     }
+  
+
   }
   
+  numReponse--;
+  document.getElementById('Nbbonne').innerHTML = numReponse;
 
  
 
