@@ -5,22 +5,22 @@
   <div class="col-sm-12 card">
 
     <nav class="nav nav-tabs">
-      <a class="nav-item nav-link" href="#info-unique">Unique</a>
-      <a class="nav-item nav-link" href="#info-multiple">Multiple</a>
-      <a class="nav-item nav-link" href="#info-Exercice">Exercice</a>
-      <a class="nav-item nav-link" href="#info-QCM">QCM</a>
-      <a class="nav-item nav-link" href="#info-MusicInput">Musique</a>
-      <a class="nav-item nav-link" href="#info-Import">Import</a>
+      <a class="nav-item nav-link" id="unique-info" href="#info-unique">Unique</a>
+      <a class="nav-item nav-link" id="multiple-info" href="#info-multiple">Multiple</a>
+      <a class="nav-item nav-link" id="questRep-info" href="#info-exercice">Exercice</a>
+      <a class="nav-item nav-link" id="qcm-info" href="#info-QCM">QCM</a>
+      <a class="nav-item nav-link" id="music-info" href="#info-MusicInput">Musique</a>
+      <a class="nav-item nav-link" id="info-info" href="#info-Import">Import</a>
     </nav>
 
-    <div class="tab-content">
+    <div class="tab-content" id="myInfo">
       <div class="tab-pane" id="info-unique">
         <h5>Comment utiliser les QR Unique ?</h5>
         <hr>
-
         <h5><a href="#affichageVideoUnique">Vidéo explicative</a></h5>
         <div id="affichageVideoUnique" class="info-content">
-          <iframe width="560" height="315" src="https://www.youtube.com/embed/9VIE4R7dDs4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/9VIE4R7dDs4" frameborder="0"
+            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
       </div>
 
@@ -30,7 +30,8 @@
 
         <h5><a href="#affichageVideoQCM">Vidéo explicative</a></h5>
         <div id="affichageVideoQCM" class="info-content">
-          <iframe width="560" height="315" src="https://www.youtube.com/embed/NQzfOvANMo4" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/NQzfOvANMo4" frameborder="0"
+            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
       </div>
 
@@ -52,7 +53,8 @@
           <div id="google" class="info-content">
             <ul class="list components">
               <li>
-                Aller sur internet, se rendre sur son compte Google Drive (https://drive.google.com), se connecter éventuellement
+                Aller sur internet, se rendre sur son compte Google Drive (https://drive.google.com), se connecter
+                éventuellement
               </li>
               <li>
                 Faire clic-droit sur le fichier audio en question
@@ -79,7 +81,8 @@
           <div id="dropbox" class="info-content">
             <ul class="list components">
               <li>
-                Aller sur internet, se rendre sur son compte Dropbox (https://www.dropbox.com), se connecter éventuellement
+                Aller sur internet, se rendre sur son compte Dropbox (https://www.dropbox.com), se connecter
+                éventuellement
               </li>
               <li>
                 Survoller avec la souris le fichier audio en question
@@ -149,7 +152,8 @@
 
         <h5><a href="#affichageVideoMultiple">Vidéo explicative</a></h5>
         <div id="affichageVideoMultiple" class="info-content">
-          <iframe width="560" height="315" src="https://www.youtube.com/embed/Wv6BuHnAXQM" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+          <iframe width="560" height="315" src="https://www.youtube.com/embed/Wv6BuHnAXQM" frameborder="0"
+            allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
         </div>
 
         <h5><a href="#affichageTexte">Texte explicatif</a></h5>
@@ -162,7 +166,8 @@
             </li>
             <li>Saisir le nom du QR-Code</li>
             <li>
-              Depuis votre ordinateur Glisser les QR-Codes uniques à ajouter et les déposer sur l'appplication, sur la zone
+              Depuis votre ordinateur Glisser les QR-Codes uniques à ajouter et les déposer sur l'appplication, sur la
+              zone
               <img src="./Views/assets/images/infos_multiple/deposermultiple.png">
             </li>
             <li>
@@ -174,17 +179,19 @@
         </div>
       </div>
 
-      <div class="tab-pane" id="info-Exercice">
-        <div class="tab-pane" id="info-unique">
+      <div class="tab-pane" id="info-exercice">
+        <div class="tab-pane" id="info-exo">
           <h5>Comment utiliser les QR Exercice ?</h5>
           <hr>
 
           <h5><a href="#affichageVideoExercice">Vidéo explicative</a></h5>
           <div id="affichageVideoExercice" class="info-content">
-            <iframe width="560" height="315" src="https://www.youtube.com/embed/2PGPMnRpgwE" frameborder="0" allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+            <iframe width="560" height="315" src="https://www.youtube.com/embed/2PGPMnRpgwE" frameborder="0"
+              allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
           </div>
         </div>
-      <!--   <h5><a href="#ajoutQuestion">Ajouter une question au projet</a></h5>
+
+        <!--   <h5><a href="#ajoutQuestion">Ajouter une question au projet</a></h5>
         <div id="ajoutQuestion" class="info-content">
           <ul>
             <li>
@@ -387,5 +394,24 @@
 
   </div>
 </div>
+
+<script>
+  $(document).ready(function () {
+    switch (require('electron').remote.getGlobal('sharedObject').someProperty) {
+      case 'unique':
+        document.getElementById("unique-info").classList.add("active");
+        document.getElementById("info-unique").style.display = "block";
+        break;
+      case 'multiple':
+        document.getElementById("multiple-info").classList.add("active");
+        document.getElementById("info-multiple").style.display = "block";
+        break;
+      case 'questRep':
+        document.getElementById("questRep-info").classList.add("active");
+        document.getElementById("info-exercice").style.display = "block";
+        break;
+    }
+  });
+</script>
 
 <script type="text/javascript" src="./js/script_info.js"></script>

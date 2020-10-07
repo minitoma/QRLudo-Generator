@@ -577,3 +577,9 @@ function deleteStore(del){
   if(store.get(del) )
     store.delete(del);
 }
+
+//pour ouvrir la page info.html quand on clique sur le bouton info du haut
+$("#infos-questRep").click(function () {
+  require('electron').remote.getGlobal('sharedObject').someProperty = 'questRep'
+  $("#charger-page").load(path.join(__dirname, "Views/info.html"));
+});

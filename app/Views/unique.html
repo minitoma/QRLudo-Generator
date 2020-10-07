@@ -1,10 +1,12 @@
 <!-- contenu page unique -->
 <!--Panel-->
-
 <div class="col-sm-8 card">
+  <div id="btnInfo">
+    <button class="btn btn-outline-success" id="infos-unique"><i class="fa fa-info-circle"></i></button>
+  </div>
   <div class="text-center" id="textPresentation">
-       Création de QR Code classique. <br>
-       Vous pouvez utiliser du contenu textuel ou vocal.
+    Création de QR Code classique. <br>
+    Vous pouvez utiliser du contenu textuel ou vocal.
   </div>
   <form id="myFormActive" onsubmit="return false;">
     <div class="card-body">
@@ -38,11 +40,13 @@
 
               </div>
               <div class="progress">
-                <div id="progressbarId" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0" aria-valuemax="250" style="width:0%"></div>
+                <div id="progressbarId" class="progress-bar" role="progressbar" aria-valuenow="0" aria-valuemin="0"
+                  aria-valuemax="250" style="width:0%"></div>
               </div>
 
-              <div class="ajoutZoneTexte" align="right" >
-                <button style="margin-top:10px" type="button" class="btn btn-outline-success btn-unique-xl" name="ajouterTexte" id="ajouterTexte" onclick="ajouterChampLegende();">
+              <div class="ajoutZoneTexte" align="right">
+                <button style="margin-top:10px" type="button" class="btn btn-outline-success btn-unique-xl"
+                  name="ajouterTexte" id="ajouterTexte" onclick="ajouterChampLegende();">
                   <i class="fa fa-file-alt"></i>&nbsp;&nbsp;Ajouter nouveau contenu
                 </button>
               </div>
@@ -53,8 +57,9 @@
 
     </div>
     <div class="card-footer form-inline">
-      <div class="card col-md-auto "  >
-        <button type="button" id="showAudio" class="btn btn-outline-success btn-unique-xl  " name="ajouterSon" data-toggle="modal" data-target="#listeMusic">
+      <div class="card col-md-auto ">
+        <button type="button" id="showAudio" class="btn btn-outline-success btn-unique-xl  " name="ajouterSon"
+          data-toggle="modal" data-target="#listeMusic">
           <i class="fa fa-music"></i>&nbsp;&nbsp;Audio
         </button>
         <button style="margin-top:10px" class="btn btn-outline-success btn-unique-xl  " id="annuler">
@@ -80,12 +85,13 @@
 <div class="col-sm-4 card" id="qr-zone">
   <script>
     $("#qr-zone").load("Views/QR-zone.html");
-                    </script>
+  </script>
 </div>
 <!--/.Panel-->
 
 <!-- Modal-1 -> pour generer le fichier .json et le sauvegarder dans un drive -->
-<div class="modal fade" id="sauvegarderFichierJson" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+<div class="modal fade" id="sauvegarderFichierJson" tabindex="-1" role="dialog"
+  aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -110,7 +116,8 @@
 
 
 <!-- Modal-2 -> Fichier audio -->
-<div class="modal fade" id="listeMusic" tabindex="-1" role="dialog" data-backdrop="static" aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-keyboard="false">
+<div class="modal fade" id="listeMusic" tabindex="-1" role="dialog" data-backdrop="static"
+  aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-keyboard="false">
   <div class="modal-dialog modal-dialog-centered" role="document">
     <div class="modal-content">
       <div class="modal-header">
@@ -124,7 +131,8 @@
         <div class="list-group" id="elementsAudio">
           <div class="form-group">
 
-            <label class="col-sm-12 control-label" style="color:#28a745;padding-top:10px;">Veuillez copier et coller le lien téléchargeable du fichier audio</label>
+            <label class="col-sm-12 control-label" style="color:#28a745;padding-top:10px;">Veuillez copier et coller le
+              lien téléchargeable du fichier audio</label>
             <div class="col-sm-12">
               <input type="text" id="musicUrl" name="musicUrl" class="form-control" onpaste="getMusicFromUrl()">
             </div>
