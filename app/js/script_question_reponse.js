@@ -99,7 +99,7 @@ $(document).ready(function() {
 
 //fonction pour e
   $("#preview").click(function() {
-      previewQRCodeQuestion();
+      previewQRCodeQuestion(); 
       $('#qrView').show();
 
   });
@@ -182,6 +182,8 @@ $(document).ready(function() {
 // fonction qui ajoute la ligne de la reponse sur la zone prévu a cet effet
 
 //let numBonne = parseInt(nbMinBoneReponse);
+
+
 function addReponseLine(reponse){
   //pour verfier que le nombre de reponse et egale le nombre attendus 
   if ($('#newNbMinimalBonneReponse').val() <= numReponse) {
@@ -201,12 +203,11 @@ function addReponseLine(reponse){
   "</div>";
 
   $("#cible").append(newRepLine);
-
-  //$("#nbreponse").innerHTML = "nombre de bonne reponse :"+compteur+";
+  document.getElementById('Nbbonne').innerHTML = numReponse;
+  console.log(numReponse);
 }
 
-    
-    
+   
 
 
 
@@ -409,8 +410,15 @@ function supprimeInfoBtnQrCode(button, cible){
 
 //fonction pour Supprimer une réponse du     &&
 function deleteReponse(button){
+  var k = $('#newNbMinimalBonneReponse').val();
   var id_reponse = $(button).attr('id');
-
+  numReponse--;
+  document.getElementById('Nbbonne').innerHTML = numReponse;
+  console.log(k);
+  console.log(numReponse);
+  if (k > numReponse) {
+  $("#preview").attr("disabled", true);
+  console.log("test");}
   projet.removeReponse(id_reponse);
   $("div#" + id_reponse).remove();
 
@@ -436,6 +444,9 @@ function deleteReponse(button){
       deleteStore('reponseColor'+i);
     }
   }
+  
+
+ 
 
 }
 
@@ -568,7 +579,6 @@ function lireReponse(button){
 function activerSave(text){
   deleteStore(text);
   var newText = $("#"+text).val();
-
   store.set(text,newText);
 }
 

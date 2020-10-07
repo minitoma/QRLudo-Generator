@@ -77,16 +77,12 @@
           <ul class="nav nav-tabs">
             <li class="nav-item">
               <a class="nav-link active" data-toggle="tab" href="#newProject"> Bonne(s) Reponse(s) </a> 
-             
             </li>
           </ul>
           <div id="texte" class="tab-pane fade in active show">
                 <div class="form-group">
                     <div class="col-sm-10">
-                      <div>
-                       <p id="nbreponse"> nombre de bonne reponse </p>
-                      </div>
-                      
+                      <div> Nombre de reponse : <div id="Nbbonne">0</div></div>
                         <div id="cible">
                         
                         </div>
@@ -104,7 +100,7 @@
     <div class="card-footer form-inline">
       <div class="card col-md-auto ">
         <button  type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#dialogAjoutReponse" id= "ajoutNewReponse" disabled ><i class="fa fa-plus-square"  ></i>&nbsp;&nbsp;Ajouter réponse</button>
-        <button style="margin-top:10px" type="button" class="btn btn-outline-success" id="annuler"><i class="fa fa-undo"></i>&nbsp;&nbsp;Réinitialiser</button>
+        <button style="margin-top:10px" type="reset" class="btn btn-outline-success" id="annuler"><i class="fa fa-undo"></i>&nbsp;&nbsp;Réinitialiser</button>
       </div>
       <div class="card col-md-auto">
         <button  type="button" class="btn btn-outline-success " id="saveQRCode" disabled>
