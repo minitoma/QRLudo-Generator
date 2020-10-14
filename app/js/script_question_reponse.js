@@ -9,6 +9,7 @@ var projet = new Projet();
 nombre_reponse=0;
 
 $(document).ready(function() {
+
   //méthode gérant la continuité
   enregistrement();
 
@@ -17,7 +18,7 @@ $(document).ready(function() {
 
   //fonction pour ajouter un nouvelle reponse
   $("#validerDataDialog").click(function(){
-      var x=0;
+
       let identifiant= $('#newId').val();
       let reponseVocale = $("#newContenuVocal").val();
       let qrColor = $('#qrColor').val();
@@ -25,7 +26,6 @@ $(document).ready(function() {
 
       document.getElementById("newContenuVocal").value = "";
       document.getElementById("newId").value = "";
-      x = x++;
 
         //On verifie qu'il y a une question de créée
         if (projet.getQuestion() == null) {
@@ -47,7 +47,7 @@ $(document).ready(function() {
         var new_rep = new QRCodeUnique(identifiant, qrData,  qrColor);
         var new_rep_vocal = reponseVocale;
 
-        //Récuperation des information de la question pour gérer la continuité
+        //Récuperation des inforamtion de la question pour gérer la continuité
         numReponse ++;
         deleteStore('numReponse');
         store.set('numReponse',numReponse);
@@ -104,7 +104,6 @@ $(document).ready(function() {
 
   });
 
-  //var nbMinBoneReponse = 0;
   $("#genererQestion").click(function() {
     $("#ajoutNewReponse").attr('disabled', false);
 
@@ -149,9 +148,53 @@ $(document).ready(function() {
     }
   });
 
+  $("#emptyFields").click(function(){
+    viderZone();
+  })
 
+  function viderZone(){
+     // masquage du lecteur de qr code
+     $('#qrView').hide();
 
-  $('button#annuler').click(e => {
+     //grissage des bouton qui etais grissé de basse
+     $('#saveQRCode').attr('disabled', true);
+     $("#ajoutNewReponse").attr('disabled', true);
+     $("#preview").attr('disabled', true);
+
+     //masquage de la zone bonne reponse
+     $("#dropZone").hide();
+
+     //reinitialisation de projet qui contient les questions
+     projet = new Projet();
+     //affichage du bouton question
+     $("#genererQestion").show();
+
+    controllerMultiple = new ControllerMultiple();
+    $('#newQuestionText').val('');
+    $('#newBonneReponseText').val('');
+    $('#newMauvaiseReponseText').val('');
+    $('#newNbMinimalBonneReponse').val('');
+
+    deleteStore(`newQuestionText`);
+
+    deleteStore(`newBonneReponseText`);
+  
+    deleteStore('newMauvaiseReponseText');
+  
+    deleteStore('newNbMinimalBonneReponse');
+  
+    for(var i=1; i<numReponse+1; i++){
+      deleteStore('reponse'+i);
+      deleteStore(''+i);
+      deleteStore('reponseId'+i);
+      deleteStore('reponseColor'+i);
+    }
+  
+    deleteStore('numReponse');
+    numReponse = 0;
+  }
+
+  /*$('button#annuler').click(e => {
     //aficher popup quand on click sur reinitialiser
     // cache le qr générer & desactivation du bouton exporter
     var numReponse=0;
@@ -160,37 +203,31 @@ $(document).ready(function() {
     if (popUpQuiter==true){
       // masquage du lecteur de qr code
       $('#qrView').hide();
-
       //grissage des bouton qui etais grissé de basse
       $('#saveQRCode').attr('disabled', true);
       $("#ajoutNewReponse").attr('disabled', true);
       $("#preview").attr('disabled', true);
-
       //masquage de la zone bonne reponse
       $("#dropZone").hide();
-
       //reinitialisation de projet qui contient les questions
       projet = new Projet();
       //affichage du bouton question
       $("#genererQestion").show();
-
-      viderChamps();
       viderZone();
       store.delete(`questionQRExerixe`);
     }
-  });
+  });*/
 });
 
 // fonction qui ajoute la ligne de la reponse sur la zone prévu a cet effet
-
-//let numBonne = parseInt(nbMinBoneReponse);
-
 function addReponseLine(reponse){
-  //pour verfier que le nombre de reponse et egale le nombre attendus 
   if ($('#newNbMinimalBonneReponse').val() <= numReponse) {
-  $("#preview").attr("disabled", false);}
+  $("#preview").attr("disabled", false);
+   }
   txtDragAndDrop.remove();
   var infos_rep = projet.getQuestion().getReponseById(reponse.getId());
+
+
   var newRepLine = "<div style='height:35px;' id='" + reponse.getId() + "'>" +
   "<li style='color:black;font-size:14px;'>" +
   "<label>" + reponse.getName() + "&nbsp&nbsp</label>" +
@@ -202,7 +239,7 @@ function addReponseLine(reponse){
 
   $("#cible").append(newRepLine);
   document.getElementById('Nbbonne').innerHTML = numReponse;
-  console.log(numReponse);
+  //console.log(numReponse);
 }
 
    
@@ -248,6 +285,10 @@ function viderChamps(){
   document.getElementById("newMauvaiseReponseText").value="";
   document.getElementById("newNbMinimalBonneReponse").value="";
 }
+
+  //compteur du nombre de reponse pour  pouvoir reinitliser la zone de drad and drop
+
+
 
 // Supprime une ligne dans la zone de drop
 function effacerLigne() {
@@ -311,7 +352,7 @@ function affichageLigneParDefault() {
 
       facade =  new FacadeController();
       facade.importQRCodeJson(qrFile, qrCode =>{
-        if (qrCode.getType() == 'xl' || qrCode.getType() == 'unique' || qrCode.getType() == 'reponse'){
+        if (qrCode.getType() == 'xl' || qrCode.getType() == 'unique' || qrCode.getType() == 'reponse'){
           let qrId = qrCode.getId();
           let qrDatad = qrCode.getData();
           let qrName = qrCode.getName();
@@ -412,7 +453,8 @@ function deleteReponse(button){
   var id_reponse = $(button).attr('id');
   console.log(k);
   console.log(numReponse);
-  if (k > numReponse) {
+  numReponse--;
+  if (k > numReponse){
   $("#preview").attr("disabled", true);
   console.log("test");}
   projet.removeReponse(id_reponse);
@@ -421,7 +463,7 @@ function deleteReponse(button){
   //retour a l'initiale quand toutes les reponses sont suprimées
   nombre_reponse--;
   console.log(nombre_reponse);
-          console.log(projet.getQuestion());
+  console.log(projet.getQuestion());
   if(nombre_reponse==0)
   {
     txtDragAndDrop.setAttribute("id", "txtDragAndDrop");
@@ -442,8 +484,6 @@ function deleteReponse(button){
   
 
   }
-  
-  numReponse--;
   document.getElementById('Nbbonne').innerHTML = numReponse;
 
  
@@ -575,9 +615,10 @@ function lireReponse(button){
   playTTS(text_reponse + text_retourVocal);
 }
 
-//méthode gérant la continuité sur les zones de texte Question, Bonne Reponse, Mauvaise Reponse et nb reponse
+//méthode gérant al continuité sur les eones de texte Question, Bonne Reponse, Mauvaise Reponse et nb reponse
 function activerSave(text){
   deleteStore(text);
+
   var newText = $("#"+text).val();
   store.set(text,newText);
 }

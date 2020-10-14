@@ -89,23 +89,20 @@ $(document).ready(function() {
     //ipcRenderer.send('showInfoWindow', null);
   });
 
-  $('button#annuler').click(e => {
+  $('button#emptyFields').click(e => {
 
     //mise ajour des données sur le progress bar
     $("#progressbarId").attr('aria-valuenow',0);
     $("#progressbarId").attr("style","width:"+0+"%");
     $("#progressbarId").text(0);
+    $("#textarea1").val("");
     //FIN progress bar gestion
     //aficher popup quand on click sur reinitialiser
     // cache le qr générer & desactivation du bouton exporter
-    var popUpQuiter = confirm("Etes vous sûr de vouloir réinitialiser?");
-    if (popUpQuiter == true){
-
       //Les différents store sont clean ici
       if(store.get(`titreUnique`)){
         store.delete(`titreUnique`);
         $("#qrName").val("");
-      }
 
       //implémentation des différentes zones de txt enregistrées
       for(var i = 1; i<=numZoneCourante; i++){
@@ -125,8 +122,6 @@ $(document).ready(function() {
       numZoneCourante = 0;
       store.delete("nbZoneDonne")
       nbZoneDonne = 0;
-
-      $("button#annuler").attr('type','reset');
 
       let a = $('#legendeTextarea');
       $.each($(".qrData"), function(i, val) {
@@ -148,9 +143,9 @@ $(document).ready(function() {
 
       $("#ajouterTexte").attr('disabled', false);
     }
-    else {
+  /*  else {
       $("button#annuler").removeAttr('type');
-    }
+    }*/
   });
 });
 
@@ -194,7 +189,7 @@ $('#preview').click(e => {
   console.log(newQrUnique);
   previewQRCode(qrName, qrData, qrColor, div);
   //console.log();
-  $('#annuler').attr('disabled', false);
+  $('#emptyZones').attr('disabled', false);
 });
 
 
@@ -413,11 +408,10 @@ function activer_button() {
   var titre = document.getElementById('qrName').value;
   store.set(`titreUnique`, titre);
 
-
   $('#preview').attr('disabled', true); //Par defaut le bouton generer est toujours activé, on le desactive dans la condition suivante si necessaire
   if (document.getElementById('qrName').value.length > 0) {
 
-    $('#preview, #annuler, #showAudio').attr('disabled', false);
+    $('#preview, #emptyZones, #showAudio').attr('disabled', false);
   }
 }
 
