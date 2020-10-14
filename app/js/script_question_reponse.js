@@ -39,8 +39,8 @@ $(document).ready(function() {
           return ; // si le champ est vide on sort
         }
         //On verifie que le texte du retour vocal n'est pas vide
-        if(reponseVocale=== "") {
-          alert("pas de reponse volacal");
+        if(reponseVocale === "") {
+          alert("pas de reponse vocale");
           return;
         }
         qrData.push(reponseVocale);
@@ -99,7 +99,7 @@ $(document).ready(function() {
 
 //fonction pour e
   $("#preview").click(function() {
-      previewQRCodeQuestion();
+      previewQRCodeQuestion(); 
       $('#qrView').show();
 
   });
@@ -197,6 +197,8 @@ $(document).ready(function() {
   /*$('button#annuler').click(e => {
     //aficher popup quand on click sur reinitialiser
     // cache le qr générer & desactivation du bouton exporter
+    var numReponse=0;
+    document.getElementById('Nbbonne').innerHTML = numReponse;
     var popUpQuiter = confirm("Etes vous sûr de vouloir réinitialiser?");
     if (popUpQuiter==true){
       // masquage du lecteur de qr code
@@ -219,9 +221,12 @@ $(document).ready(function() {
 
 // fonction qui ajoute la ligne de la reponse sur la zone prévu a cet effet
 function addReponseLine(reponse){
+  if ($('#newNbMinimalBonneReponse').val() <= numReponse) {
   $("#preview").attr("disabled", false);
+   }
   txtDragAndDrop.remove();
   var infos_rep = projet.getQuestion().getReponseById(reponse.getId());
+
 
   var newRepLine = "<div style='height:35px;' id='" + reponse.getId() + "'>" +
   "<li style='color:black;font-size:14px;'>" +
@@ -233,9 +238,57 @@ function addReponseLine(reponse){
   "</div>";
 
   $("#cible").append(newRepLine);
+  document.getElementById('Nbbonne').innerHTML = numReponse;
+  //console.log(numReponse);
+}
+
+   
+
+
+
+
+
+
+
+
+//Permet de vider la zone Exercice ainsi que les éléméent enregistré dans le store
+function viderZone(){
+  deleteStore(`newQuestionText`);
+
+  deleteStore(`newBonneReponseText`);
+
+  deleteStore('newMauvaiseReponseText');
+
+  deleteStore('newNbMinimalBonneReponse');
+
+  for(var i=1; i<numReponse+1; i++){
+    deleteStore('reponse'+i);
+    deleteStore(''+i);
+    deleteStore('reponseId'+i);
+    deleteStore('reponseColor'+i);
+  }
+
+  deleteStore('numReponse');
+  numReponse = 0;
+
+
+    $('#qrName').val('');
+    $(txtZone).empty();
+    $("#cible").empty();
+    txtZone.appendChild(txtDragAndDrop);
+}
+
+//Permet d'effacer la valeur des champs dans la zone Exercice
+function viderChamps(){
+  document.getElementById("newQuestionText").value="";
+  document.getElementById("newBonneReponseText").value="";
+  document.getElementById("newMauvaiseReponseText").value="";
+  document.getElementById("newNbMinimalBonneReponse").value="";
+}
+
   //compteur du nombre de reponse pour  pouvoir reinitliser la zone de drad and drop
 
-} 
+
 
 // Supprime une ligne dans la zone de drop
 function effacerLigne() {
@@ -396,15 +449,21 @@ function supprimeInfoBtnQrCode(button, cible){
 
 //fonction pour Supprimer une réponse du     &&
 function deleteReponse(button){
+  var k = $('#newNbMinimalBonneReponse').val();
   var id_reponse = $(button).attr('id');
-
+  console.log(k);
+  console.log(numReponse);
+  numReponse--;
+  if (k > numReponse){
+  $("#preview").attr("disabled", true);
+  console.log("test");}
   projet.removeReponse(id_reponse);
   $("div#" + id_reponse).remove();
 
   //retour a l'initiale quand toutes les reponses sont suprimées
   nombre_reponse--;
   console.log(nombre_reponse);
-          console.log(projet.getQuestion());
+  console.log(projet.getQuestion());
   if(nombre_reponse==0)
   {
     txtDragAndDrop.setAttribute("id", "txtDragAndDrop");
@@ -422,7 +481,12 @@ function deleteReponse(button){
       deleteStore('reponseId'+i);
       deleteStore('reponseColor'+i);
     }
+  
+
   }
+  document.getElementById('Nbbonne').innerHTML = numReponse;
+
+ 
 
 }
 
@@ -556,7 +620,6 @@ function activerSave(text){
   deleteStore(text);
 
   var newText = $("#"+text).val();
-
   store.set(text,newText);
 }
 
