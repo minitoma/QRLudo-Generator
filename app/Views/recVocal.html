@@ -1,114 +1,116 @@
-<script src="js/script_qcm.js"></script>
+<script src="js/script_recVocal.js"></script>
 <!-- contenu page QuesRep -->
 <!--Panel-->
 
 <div class="col-sm-12 card">
-  <div class="text-center" id="textPresentation">
-      Création de QR Code QCM.<br>
-      Une question possède plusieurs réponses. Si la bonne est donnée,<br>
-       c'est gagné, sinon c'est perdu !
-  </div >
-  <div class="alert alert-success" role="alert" id="alertExportationOk" style="display:none;">  Votre projet a bien été enregistré. </div>
-  <div class="alert alert-danger" role="alert" id="alertQuestionVideError" style="display:none;"> Veuillez saisir le texte de votre question. </div>
-  <div class="alert alert-danger" role="alert" id="alertNombreReponseVideError" style="display:none;"> Veuillez saisir un nombre de réponses correct. </div>
-  <div class="alert alert-danger" role="alert" id="alertQuestionExistError" style="display:none"> La question existe déjà. </div>
-  <form id="formulaireQCM" onsubmit="return false;">
-    <div class="card-body">
-      <h6 class="card-title"></h6>
-      <ul class="nav nav-tabs">
-        <li class="nav-item">
-          <a class="nav-link active" data-toggle="tab" href="#newProject">Exercice reconaissance Vocale</a>
-        </li>
-      </ul>
-       <div style=" margin-top:15px;">
-      <div id="newProject" class="tab-pane fade in active show" role="tabpanel">
-        <div class="form-group">
-          <table rowspan="0">
-            <tr>
-              <td>
-                  <label class="control-label col-md-auto  " style="color:#28a745;padding-top:5px;">Question  &nbsp;&nbsp;&nbsp; </label>
-              </td>
-              <td>
-                <div class="form-inline">
-                  <input type='text' class="form-control col-sm-14" id="newQuestionText" onkeyup="activerSave('newQuestionText');" name="nomQuest" placeholder="Saisissez la question"/>
-                </div>
-              </td>
-            </tr>
-          </table>
-        </div>
-      <div class="tab-content scrollbar-success" style="height:600px; overflow-y: scroll; margin-top:15px;">
-        <div id="newProject" class="tab-pane fade in active show" role="tabpanel">
-          <tr>
-              <td>
-          <div class="form-group" >
+    <div class="text-center" id="textPresentation">
+        Création de QR Code Serious Game.<br>
+        Jeu à but pédagogique. <br />
+        Les réponses attendues peuvent être à reconnaisance vocale, scan de QR Code, ...
+    </div>
+    <div class="alert alert-success" role="alert" id="alertExportationOk" style="display:none;"> Votre projet a bien été
+        enregistré. </div>
+    <div class="alert alert-danger" role="alert" id="alertQuestionVideError" style="display:none;"> Veuillez saisir le
+        texte lié à votre jeu. </div>
+    <div class="alert alert-danger" role="alert" id="alertNombreReponseVideError" style="display:none;"> Veuillez saisir
+        un nombre de réponses correct. </div>
+    <div class="alert alert-danger" role="alert" id="alertQuestionExistError" style="display:none"> La question existe
+        déjà. </div>
+    <form id="formulaireQCM" onsubmit="return false;">
+        <div class="card-body">
+            <h6 class="card-title"></h6>
+            <ul class="nav nav-tabs">
+                <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#newProject">Exercice Reconnaissance vocale </a>
+                </li>
+            </ul>
           
-            <hr>
-            <div class="alert alert-danger" role="alert" id="messageReponseSansQuestionError" style="display:none;">Vous devez d'abord créer une question.</div>
-            <div class="alert alert-danger" role="alert" id="messageReponseVideError" style="display:none;">Veuillez ajouter le texte de votre réponse.</div>
-            <div class="alert alert-danger" role="alert" id="messageRetourVocalVideError" style="display:none;">Veuillez ajouter le texte de votre retour vocal.</div>
-            <div class="alert alert-danger" role="alert" id="messageReponseExistError" style="display:none;">Cette réponse existe déjà.</div>
-            <div class="alert alert-danger" role="alert" id="messageReponseMaxError" style="display:none;">Le maximum de réponses est atteint.</div>
-            <div class="form-group" id="zoneReponse">
-              <table>
-                <tr>
-                  <td>
-                    <label class="control-label" style="color:#28a745;padding-top:10px;">Identifiant réponse :</label>
-                  </td>
-                  <td>
-                    <div class="form-inline">
-                      <input type='text' class="form-control col-sm-11" id="newReponseText" placeholder="Saisissez l'identifiant de la réponse"/>
-                    </div>
-                  </td>
-                  <td>
-                    <div id="bonneRepCheckBox" style="margin-top:15px;"><input id="isBonneRepCheckBox" type="checkbox" /> <label for="isBonneRepCheckBox"><em style='color:gray'>Cochez si c'est la bonne réponse</em></label></div>
-                  </td>
-                </tr>
-                <tr>
-                  <td style='width: 115px;'>
-                    <label class="control-label" style="color:#28a745;padding-top:10px;">Retour vocal :</label>
-                  </td>
-                  <td>
-                    <div class="form-inline">
-                      <input type='text' class="form-control col-sm-11" id="newReponseVocalText" placeholder="Saisissez la réponse vocale" maxlength="49"/>
-                    </div>
-                  </td>
-                  <td>
-                    <button id="addNewRep" type="button" class="btn btn-outline-success" style="margin-left:50px;margin-bottom:15px;">Ajouter réponse</button>
-                  </td>
-                </tr>
+            <div class="tab-content scrollbar-success" style="height:600px; overflow-y: scroll; margin-top:15px;">
+                <div id="newProject" class="tab-pane fade in active show" role="tabpanel">
+                  <div class="container-fluid">
+                    <div class="row">
+                      <div class="col-lg-6 form-inline">
+                        <label class="control-label" style="color:#28a745;padding-right:32px;">Question :
+                            </label>
+                            <input type="text" class="form-control input-lg" style="width:450px;"  id="projectId" cols="10" name="nomprojet"
+                                placeholder="Quelle est Votre Question" onkeyup="activerSave();" />
+                      </div>
 
-              </table>
-            </div>
-            <hr>
-            <div id="questionsDivLabelsId" class="form-group">
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <div class="card-footer form-inline">
-      <div class="card col-md-auto "  >
-        <button type="reset" style="margin-top:10px" class="btn btn-outline-success btn-unique-xl" onclick="deleteQuestion()">
-          <i class="fa fa-undo"></i>&nbsp;&nbsp;Réinitialiser
-        </button>
-      </div>
-      <div class="card col-md-auto">
-        <button type="button" class="btn btn-outline-success btn-unique-xl " id="importProjectBtnId">
-          <i class="fa fa-upload"></i>&nbsp;&nbsp;Importer un projet existant
-        </button>
-        <button type="button" style="margin-top:10px" class="btn btn-outline-success btn-unique-xl" id="saveQRCode" disabled>
-          <i class="fa fa-download"></i>&nbsp;&nbsp;Exporter
-        </button>
-      </div>
+                      <div class="col-lg-5">
+                        <br>
+                          <div class="form-group form-inline">
+                            
+                            <input type="checkbox" form="label2" name="" class="form-control">
+                              <label id="label2" class="ml-2">Utiliser la lettre de la question comme réponse</label>
+                            </div>
+                        </div>
+                               </div>
+                               <br>
+                              <div class="form-row">
+                                <div class="form-group col-md-1">
+                               <label></label>
+                               </div>
+                                <div class="form-group col-md-3">
+                               <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bonne(s) réponse(s)</label>
+                               </div>
+                               <div class="form-group col-md-4">
+                               <label></label>
+                               </div>
+                               <div class="form-group col-md-4">
+                               <label></label>
+                               </div>
+                              </div>
+                              <div id="repContainer">
+                              </div>
+                              <div class="form-group col-md-6">
+                                  <label style="color:#a5b2af;">Ajouter une réponse</label>
+                                  <button id="ajouterQuestion" type="button"
+                                    class="btn btn-outline-success align-self-center" style="color:#a5b2af;" name="ajouterQuestion">
+                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                  </button>
+                                </div>
 
-    </div>
-  </form>
+                               <form>
+                                <br>
+                                <br>
+                              <div class="form-group row">
+                                <label for="inputEmail3" class="col-sm-4 col-form-label">Message de bonne réponse :</label>
+                                <div class="col-sm-8">
+                                  <input type="text" class="form-control" id="inputEmail3" placeholder="Bonne">
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                 <label for="inputEmail3" class="col-sm-4 col-form-label">Message de mauvaise réponse :</label>
+                                <div class="col-sm-8">
+                                  <input type="text" class="form-control" id="inputEmail3" placeholder="Mauvaise">
+                                </div>
+                              </div>
+                            </form>
+                            </div>
+                        </div>
+                       </div>
+                    </div>
+                          <div class="card-footer form-inline">
+                            <div class="card col-md-auto ">
+                                                      
+                                  <button style="margin-top:10px" type="reset" class="btn btn-outline-success" id="annuler"><i class="fa fa-undo"></i>&nbsp;&nbsp;Réinitialiser</button>
+                             </div>
+                     <div class="card col-md-auto">
+                          <button  type="button" class="btn btn-outline-success " id="saveQRCode" disabled>
+                                   <i class="fa fa-download"></i>&nbsp;&nbsp;Exporter
+                                 </button>
+                               <button type="submit" style="margin-top:10px" class="btn btn-outline-success " id="preview" disabled >
+                               <i class="fa fa-cogs"></i>&nbsp;&nbsp; Générer
+                          </button>
+                             </div>
+                           </div>
+    </form>
 </div>
 <!--/.Panel-->
 
 <!--Panel -> zone pour afficher le QrCode produit -->
 <div class="col-sm-4 card" id="qr-zone">
-  <script>
-    $("#qr-zone").load("Views/QR-zone.html");
-  </script>
+    <script>
+        $("#qr-zone").load("Views/QR-zone.html");
+    </script>
 </div>
