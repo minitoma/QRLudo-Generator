@@ -16,6 +16,9 @@ $().ready(function() {
     $("#charger-page").load(path.join(__dirname, "Views/quesRep.html"), loadDefaultColor);
   });
   $("#qcm-html").click(function() {
+    $("#charger-page").load(path.join(__dirname, "Views/qcm.html"), loadDefaultColor);
+  })
+  $("#rec-vocale-html").click(function() {
     $("#charger-page").load(path.join(__dirname, "Views/recVocal.html"), loadDefaultColor);
   })
   $("#info-html").click(function() {
