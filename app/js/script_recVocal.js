@@ -51,3 +51,29 @@ $(function() {
 })*/
 
 
+$(document).ready(function() {
+  $('div.info-content').css('display', 'none');
+
+  $("a.nav-link").click(e => {
+    e.preventDefault();
+    let element = e.target;
+    let tab = $(element).attr('href');
+
+    $('a').attr('class', 'nav-item nav-link');
+    $('div.tab-pane').attr('class', 'tab-pane');
+
+    $(element).addClass('active');
+    $(tab).addClass('active');
+  });
+
+  $('.tab-content').find('a').click(e => {
+    let href = $(e.target).attr('href');
+    let display = $(href).css('display');
+
+    if (display == 'block')
+      $(href).fadeOut();
+    else
+      $(href).fadeIn();
+  });
+
+});

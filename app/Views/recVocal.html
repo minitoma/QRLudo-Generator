@@ -19,12 +19,16 @@
     <form id="formulaireQCM" onsubmit="return false;">
         <div class="card-body">
             <h6 class="card-title"></h6>
+            <nav class="nav nav-tabs">
             <ul class="nav nav-tabs">
                 <li class="nav-item">
-                    <a class="nav-link active" data-toggle="tab" href="#newProject">Exercice Reconnaissance vocale </a>
-                </li>
+                    <a class="nav-link active" data-toggle="tab" href="#onglet-RecVocal">Exercice Reconnaissance vocale </a>  </li>
+                    <li class="nav-item">
+                    <a class="nav-link active" data-toggle="tab" href="#onglet-QuesOuverte">Question Ouverte </a></li>  
             </ul>
-          
+          </nav>
+          <div class="tab-content">
+          <!--<div class="tab-pane" id="onglet-RecVocal">
             <div class="tab-content scrollbar-success" style="height:600px; overflow-y: scroll; margin-top:15px;">
                 <div id="newProject" class="tab-pane fade in active show" role="tabpanel">
                   <div class="container-fluid">
@@ -89,7 +93,104 @@
                             </div>
                         </div>
                        </div>
+                    </div>-->
+                          <div class="tab-pane" id="onglet-RecVocal">
+                       <div id="newProject" class="tab-pane fade in active show" role="tabpanel">
+                  <div class="container-fluid">
+                    <div class="row">
+                      <div class="col-lg-6 form-inline">
+                        <label class="control-label" style="color:#28a745;padding-right:32px;">Question :
+                            </label>
+                            <input type="text" class="form-control input-lg" style="width:450px;"  id="projectId" cols="10" name="nomprojet"
+                                placeholder="Quelle est Votre Question" onkeyup="activerSave();" />
+                      </div>
+
+                      <div class="col-lg-5">
+                        <br>
+                          <div class="form-group form-inline">
+                            
+                            <input type="checkbox" form="label2" name="" class="form-control">
+                              <label id="label2" class="ml-2">Utiliser la lettre de la question comme réponse</label>
+                            </div>
+                        </div>
+                               </div>
+                               <br>
+                              <div class="form-row">
+                                <div class="form-group col-md-1">
+                               <label></label>
+                               </div>
+                                <div class="form-group col-md-3">
+                               <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bonne(s) réponse(s)</label>
+                               </div>
+                               <div class="form-group col-md-4">
+                               <label></label>
+                               </div>
+                               <div class="form-group col-md-4">
+                               <label></label>
+                               </div>
+                              </div>
+                              <div id="repContainer">
+                              </div>
+                              <div class="form-group col-md-6">
+                                  <label style="color:#a5b2af;">Ajouter une réponse</label>
+                                  <button id="ajouterQuestion" type="button"
+                                    class="btn btn-outline-success align-self-center" style="color:#a5b2af;" name="ajouterQuestion">
+                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                  </button>
+                                </div>
+
+                               <form>
+                                <br>
+                                <br>
+                              <div class="form-group row">
+                                <label for="inputEmail3" class="col-sm-4 col-form-label">Message de bonne réponse :</label>
+                                <div class="col-sm-8">
+                                  <input type="text" class="form-control" id="inputEmail3" placeholder="Bonne">
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                 <label for="inputEmail3" class="col-sm-4 col-form-label">Message de mauvaise réponse :</label>
+                                <div class="col-sm-8">
+                                  <input type="text" class="form-control" id="inputEmail3" placeholder="Mauvaise">
+                                </div>
+                              </div>
+                            </form>
+                            </div>
+                        </div>
                     </div>
+                    <div class="tab-pane" id="onglet-QuesOuverte">
+                     <form>
+                      <br>
+                       <div class="form-group row">
+                                <label for="inputEmail3" class="col-sm-4 col-form-label">Question :</label>
+                                <div class="col-sm-8">
+                                  <input type="text" class="form-control" id="inputEmail3" style="height: 70px;">
+                                </div>
+                              </div>
+                      <br>
+                       <div class="form-group row">
+                                <label for="inputEmail3" class="col-sm-4 col-form-label">Bonne réponse :</label>
+                                <div class="col-sm-8">
+                                  <input type="text" class="form-control" id="inputEmail3">
+                                </div>
+                              </div>
+                      <br>
+                         <div class="form-group row">
+                                <label for="inputEmail3" class="col-sm-4 col-form-label">Message de bonne réponse :</label>
+                                <div class="col-sm-8">
+                                  <input type="text" class="form-control" id="inputEmail3" placeholder="Bravo !">
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                 <label for="inputEmail3" class="col-sm-4 col-form-label">Message de mauvaise réponse :</label>
+                                <div class="col-sm-8">
+                                  <input type="text" class="form-control" id="inputEmail3" placeholder="Dommage !">
+                                </div>
+                              </div>
+                            </form>
+                    </div>
+                  </div>
+                </div>
                           <div class="card-footer form-inline">
                             <div class="card col-md-auto ">
                                                       
@@ -114,3 +215,6 @@
         $("#qr-zone").load("Views/QR-zone.html");
     </script>
 </div>
+
+
+
