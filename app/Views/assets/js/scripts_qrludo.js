@@ -15,19 +15,22 @@ $().ready(function() {
   $("#quesRep-html").click(function() {
     $("#charger-page").load(path.join(__dirname, "Views/quesRep.html"), loadDefaultColor);
   });
-  $("#qcm-html").click(function() {
-    $("#charger-page").load(path.join(__dirname, "Views/qcm.html"), loadDefaultColor);
-  })
   $("#rec-vocale-html").click(function() {
     $("#charger-page").load(path.join(__dirname, "Views/recVocal.html"), loadDefaultColor);
-  })
-  $("#info-html").click(function() {
-    $("#charger-page").load(path.join(__dirname, "Views/info.html"));
   });
-
+  $("#serious-html").click(function() {
+    $("#charger-page").load(path.join(__dirname, "Views/serious-game.html"), loadDefaultColor); 
+  });
+  $("#qcm-html").click(function() {
+    $("#charger-page").load(path.join(__dirname, "Views/qcm.html"), loadDefaultColor);
+  });
   $("#parametres").click(function(){
     $("#charger-page").load(path.join(__dirname, "Views/parametres.html"));
-  })
+  });
+  $("#infos").click(function(){
+    $("#charger-page").load(path.join(__dirname, "Views/info.html"));
+  });
+  
 
 
   //l'element du menu courant -> class="... active"
