@@ -500,4 +500,13 @@ input[type="color"]::-webkit-color-swatch {
     height: 250px;
   }
 }
+
+#containerEnigme {
+  counter-reset: section;
+}
+
+.count:after {
+  counter-increment: section;
+  content: counter(section);
+}
 /*end info*/

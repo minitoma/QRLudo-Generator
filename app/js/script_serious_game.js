@@ -99,7 +99,7 @@ $(document).ready(function () {
     }
     //ipcRenderer.send('showInfoWindow', null);
   });
-});  
+});
 
 function activerSave() {
   console.log("Activer Save");
@@ -153,69 +153,83 @@ $('#importProjectBtnId').click(function () {
   $("#saveQRCode").attr('disabled', false);
 });
 
-
-let compteurQuestion = 0
-
-let indexQuestion = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16"];
-
-$("#ajouterQuestion").click(function () {
-
-  if (compteurQuestion < 15) {
-    let reponse = document.createElement('div');
-    reponse.innerHTML = `<div class="form-row">
-                            <div class="form-group col-md-3">
-                                  <label class="control-label">Réponse `+ indexQuestion[compteurQuestion] + `</label>
-                                </div>
-                         <div class="form-group col-md-2">
-                                   <input class="form-check-input" type="checkbox" name="gridRadios" id="gridCheck`+ indexQuestion[compteurQuestion] + `" style="width:70px;" value="option"` + indexQuestion[compteurQuestion] + ` >
-                                      <label class="form-check-label" for="gridCheck`+ indexQuestion[compteurQuestion] + `">
-                            </div>
-                          <div class="form-group col-md-6">
-                                 <input type="text" class="form-control col-sm-6" id="projectId`+ indexQuestion[compteurQuestion] + `" rows="2" name="nomprojet"
-                                placeholder="Réponse" onkeyup="activerSave();" />
-                           </div>
-                            <div class="form-group col-md-1">
-                                <button id="deleteType`+ indexQuestion[compteurQuestion] + `" type="button"
-                                    class="btn btn-outline-success align-self-center" onclick=$(this).parent().parent("div").remove();>
-                                    <i class="fa fa-trash"></i></button>
-                                    </div>
-                            </div>`;
-
-    let container = $("#repContainer");
-    container.append(reponse);
-    compteurQuestion++
-  }
-});
-
-let indexEnigme = ["2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12", "13", "14", "15", "16"];
-
-let compteurEnigme = 0;
-
+//Pour ajouter autant d'énigme que souhaité
+let type = "";
+let compteurEnigme = 1;
 $("#ajouterEnigme").click(function () {
-  if (compteurEnigme < 15) {
+  if (compteurEnigme < 30) {
+    type = "enigme";
     let reponse = document.createElement('div');
     reponse.innerHTML = `<div class="form-group">
                             <div class="form-inline" class="col-sm-12">
                               <label class="control-label"
-                              style="color:#28a745;padding-top:10px;padding-right:54px;">Énigme `+ indexEnigme[compteurEnigme] + ` : </label>
-                              <input type="text" class="form-control" id="enigme`+ indexEnigme[compteurEnigme] + `" name="nombreReponse"
-                              placeholder="Détails sur l'énigme `+ indexEnigme[compteurEnigme] + `" onkeyup="activerSave();" />
+                              style="color:#28a745;padding-top:10px;padding-right:54px;">Énigme `+ compteurEnigme + ` : </label>
+                              <input type="text" class="form-control" id="enigme`+ compteurEnigme + `" name="nombreReponse"
+                              placeholder="Détails sur l'énigme `+ compteurEnigme + `" onkeyup="activerSave();" />
                               <label class="control-label" style="color:#28a745;padding-top:10px;padding-right:10px; padding-left:20px;">Type d'énigme : </label>
-                              <button type="button" id="scanQR`+ indexEnigme[compteurEnigme] + `" name="ajouterQR` + indexEnigme[compteurEnigme] + `" data-toggle="modal"
+                              <button type="button" id="scanQR`+ compteurEnigme + `" name="ajouterQR` + compteurEnigme + `" data-toggle="modal"
                                   data-target="#popupQRCode" class="btn btn-outline-success align-self-center">
                                   <i class="fa fa-qrcode"></i>&nbsp;&nbsp;QR CODE</button>&nbsp;
-                              <button id="recVocale`+ indexEnigme[compteurEnigme] + `" type="button" class="btn btn-outline-success align-self-center"
+                              <button id="recVocale`+ compteurEnigme + `" type="button" class="btn btn-outline-success align-self-center"
                                   data-toggle="modal" data-target="#popupRecVocale">
                                   <i class="fa fa-microphone"></i>&nbsp;&nbsp;Reconnaissance vocale</button>&nbsp;
-                              <button id="deleteType`+ indexEnigme[compteurEnigme] + `" type="button" onclick=$(this).parent().parent("div").remove();
-                                  class="btn btn-outline-success align-self-center">
+                              <button id="deleteEnigme`+ compteurEnigme + `" type="button" onclick="supprLigne(` + compteurEnigme +`);" class="btn btn-outline-success align-self-center">
                                   <i class="fa fa-trash"></i></button>
                               </div>
                           </div>`;
 
     let container = $("#containerEnigme");
     container.append(reponse);
-    compteurEnigme++
+    compteurEnigme++;
   }
 });
 
+//Ajouter autant de réponses que souhaité dans la popup QRCode
+let compteurQuestion = 1;
+$("#ajouterQuestion").click(function () {
+  if (compteurQuestion < 30) {
+    type = "qrcode";
+    let reponse = document.createElement('div');
+    reponse.innerHTML = `<div class="form-row">
+                            <div class="form-group col-md-3">
+                                  <label class="control-label">Réponse `+ compteurQuestion + `</label>
+                                </div>
+                         <div class="form-group col-md-2">
+                                   <input class="form-check-input" type="checkbox" name="gridRadios" id="gridCheck`+ compteurQuestion + `" style="width:70px;" value="option"` + compteurQuestion + ` >
+                                      <label class="form-check-label" for="gridCheck`+ compteurQuestion + `">
+                            </div>
+                          <div class="form-group col-md-6">
+                                 <input type="text" class="form-control col-sm-6" id="projectId`+ compteurQuestion + `" rows="2" name="nomprojet"
+                                placeholder="Réponse" onkeyup="activerSave();" />
+                           </div>
+                            <div class="form-group col-md-1">
+                                <button id="deleteQRCode`+ compteurQuestion + `" type="button"
+                                    class="btn btn-outline-success align-self-center" onclick="supprLigne(` + compteurQuestion +`);">
+                                    <i class="fa fa-trash"></i></button>
+                                    </div>
+                            </div>`;
+
+    let container = $("#repContainer");
+    container.append(reponse);
+    compteurQuestion++;
+  }
+});
+
+//Pour supprimer une énigme ou bien une réponse des QRCode
+function supprLigne(idLigne) {
+  if (type == "enigme") {
+    $("body").delegate("#deleteEnigme" + idLigne, 'click', function () {
+      $(this).parent().parent("div").remove();
+      if(compteurEnigme > 2){
+        compteurEnigme--;
+      }
+    });
+  } else if (type == "qrcode") {
+    $("body").delegate("#deleteQRCode" + idLigne, 'click', function () {
+      $(this).parent().parent("div").remove();
+      if(compteurQuestion > 2){
+        compteurQuestion--;
+      }
+    });
+  }
+}

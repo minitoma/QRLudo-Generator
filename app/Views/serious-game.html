@@ -40,7 +40,7 @@
                             <div class="form-inline">
                                 <label class="control-label"
                                     style="color:#28a745;padding-top:10px;padding-right:27px;">Introduction : </label>
-                                <textarea rows="4" cols="55"></textarea>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <textarea rows="4" cols="45"></textarea>&nbsp;&nbsp;&nbsp;&nbsp;
                                 <button type="button" id="addAudio1" class="btn btn-outline-success btn-unique-xl  "
                                     name="ajouterSon" data-toggle="modal" data-target="#listeMusic">
                                     <i class="fa fa-music"></i>&nbsp;&nbsp;Audio
@@ -49,26 +49,6 @@
                         </div>
 
                         <div id="containerEnigme">
-                            <div class="form-group">
-                                <div class="form-inline" class="col-sm-12">
-                                    <label class="control-label"
-                                        style="color:#28a745;padding-top:10px;padding-right:54px;">Énigme 1 :
-                                    </label>
-                                    <input type="text" class="form-control" id="enigme1" name="nombreReponse"
-                                        placeholder="Détails sur l'énigme 1" onkeyup="activerSave();" />
-                                    <label class="control-label"
-                                        style="color:#28a745;padding-top:10px;padding-right:10px; padding-left:20px;">Type
-                                        d'énigme : </label>
-                                    <button type="button" id="scanQR1" name="ajouterQR1" data-toggle="modal"
-                                        data-target="#popupQRCode" class="btn btn-outline-success align-self-center">
-                                        <i class="fa fa-qrcode"></i>&nbsp;&nbsp;QR CODE</button>&nbsp;
-                                    <button id="recVocale1" type="button"
-                                        class="btn btn-outline-success align-self-center" data-toggle="modal"
-                                        data-target="#popupRecVocale">
-                                        <i class="fa fa-microphone"></i>&nbsp;&nbsp;Reconnaissance
-                                        vocale</button>&nbsp;
-                                </div>
-                            </div>
                         </div>
 
                         <div class="form-group">
@@ -83,7 +63,7 @@
                             <div class="form-inline">
                                 <label class="control-label"
                                     style="color:#28a745;padding-top:10px;padding-right:100px;">Fin : </label>
-                                <textarea rows="4" cols="55"></textarea>
+                                <textarea rows="4" cols="45"></textarea>
                                 &nbsp;&nbsp;&nbsp;&nbsp;
                                 <button type="button" id="addAudio1" class="btn btn-outline-success btn-unique-xl  "
                                     name="ajouterSon" data-toggle="modal" data-target="#listeMusic">
@@ -100,6 +80,10 @@
         </div>
         <div class="card-footer form-inline">
             <div class="card col-md-auto ">
+                <button type="submit" style="margin-top:10px" class="btn btn-outline-success btn-unique-xl"
+                    id="generateSG">
+                    <i class="fa fa-cogs"></i>&nbsp;&nbsp;Générer
+                </button>
                 <button type="reset" style="margin-top:10px" class="btn btn-outline-success btn-unique-xl"
                     onclick="deleteGame()">
                     <i class="fa fa-undo"></i>&nbsp;&nbsp;Réinitialiser
@@ -125,7 +109,7 @@
     <div class="modal-dialog modal-lg modal-dialog-centered" role="dialog" style="max-width: 50% !important">
         <div class="modal-content" style="padding: 20px;">
             <div class="modal-header">
-                <h5 class="modal-title" id="exampleModalCenterTitle">Reconnaissance Vocale</h5>
+                <h5 class="modal-title" id="exampleModalCenterTitle">QR Code</h5>
                 <button type="button" class="close" id="closeModalQRCode" data-dismiss="modal" aria-label="Close">
                     <span aria-hidden="true">&times;</span>
                 </button>
@@ -154,7 +138,7 @@
                         <label class="form-check-label" for="gridCheck1">
                     </div>
                     <div class="form-group col-md-6">
-                        <input type="text" class="form-control col-sm-6" id="projectId" rows="2" name="nomprojet"
+                        <input type="text" class="form-control col-sm-6" id="QRCodeID" rows="2" name="nomprojet"
                             placeholder="Reponse" onkeyup="activerSave();" />
                     </div>
                 </div>
@@ -214,38 +198,40 @@
 
 <!-- Modal Popup Fichier audio -->
 <div class="modal fade" id="listeMusic" tabindex="-1" role="dialog" data-backdrop="static"
-  aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-keyboard="false">
-  <div class="modal-dialog modal-dialog-centered" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="exampleModalCenterTitle">Ajouter un fichier audio</h5>
-        <button type="button" class="close" id="closeModalListeMusic" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-
-      <div class="modal-body scrollbar-success">
-        <div class="list-group" id="elementsAudio">
-          <div class="form-group">
-
-            <label class="col-sm-12 control-label" style="color:#28a745;padding-top:10px;">Veuillez copier et coller le
-              lien téléchargeable du fichier audio</label>
-            <div class="col-sm-12">
-              <input type="text" id="musicUrl" name="musicUrl" class="form-control" onpaste="getMusicFromUrl()">
+    aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-keyboard="false">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Ajouter un fichier audio</h5>
+                <button type="button" class="close" id="closeModalListeMusic" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
             </div>
-            <br>
-            <button type="button" class="btn btn-outline-success" id="showInfo" title="Afficher aide">
-              <i class="fa fa-info-circle"></i>
-            </button>
 
-          </div>
-        </div>
-      </div>
-      <!-- <div class="modal-footer">
+            <div class="modal-body scrollbar-success">
+                <div class="list-group" id="elementsAudio">
+                    <div class="form-group">
+
+                        <label class="col-sm-12 control-label" style="color:#28a745;padding-top:10px;">Veuillez copier
+                            et coller le
+                            lien téléchargeable du fichier audio</label>
+                        <div class="col-sm-12">
+                            <input type="text" id="musicUrl" name="musicUrl" class="form-control"
+                                onpaste="getMusicFromUrl()">
+                        </div>
+                        <br>
+                        <button type="button" class="btn btn-outline-success" id="showInfo" title="Afficher aide">
+                            <i class="fa fa-info-circle"></i>
+                        </button>
+
+                    </div>
+                </div>
+            </div>
+            <!-- <div class="modal-footer">
         <button type="button" class="btn btn-outline-success" id="addMusic">Valider</button>
       </div> -->
+        </div>
     </div>
-  </div>
 </div>
 <!-- Fin Modal Popup Fichier Audio -->
 
@@ -255,6 +241,6 @@
         $("#qr-zone").load("Views/QR-zone.html");
     </script>
 </div>
-
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.10.2/jquery.min.js"></script>
 <script type="text/javascript" src="./js/script_serious_game.js"></script>
 <link rel="stylesheet" href="./assets/css/qrludo.css">
