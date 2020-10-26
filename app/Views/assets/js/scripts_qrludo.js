@@ -15,11 +15,14 @@ $().ready(function() {
   $("#quesRep-html").click(function() {
     $("#charger-page").load(path.join(__dirname, "Views/quesRep.html"), loadDefaultColor);
   });
-  $("#qcm-html").click(function() {
-    $("#charger-page").load(path.join(__dirname, "Views/qcm.html"), loadDefaultColor);
+  $("#rec-vocale-html").click(function() {
+    $("#charger-page").load(path.join(__dirname, "Views/recVocal.html"), loadDefaultColor);
   });
   $("#serious-html").click(function() {
-    $("#charger-page").load(path.join(__dirname, "Views/serious-game.html"), loadDefaultColor);
+    $("#charger-page").load(path.join(__dirname, "Views/serious-game.html"), loadDefaultColor); 
+  });
+  $("#qcm-html").click(function() {
+    $("#charger-page").load(path.join(__dirname, "Views/qcm.html"), loadDefaultColor);
   });
   $("#parametres").click(function(){
     $("#charger-page").load(path.join(__dirname, "Views/parametres.html"));
