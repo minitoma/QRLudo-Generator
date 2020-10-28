@@ -154,14 +154,15 @@ $('#importProjectBtnId').click(function () {
 });
 
 //Pour ajouter autant d'énigme que souhaité
-let type = "";
-let compteurEnigme = 1;
+var type = "";
+var compteurEnigme = 0;
 $("#ajouterEnigme").click(function () {
+  compteurEnigme++;
   if (compteurEnigme < 30) {
     type = "enigme";
     let reponse = document.createElement('div');
     reponse.innerHTML = `<div class="form-group">
-                            <div class="form-inline" class="col-sm-12">
+                            <div class="form-inline" class="col-sm-12" id="divEnigme` + compteurEnigme + `">
                               <label class="control-label"
                               style="color:#28a745;padding-top:10px;padding-right:54px;">Énigme `+ compteurEnigme + ` : </label>
                               <input type="text" class="form-control" id="enigme`+ compteurEnigme + `" name="nombreReponse"
@@ -180,17 +181,17 @@ $("#ajouterEnigme").click(function () {
 
     let container = $("#containerEnigme");
     container.append(reponse);
-    compteurEnigme++;
   }
 });
 
 //Ajouter autant de réponses que souhaité dans la popup QRCode
-let compteurQuestion = 1;
+var compteurQuestion = 0;
 $("#ajouterQuestion").click(function () {
+  compteurQuestion++;
   if (compteurQuestion < 30) {
     type = "qrcode";
     let reponse = document.createElement('div');
-    reponse.innerHTML = `<div class="form-row">
+    reponse.innerHTML = `<div class="form-row" id="divQuestion` + compteurQuestion + `">
                             <div class="form-group col-md-3">
                                   <label class="control-label">Réponse `+ compteurQuestion + `</label>
                                 </div>
@@ -211,24 +212,44 @@ $("#ajouterQuestion").click(function () {
 
     let container = $("#repContainer");
     container.append(reponse);
-    compteurQuestion++;
   }
 });
 
 //Pour supprimer une énigme ou bien une réponse des QRCode
 function supprLigne(idLigne) {
   if (type == "enigme") {
-    $("body").delegate("#deleteEnigme" + idLigne, 'click', function () {
-      $(this).parent().parent("div").remove();
-      if(compteurEnigme > 2){
-        compteurEnigme--;
+    compteurEnigme--;
+    $("#divEnigme" + idLigne).on('click', function() {
+      $(this).remove();
+      for (let cpt = idLigne; cpt <= compteurEnigme; cpt++) {
+        let id = cpt+1;
+        let div = $("#divEnigme" + id)[0];
+        div.getElementsByTagName("label")[0].innerHTML = "Énigme " + cpt;
+        div.getElementsByTagName("input")[0].id = "enigme" + cpt;
+        div.getElementsByTagName("input")[0].placeholder = "Détails sur l'énigme " + cpt;
+        let boutons = div.getElementsByTagName("button");
+        boutons[0].id = "scanQR" + cpt;
+        boutons[0].name = "ajouterQR" + cpt;
+        boutons[1].id = "recVocale" + cpt;
+        boutons[2].id = "deleteEnigme" + cpt;
+        boutons[2].setAttribute("onclick", "supprLigne(" + cpt +")");
+        div.id = "divEnigme" + cpt;
       }
     });
   } else if (type == "qrcode") {
-    $("body").delegate("#deleteQRCode" + idLigne, 'click', function () {
-      $(this).parent().parent("div").remove();
-      if(compteurQuestion > 2){
-        compteurQuestion--;
+    compteurQuestion--;
+    $("#divQuestion" + idLigne).on('click', function() {
+      $(this).remove();
+      for(let cpt = idLigne; cpt <= compteurQuestion; cpt++) {
+        let id = cpt+1;
+        let div = $("#divQuestion" + id)[0].getElementsByTagName("div");
+        div[0].getElementsByTagName("label")[0].innerHTML = "Réponse " + cpt;
+        div[1].getElementsByTagName("input")[0].id = "gridCheck" + cpt;
+        div[1].getElementsByTagName("label")[0].for = "gridCheck" + cpt;
+        div[2].getElementsByTagName("input")[0].id = "projectId" + cpt;
+        div[3].getElementsByTagName("button")[0].id = "deleteQRCode" + cpt;
+        div[3].getElementsByTagName("button")[0].setAttribute("onclick", "supprLigne(" + cpt +")");
+        $("#divQuestion" + id)[0].id = "divQuestion" + cpt;
       }
     });
   }
