@@ -174,7 +174,7 @@ $("#ajouterEnigme").click(function () {
                               <button id="recVocale`+ compteurEnigme + `" type="button" class="btn btn-outline-success align-self-center"
                                   data-toggle="modal" data-target="#popupRecVocale">
                                   <i class="fa fa-microphone"></i>&nbsp;&nbsp;Reconnaissance vocale</button>&nbsp;
-                              <button id="deleteEnigme`+ compteurEnigme + `" type="button" onclick="supprLigne(` + compteurEnigme +`);" class="btn btn-outline-success align-self-center">
+                              <button id="deleteEnigme`+ compteurEnigme + `" type="button" onclick="supprLigne(` + compteurEnigme + ",\'" + type + `\');" class="btn btn-outline-success align-self-center">
                                   <i class="fa fa-trash"></i></button>
                               </div>
                           </div>`;
@@ -193,7 +193,7 @@ $("#ajouterQuestion").click(function () {
     let reponse = document.createElement('div');
     reponse.innerHTML = `<div class="form-row" id="divQuestion` + compteurQuestion + `">
                             <div class="form-group col-md-3">
-                                  <label class="control-label">Réponse `+ compteurQuestion + `</label>
+                                  <label class="control-label">Réponse `+ compteurQuestion + ` :</label>
                                 </div>
                          <div class="form-group col-md-2">
                                    <input class="form-check-input" type="checkbox" name="gridRadios" id="gridCheck`+ compteurQuestion + `" style="width:70px;" value="option"` + compteurQuestion + ` >
@@ -205,7 +205,7 @@ $("#ajouterQuestion").click(function () {
                            </div>
                             <div class="form-group col-md-1">
                                 <button id="deleteQRCode`+ compteurQuestion + `" type="button"
-                                    class="btn btn-outline-success align-self-center" onclick="supprLigne(` + compteurQuestion +`);">
+                                    class="btn btn-outline-success align-self-center" onclick="supprLigne(` + compteurQuestion + ",\'" + type + `\');">
                                     <i class="fa fa-trash"></i></button>
                                     </div>
                             </div>`;
@@ -216,15 +216,15 @@ $("#ajouterQuestion").click(function () {
 });
 
 //Pour supprimer une énigme ou bien une réponse des QRCode
-function supprLigne(idLigne) {
-  if (type == "enigme") {
+function supprLigne(idLigne, element) {
+  if (element == "enigme") {
     compteurEnigme--;
     $("#divEnigme" + idLigne).on('click', function() {
       $(this).remove();
       for (let cpt = idLigne; cpt <= compteurEnigme; cpt++) {
         let id = cpt+1;
         let div = $("#divEnigme" + id)[0];
-        div.getElementsByTagName("label")[0].innerHTML = "Énigme " + cpt;
+        div.getElementsByTagName("label")[0].innerHTML = "Énigme " + cpt + " :";
         div.getElementsByTagName("input")[0].id = "enigme" + cpt;
         div.getElementsByTagName("input")[0].placeholder = "Détails sur l'énigme " + cpt;
         let boutons = div.getElementsByTagName("button");
@@ -232,23 +232,23 @@ function supprLigne(idLigne) {
         boutons[0].name = "ajouterQR" + cpt;
         boutons[1].id = "recVocale" + cpt;
         boutons[2].id = "deleteEnigme" + cpt;
-        boutons[2].setAttribute("onclick", "supprLigne(" + cpt +")");
+        boutons[2].setAttribute("onclick", "supprLigne(" + cpt + ",\'" + element + "\')");
         div.id = "divEnigme" + cpt;
       }
     });
-  } else if (type == "qrcode") {
+  } else if (element == "qrcode") {
     compteurQuestion--;
     $("#divQuestion" + idLigne).on('click', function() {
       $(this).remove();
       for(let cpt = idLigne; cpt <= compteurQuestion; cpt++) {
         let id = cpt+1;
         let div = $("#divQuestion" + id)[0].getElementsByTagName("div");
-        div[0].getElementsByTagName("label")[0].innerHTML = "Réponse " + cpt;
+        div[0].getElementsByTagName("label")[0].innerHTML = "Réponse " + cpt + " :";
         div[1].getElementsByTagName("input")[0].id = "gridCheck" + cpt;
         div[1].getElementsByTagName("label")[0].for = "gridCheck" + cpt;
         div[2].getElementsByTagName("input")[0].id = "projectId" + cpt;
         div[3].getElementsByTagName("button")[0].id = "deleteQRCode" + cpt;
-        div[3].getElementsByTagName("button")[0].setAttribute("onclick", "supprLigne(" + cpt +")");
+        div[3].getElementsByTagName("button")[0].setAttribute("onclick", "supprLigne(" + cpt + ",\'" + element +"\')");
         $("#divQuestion" + id)[0].id = "divQuestion" + cpt;
       }
     });
