@@ -188,6 +188,30 @@ class Question {
     this.qrcode.name = name;
   }
 
+  getGoodAnswer(){
+    return this.qrcode.text_bonne_reponse
+  }
+
+  setGoodAnswer(reponse){
+    this.qrcode.text_bonne_reponse = reponse
+  }
+
+  getBadAnswer(){
+    return this.qrcode.text_mauvaise_reponse
+  }
+
+  setBadAnswer(reponse){
+    this.qrcode.text_mauvaise_reponse = reponse
+  }
+
+  getMinAnswer(){
+    return this.qrcode.nb_min_reponses
+  }
+
+  setMinAnswer(minimum){
+    this.qrcode.nb_min_reponses = minimum
+  }
+
   getReponses() {
     return this.qrcode.data;
   }

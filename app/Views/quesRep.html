@@ -2,6 +2,7 @@
 <!-- contenu page QuesRep -->
 <!--Panel-->
 
+
 <div class="col-sm-12 card">
   <div class="text-center" id="textPresentation">
       Création de QR Code Exercice.<br>
@@ -86,10 +87,9 @@
                         <div id="cible">
 
                         </div>
-
                     </div>
-                    <i> Nombre de réponses : <i id="Nbbonne">0</i> </i>
                 </div>
+
             </div>
             <div id="txtZone" class="tab-pane fade in active show ">
             </div>
@@ -101,7 +101,7 @@
     <div class="card-footer form-inline">
       <div class="card col-md-auto ">
         <button  type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#dialogAjoutReponse" id= "ajoutNewReponse" disabled ><i class="fa fa-plus-square"  ></i>&nbsp;&nbsp;Ajouter réponse</button>
-        <button style="margin-top:10px" type="button" class="btn btn-outline-success" id="annuler"><i class="fa fa-undo"></i>&nbsp;&nbsp;Réinitialiser</button>
+        <button style="margin-top:10px" class="btn btn-outline-success" data-toggle="modal" id="emptyZones" data-target="#confirmation"><i class="fa fa-undo"></i>&nbsp;&nbsp;Réinitialiser</button>
       </div>
       <div class="card col-md-auto">
         <button  type="button" class="btn btn-outline-success " id="saveQRCode" disabled>
@@ -188,5 +188,80 @@
 </div>
 <!--Fin Modal-1-->
 
+
+<div class="modal" id="errorModalQuestion" role="dialog">
+  <div class="modal-dialog" role="document"><div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">Erreur</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      </div>
+      <div class="modal-body">
+        <p>Veuillez d'abord saisir une question</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="errorModalBReponse" role="dialog">
+  <div class="modal-dialog" role="document"><div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">Erreur</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      </div>
+      <div class="modal-body">
+        <p>Veuillez saisir le message de bonne réponse à la question</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="errorModalMReponse" role="dialog">
+  <div class="modal-dialog" role="document"><div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">Erreur</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      </div>
+      <div class="modal-body">
+        <p>Veuillez saisir le message de mauvaise réponse à la question</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="errorModalNombreReponse" role="dialog">
+  <div class="modal-dialog" role="document"><div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">Erreur</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      </div>
+      <div class="modal-body">
+        <p>Veuillez saisir le nombre de bonne reponse minimum</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
 <!-- Js pour la parti des question et reponse l -->
 <script src="./js/script_question_reponse.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" crossorigin="anonymous"></script>
