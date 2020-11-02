@@ -33,7 +33,7 @@ function drawQRCodeImport(qrcode) {
     $("#charger-page").load(path.join(__dirname, "Views/unique.html"), function() {
       $('input#qrColor').val(qrcode.getColor()); // restaurer la couleur du qrcode
       $('input#qrName').val(qrcode.getName()); //restaurer le nom du qrcode
-
+      
       $('#preview, #empty').attr('disabled', false);
       drawQRCodeData(qrcode);
     });
@@ -48,16 +48,23 @@ function drawQRCodeImport(qrcode) {
       $('#txtDragAndDrop').remove();
 
     });
-  } else if (qrcode.getType() == 'quesRep') {
-    $("#charger-page").load(path.join(__dirname, "Views/quesRep.html"), function() {});
+  } else if (qrcode.getType() == 'question') {
+    $("#charger-page").load(path.join(__dirname, "Views/quesRep.html"), function() {
+      $("#newQuestionText").val(qrcode.getName());
+      console.log(qrcode);
+      $("#newBonneReponseText").val(qrcode.getGoodAnswer());
+      $("#newMauvaiseReponseText").val(qrcode.getBadAnswer());
+      $("#newNbMinimalBonneReponse").val(qrcode.getMinAnswer());
+    });
   }
 }
 
 // recréer les input d'un qrcode unique
 function drawQRCodeData(qrcode) {
   let data = qrcode.getData();
-
+  
   for (var i = 0; i < data.length; i++) {
+    console.log(i);
     if (typeof data[i] === "string") {
       ajouterChampLegende(data[i]);
     } else if (typeof data[i] === "object") {
@@ -77,12 +84,19 @@ function drawQRCodeMultipleUnique(qrcode) {
     let qrJson = qrcode.getData()[i].qrcode;
     let qr = null;
 
-    if (qrJson.type == "unique")
+    if (qrJson.type == "unique"){
       qr = new QRCodeUnique(qrJson.name, qrJson.data, qrJson.color);
-    else if (qrJson.type == "xl")
+    }
+    else if (qrJson.type == "xl"){
       qr = new QRCodeXL(qrJson.name, qrJson.data, qrJson.color);
-    else if (qrJson.type == "ensemble")
-      qr = new QRCodemultipleJson(qrJson.name, qrJson.data, qrJson.color);
+    }
+    else if (qrJson.type == "ensemble"){
+      qr = new QRCodeMultipleJson(qrJson.name, qrJson.data, qrJson.color);
+    }
+    else if (qrJson.type == "question"){
+      qr = new QRCodeQuestionReponse(qrJson.name, qrJson.data, qrJson.color);
+    }
+
 
     genererLigne(qr.getName());
     controllerMultiple.setQRCodeAtomiqueInArray(qr);

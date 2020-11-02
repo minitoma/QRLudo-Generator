@@ -104,49 +104,7 @@ $(document).ready(function() {
 
   });
 
-  $("#genererQestion").click(function() {
-    $("#ajoutNewReponse").attr('disabled', false);
 
-    let question= $('#newQuestionText').val();
-    let bonneReponse = $('#newBonneReponseText').val();
-    let mauvaiseReponse = $('#newMauvaiseReponseText').val();
-    let nbMinBoneReponse = $('#newNbMinimalBonneReponse').val();
-    let qrColor = $('#qrColor').val();
-    let qrData = [];
-
-
-    //On verifie si le texte de la question n'est pas vide
-    if (question=== ""){
-      alert("Veuillez d'abord saisir une question");
-          return; // si le champ est vide on sort
-    }
-    else if (bonneReponse=== ""){
-      alert("Veuillez saisir le message de bonne réponse à la question");
-          return; // si le champ est vide on sort
-    }
-    else if (mauvaiseReponse=== ""){
-      alert("Veuillez saisir le message de mauvaise réponse à la question");
-          return; // si le champ est vide on sort
-    }
-    else if (nbMinBoneReponse=== ""){
-      alert("Veuillez saisir le nombre de bonne reponse minimum");
-          return; // si le champ est vide on sort
-    }
-    else {
-      let nouvQuestion = new Question (question,bonneReponse,mauvaiseReponse, qrData ,nbMinBoneReponse, $("#qrColor").val());
-      projet.setQuestion(nouvQuestion);
-
-      //addQuestionLine(nouvQuestion);
-      var questions = projet.getQuestion();
-
-      //affichage de la zone de question
-      $("#dropZone").show();
-
-      //on cache le bouton question
-      $("#genererQestion").hide();
-
-    }
-  });
 
   $("#emptyFields").click(function(){
     viderZone();
@@ -193,30 +151,6 @@ $(document).ready(function() {
     deleteStore('numReponse');
     numReponse = 0;
   }
-
-  /*$('button#annuler').click(e => {
-    //aficher popup quand on click sur reinitialiser
-    // cache le qr générer & desactivation du bouton exporter
-    var numReponse=0;
-    document.getElementById('Nbbonne').innerHTML = numReponse;
-    var popUpQuiter = confirm("Etes vous sûr de vouloir réinitialiser?");
-    if (popUpQuiter==true){
-      // masquage du lecteur de qr code
-      $('#qrView').hide();
-      //grissage des bouton qui etais grissé de basse
-      $('#saveQRCode').attr('disabled', true);
-      $("#ajoutNewReponse").attr('disabled', true);
-      $("#preview").attr('disabled', true);
-      //masquage de la zone bonne reponse
-      $("#dropZone").hide();
-      //reinitialisation de projet qui contient les questions
-      projet = new Projet();
-      //affichage du bouton question
-      $("#genererQestion").show();
-      viderZone();
-      store.delete(`questionQRExerixe`);
-    }
-  });*/
 });
 
 // fonction qui ajoute la ligne de la reponse sur la zone prévu a cet effet
@@ -243,6 +177,49 @@ function addReponseLine(reponse){
 }
 
    
+$("#genererQestion").click(function() {
+  $("#ajoutNewReponse").attr('disabled', false);
+
+  let question= $('#newQuestionText').val();
+  let bonneReponse = $('#newBonneReponseText').val();
+  let mauvaiseReponse = $('#newMauvaiseReponseText').val();
+  let nbMinBoneReponse = $('#newNbMinimalBonneReponse').val();
+  let qrColor = $('#qrColor').val();
+  let qrData = [];
+
+
+  //On verifie si le texte de la question n'est pas vide
+  if (question=== ""){
+    $("#errorModalQuestion").modal('show');
+        return; // si le champ est vide on sort
+  }
+  else if (bonneReponse=== ""){
+    $("#errorModalBReponse").modal('show');
+        return; // si le champ est vide on sort
+  }
+  else if (mauvaiseReponse=== ""){
+    $("#errorModalMReponse").modal('show');
+        return; // si le champ est vide on sort
+  }
+  else if (nbMinBoneReponse=== ""){ 
+    $("#errorModalNombreReponse").modal('show');
+        return; // si le champ est vide on sort
+  }
+  else {
+    let nouvQuestion = new Question (question,bonneReponse,mauvaiseReponse, qrData ,nbMinBoneReponse, $("#qrColor").val());
+    projet.setQuestion(nouvQuestion);
+
+    //addQuestionLine(nouvQuestion);
+    var questions = projet.getQuestion();
+
+    //affichage de la zone de question
+    $("#dropZone").show();
+
+    //on cache le bouton question
+    $("#genererQestion").hide();
+
+  }
+});
 
 
 
@@ -339,7 +316,7 @@ function affichageLigneParDefault() {
     e.preventDefault();
     //On verifie qu'il y a une question de créée
     if (projet.getQuestion() == null) {
-      alert ("pas de question");
+      $("#errorModalQuestion").modal('show');
       return ;
     }
     else {
