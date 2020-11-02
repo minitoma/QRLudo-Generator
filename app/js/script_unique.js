@@ -708,3 +708,10 @@ function disableButtonAddNewData() {
   $('#ajouterTexte').attr('disabled', true);
   $('#showAudio').attr('disabled', true);
 }
+
+
+//pour ouvrir la page info.html quand on clique sur le bouton info du haut
+$("#infos-unique").click(function () {
+  require('electron').remote.getGlobal('sharedObject').someProperty = 'unique'
+  $("#charger-page").load(path.join(__dirname, "Views/info.html"));
+});

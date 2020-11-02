@@ -51,7 +51,6 @@ function drawQRCodeImport(qrcode) {
   } else if (qrcode.getType() == 'question') {
     $("#charger-page").load(path.join(__dirname, "Views/quesRep.html"), function() {
       $("#newQuestionText").val(qrcode.getName());
-      console.log(qrcode);
       $("#newBonneReponseText").val(qrcode.getGoodAnswer());
       $("#newMauvaiseReponseText").val(qrcode.getBadAnswer());
       $("#newNbMinimalBonneReponse").val(qrcode.getMinAnswer());
