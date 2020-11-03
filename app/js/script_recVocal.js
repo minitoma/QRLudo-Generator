@@ -34,21 +34,6 @@ $("#ajouterQuestion").click(function(){
   }
 
 })
-/*
-$(function() {
-  var $crossButton = $('#deleteType'),
-    $content = $("#form-row");
-
-  $content.on("click", ".deleteType", function() {
-    if ($(this).is("#deleteType")) return false;
-    var $cross = $(this);
-    $(this).next().slideUp(400, function() {
-      $(this).remove();
-      $deleteType.remove();
-    });
-  });
-
-})*/
 
 
 $(document).ready(function() {
