@@ -35,6 +35,38 @@ $("#ajouterQuestion").click(function(){
 
 })
 
+// Ajouter une nouvelle Reponse une fois qu'on va clicker sur la button Ajouterreponse
+
+/*var compteurReponse = 0;
+$("#ajouterQuestion").click(function () {
+  compteurReponse++;
+  if (compteurReponse < 30) {
+    type = "qrcode";
+    let reponse = document.createElement('div');
+    reponse.innerHTML = `<div class="form-row" id="divQuestion` + compteurReponse + `">
+                            <div class="form-group col-md-3">
+                                  <label class="control-label">Réponse `+ compteurReponse + ` :</label>
+                                </div>
+                         <div class="form-group col-md-2">
+                                   <input class="form-check-input" type="checkbox" name="gridRadios" id="gridCheck`+ compteurReponse + `" style="width:70px;" value="option"` + compteurReponse + ` >
+                                      <label class="form-check-label" for="gridCheck`+ compteurReponse + `">
+                            </div>
+                          <div class="form-group col-md-6">
+                                 <input type="text" class="form-control col-sm-6" id="projectId`+ compteurReponse + `" rows="2" name="nomprojet"
+                                placeholder="Réponse" onkeyup="activerSave();" />
+                           </div>
+                            <div class="form-group col-md-1">
+                                <button id="deleteQRCode`+ compteurReponse + `" type="button"
+                                    class="btn btn-outline-success align-self-center" onclick="supprLigne(` + compteurReponse + ",\'" + type + `\');">
+                                    <i class="fa fa-trash"></i></button>
+                                    </div>
+                            </div>`;
+
+    let container = $("#repContainer");
+    container.append(reponse);
+  }
+});
+*/
 
 $(document).ready(function() {
   $('div.info-content').css('display', 'none');
