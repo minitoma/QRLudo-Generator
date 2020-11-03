@@ -1,7 +1,7 @@
 
 
 // Ajouter une nouvelle Reponse une fois qu'on va clicker sur la button Ajouterreponse
-var counter = 0
+/*var counter = 0
 
 var alphaTab = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P"]
 
@@ -34,10 +34,10 @@ $("#ajouterQuestion").click(function(){
   }
 
 })
-
+*/
 // Ajouter une nouvelle Reponse une fois qu'on va clicker sur la button Ajouterreponse
 
-/*var compteurReponse = 0;
+var compteurReponse = 0;
 $("#ajouterQuestion").click(function () {
   compteurReponse++;
   if (compteurReponse < 30) {
@@ -66,7 +66,7 @@ $("#ajouterQuestion").click(function () {
     container.append(reponse);
   }
 });
-*/
+
 
 $(document).ready(function() {
   $('div.info-content').css('display', 'none');
