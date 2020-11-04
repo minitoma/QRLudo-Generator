@@ -114,3 +114,8 @@ $(document).ready(function() {
   });
 
 });
+
+
+function myFunction() {
+  document.getElementById("formulaireQCM").reset();
+}

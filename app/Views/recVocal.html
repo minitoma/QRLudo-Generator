@@ -159,7 +159,7 @@
                         </div>
                     </div>
                     <div class="tab-pane fade in active show" id="onglet-QuesOuverte">
-                     <form>
+                     
                       <br>
                        <div class="form-group row">
                                 <label for="inputEmail3" class="col-sm-4 col-form-label">Question :</label>
@@ -187,16 +187,17 @@
                                   <input type="text" class="form-control" id="inputEmail3" placeholder="Mauvaise">
                                 </div>
                               </div>
-                            </form>
+                            
                     </div>
                   </div>
                 </div>
+              </form>
            <div class="card-footer form-inline">
         <!--<label class="btn btn-outline-success">-->
         <!--Parcourir&hellip; <input type="file" style="display: none;"> -->
         <!--</label>-->
         <div class="card col-md-auto">
-          <button style="margin-top:10px" type="reset" class="btn btn-outline-success btn-unique-xl" data-toggle="modal" id="emptyZones" data-target="#confirmation"><i class="fa fa-undo"></i>&nbsp;&nbsp;Réinitialiser</button>
+          <button style="margin-top:10px" type="reset" class="btn btn-outline-success btn-unique-xl" data-toggle="modal" onclick="myFunction()" data-target="#confirmation"><i class="fa fa-undo"></i>&nbsp;&nbsp;Réinitialiser</button>
         </div>
         <div class="card col-md-auto">
           <button type="button" class="btn btn-outline-success btn-unique-xl " id="saveQRCode" disabled><i class="fa fa-download"></i>&nbsp;&nbsp;Exporter</button>
