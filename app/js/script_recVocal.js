@@ -41,7 +41,7 @@ var compteurReponse = 0;
 $("#ajouterQuestion").click(function () {
   compteurReponse++;
   if (compteurReponse < 30) {
-    type = "qrcode";
+    type = "Rreponse";
     let reponse = document.createElement('div');
     reponse.innerHTML = `<div class="form-row" id="divQuestion` + compteurReponse + `">
                             <div class="form-group col-md-3">
@@ -69,7 +69,7 @@ $("#ajouterQuestion").click(function () {
 
 //Pour supprimer une énigme ou bien une réponse 
 function supprLigne(idLigne, element) {
-  if (element == "qrcode") {
+  if (element == "Rreponse") {
     compteurReponse--;
     $("#divQuestion" + idLigne).on('click', function() {
       $(this).remove();
