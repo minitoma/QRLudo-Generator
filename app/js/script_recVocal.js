@@ -67,6 +67,26 @@ $("#ajouterQuestion").click(function () {
   }
 });
 
+//Pour supprimer une énigme ou bien une réponse 
+function supprLigne(idLigne, element) {
+  if (element == "qrcode") {
+    compteurReponse--;
+    $("#divQuestion" + idLigne).on('click', function() {
+      $(this).remove();
+      for(let cpt = idLigne; cpt <= compteurReponse; cpt++) {
+        let id = cpt+1;
+        let div = $("#divQuestion" + id)[0].getElementsByTagName("div");
+        div[0].getElementsByTagName("label")[0].innerHTML = "Réponse " + cpt + " :";
+        div[1].getElementsByTagName("input")[0].id = "gridCheck" + cpt;
+        div[1].getElementsByTagName("label")[0].for = "gridCheck" + cpt;
+        div[2].getElementsByTagName("input")[0].id = "projectId" + cpt;
+        div[3].getElementsByTagName("button")[0].id = "deleteQRCode" + cpt;
+        div[3].getElementsByTagName("button")[0].setAttribute("onclick", "supprLigne(" + cpt + ",\'" + element +"\')");
+        $("#divQuestion" + id)[0].id = "divQuestion" + cpt;
+      }
+    });
+  }
+}
 
 $(document).ready(function() {
   $('div.info-content').css('display', 'none');
