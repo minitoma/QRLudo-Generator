@@ -37,7 +37,7 @@ $("#ajouterQuestion").click(function(){
 */
 // Ajouter une nouvelle Reponse une fois qu'on va clicker sur la button Ajouterreponse
 
-var compteurReponse = 0;
+var compteurReponse = 1;
 $("#ajouterQuestion").click(function () {
   compteurReponse++;
   if (compteurReponse < 30) {
@@ -116,6 +116,31 @@ $(document).ready(function() {
 });
 
 
-function myFunction() {
+/*function myFunction() {
   document.getElementById("formulaireQCM").reset();
+}*/
+
+function viderZone(){
+  controllerMultiple = new ControllerMultiple();
+  $('#qrName').val('');
+  $(txtZone).empty();
+  txtZone.appendChild(txtDragAndDrop);
+  $('#txtDragAndDrop').show();
+
+  //Permet la suppression des elements du store créé dans le script_multiple
+  if(store.get(`numFich`)){
+    store.delete(`numFich`);
+  }
+
+  //vérifier si un enregistrement du titre existe
+  if(store.get(`titremultiple`)){
+    store.delete(`titremultiple`);
+  }
+
+  for(var i =0; i < numFich; i++){
+    if(store.get(`fichierDrop${i}`)){
+      store.delete(`fichierDrop${i}`);
+    }
+  }
+  numFich = 0;
 }
