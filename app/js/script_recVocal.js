@@ -1,7 +1,7 @@
 
 
 // Ajouter une nouvelle Reponse une fois qu'on va clicker sur la button Ajouterreponse
-var counter = 0
+/*var counter = 0
 
 var alphaTab = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P"]
 
@@ -34,22 +34,59 @@ $("#ajouterQuestion").click(function(){
   }
 
 })
-/*
-$(function() {
-  var $crossButton = $('#deleteType'),
-    $content = $("#form-row");
+*/
+// Ajouter une nouvelle Reponse une fois qu'on va clicker sur la button Ajouterreponse
 
-  $content.on("click", ".deleteType", function() {
-    if ($(this).is("#deleteType")) return false;
-    var $cross = $(this);
-    $(this).next().slideUp(400, function() {
+var compteurReponse = 1;
+$("#ajouterQuestion").click(function () {
+  compteurReponse++;
+  if (compteurReponse < 30) {
+    type = "Rreponse";
+    let reponse = document.createElement('div');
+    reponse.innerHTML = `<div class="form-row" id="divQuestion` + compteurReponse + `">
+                            <div class="form-group col-md-3">
+                                  <label class="control-label">Réponse `+ compteurReponse + ` :</label>
+                                </div>
+                         <div class="form-group col-md-2">
+                                   <input class="form-check-input" type="checkbox" name="gridRadios" id="gridCheck`+ compteurReponse + `" style="width:70px;" value="option"` + compteurReponse + ` >
+                                      <label class="form-check-label" for="gridCheck`+ compteurReponse + `">
+                            </div>
+                          <div class="form-group col-md-6">
+                                 <input type="text" class="form-control col-sm-6" id="projectId`+ compteurReponse + `" rows="2" name="nomprojet"
+                                placeholder="Réponse" onkeyup="activerSave();" />
+                           </div>
+                            <div class="form-group col-md-1">
+                                <button id="deleteQRCode`+ compteurReponse + `" type="button"
+                                    class="btn btn-outline-success align-self-center" onclick="supprLigne(` + compteurReponse + ",\'" + type + `\');">
+                                    <i class="fa fa-trash"></i></button>
+                                    </div>
+                            </div>`;
+
+    let container = $("#repContainer");
+    container.append(reponse);
+  }
+});
+
+//Pour supprimer une énigme ou bien une réponse 
+function supprLigne(idLigne, element) {
+  if (element == "Rreponse") {
+    compteurReponse--;
+    $("#divQuestion" + idLigne).on('click', function() {
       $(this).remove();
-      $deleteType.remove();
+      for(let cpt = idLigne; cpt <= compteurReponse; cpt++) {
+        let id = cpt+1;
+        let div = $("#divQuestion" + id)[0].getElementsByTagName("div");
+        div[0].getElementsByTagName("label")[0].innerHTML = "Réponse " + cpt + " :";
+        div[1].getElementsByTagName("input")[0].id = "gridCheck" + cpt;
+        div[1].getElementsByTagName("label")[0].for = "gridCheck" + cpt;
+        div[2].getElementsByTagName("input")[0].id = "projectId" + cpt;
+        div[3].getElementsByTagName("button")[0].id = "deleteQRCode" + cpt;
+        div[3].getElementsByTagName("button")[0].setAttribute("onclick", "supprLigne(" + cpt + ",\'" + element +"\')");
+        $("#divQuestion" + id)[0].id = "divQuestion" + cpt;
+      }
     });
-  });
-
-})*/
-
+  }
+}
 
 $(document).ready(function() {
   $('div.info-content').css('display', 'none');
