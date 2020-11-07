@@ -1,3 +1,15 @@
+var audioSource = "";
+
+$("#addAudioIntro").click(function () {
+  audioSource = "intro";
+});
+$("#addAudioFin").click(function () {
+  audioSource = "fin";
+});
+$("#addAudioQRCode").click(function () {
+  audioSource = "qrcode";
+});
+
 function getMusicFromUrl() {
   let modal = $('#listeMusic').find('div.modal-body.scrollbar-success');
   let loader = document.createElement('div');
@@ -22,7 +34,7 @@ function getMusicFromUrl() {
       showError(modal, errorMsg);
     }
     xhr.responseType = 'blob';
-    xhr.onload = function(e) {
+    xhr.onload = function (e) {
 
       if (this.status == 200) {
         let blob = this.response; // get binary data as a response
@@ -37,7 +49,7 @@ function getMusicFromUrl() {
 
           // save file in folder projet/download
           let fileReader = new FileReader();
-          fileReader.onload = function() {
+          fileReader.onload = function () {
             fs.writeFileSync(`${temp}/Download/${filename}`, Buffer(new Uint8Array(this.result)));
 
             $(loader, errorMsg).remove();
@@ -55,14 +67,14 @@ function getMusicFromUrl() {
       }
     };
 
-    xhr.onloadstart = function(e) {
+    xhr.onloadstart = function (e) {
       console.log('load start');
       $(loader).addClass('loader');
       $(modal).find('.errorLoader').remove();
       $(modal).prepend(loader); // show loader when request progress
     };
 
-    xhr.onerror = function(e) {
+    xhr.onerror = function (e) {
       showError(modal, errorMsg);
     };
 
@@ -71,9 +83,20 @@ function getMusicFromUrl() {
 }
 
 function ajouterChampSon(nom, url) {
-  let textArea = document.getElementById("textAreaIntro");
-  textArea.value = nom;
-  textArea.setAttribute("readonly", "true");
+  if (audioSource == "intro") {
+    let textArea = document.getElementById("textAreaIntro");
+    textArea.value = nom;
+    textArea.setAttribute("disabled", "true");
+  } else if (audioSource == "fin") {
+    let textArea = document.getElementById("textAreaFin");
+    textArea.value = nom;
+    textArea.setAttribute("disabled", "true");
+  }
+  else if (audioSource == "qrcode") {
+    let text = document.getElementById("questQRCode");
+    text.value = nom;
+    text.setAttribute("disabled", "true");
+  }
 }
 
 function showError(modal, errorMsg, message = "Veuillez coller un lien de fichier téléchargeable. Reportez vous à la rubrique Info pour plus d'informations.") {
@@ -233,10 +256,10 @@ $("#ajouterQuestion").click(function () {
 function supprLigne(idLigne, element) {
   if (element == "enigme") {
     compteurEnigme--;
-    $("#divEnigme" + idLigne).on('click', function() {
+    $("#divEnigme" + idLigne).on('click', function () {
       $(this).remove();
       for (let cpt = idLigne; cpt <= compteurEnigme; cpt++) {
-        let id = cpt+1;
+        let id = cpt + 1;
         let div = $("#divEnigme" + id)[0];
         div.getElementsByTagName("label")[0].innerHTML = "Énigme " + cpt + " :";
         div.getElementsByTagName("input")[0].id = "enigme" + cpt;
@@ -252,17 +275,17 @@ function supprLigne(idLigne, element) {
     });
   } else if (element == "qrcode") {
     compteurQuestion--;
-    $("#divQuestion" + idLigne).on('click', function() {
+    $("#divQuestion" + idLigne).on('click', function () {
       $(this).remove();
-      for(let cpt = idLigne; cpt <= compteurQuestion; cpt++) {
-        let id = cpt+1;
+      for (let cpt = idLigne; cpt <= compteurQuestion; cpt++) {
+        let id = cpt + 1;
         let div = $("#divQuestion" + id)[0].getElementsByTagName("div");
         div[0].getElementsByTagName("label")[0].innerHTML = "Réponse " + cpt + " :";
         div[1].getElementsByTagName("input")[0].id = "gridCheck" + cpt;
         div[1].getElementsByTagName("label")[0].for = "gridCheck" + cpt;
         div[2].getElementsByTagName("input")[0].id = "projectId" + cpt;
         div[3].getElementsByTagName("button")[0].id = "deleteQRCode" + cpt;
-        div[3].getElementsByTagName("button")[0].setAttribute("onclick", "supprLigne(" + cpt + ",\'" + element +"\')");
+        div[3].getElementsByTagName("button")[0].setAttribute("onclick", "supprLigne(" + cpt + ",\'" + element + "\')");
         $("#divQuestion" + id)[0].id = "divQuestion" + cpt;
       }
     });
@@ -270,13 +293,16 @@ function supprLigne(idLigne, element) {
 }
 
 $("#deleteAudioIntro").click(function () {
-  document.getElementById('textAreaIntro').value = ""; 
+  document.getElementById('textAreaIntro').value = "";
+  $("#textAreaIntro").prop('disabled', false);
 });
 
 $("#deleteAudioFin").click(function () {
-  document.getElementById('textAreaFin').value = ""; 
+  document.getElementById('textAreaFin').value = "";
+  $("#textAreaFin").prop('disabled', false);
 });
 
 $("#deleteAudioQRCode").click(function () {
-  document.getElementById('questRecVocale').value = ""; 
+  document.getElementById('questQRCode').value = "";
+  $("#questQRCode").prop('disabled', false);
 });
