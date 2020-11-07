@@ -3,7 +3,6 @@ function getMusicFromUrl() {
   let loader = document.createElement('div');
   let errorMsg = document.createElement('label');
 
-
   const {
     clipboard
   } = require('electron');
@@ -23,7 +22,7 @@ function getMusicFromUrl() {
       showError(modal, errorMsg);
     }
     xhr.responseType = 'blob';
-    xhr.onload = function (e) {
+    xhr.onload = function(e) {
 
       if (this.status == 200) {
         let blob = this.response; // get binary data as a response
@@ -38,7 +37,7 @@ function getMusicFromUrl() {
 
           // save file in folder projet/download
           let fileReader = new FileReader();
-          fileReader.onload = function () {
+          fileReader.onload = function() {
             fs.writeFileSync(`${temp}/Download/${filename}`, Buffer(new Uint8Array(this.result)));
 
             $(loader, errorMsg).remove();
@@ -48,7 +47,7 @@ function getMusicFromUrl() {
 
           ajouterChampSon(filename, link);
         } else {
-          showError(modal, errorMsg, "Le fichier n'est pas un fichier audio.");
+          showError(modal, errorMsg, "Le fichier n'est pas un fichier audio");
         }
       } else {
         // request failed
@@ -56,19 +55,34 @@ function getMusicFromUrl() {
       }
     };
 
-    xhr.onloadstart = function (e) {
+    xhr.onloadstart = function(e) {
       console.log('load start');
       $(loader).addClass('loader');
       $(modal).find('.errorLoader').remove();
       $(modal).prepend(loader); // show loader when request progress
     };
 
-    xhr.onerror = function (e) {
+    xhr.onerror = function(e) {
       showError(modal, errorMsg);
     };
 
     xhr.send();
   });
+}
+
+function ajouterChampSon(nom, url) {
+  let textArea = document.getElementById("textAreaIntro");
+  textArea.value = nom;
+  textArea.setAttribute("readonly", "true");
+}
+
+function showError(modal, errorMsg, message = "Veuillez coller un lien de fichier téléchargeable. Reportez vous à la rubrique Info pour plus d'informations.") {
+  console.log('error ');
+  $(modal).find('.loader').remove();
+  $(errorMsg).text(message);
+  $(errorMsg).css('color', '#f35b6a');
+  $(errorMsg).addClass('errorLoader');
+  $(modal).prepend(errorMsg); // add error message
 }
 
 $(document).ready(function () {
@@ -254,3 +268,15 @@ function supprLigne(idLigne, element) {
     });
   }
 }
+
+$("#deleteAudioIntro").click(function () {
+  document.getElementById('textAreaIntro').value = ""; 
+});
+
+$("#deleteAudioFin").click(function () {
+  document.getElementById('textAreaFin').value = ""; 
+});
+
+$("#deleteAudioQRCode").click(function () {
+  document.getElementById('questRecVocale').value = ""; 
+});
