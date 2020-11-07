@@ -37,7 +37,7 @@ $("#ajouterQuestion").click(function(){
 */
 // Ajouter une nouvelle Reponse une fois qu'on va clicker sur la button Ajouterreponse
 
-var compteurReponse = 0;
+var compteurReponse = 1;
 $("#ajouterQuestion").click(function () {
   compteurReponse++;
   if (compteurReponse < 30) {
