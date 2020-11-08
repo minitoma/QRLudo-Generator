@@ -52,8 +52,8 @@ $("#ajouterQuestion").click(function () {
                                       <label class="form-check-label" for="gridCheck`+ compteurReponse + `">
                             </div>
                           <div class="form-group col-md-6">
-                                 <input type="text" class="form-control col-sm-6" id="projectId`+ compteurReponse + `" rows="2" name="nomprojet"
-                                placeholder="Réponse" onkeyup="activerSave();" />
+                                 <input type="text" class="form-control col-sm-6" id="reponse`+ compteurReponse + `" rows="2" name="nomprojet"
+                                placeholder="Réponse" />
                            </div>
                             <div class="form-group col-md-1">
                                 <button id="deleteQRCode`+ compteurReponse + `" type="button"
@@ -115,32 +115,52 @@ $(document).ready(function() {
 
 });
 
+//script 
+$("#emptyFields").click(function(){
+    viderChamps();
+  })
+
 
 /*function myFunction() {
   document.getElementById("formulaireQCM").reset();
 }*/
 
-function viderZone(){
+/*function viderZone(){
   controllerMultiple = new ControllerMultiple();
-  $('#qrName').val('');
-  $(txtZone).empty();
-  txtZone.appendChild(txtDragAndDrop);
-  $('#txtDragAndDrop').show();
+  $('#Question').val('');
+  $('#Bonnereponse').val('');
+  $('#MessageBonnereponse').val('');
+  $('#MessageMauvaisereponse').val('');
+  console.log("zaki");
 
-  //Permet la suppression des elements du store créé dans le script_multiple
-  if(store.get(`numFich`)){
-    store.delete(`numFich`);
-  }
+}*/
 
-  //vérifier si un enregistrement du titre existe
-  if(store.get(`titremultiple`)){
-    store.delete(`titremultiple`);
+function viderChamps(){
+  document.getElementById("Question").value="";
+  document.getElementById("Bonnereponse").value="";
+  document.getElementById("MessageBonnereponse").value="";
+  document.getElementById("MessageMauvaisereponse").value="";
+  document.getElementById("reponseinitiale").value="";
+  document.getElementById("QuestionQCM").value="";
+  if($("#checkboxQR").is(':checked') == true){
+    console.log("couco");
+    $('#checkboxQR').prop('checked', false);
+    console.log("dd")
   }
+  $('#gridCheck1').prop('checked', false);
+  document.getElementById("MessageBonnereponseQCM").value="";
+  document.getElementById("MessageMauvaisereponseQCM").value="";
+  console.log(compteurReponse);
+   /*document.getElementById("reponse2").value="";
 
-  for(var i =0; i < numFich; i++){
-    if(store.get(`fichierDrop${i}`)){
-      store.delete(`fichierDrop${i}`);
-    }
-  }
-  numFich = 0;
+  for(var i =0; i < compteurReponse; i++){
+      document.getElementById(`reponse${i}`).value="";
+    }*/
+    $("#repContainer").empty();
+
+   compteurReponse = 1; 
+
+
 }
+
+
