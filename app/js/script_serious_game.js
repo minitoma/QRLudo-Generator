@@ -93,7 +93,7 @@ function ajouterChampSon(nom, url) {
     textArea.setAttribute("disabled", "true");
   }
   else if (audioSource == "qrcode") {
-    let text = document.getElementById("questQRCode");
+    let text = document.getElementById("questQRCode" + currentEnigme);
     text.value = nom;
     text.setAttribute("disabled", "true");
   }
@@ -193,11 +193,14 @@ $('#importProjectBtnId').click(function () {
 //Pour ajouter autant d'énigme que souhaité
 var type = "";
 var compteurEnigme = 0;
+var currentEnigme = 1;
 $("#ajouterEnigme").click(function () {
   compteurEnigme++;
   if (compteurEnigme < 30) {
     type = "enigme";
     let reponse = document.createElement('div');
+    let popUpQRCode = document.createElement('div');
+    let popUpRecVocale = document.createElement('div');
     reponse.innerHTML = `<div class="form-group">
                             <div class="form-inline" class="col-sm-12" id="divEnigme` + compteurEnigme + `">
                               <label class="control-label"
@@ -206,57 +209,161 @@ $("#ajouterEnigme").click(function () {
                               placeholder="Détails sur l'énigme `+ compteurEnigme + `" onkeyup="activerSave();" />
                               <label class="control-label" style="color:#28a745;padding-top:10px;padding-right:10px; padding-left:20px;">Type d'énigme : </label>
                               <button type="button" id="scanQR`+ compteurEnigme + `" name="ajouterQR` + compteurEnigme + `" data-toggle="modal"
-                                  data-target="#popupQRCode" class="btn btn-outline-success align-self-center">
+                                  data-target="#popupQRCode` + compteurEnigme + `" class="btn btn-outline-success align-self-center">
                                   <i class="fa fa-qrcode"></i>&nbsp;&nbsp;QR CODE</button>&nbsp;
                               <button id="recVocale`+ compteurEnigme + `" type="button" class="btn btn-outline-success align-self-center"
-                                  data-toggle="modal" data-target="#popupRecVocale">
+                                  data-toggle="modal" data-target="#popupRecVocale` + compteurEnigme + `">
                                   <i class="fa fa-microphone"></i>&nbsp;&nbsp;Reconnaissance vocale</button>&nbsp;
                               <button id="deleteEnigme`+ compteurEnigme + `" type="button" onclick="supprLigne(` + compteurEnigme + ",\'" + type + `\');" class="btn btn-outline-success align-self-center">
                                   <i class="fa fa-trash"></i></button>
                               </div>
                           </div>`;
 
+    popUpQRCode.innerHTML = `<div class="modal fade bd-example-modal-lg" id="popupQRCode` + compteurEnigme + `" tabindex="-1" role="dialog" data-backdrop="static"
+    aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-keyboard="false">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="dialog" style="max-width: 53% !important">
+        <div class="modal-content" style="padding: 20px;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">QR Code</h5>
+                <button type="button" class="close" id="closeModalQRCode" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="row">
+                <div class="col-lg-12 form-inline">
+                    <label class="control-label" style="color:#28a745;padding-right:32px;">Question :</label>
+                    <input type="text" class="form-control input-lg" style="width:700px;" id="questQRCode` + compteurEnigme + `" cols="10"
+                        name="nomprojet" placeholder="Saisissez votre question" onkeyup="activerSave();" />
+                    <button type="button" id="addAudioQRCode" class="btn btn-outline-success btn-unique-xl  "
+                        name="ajouterSon" data-toggle="modal" data-target="#listeMusic">
+                        <i class="fa fa-music"></i>&nbsp;&nbsp;Audio
+                    </button>
+                    <button id="deleteAudioQRCode" type="button" onclick="deleteAudioQRCode(` + compteurEnigme + `)"
+                        class="btn btn-outline-success align-self-center"><i class="fa fa-trash"></i>
+                    </button>
+                </div>
+            </div>
+            <hr>
+            <div class="form-row">
+                <div class="form-group col-md-6" id="labelBonneReponse">
+                    <label>&nbsp;&nbsp;&nbsp;&nbsp;Bonne réponse :</label>
+                </div>
+            </div>
+            <div id="repContainer` + compteurEnigme + `">
+                <div class="form-row" id="divQuestion11">
+                  <div class="form-group col-md-3">
+                      <label class="control-label">Réponse 1 :</label>
+                  </div>
+                  <div class="form-group col-md-2">
+                      <input class="form-check-input" type="radio" name="gridRadios` + compteurEnigme + `" id="gridCheck11" checked style="width:70px;" value="option1">
+                      <label class="form-check-label" for="gridCheck11">
+                  </div>
+                  <div class="form-group col-md-6">
+                    <input type="text" class="form-control col-sm-6" id="projectId11" rows="2" name="nomprojet"
+                    placeholder="Réponse" onkeyup="activerSave();" />
+                  </div>
+                  <div class="form-group col-md-1">
+                    <button id="deleteQRCode11" type="button"
+                        class="btn btn-outline-success align-self-center" onclick="supprLigne(1,\'` + type + `\');">
+                        <i class="fa fa-trash"></i></button>
+                  </div>
+                </div>
+              </div>
+              <hr>
+              <div class="form-group col-md-4">
+                    <label for="ajouterQuestion" style="color:#a5b2af;">Ajouter une réponse</label>
+                    <button id="ajouterQuestion" type="button" class="btn btn-outline-success align-self-center"
+                        style="color:#a5b2af;" name="ajouterQuestion" onclick="ajouterQuestions(` + compteurEnigme + `)">
+                        <i class="fa fa-plus" aria-hidden="true"></i>
+                    </button>
+              </div>
+              <div class="modal-footer">
+                  <button type="button" class="btn btn-outline-success" data-dismiss="modal"
+                      id="cancelQRCode" onclick="annulerQuestion(` + compteurEnigme + `, \'qrcode\')">Annuler</button>
+                  <button type="button" class="btn btn-outline-success" data-dismiss="modal" id="addQRCode" onclick="validerQuestion(` + compteurEnigme + `, \'qrcode\')">Valider</button>
+              </div>
+          </div>
+      </div>
+  </div>`;
+
+    popUpRecVocale.innerHTML = `<div class="modal fade" id="popupRecVocale` + compteurEnigme + `" tabindex="-1" role="dialog" data-backdrop="static"
+    aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-keyboard="false">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="dialog" style="max-width: 40% !important">
+        <div class="modal-content" style="padding: 20px;">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalCenterTitle">Reconnaissance Vocale</h5>
+                <button type="button" class="close" id="closeModalQRCode" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="form-group">
+                <div class="col-lg-12 form-inline">
+                    <label class="control-label" style="color:#28a745;padding-right:32px;">Question :</label>
+                    <input type="text" class="form-control input-lg" style="width:1450px;" id="questRecVocal` + compteurEnigme + `" cols="10"
+                        name="nomprojet" placeholder="Saisissez votre question" onkeyup="activerSave();" />
+                </div>
+                <hr>
+                <div class="col-lg-12 form-inline">
+                    <label class="control-label" style="color:#28a745;padding-right:32px;">Réponse :</label>
+                    <input type="text" class="form-control input-lg" style="width:1450px;" id="repRecVocal` + compteurEnigme + `" cols="10"
+                        name="nomprojet" placeholder="Saisissez votre question" onkeyup="activerSave();" />
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-outline-success" data-dismiss="modal"
+                    id="cancelRecVocal" onclick="annulerQuestion(` + compteurEnigme + `, \'vocale\')">Annuler</button>
+                <button type="button" class="btn btn-outline-success" data-dismiss="modal" id="addRecVocal" onclick="validerQuestion(` + compteurEnigme + `, \'vocale\')">Valider</button>
+            </div>
+        </div>
+    </div>
+</div>`;
     let container = $("#containerEnigme");
     container.append(reponse);
+    container.append(popUpQRCode);
+    container.append(popUpRecVocale);
   }
 });
 
 //Ajouter autant de réponses que souhaité dans la popup QRCode
-var compteurQuestion = 0;
-$("#ajouterQuestion").click(function () {
+var compteurQuestion = 1;
+function ajouterQuestions(idEnigme) {
+  currentEnigme = compteurEnigme;
+  compteurQuestion = document.getElementById("repContainer" + idEnigme).childElementCount;
   compteurQuestion++;
   if (compteurQuestion < 30) {
     type = "qrcode";
     let reponse = document.createElement('div');
-    reponse.innerHTML = `<div class="form-row" id="divQuestion` + compteurQuestion + `">
-                            <div class="form-group col-md-3">
-                                  <label class="control-label">Réponse `+ compteurQuestion + ` :</label>
-                                </div>
+    reponse.setAttribute("class", "form-row");
+    reponse.setAttribute("id", "divQuestion" + idEnigme + compteurQuestion);
+    reponse.innerHTML = `<div class="form-group col-md-3">
+                            <label class="control-label">Réponse `+ compteurQuestion + ` :</label>
+                         </div>
                          <div class="form-group col-md-2">
-                                   <input class="form-check-input" type="checkbox" name="gridRadios" id="gridCheck`+ compteurQuestion + `" style="width:70px;" value="option"` + compteurQuestion + ` >
-                                      <label class="form-check-label" for="gridCheck`+ compteurQuestion + `">
-                            </div>
+                            <input class="form-check-input" type="radio" name="gridRadios` + idEnigme + `" id="gridCheck` + idEnigme + compteurQuestion + `" style="width:70px;" value="option` + compteurQuestion + `">
+                            <label class="form-check-label" for="gridCheck` + idEnigme + compteurQuestion + `">
+                          </div>
                           <div class="form-group col-md-6">
-                                 <input type="text" class="form-control col-sm-6" id="projectId`+ compteurQuestion + `" rows="2" name="nomprojet"
-                                placeholder="Réponse" onkeyup="activerSave();" />
-                           </div>
-                            <div class="form-group col-md-1">
-                                <button id="deleteQRCode`+ compteurQuestion + `" type="button"
-                                    class="btn btn-outline-success align-self-center" onclick="supprLigne(` + compteurQuestion + ",\'" + type + `\');">
-                                    <i class="fa fa-trash"></i></button>
-                                    </div>
-                            </div>`;
+                            <input type="text" class="form-control col-sm-6" id="projectId` + idEnigme + compteurQuestion + `" rows="2" name="nomprojet"
+                              placeholder="Réponse" onkeyup="activerSave();" />
+                          </div>
+                          <div class="form-group col-md-1">
+                            <button id="deleteQRCode` + idEnigme + compteurQuestion + `" type="button"
+                                class="btn btn-outline-success align-self-center" onclick="supprLigne(` + compteurQuestion + ",\'" + type + `\');">
+                            <i class="fa fa-trash"></i></button>
+                          </div>`;
 
-    let container = $("#repContainer");
+    let container = $("#repContainer" + idEnigme);
     container.append(reponse);
   }
-});
+};
 
 //Pour supprimer une énigme ou bien une réponse des QRCode
 function supprLigne(idLigne, element) {
   if (element == "enigme") {
     compteurEnigme--;
     $("#divEnigme" + idLigne).on('click', function () {
+      verifEnigmeValide(idLigne);
+      console.log(questionsQR.length + " " + questionsRec.length);
       $(this).remove();
       for (let cpt = idLigne; cpt <= compteurEnigme; cpt++) {
         let id = cpt + 1;
@@ -275,20 +382,98 @@ function supprLigne(idLigne, element) {
     });
   } else if (element == "qrcode") {
     compteurQuestion--;
-    $("#divQuestion" + idLigne).on('click', function () {
+    $("#divQuestion" + currentEnigme + idLigne).on('click', function () {
       $(this).remove();
       for (let cpt = idLigne; cpt <= compteurQuestion; cpt++) {
         let id = cpt + 1;
-        let div = $("#divQuestion" + id)[0].getElementsByTagName("div");
+        let div = $("#divQuestion" + currentEnigme + id)[0].getElementsByTagName("div");
         div[0].getElementsByTagName("label")[0].innerHTML = "Réponse " + cpt + " :";
-        div[1].getElementsByTagName("input")[0].id = "gridCheck" + cpt;
-        div[1].getElementsByTagName("label")[0].for = "gridCheck" + cpt;
-        div[2].getElementsByTagName("input")[0].id = "projectId" + cpt;
-        div[3].getElementsByTagName("button")[0].id = "deleteQRCode" + cpt;
+        div[1].getElementsByTagName("input")[0].id = "gridCheck" + currentEnigme + cpt;
+        div[1].getElementsByTagName("label")[0].for = "gridCheck" + currentEnigme + cpt;
+        div[2].getElementsByTagName("input")[0].id = "projectId" + currentEnigme + cpt;
+        div[3].getElementsByTagName("button")[0].id = "deleteQRCode" + currentEnigme + cpt;
         div[3].getElementsByTagName("button")[0].setAttribute("onclick", "supprLigne(" + cpt + ",\'" + element + "\')");
-        $("#divQuestion" + id)[0].id = "divQuestion" + cpt;
+        $("#divQuestion" + currentEnigme + id)[0].id = "divQuestion" + currentEnigme + cpt;
       }
     });
+  }
+}
+
+function annulerQuestion(idEnigme, type){
+  if(type == "qrcode"){
+    let nbQuestions = document.getElementById("repContainer" + idEnigme).childElementCount;
+    for(let i = 2 ; i <= nbQuestions; ++i){
+      let reponse = document.getElementById("divQuestion" + idEnigme + i);
+      reponse.remove();
+    }
+    let reponse = document.getElementById("divQuestion" + idEnigme + "1").getElementsByTagName('div');
+    reponse[2].getElementsByTagName('input')[0].value = "";
+    let question = document.getElementById("questQRCode" + idEnigme);
+    question.value = "";
+  }
+  else if(type == "vocale"){
+    document.getElementById("questRecVocale" + idEnigme).value = "";
+    document.getElementById("repRecVocale" + idEnigme).value = "";
+  }
+}
+
+class QRCodeQuestion {
+  constructor(textQuestion, tabReponse, estBonneReponse, idEnigme){
+    this.questionQR = textQuestion;
+    this.reponsesQR = tabReponse;
+    this.bonneReponseQR = estBonneReponse;
+    this.idQR = idEnigme;
+  }
+}
+
+class RecVocaleQuestion {
+  constructor(textQuestion, textReponse, idEnigme){
+    this.questionRec = textQuestion;
+    this.reponseRec = textReponse;
+    this.idRec = idEnigme;
+  }
+}
+
+var questionsQR = new Array();
+var questionsRec = new Array();
+
+function validerQuestion(idEnigme, type){
+  if(type == "qrcode"){
+    let textQuestion = document.getElementById("questQRCode" + idEnigme).value;
+    let tabReponses = new Array();
+    let estBonneReponse = 1;
+    let nbReponses = document.getElementById("repContainer" + idEnigme).childElementCount;
+    for(let i = 1; i <= nbReponses; ++i){
+      let divs = document.getElementById("divQuestion" + idEnigme + i).getElementsByTagName('div');
+      let reponse = divs[2].getElementsByTagName('input')[0].value;
+      tabReponses.push(reponse);
+      if(divs[1].getElementsByTagName('input')[0].checked == true){
+        estBonneReponse = i;
+      }
+    }
+    questionsQR.push(new QRCodeQuestion(textQuestion, tabReponses, estBonneReponse, idEnigme));
+  }
+  else if(type == "vocale"){
+    let textQuestion = document.getElementById("questRecVocal" + idEnigme).value;
+    let textReponse = document.getElementById("repRecVocal" + idEnigme).value;
+    questionsRec.push(new RecVocaleQuestion(textQuestion, textReponse, idEnigme));
+  }
+  console.log(questionsQR[0]);
+  annulerQuestion(idEnigme, type);
+}
+
+function verifEnigmeValide(idEnigme){
+  for(let i=0; i < questionsQR.length; ++i){
+    if(questionsQR[i].idQR == idEnigme){
+      questionsQR.splice(i, i+1);
+      return;
+    }
+  }
+  for(let i=0; i < questionsRec.length; ++i){
+    if(questionsRec[i].idRec == idEnigme){
+      questionsRec.splice(i, i+1);
+      return;
+    }
   }
 }
 
@@ -302,7 +487,7 @@ $("#deleteAudioFin").click(function () {
   $("#textAreaFin").prop('disabled', false);
 });
 
-$("#deleteAudioQRCode").click(function () {
-  document.getElementById('questQRCode').value = "";
-  $("#questQRCode").prop('disabled', false);
-});
+function deleteAudioQRCode(idEnigme) {
+  document.getElementById('questQRCode' + idEnigme).value = "";
+  $("#questQRCode" + idEnigme).prop('disabled', false);
+}
