@@ -264,7 +264,7 @@ $("#ajouterEnigme").click(function () {
                   </div>
                   <div class="form-group col-md-1">
                     <button id="deleteQRCode` + compteurEnigme + `1" type="button"
-                        class="btn btn-outline-success align-self-center" onclick="supprLigne(1,\'` + type + `\');">
+                        class="btn btn-outline-success align-self-center" onclick="supprLigne(1,\'qrcode\');">
                         <i class="fa fa-trash"></i></button>
                   </div>
                 </div>
@@ -327,7 +327,7 @@ $("#ajouterEnigme").click(function () {
 //Ajouter autant de réponses que souhaité dans la popup QRCode
 var compteurQuestion = 1;
 function ajouterQuestions(idEnigme) {
-  currentEnigme = compteurEnigme;
+  currentEnigme = idEnigme;
   compteurQuestion = document.getElementById("repContainer" + idEnigme).childElementCount;
   compteurQuestion++;
   if (compteurQuestion < 30) {
@@ -431,7 +431,6 @@ function supprLigne(idLigne, element) {
         div[2].getElementsByTagName("input")[0].id = "projectId" + currentEnigme + cpt;
         div[3].getElementsByTagName("button")[0].id = "deleteQRCode" + currentEnigme + cpt;
         div[3].getElementsByTagName("button")[0].setAttribute("onclick", "supprLigne(" + cpt + ",\'" + element + "\')");
-        div[3].getElementById("deleteQRCode" + id + i).id = "deleteQRCode" + currentEnigme + cpt;
         $("#divQuestion" + currentEnigme + id)[0].id = "divQuestion" + currentEnigme + cpt;
       }
     });
