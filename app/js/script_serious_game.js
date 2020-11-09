@@ -6,9 +6,9 @@ $("#addAudioIntro").click(function () {
 $("#addAudioFin").click(function () {
   audioSource = "fin";
 });
-$("#addAudioQRCode").click(function () {
+function addAudioQRCode() {
   audioSource = "qrcode";
-});
+};
 
 function getMusicFromUrl() {
   let modal = $('#listeMusic').find('div.modal-body.scrollbar-success');
@@ -235,7 +235,7 @@ $("#ajouterEnigme").click(function () {
                     <input type="text" class="form-control input-lg" style="width:700px;" id="questQRCode` + compteurEnigme + `" cols="10"
                         name="nomprojet" placeholder="Saisissez votre question" onkeyup="activerSave();" />
                     <button type="button" id="addAudioQRCode` + compteurEnigme + `" class="btn btn-outline-success btn-unique-xl  "
-                        name="ajouterSon" data-toggle="modal" data-target="#listeMusic">
+                        name="ajouterSon" data-toggle="modal" data-target="#listeMusic" onclick="addAudioQRCode()">
                         <i class="fa fa-music"></i>&nbsp;&nbsp;Audio
                     </button>
                     <button id="deleteAudioQRCode` + compteurEnigme + `" type="button" onclick="deleteAudioQRCode(` + compteurEnigme + `)"
@@ -448,6 +448,7 @@ function annulerQuestion(idEnigme, type){
     let reponse = document.getElementById("divQuestion" + idEnigme + "1").getElementsByTagName('div');
     reponse[2].getElementsByTagName('input')[0].value = "";
     let question = document.getElementById("questQRCode" + idEnigme);
+    question.disabled = false;
     question.value = "";
   }
   else if(type == "vocale"){
