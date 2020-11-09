@@ -1,8 +1,19 @@
+var audioSource = "";
+
+$("#addAudioIntro").click(function () {
+  audioSource = "intro";
+});
+$("#addAudioFin").click(function () {
+  audioSource = "fin";
+});
+$("#addAudioQRCode").click(function () {
+  audioSource = "qrcode";
+});
+
 function getMusicFromUrl() {
   let modal = $('#listeMusic').find('div.modal-body.scrollbar-success');
   let loader = document.createElement('div');
   let errorMsg = document.createElement('label');
-
 
   const {
     clipboard
@@ -48,7 +59,7 @@ function getMusicFromUrl() {
 
           ajouterChampSon(filename, link);
         } else {
-          showError(modal, errorMsg, "Le fichier n'est pas un fichier audio.");
+          showError(modal, errorMsg, "Le fichier n'est pas un fichier audio");
         }
       } else {
         // request failed
@@ -69,6 +80,32 @@ function getMusicFromUrl() {
 
     xhr.send();
   });
+}
+
+function ajouterChampSon(nom, url) {
+  if (audioSource == "intro") {
+    let textArea = document.getElementById("textAreaIntro");
+    textArea.value = nom;
+    textArea.setAttribute("disabled", "true");
+  } else if (audioSource == "fin") {
+    let textArea = document.getElementById("textAreaFin");
+    textArea.value = nom;
+    textArea.setAttribute("disabled", "true");
+  }
+  else if (audioSource == "qrcode") {
+    let text = document.getElementById("questQRCode");
+    text.value = nom;
+    text.setAttribute("disabled", "true");
+  }
+}
+
+function showError(modal, errorMsg, message = "Veuillez coller un lien de fichier téléchargeable. Reportez vous à la rubrique Info pour plus d'informations.") {
+  console.log('error ');
+  $(modal).find('.loader').remove();
+  $(errorMsg).text(message);
+  $(errorMsg).css('color', '#f35b6a');
+  $(errorMsg).addClass('errorLoader');
+  $(modal).prepend(errorMsg); // add error message
 }
 
 $(document).ready(function () {
@@ -154,14 +191,15 @@ $('#importProjectBtnId').click(function () {
 });
 
 //Pour ajouter autant d'énigme que souhaité
-let type = "";
-let compteurEnigme = 1;
+var type = "";
+var compteurEnigme = 0;
 $("#ajouterEnigme").click(function () {
+  compteurEnigme++;
   if (compteurEnigme < 30) {
     type = "enigme";
     let reponse = document.createElement('div');
     reponse.innerHTML = `<div class="form-group">
-                            <div class="form-inline" class="col-sm-12">
+                            <div class="form-inline" class="col-sm-12" id="divEnigme` + compteurEnigme + `">
                               <label class="control-label"
                               style="color:#28a745;padding-top:10px;padding-right:54px;">Énigme `+ compteurEnigme + ` : </label>
                               <input type="text" class="form-control" id="enigme`+ compteurEnigme + `" name="nombreReponse"
@@ -173,26 +211,26 @@ $("#ajouterEnigme").click(function () {
                               <button id="recVocale`+ compteurEnigme + `" type="button" class="btn btn-outline-success align-self-center"
                                   data-toggle="modal" data-target="#popupRecVocale">
                                   <i class="fa fa-microphone"></i>&nbsp;&nbsp;Reconnaissance vocale</button>&nbsp;
-                              <button id="deleteEnigme`+ compteurEnigme + `" type="button" onclick="supprLigne(` + compteurEnigme +`);" class="btn btn-outline-success align-self-center">
+                              <button id="deleteEnigme`+ compteurEnigme + `" type="button" onclick="supprLigne(` + compteurEnigme + ",\'" + type + `\');" class="btn btn-outline-success align-self-center">
                                   <i class="fa fa-trash"></i></button>
                               </div>
                           </div>`;
 
     let container = $("#containerEnigme");
     container.append(reponse);
-    compteurEnigme++;
   }
 });
 
 //Ajouter autant de réponses que souhaité dans la popup QRCode
-let compteurQuestion = 1;
+var compteurQuestion = 0;
 $("#ajouterQuestion").click(function () {
+  compteurQuestion++;
   if (compteurQuestion < 30) {
     type = "qrcode";
     let reponse = document.createElement('div');
-    reponse.innerHTML = `<div class="form-row">
+    reponse.innerHTML = `<div class="form-row" id="divQuestion` + compteurQuestion + `">
                             <div class="form-group col-md-3">
-                                  <label class="control-label">Réponse `+ compteurQuestion + `</label>
+                                  <label class="control-label">Réponse `+ compteurQuestion + ` :</label>
                                 </div>
                          <div class="form-group col-md-2">
                                    <input class="form-check-input" type="checkbox" name="gridRadios" id="gridCheck`+ compteurQuestion + `" style="width:70px;" value="option"` + compteurQuestion + ` >
@@ -204,32 +242,67 @@ $("#ajouterQuestion").click(function () {
                            </div>
                             <div class="form-group col-md-1">
                                 <button id="deleteQRCode`+ compteurQuestion + `" type="button"
-                                    class="btn btn-outline-success align-self-center" onclick="supprLigne(` + compteurQuestion +`);">
+                                    class="btn btn-outline-success align-self-center" onclick="supprLigne(` + compteurQuestion + ",\'" + type + `\');">
                                     <i class="fa fa-trash"></i></button>
                                     </div>
                             </div>`;
 
     let container = $("#repContainer");
     container.append(reponse);
-    compteurQuestion++;
   }
 });
 
 //Pour supprimer une énigme ou bien une réponse des QRCode
-function supprLigne(idLigne) {
-  if (type == "enigme") {
-    $("body").delegate("#deleteEnigme" + idLigne, 'click', function () {
-      $(this).parent().parent("div").remove();
-      if(compteurEnigme > 2){
-        compteurEnigme--;
+function supprLigne(idLigne, element) {
+  if (element == "enigme") {
+    compteurEnigme--;
+    $("#divEnigme" + idLigne).on('click', function () {
+      $(this).remove();
+      for (let cpt = idLigne; cpt <= compteurEnigme; cpt++) {
+        let id = cpt + 1;
+        let div = $("#divEnigme" + id)[0];
+        div.getElementsByTagName("label")[0].innerHTML = "Énigme " + cpt + " :";
+        div.getElementsByTagName("input")[0].id = "enigme" + cpt;
+        div.getElementsByTagName("input")[0].placeholder = "Détails sur l'énigme " + cpt;
+        let boutons = div.getElementsByTagName("button");
+        boutons[0].id = "scanQR" + cpt;
+        boutons[0].name = "ajouterQR" + cpt;
+        boutons[1].id = "recVocale" + cpt;
+        boutons[2].id = "deleteEnigme" + cpt;
+        boutons[2].setAttribute("onclick", "supprLigne(" + cpt + ",\'" + element + "\')");
+        div.id = "divEnigme" + cpt;
       }
     });
-  } else if (type == "qrcode") {
-    $("body").delegate("#deleteQRCode" + idLigne, 'click', function () {
-      $(this).parent().parent("div").remove();
-      if(compteurQuestion > 2){
-        compteurQuestion--;
+  } else if (element == "qrcode") {
+    compteurQuestion--;
+    $("#divQuestion" + idLigne).on('click', function () {
+      $(this).remove();
+      for (let cpt = idLigne; cpt <= compteurQuestion; cpt++) {
+        let id = cpt + 1;
+        let div = $("#divQuestion" + id)[0].getElementsByTagName("div");
+        div[0].getElementsByTagName("label")[0].innerHTML = "Réponse " + cpt + " :";
+        div[1].getElementsByTagName("input")[0].id = "gridCheck" + cpt;
+        div[1].getElementsByTagName("label")[0].for = "gridCheck" + cpt;
+        div[2].getElementsByTagName("input")[0].id = "projectId" + cpt;
+        div[3].getElementsByTagName("button")[0].id = "deleteQRCode" + cpt;
+        div[3].getElementsByTagName("button")[0].setAttribute("onclick", "supprLigne(" + cpt + ",\'" + element + "\')");
+        $("#divQuestion" + id)[0].id = "divQuestion" + cpt;
       }
     });
   }
 }
+
+$("#deleteAudioIntro").click(function () {
+  document.getElementById('textAreaIntro').value = "";
+  $("#textAreaIntro").prop('disabled', false);
+});
+
+$("#deleteAudioFin").click(function () {
+  document.getElementById('textAreaFin').value = "";
+  $("#textAreaFin").prop('disabled', false);
+});
+
+$("#deleteAudioQRCode").click(function () {
+  document.getElementById('questQRCode').value = "";
+  $("#questQRCode").prop('disabled', false);
+});
