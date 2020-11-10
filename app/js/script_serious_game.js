@@ -1,3 +1,7 @@
+const { ProjetSeriousGame, QRCodeSeriousGame, QRCodeQuestion, RecVocaleQuestion } = require('./Model/QRCodeSeriousGame');
+
+var projetSeriousGame = new ProjetSeriousGame();
+
 var audioSource = "";
 
 $("#addAudioIntro").click(function () {
@@ -142,6 +146,7 @@ function activerSave() {
   console.log("Activer Save");
 }
 
+// Réinitialise les champs du Scénario
 function deleteGame() {
   console.log("Delete Game");
 }
@@ -384,7 +389,7 @@ function supprLigne(idLigne, element) {
         document.getElementById("addAudioQRCode" + id).id = "addAudioQRCode" + cpt;
         document.getElementById("deleteAudioQRCode" + id).id = "deleteAudioQRCode" + cpt;
         document.getElementById("labelBonneReponse" + id).id = "labelBonneReponse" + cpt;
-        for(let i = 1; i <= document.getElementById("repContainer" + id).childElementCount; ++i){
+        for (let i = 1; i <= document.getElementById("repContainer" + id).childElementCount; ++i) {
           document.getElementById("divQuestion" + id + i).id = "divQuestion" + cpt + i;
           document.getElementById("gridCheck" + id + i).name = "gridRadios" + cpt;
           document.getElementById("gridCheck" + id + i).id = "gridCheck" + cpt + i;
@@ -392,28 +397,29 @@ function supprLigne(idLigne, element) {
           document.getElementById("deleteQRCode" + id + i).setAttribute("onclick", "supprLigne(" + cpt + ",\'qrcode\')");
           document.getElementById("deleteQRCode" + id + i).id = "deleteQRCode" + cpt + i;
         }
-        document.getElementById("ajouterQuestion" + id).setAttribute("onclick","ajouterQuestions(" + cpt + ")");
+        document.getElementById("ajouterQuestion" + id).setAttribute("onclick", "ajouterQuestions(" + cpt + ")");
         document.getElementById("ajouterQuestion" + id).id = "ajouterQuestion" + cpt;
-        document.getElementById("cancelQRCode" + id).setAttribute("onclick","annulerQuestion(" + cpt + ",\'qrcode\')");
+        document.getElementById("cancelQRCode" + id).setAttribute("onclick", "annulerQuestion(" + cpt + ",\'qrcode\')");
         document.getElementById("cancelQRCode" + id).id = "cancelQRCode" + cpt;
-        document.getElementById("addQRCode" + id).setAttribute("onclick","validerQuestion(" + cpt + ",\'qrcode\')");
+        document.getElementById("addQRCode" + id).setAttribute("onclick", "validerQuestion(" + cpt + ",\'qrcode\')");
         document.getElementById("addQRCode" + id).id = "addQRCode" + cpt;
         document.getElementById("repContainer" + id).id = "repContainer" + cpt;
         document.getElementById("popupRecVocale" + id).id = "popupRecVocale" + cpt;
         document.getElementById("questRecVocal" + id).id = "questRecVocal" + cpt;
         document.getElementById("repRecVocal" + id).id = "repRecVocal" + cpt;
-        document.getElementById("cancelRecVocal" + id).setAttribute("onclick","annulerQuestion(" + cpt + ",\'qrcode\')");
+        document.getElementById("cancelRecVocal" + id).setAttribute("onclick", "annulerQuestion(" + cpt + ",\'qrcode\')");
         document.getElementById("cancelRecVocal" + id).id = "cancelRecVocal" + cpt;
-        document.getElementById("addRecVocal" + id).setAttribute("onclick","validerQuestion(" + cpt + ",\'qrcode\')");
+        document.getElementById("addRecVocal" + id).setAttribute("onclick", "validerQuestion(" + cpt + ",\'qrcode\')");
         document.getElementById("addRecVocal" + id).id = "addRecVocal" + cpt;
-        for(let i = 0; i < questionsQR.length; ++i){
-          if(questionsQR[i].id == id){
-            questionsQR[i].id = cpt;
+        //for(let i = 0; i < questionsQR.length; ++i){
+        for (let i = 0; i < projetSeriousGame.getQuestionsQr().length; ++i) {
+          if (projetSeriousGame.getQuestionsQr()[i].id == id) {
+            projetSeriousGame.getQuestionsQr()[i].id = cpt;
           }
         }
-        for(let i = 0; i < questionsRec.length; ++i){
-          if(questionsRec[i].id == id){
-            questionsRec[i].id = cpt;
+        for (let i = 0; i < projetSeriousGame.getQuestionsReco().length; ++i) {
+          if (projetSeriousGame.getQuestionsReco()[i].id == id) {
+            projetSeriousGame.getQuestionsReco()[i].id = cpt;
           }
         }
       }
@@ -437,10 +443,10 @@ function supprLigne(idLigne, element) {
   }
 }
 
-function annulerQuestion(idEnigme, type){
-  if(type == "qrcode"){
+function annulerQuestion(idEnigme, type) {
+  if (type == "qrcode") {
     let nbQuestions = document.getElementById("repContainer" + idEnigme).childElementCount;
-    for(let i = 2 ; i <= nbQuestions; ++i){
+    for (let i = 2; i <= nbQuestions; ++i) {
       let reponse = document.getElementById("divQuestion" + idEnigme + i);
       reponse.remove();
     }
@@ -450,67 +456,52 @@ function annulerQuestion(idEnigme, type){
     question.disabled = false;
     question.value = "";
   }
-  else if(type == "vocale"){
-    document.getElementById("questRecVocale" + idEnigme).value = "";
-    document.getElementById("repRecVocale" + idEnigme).value = "";
-  }
-}
-
-class QRCodeQuestion {
-  constructor(textQuestion, tabReponse, estBonneReponse, idEnigme){
-    this.questionQR = textQuestion;
-    this.reponsesQR = tabReponse;
-    this.bonneReponseQR = estBonneReponse;
-    this.idQR = idEnigme;
-  }
-}
-
-class RecVocaleQuestion {
-  constructor(textQuestion, textReponse, idEnigme){
-    this.questionRec = textQuestion;
-    this.reponseRec = textReponse;
-    this.idRec = idEnigme;
+  else if (type == "vocale") {
+    document.getElementById("questRecVocal" + idEnigme).value = "";
+    document.getElementById("repRecVocal" + idEnigme).value = "";
   }
 }
 
 var questionsQR = new Array();
 var questionsRec = new Array();
 
-function validerQuestion(idEnigme, type){
-  if(type == "qrcode"){
+function validerQuestion(idEnigme, type) {
+  if (type == "qrcode") {
     let textQuestion = document.getElementById("questQRCode" + idEnigme).value;
     let tabReponses = new Array();
     let estBonneReponse = 1;
     let nbReponses = document.getElementById("repContainer" + idEnigme).childElementCount;
-    for(let i = 1; i <= nbReponses; ++i){
+    for (let i = 1; i <= nbReponses; ++i) {
       let divs = document.getElementById("divQuestion" + idEnigme + i).getElementsByTagName('div');
       let reponse = divs[2].getElementsByTagName('input')[0].value;
       tabReponses.push(reponse);
-      if(divs[1].getElementsByTagName('input')[0].checked == true){
+      if (divs[1].getElementsByTagName('input')[0].checked == true) {
         estBonneReponse = i;
       }
     }
-    questionsQR.push(new QRCodeQuestion(textQuestion, tabReponses, estBonneReponse, idEnigme));
+    projetSeriousGame.getQuestionsQr().push(new QRCodeQuestion(textQuestion, tabReponses, estBonneReponse, idEnigme));
+    console.log(projetSeriousGame.getQuestionsQr());
   }
-  else if(type == "vocale"){
+  else if (type == "vocale") {
     let textQuestion = document.getElementById("questRecVocal" + idEnigme).value;
     let textReponse = document.getElementById("repRecVocal" + idEnigme).value;
-    questionsRec.push(new RecVocaleQuestion(textQuestion, textReponse, idEnigme));
+    projetSeriousGame.getQuestionsReco().push(new RecVocaleQuestion(textQuestion, textReponse, idEnigme));
+    console.log(projetSeriousGame.getQuestionsReco());
   }
-  console.log(questionsQR[0]);
+
   annulerQuestion(idEnigme, type);
 }
 
-function verifEnigmeValide(idEnigme){
-  for(let i=0; i < questionsQR.length; ++i){
-    if(questionsQR[i].idQR == idEnigme){
-      questionsQR.splice(i, i+1);
+function verifEnigmeValide(idEnigme) {
+  for (let i = 0; i < projetSeriousGame.getQuestionsQr().length; ++i) {
+    if (projetSeriousGame.getQuestionsQr()[i].idQR == idEnigme) {
+      projetSeriousGame.getQuestionsQr().splice(i, i + 1);
       return;
     }
   }
-  for(let i=0; i < questionsRec.length; ++i){
-    if(questionsRec[i].idRec == idEnigme){
-      questionsRec.splice(i, i+1);
+  for (let i = 0; i < projetSeriousGame.getQuestionsReco().length; ++i) {
+    if (projetSeriousGame.getQuestionsReco()[i].idRec == idEnigme) {
+      projetSeriousGame.getQuestionsReco().splice(i, i + 1);
       return;
     }
   }
@@ -529,4 +520,120 @@ $("#deleteAudioFin").click(function () {
 function deleteAudioQRCode(idEnigme) {
   document.getElementById('questQRCode' + idEnigme).value = "";
   $("#questQRCode" + idEnigme).prop('disabled', false);
+}
+
+// Appeler lorsqu'on click sur Générer
+$("#generateSG").on("click", function () {
+  // On génère le qrcodeSeriousGame
+  genereJsonSeriousGame();
+  // On génére le QrCode a afficher
+  previewQRCodeQuestion();
+  console.log("Preview faite")
+  // On affiche le qrCode
+  $('#qrView').show();
+});
+/* On générère le QRCodeSeriousGame en récupérant les valeurs des champs la page html et des question QRCOde et Reco qui ont été stockées dans le projetSeriousGame
+ * 
+ */
+function genereJsonSeriousGame() {
+  console.log("Generating Json Serious Game");
+  // On extrait les valeurs des champs utiles du html
+  let nomSeriousGame = $("#projectId").val();
+  // On affecte le nom du seriousGame au nom du projet
+  projetSeriousGame.setName(nomSeriousGame);
+  let textIntro = $("#textAreaIntro").val();
+  let textFin = $("#textAreaFin").val();
+  let qrColor = $('#qrColor').val();
+
+  let enigmes = [];
+  // On rempli le tableau d'enigme à partir les tableaux de questions QR et RecoVocale
+  for (let i = 0; i < projetSeriousGame.getQuestionsQr().length; i++) {
+    let detailEnigme = $("#enigme" + projetSeriousGame.getQuestionsQr()[i].idQR).val();
+    console.log("Ajout Qrcode");
+    console.log(projetSeriousGame.getQuestionsQr()[i]);
+    enigmes.push([projetSeriousGame.getQuestionsQr()[i].idQR.toString(), detailEnigme, "questionQRCode"]);
+  }
+  for (let i = 0; i < projetSeriousGame.getQuestionsReco().length; i++) {
+    let detailEnigme = $("#enigme" + projetSeriousGame.getQuestionsReco()[i].idRec).val();
+    console.log("Ajout Reco");
+    console.log(projetSeriousGame.getQuestionsReco()[i]);
+    enigmes.push([projetSeriousGame.getQuestionsReco()[i].idRec.toString(), detailEnigme, "questionRecoVocale"]);
+  }
+
+  // On tri le tableau en fonction des id de question
+  enigmes.sort(function (a, b) {
+    return a[0] > b[0];
+  });
+
+  console.log(projetSeriousGame.getQuestionsQr());
+  console.log(projetSeriousGame.getQuestionsReco());
+
+  // On crée le Json de SeriousGame avec QRCodeSeriousGame
+  let jsonSeriousGame = new QRCodeSeriousGame(nomSeriousGame, textIntro, textFin, enigmes, projetSeriousGame.getQuestionsQrForJson(), projetSeriousGame.getQuestionsRecoForJson(), qrColor);
+  projetSeriousGame.setQuestion(jsonSeriousGame);
+  console.log(projetSeriousGame.getQuestion());
+}
+
+function previewQRCodeQuestion() {
+  var question = projetSeriousGame.getQuestion();
+  previewQRCode(question, $('#qrView')[0]);
+}
+
+// generate and print qr code
+function previewQRCode(qrcode, div) {
+  let facade = new FacadeController();
+
+  facade.genererQRCode(div, qrcode);
+}
+
+/*Permet d'exporter un Projet
+ On enregistre la questions et les réponses du projet dans le répertoire sélectionné
+ par l'utilisateur*/
+$("#saveQRCode").click(function () {
+  //Permet de sélectinner le répertoire où le projet va être enregistré
+  var dir_path = dialog.showOpenDialog({ title: 'Sélectionnez un dossier', properties: ['openDirectory'] })[0];
+  if (dir_path !== undefined) {
+    var facade = new FacadeController();
+    //projet.setName($("#projectId").val());
+
+    var dir_path = path.join(dir_path, projetSeriousGame.getName());
+
+    var fs = require('fs');
+    if (!fs.existsSync(dir_path)) {
+      fs.mkdirSync(dir_path);
+    }
+
+    //On enregistre la question
+    let div = document.createElement('div');
+    facade.genererQRCode(div, projetSeriousGame.getQuestion());
+    saveQRCodeImage(div, projetSeriousGame.getQuestion(), dir_path);
+
+
+    // Idem pour les reponses des questions Qrcode
+    projetSeriousGame.getReponsesQrCode().forEach(function(reponse){
+      let div = document.createElement('div');
+      facade.genererQRCode(div, reponse);
+      saveQRCodeImage(div, reponse, dir_path);
+    });
+
+    $("#alertExportationOk").show();
+    setTimeout(function () {
+      $('#alertExportationOk').hide();
+    }, 10000);
+  }
+});
+
+//Cette fonction sauvegarde l'image du qrcode dans un div pour le pouvoir generer apres
+function saveQRCodeImage(div, qrcode, directoryName) {
+  let img = $(div).children()[0].src;
+  //let data = img.replace(/^data:image\/\w+;base64,/, '');
+  let matches = img.match(/^data:([A-Za-z-+\/]+);base64,(.+)$/);
+  let data = new Buffer(matches[2], 'base64');
+  var file_name = qrcode.getName().replace(/[^a-zA-Z0-9]+/g, "") + '.jpeg';
+  fs.writeFile(path.join(directoryName, file_name), data, (err) => {
+    if (err) {
+      $("#questionsDivLabelsId").append("<div>" + err + "</div>");
+    }
+    console.log('The file has been saved!');
+  });
 }
