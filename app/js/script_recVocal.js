@@ -76,4 +76,17 @@ $(document).ready(function() {
       $(href).fadeIn();
   });
 
+  //*********************************************************************//
+  function previewQRCode(qrcode, div) {
+    let facade = new FacadeController();
+    facade.genererQRCode(div, qrcode);
+  }
+
+
+
+
+
+
+
+
 });
