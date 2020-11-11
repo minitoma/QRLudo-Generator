@@ -39,8 +39,10 @@ $().ready(function() {
     $('#saveQRCode').attr('disabled', false);
   });
 
-  $("#empty").click(viderZone);
-
+  //$("#empty").click(viderZone);
+  $("#emptyFields").click(function(){
+    viderZone();
+  })
 
   $("#saveQRCode").click(e => {
     saveQRCodeImage();
@@ -196,34 +198,43 @@ function genererLigne(name, numLigne) {
   let baliseButtonDown= document.createElement("BUTTON");
   let baliseIDown = document.createElement("I");
 
+  let balisePrevisualisation = document.createElement("BUTTON");
+  let baliseIPrevisualisation = document.createElement("I");
+
   let baliseLabel= document.createElement("LABEL");
   baliseLabel.setAttribute("class","btn");
   baliseLabel.innerHTML= name;
 
 
-  //fonctionatité bouton delete   &&
+  //fonctionnalité bouton delete   &&
   setAttributes(baliseIDelete, {"class": "fa fa-trash-alt ", "height":"8px", "width":"8px"});
   baliseButtonDelete.addEventListener("click", effacerLigne);
   baliseButtonDelete.setAttribute("class", "btn btn-outline-success float-right");
   baliseButtonDelete.setAttribute("padding", "10px 10px");
   baliseButtonDelete.appendChild(baliseIDelete);
 
-  //fonctinalité bouton up  &&
+  //fonctionnalité bouton up  &&
   setAttributes(baliseIUp, {"class": "fa fa-arrow-up ", "height":"8px", "width":"8px"});
   baliseButtonUp.setAttribute("class","btn btn-outline-success float-right ");
   baliseButtonUp.appendChild(baliseIUp);
   baliseButtonUp.setAttribute("id", name+'Up');
   baliseButtonUp.addEventListener("click", upItem);
 
-  //fonctinalité bouton down  &&
+  //fonctionnalité bouton down  &&
   setAttributes(baliseIDown, {"class": "fa fa-arrow-down ", "height":"8px", "width":"8px"});
   baliseButtonDown.setAttribute("class","btn btn-outline-success float-right ");
   baliseButtonDown.appendChild(baliseIDown);
   baliseButtonDown.setAttribute("id", name+'Down');
   baliseButtonDown.addEventListener("click", downItem);
 
+  //fonctionnalité bouton previsualisation
+  setAttributes(baliseIPrevisualisation, {"class": "fa fa-qrcode", "height":"8px", "width":"8px"});
+  balisePrevisualisation.setAttribute("class", "btn btn-outline-success float-right");
+  balisePrevisualisation.setAttribute("id", name+'Previsualisation');
+  balisePrevisualisation.addEventListener("click", afficherQrCode)
+  balisePrevisualisation.appendChild(baliseIPrevisualisation);
 
-  //fonctionatité nom qrcode
+  //fonctionnalité nom qrcode
   baliseSpan.appendChild(baliseLabel);
   baliseSpan.setAttribute("style", "white-space: nowrap; padding:5px; font-size:0.7em;");
   baliseSpan.setAttribute("class", "qrData text-left ");
@@ -231,12 +242,13 @@ function genererLigne(name, numLigne) {
 
 
 
-  baliseDiv.addEventListener("click", afficherQrCode);
+  //baliseDiv.addEventListener("click", afficherQrCode);
   baliseDiv.setAttribute("style","height:40px");
   baliseDiv.appendChild(baliseSpan);
   baliseDiv.id = name;
 
   baliseDiv.appendChild(baliseButtonDelete);
+  baliseDiv.appendChild(balisePrevisualisation)
   baliseDiv.appendChild(baliseButtonUp);
   baliseDiv.appendChild(baliseButtonDown);
 
@@ -253,12 +265,10 @@ function afficherQrCode(e) {
   affichageLigneParDefault();
 
 
-  this.querySelector("span").setAttribute("style", "white-space: nowrap; padding:5px; font-size:0.7em; background-color:#99cc00;");
-
   let qrcodes = controllerMultiple.getQRCodeAtomiqueArray();
-  // Affiche le qrCode que l'on vien de selectionner
+  // Affiche le QR Code que l'on vient de selectionner
   for (let i = 0; i < qrcodes.length; i++) {
-    if (qrcodes[i].getName() == id) {
+    if (qrcodes[i].getName()+"Previsualisation" == id) {
       let facade = new FacadeController();
       facade.genererQRCode($('#qrView')[0], qrcodes[i]);
       controllerMultiple.setQRCodeSelectionne(qrcodes[i]);
@@ -266,7 +276,6 @@ function afficherQrCode(e) {
   }
 
   console.log(controllerMultiple.getQRCodeSelectionne());
-  // qrCodesUniqueSelectionne = this;
 }
 
 

@@ -9,8 +9,6 @@ $(document).ready(function () {
   $('div.info-content').css('display', 'none');
 
   $("a.nav-link").click(e => {
-    emptyAutoInfos();
-    
     e.preventDefault();
     let element = e.target;
     let tab = $(element).attr('href');
@@ -31,40 +29,58 @@ $(document).ready(function () {
     else
       $(href).fadeIn();
   });
-
-
 });
 
-function emptyAutoInfos() {
-  switch (require('electron').remote.getGlobal('sharedObject').someProperty) {
-    case 'unique':
-      document.getElementById("unique-info").classList.remove("active");
-      document.getElementById("info-unique").style.display = "none";
-      break;
-    case 'multiple':
-      document.getElementById("multiple-info").classList.remove("active");
-      document.getElementById("info-multiple").style.display = "none";
-      break;
-    case 'questRep':
-      document.getElementById("questRep-info").classList.remove("active");
-      document.getElementById("info-exercice").style.display = "none";
-      break;
-  }
-}
+$("#unique-info").click(function(){
+  $("#info-unique").css("display","block");
+  $("#info-multiple").css("display","none");
+  $("#info-exo").css("display","none");
+  $("#info-QCM").css("display","none");
+  $("#info-MusicInput").css("display","none");
+  $("#info-Import").css("display","none");
+});
 
-function allowDivInfos() {
-  switch (require('electron').remote.getGlobal('sharedObject').someProperty) {
-    case 'unique':
-      document.getElementById("unique-info").classList.add("active");
-      //document.getElementById("info-unique").style.display = "block";
-      break;
-    case 'multiple':
-      document.getElementById("multiple-info").classList.remove("active");
-      document.getElementById("info-multiple").style.display = "none";
-      break;
-    case 'questRep':
-      document.getElementById("questRep-info").classList.remove("active");
-      document.getElementById("info-exercice").style.display = "none";
-      break;
-  }
-}
+$("#multiple-info").click(function(){
+  $("#info-unique").css("display","none");
+  $("#info-multiple").css("display","block");
+  $("#info-exo").css("display","none");
+  $("#info-QCM").css("display","none");
+  $("#info-MusicInput").css("display","none");
+  $("#info-Import").css("display","none");
+});
+
+$("#questRep-info").click(function(){
+  $("#info-unique").css("display","none");
+  $("#info-multiple").css("display","none");
+  $("#info-exo").css("display","block");
+  $("#info-QCM").css("display","none");
+  $("#info-MusicInput").css("display","none");
+  $("#info-Import").css("display","none");
+});
+
+$("#qcm-info").click(function(){
+  $("#info-unique").css("display","none");
+  $("#info-multiple").css("display","none");
+  $("#info-exo").css("display","none");
+  $("#info-QCM").css("display","block");
+  $("#info-MusicInput").css("display","none");
+  $("#info-Import").css("display","none");
+});
+
+$("#music-info").click(function(){
+  $("#info-unique").css("display","none");
+  $("#info-multiple").css("display","none");
+  $("#info-exo").css("display","none");
+  $("#info-QCM").css("display","none");
+  $("#info-MusicInput").css("display","block");
+  $("#info-Import").css("display","none");
+});
+
+$("#import-info").click(function(){
+  $("#info-unique").css("display","none");
+  $("#info-multiple").css("display","none");
+  $("#info-exo").css("display","none");
+  $("#info-QCM").css("display","none");
+  $("#info-MusicInput").css("display","none");
+  $("#info-Import").css("display","block");
+});

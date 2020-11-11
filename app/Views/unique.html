@@ -62,7 +62,7 @@
           data-toggle="modal" data-target="#listeMusic">
           <i class="fa fa-music"></i>&nbsp;&nbsp;Audio
         </button>
-        <button style="margin-top:10px" class="btn btn-outline-success btn-unique-xl  " id="annuler">
+        <button style="margin-top:10px" class="btn btn-outline-success btn-unique-xl" data-toggle="modal" id="emptyZones" data-target="#confirmation"> 
           <i class="fa fa-undo"></i>&nbsp;&nbsp;Réinitialiser
         </button>
       </div>
@@ -113,7 +113,22 @@
   </div>
 </div>
 <!-- Fin Modal-1 -->
-
+<div class="modal fade" id="confirmation" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalCenterTitle">Etes vous sûr de vouloir réinitialiser ?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Annuler</button>
+        <button type="button" class="btn btn-outline-success" data-dismiss="modal" id="emptyFields">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <!-- Modal-2 -> Fichier audio -->
 <div class="modal fade" id="listeMusic" tabindex="-1" role="dialog" data-backdrop="static"
@@ -151,6 +166,8 @@
   </div>
 </div>
 <!-- Fin Modal-2 -->
+
+
 
 
 <!-- fin contenu page unique -->
