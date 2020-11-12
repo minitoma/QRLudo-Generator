@@ -196,5 +196,10 @@ const {
   QuestionQCM
 } = require(`${root}/Model/QRCodeQCM`);
 
+const { 
+  QRCodeQCM 
+} = require(`${root}/Model/QRCodeExerciceVocal.js`);
+
+
 // Instanciate object
 let controllerMultiple = new ControllerMultiple();

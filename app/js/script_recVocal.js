@@ -1,4 +1,3 @@
-const { QRCodeQCM } = require(`${root}/Model/QRCodeExerciceVocal.js`);
 
 var question;
 
