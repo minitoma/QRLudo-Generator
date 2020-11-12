@@ -202,7 +202,9 @@ const {
 } = require(`${root}/Model/QRCodeQCM.js`);
 
 
-const {QRCodeQuestionOuverte }
+const {
+  QRCodeQuestionOuverte 
+}
 = require(`${root}/Model/QRCodeQuestionOuverte.js`);
 
 // Instanciate object
