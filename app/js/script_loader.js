@@ -194,9 +194,17 @@ const {
   ProjetQCM,
   ReponseQCM,
   QuestionQCM
-} = require(`${root}/Model/QRCodeQCM`);
+} = require(`${root}/Model/QRCodeQCM_old`);
 
-const {QRCodeQuestionOuverte }
+const { 
+  QRCodeQCM,
+  ReponseVocale  
+} = require(`${root}/Model/QRCodeQCM.js`);
+
+
+const {
+  QRCodeQuestionOuverte 
+}
 = require(`${root}/Model/QRCodeQuestionOuverte.js`);
 
 // Instanciate object

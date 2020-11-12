@@ -1,40 +1,55 @@
 
-
-// Ajouter une nouvelle Reponse une fois qu'on va clicker sur la button Ajouterreponse
-/*var counter = 0
-
-var alphaTab = ["A","B","C","D","E","F","G","H","I","J","K","L","M","N","O","P"]
-
-
-$("#ajouterQuestion").click(function(){
-  if(counter < 15){
-      var reponse = document.createElement('div');
-      reponse.innerHTML = `<div class="form-row">
-                            <div class="form-group col-md-2">
-                                  <label class="control-label">`+alphaTab[counter]+`</label>
-                                </div>
-                         <div class="form-group col-md-2">
-                                   <input class="form-check-input" type="checkbox" name="gridRadios" id="gridCheck`+alphaTab[counter]+`" style="width:70px;" value="option1" >
-                                      <label class="form-check-label" for="gridCheck1">
-                            </div>
-                          <div class="form-group col-md-5">
-                                 <input type="text" class="form-control col-sm-6" id="projectId`+alphaTab[counter]+`" rows="2" name="nomprojet"
-                                placeholder="Reponse" onkeyup="activerSave();" />
-                           </div>
-                            <div class="form-group col-md-3">
-                                <button id="deleteType`+alphaTab[counter]+`" type="button"
-                                    class="btn btn-outline-success align-self-center" onclick=$(this).parent().parent("div").remove();>
-                                    <i class="fa fa-trash"></i></button>
-                                    </div>
-                            </div>`;
-
-      let container = $("#repContainer");
-      container.append(reponse);
-      counter ++ 
+function genererJson() {
+  // Si le champs "QuestionQCM" est rempli, nous sommes dans l'onglet QCM
+  // Sinon, nous sommes dans l'onglet QuestionOuverte
+  if($("#QuestionQCM").val() != "") {
+    genererJsonQCM();
+  } else {
+    genererJsonQuestionOuverte();
   }
+}
 
-})
-*/
+var questionQCM;
+
+function genererJsonQCM(){
+  var questionText = $("#QuestionQCM").val();
+  var isLetter = $("#label2").is(':checked');
+  var messageBonneReponse = $("#MessageBonnereponseQCM").val();
+  var messageMauvaiseReponse = $("#MessageMauvaisereponseQCM").val();
+
+  var reponses = [];
+  // Ajout de la réponse 1 
+  var controlLabel1 = $("#divQuestion1 .control-label").html();
+  var isGoodAnswer1 = $("#divQuestion1 #gridCheck1").is(':checked');
+  var responseText1 = $("#divQuestion1 #reponseinitiale").val();
+  let reponse1 = new ReponseVocale(controlLabel1, isGoodAnswer1, responseText1);
+  reponses.push([reponse1.getNumeroEnigme(), reponse1.getEstBonneReponse(), reponse1.getTextQuestion()]);
+
+  // Ajout des autres réponses
+  $("#repContainer .form-row").each(function(index){
+    console.log(index);
+    var controlLabel = $(this).find(".control-label").html();
+    var isGoodAnswer = $(this).find("#gridCheck".concat(index + 2)).is(':checked');
+    var responseText = $(this).find("#reponse".concat(index + 2)).val();
+    let reponse = new ReponseVocale(controlLabel, isGoodAnswer, responseText);
+    reponses.push([reponse.getNumeroEnigme(), reponse.getEstBonneReponse(), reponse.getTextQuestion()]);
+  });
+
+  questionQCM = new QRCodeQCM(questionText, reponses, isLetter, messageBonneReponse, messageMauvaiseReponse);
+
+  console.log(questionQCM.qrcode);
+
+  // On génére le QrCode a afficher
+  previewQRCodeQCM();
+  // On affiche le qrCode
+  $('#qrView').show();
+
+}
+
+function previewQRCodeQCM() {
+  previewQRCode(questionQCM, $('#qrView')[0]);
+}
+
 
 var questionOuverte;
 
@@ -49,14 +64,14 @@ function genererJsonQuestionOuverte(){
 
   console.log(questionOuverte.qrcode);
 
-   // On génére le QrCode a afficher
- previewQRCodeQuestion();
- // On affiche le qrCode
- $('#qrView').show();
+  // On génére le QrCode a afficher
+  previewQRCodeQuestionOuverte();
+  // On affiche le qrCode
+  $('#qrView').show();
 
 }
 
-function previewQRCodeQuestion() {
+function previewQRCodeQuestionOuverte() {
   previewQRCode(questionOuverte, $('#qrView')[0]);
 }
 
@@ -65,7 +80,6 @@ function previewQRCode(qrcode, div) {
   let facade = new FacadeController();
   facade.genererQRCode(div, qrcode);
 }
-
 
 // Ajouter une nouvelle Reponse une fois qu'on va clicker sur la button Ajouterreponse
 
@@ -80,7 +94,8 @@ $("#ajouterQuestion").click(function () {
                                   <label class="control-label">Réponse `+ compteurReponse + ` :</label>
                                 </div>
                          <div class="form-group col-md-2">
-                                   <input class="form-check-input" type="checkbox" name="gridRadios" id="gridCheck`+ compteurReponse + `" style="width:70px;" value="option"` + compteurReponse + ` >
+                                   <input class="form-check-input" type="checkbox" name="gridRadios" id="gridCheck`+ compteurReponse + `" style="width:70px;" 
+                                      value="option"` + compteurReponse + `" >
                                       <label class="form-check-label" for="gridCheck`+ compteurReponse + `">
                             </div>
                           <div class="form-group col-md-6">
@@ -111,7 +126,7 @@ function supprLigne(idLigne, element) {
         div[0].getElementsByTagName("label")[0].innerHTML = "Réponse " + cpt + " :";
         div[1].getElementsByTagName("input")[0].id = "gridCheck" + cpt;
         div[1].getElementsByTagName("label")[0].for = "gridCheck" + cpt;
-        div[2].getElementsByTagName("input")[0].id = "projectId" + cpt;
+        div[2].getElementsByTagName("input")[0].id = "reponse" + cpt;
         div[3].getElementsByTagName("button")[0].id = "deleteQRCode" + cpt;
         div[3].getElementsByTagName("button")[0].setAttribute("onclick", "supprLigne(" + cpt + ",\'" + element +"\')");
         $("#divQuestion" + id)[0].id = "divQuestion" + cpt;
@@ -144,7 +159,6 @@ $(document).ready(function() {
     else
       $(href).fadeIn();
   });
-
 });
 
 //script 
@@ -194,5 +208,3 @@ function viderChamps(){
 
 
 }
-
-
