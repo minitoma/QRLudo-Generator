@@ -20,7 +20,7 @@ var {
 
 var menu = new Menu();
 
-$(document).ready(function() {
+$(document).ready(function () {
 
   //appel à la focntion qui permet de lire les enregistrement
   chargement();
@@ -60,22 +60,22 @@ $(document).ready(function() {
 
   $('input#musicUrl').contextmenu(e => {
     menu.popup(remote.getCurrentWindow())
-    if(info_activ == true){
+    if (info_activ == true) {
       document.getElementById('elementsAudio').removeChild(info);
       info_activ = false;
     }
   });
-   //Show the information about the audio file import (help)
+  //Show the information about the audio file import (help)
   $('button#showInfo').click(e => {
     e.preventDefault();
-    if (info_activ==false){
+    if (info_activ == false) {
       info.innerHTML = ``;
-      fetch('Views/unique/audioinfo.html').then(function(response) {
+      fetch('Views/unique/audioinfo.html').then(function (response) {
         return response.text();
-      }).then(function(string) {
+      }).then(function (string) {
         // console.log(string);
         info.innerHTML = string;
-      }).catch(function(err) {
+      }).catch(function (err) {
         console.log(info.innerHTML);
         info.innerHTML = `Erreur`;
       });
@@ -92,8 +92,8 @@ $(document).ready(function() {
   $('button#emptyFields').click(function() {
 
     //mise ajour des données sur le progress bar
-    $("#progressbarId").attr('aria-valuenow',0);
-    $("#progressbarId").attr("style","width:"+0+"%");
+    $("#progressbarId").attr('aria-valuenow', 0);
+    $("#progressbarId").attr("style", "width:" + 0 + "%");
     $("#progressbarId").text(0);
     $("#textarea1").val("");
     $("#qrName").val("");
@@ -101,6 +101,7 @@ $(document).ready(function() {
     //FIN progress bar gestion
     //aficher popup quand on click sur reinitialiser
     // cache le qr générer & desactivation du bouton exporter
+
       //Les différents store sont clean ici
       //if(store.get(`titreUnique`)){
         store.delete(`titreUnique`);
@@ -131,7 +132,6 @@ $(document).ready(function() {
       var divChamps = $('#cible');
       divChamps.children($('.legendeQR')).remove();
       ajouterChampLegendeInitial();
-
 
       $('#qrView').hide();
       $('#saveQRCode').attr('disabled', true);
@@ -195,37 +195,37 @@ $('#preview').click(e => {
 
 
 //Fonction permettant la continuité entre les onglet avec la gestion de l'objet store
-function chargement(){
+function chargement() {
 
   //nombre de zone texte courant
   if(store.get(`nbZoneDonne`))
     numZoneDonne = store.get(`nbZoneDonne`);
   else
-    store.set(`nbZoneDonne`,nbZoneDonne);
+    store.set(`nbZoneDonne`, nbZoneDonne);
 
-  if(nbZoneDonne >= 3) {
+  if (nbZoneDonne >= 3) {
     disableButtonAddNewData();
   }
 
   //indice des zones textes presente, peut etre superieur au zone texte presente
-  if(store.get(`numZoneCourante`))
+  if (store.get(`numZoneCourante`))
     numZoneCourante = store.get(`numZoneCourante`);
   else
-    store.set(`numZoneCourante`,numZoneCourante);
+    store.set(`numZoneCourante`, numZoneCourante);
 
-  if(store.get(`titreUnique`)){
+  if (store.get(`titreUnique`)) {
     $('#qrName').val(store.get(`titreUnique`));
   }
 
   //implémentation des différentes zones de txt enregistrées
-  for(var i = 1; i<=numZoneCourante; i++){
-    if (store.get(`zone${i}`)){
+  for (var i = 1; i <= numZoneCourante; i++) {
+    if (store.get(`zone${i}`)) {
       var text = document.createElement('div');
       text.innerHTML = store.get(`zone${i}`);
       text.setAttribute("class", "d-flex align-items-start legendeQR");
 
       // L'id du div est différent si c'est une zone de texte ou un fichier audio
-      if(store.get(`zone${i}`).indexOf("textarea") != -1) {
+      if (store.get(`zone${i}`).indexOf("textarea") != -1) {
         text.setAttribute("id", "legendeTextarea");
       }
       else {
@@ -249,7 +249,7 @@ function chargement(){
   }
 
   //On desactive le bouton supprimer quand il y a qu'un seul text area
-  if(nbZoneDonne == 1) {
+  if (nbZoneDonne == 1) {
     disableButtonDelete();
   }
 }
@@ -304,12 +304,12 @@ function saveQRCodeImage() {
   console.log(data);
   xhr.open('GET', data, true);
 
-  xhr.onreadystatechange = function() {
+  xhr.onreadystatechange = function () {
     if (xhr.readyState == xhr.DONE) {
       var filesaver = require('file-saver');
       console.log(xhr.response);
       //Dans les deux cas filsaver.saveAs renvoie rien qui s'apparente à un bolléen
-      if(filesaver.saveAs(xhr.response, qrcode.getName() + '.jpeg') == true ){
+      if (filesaver.saveAs(xhr.response, qrcode.getName() + '.jpeg') == true) {
         console.log(filesaver.saveAs(xhr.response, qrcode.getName() + '.jpeg').getName);
         messageInfos("Le QR code a bien été enregistré", "success"); //message a afficher en haut de la page
       }
@@ -344,7 +344,7 @@ function getMusicFromUrl() {
       showError(modal, errorMsg);
     }
     xhr.responseType = 'blob';
-    xhr.onload = function(e) {
+    xhr.onload = function (e) {
 
       if (this.status == 200) {
         let blob = this.response; // get binary data as a response
@@ -359,7 +359,7 @@ function getMusicFromUrl() {
 
           // save file in folder projet/download
           let fileReader = new FileReader();
-          fileReader.onload = function() {
+          fileReader.onload = function () {
             fs.writeFileSync(`${temp}/Download/${filename}`, Buffer(new Uint8Array(this.result)));
 
             $(loader, errorMsg).remove();
@@ -377,14 +377,14 @@ function getMusicFromUrl() {
       }
     };
 
-    xhr.onloadstart = function(e) {
+    xhr.onloadstart = function (e) {
       console.log('load start');
       $(loader).addClass('loader');
       $(modal).find('.errorLoader').remove();
       $(modal).prepend(loader); // show loader when request progress
     };
 
-    xhr.onerror = function(e) {
+    xhr.onerror = function (e) {
       showError(modal, errorMsg);
     };
 
@@ -474,15 +474,15 @@ function ajouterChampLegendeInitial(valeur = "") {
   activateAllButtonDelete();
 
   //Permet d'enregistrer l'ajout de case texte
-  store.set(`zone${numZoneCourante}`,textareaLegende.innerHTML);
+  store.set(`zone${numZoneCourante}`, textareaLegende.innerHTML);
 
   //limiter zone de texte a 3 par example
-  if (nbZoneDonne>=3){
+  if (nbZoneDonne >= 3) {
     //disableButtonAddNewData();
   }
   //reasignation du nombre total de caractère restant pour la nouvelle zone
-  var totatCaractere= SetProgressBar();
-  $('#textarea'+numZoneCourante).attr('maxlength',(255-totatCaractere));
+  var totatCaractere = SetProgressBar();
+  $('#textarea' + numZoneCourante).attr('maxlength', (255 - totatCaractere));
 }
 
 
@@ -491,50 +491,50 @@ function ajouterChampLegendeInitial(valeur = "") {
 function SetProgressBar() {
   //progress bar gestion
   var total = 0;
-  var nombreCaratereMAX=255;
+  var nombreCaratereMAX = 255;
 
-  $("#cible textarea").each( function(){
-     total += $(this).val().length;
-     //console.log(total);
+  $("#cible textarea").each(function () {
+    total += $(this).val().length;
+    //console.log(total);
   });
   //$("#cible input").val().length;
-  var totalSeted = Math.round((total  * 100)/nombreCaratereMAX) ;
+  var totalSeted = Math.round((total * 100) / nombreCaratereMAX);
 
 
   //mise ajour des données sur le progress bar
-  $("#progressbarId").attr('aria-valuenow',totalSeted);
-  $("#progressbarId").attr("style","width:"+totalSeted+"%");
-  $("#progressbarId").text(totalSeted+"%");
+  $("#progressbarId").attr('aria-valuenow', totalSeted);
+  $("#progressbarId").attr("style", "width:" + totalSeted + "%");
+  $("#progressbarId").text(totalSeted + "%");
   //FIN progress bar gestion
-    return total;
+  return total;
 }
 
 //verifier si le nombre de caractère maximal est respecté, si ce n'est pas le cas on affiche une pop up d'informations
 function verifNombreCaractere(num) {
   //Permet l'enregistrement du text dans le store
   store.delete(`text${num}`);
-  var txt = document.getElementById('textarea'+num).value;
+  var txt = document.getElementById('textarea' + num).value;
   store.set(`text${num}`, txt);
 
-  var nombreCaratereMAX =255;
+  var nombreCaratereMAX = 255;
   //progress bar gestion
-   var total = SetProgressBar();
+  var total = SetProgressBar();
 
   //console.log($('#textarea'+num).attr('maxlength'));
   $('#messages').empty();
-  if( total >= nombreCaratereMAX)  {
-    messageInfos("La limite de caractère est atteinte (255 caractères)","warning");
+  if (total >= nombreCaratereMAX) {
+    messageInfos("La limite de caractère est atteinte (255 caractères)", "warning");
     disableButtonAddNewData();
     //si nombre de caractére max attein toute les zone de texte sont fermer a l'jout de caractère
-    $("#cible textarea").each( function(){
-      $(this).attr('maxlength',0);
+    $("#cible textarea").each(function () {
+      $(this).attr('maxlength', 0);
     });
   }
   else {
     activateButtonAddNewData();
     //reassignation du nombre de caractére disponible pour toutes les zones
-    $("#cible textarea").each( function(){
-      $(this).attr('maxlength',255);
+    $("#cible textarea").each(function () {
+      $(this).attr('maxlength', 255);
     });
   }
 }
@@ -547,14 +547,14 @@ function supprimerChampLegende(e, numText) {
   decrementerNbZoneDonne();
 
   //suppression dans le store de la zone de txt correspondante
-  store.delete(`text`+numText);
-  store.delete(`zone`+numText);
+  store.delete(`text` + numText);
+  store.delete(`zone` + numText);
 
   $(e).parents('div#legendeTextarea').remove();
 
   activateButtonAddNewData();
 
-  if(nbZoneDonne == 1) {
+  if (nbZoneDonne == 1) {
     disableButtonDelete();
   }
   //calcul et mise a jour de la bar de progression
@@ -584,15 +584,15 @@ function ajouterChampSon(nom, url) {
 
   $('#listeMusic .close').click();
 
-  store.set(`zone${numZoneCourante}`,inputSon.innerHTML);
+  store.set(`zone${numZoneCourante}`, inputSon.innerHTML);
 
   activateAllButtonDelete();
 
-  if (nbZoneDonne>=3){
+  if (nbZoneDonne >= 3) {
     //disableButtonAddNewData();
   }
-   //calcul et mise a jour de la bar de progression
-    SetProgressBar();
+  //calcul et mise a jour de la bar de progression
+  SetProgressBar();
 }
 
 //supprimer un champ Audio -> event onclick
@@ -601,14 +601,14 @@ function supprimerChampSon(e, numText) {
 
 
   //suppression dans le store de la zone de txt correspondante
-  store.delete(`text`+numText);
-  store.delete(`zone`+numText);
+  store.delete(`text` + numText);
+  store.delete(`zone` + numText);
 
   $(e).parents('div#inputAudio').remove();
 
   activateButtonAddNewData();
 
-  if(nbZoneDonne == 1) {
+  if (nbZoneDonne == 1) {
     disableButtonDelete();
   }
   SetProgressBar();
@@ -624,11 +624,11 @@ function moveUp(e, numTxt) {
 
   if (prev.length > 0) {
 
-    for(var i = 1; i<numZoneCourante+1; i++){
-      if(store.get("text"+i) == prevVal)
-        store.set("text"+i,divVal);
+    for (var i = 1; i < numZoneCourante + 1; i++) {
+      if (store.get("text" + i) == prevVal)
+        store.set("text" + i, divVal);
     }
-    store.set("text"+numTxt,prevVal);
+    store.set("text" + numTxt, prevVal);
 
     div.remove();
     div.insertBefore(prev);
@@ -636,7 +636,7 @@ function moveUp(e, numTxt) {
 }
 
 // déplacer en dessous du champ suivant
-function moveDown(e,numTxt) {
+function moveDown(e, numTxt) {
   let next = $(e).parents('.legendeQR').next();
   let div = $(e).parents('.legendeQR');
 
@@ -645,11 +645,11 @@ function moveDown(e,numTxt) {
 
   if (next.length > 0) {
 
-    for(var i = 1; i<numZoneCourante+1; i++){
-      if(store.get("text"+i) == nextVal)
-        store.set("text"+i,divVal);
+    for (var i = 1; i < numZoneCourante + 1; i++) {
+      if (store.get("text" + i) == nextVal)
+        store.set("text" + i, divVal);
     }
-    store.set("text"+numTxt,nextVal);
+    store.set("text" + numTxt, nextVal);
 
     div.remove();
     div.insertAfter(next);
@@ -662,35 +662,35 @@ function moveDown(e,numTxt) {
 function incrementerNbZoneDonne() {
   store.delete(`nbZoneDonne`);
   nbZoneDonne++; // Nouveau numero pour le prochain textarea
-  store.set(`nbZoneDonne`,nbZoneDonne);
+  store.set(`nbZoneDonne`, nbZoneDonne);
 }
 
 // Fonction qui décremente de 1 le nombre de zones de données
 function decrementerNbZoneDonne() {
   store.delete(`nbZoneDonne`);
   nbZoneDonne--; // Nouveau numero pour le prochain textarea
-  store.set(`nbZoneDonne`,nbZoneDonne);
+  store.set(`nbZoneDonne`, nbZoneDonne);
 }
 
 //Permet de set le numero de la nouvelle zone de donnée courante
 function incrementerNumZoneCourante() {
   store.delete(`numZoneCourante`);
   numZoneCourante++; // Nouveau numero pour le prochain textarea
-  store.set(`numZoneCourante`,numZoneCourante);
+  store.set(`numZoneCourante`, numZoneCourante);
 }
 
 //Permet de desactiver le bouton supprimer de la zone de donnée restante
 function disableButtonDelete() {
-  for(var i = 1; i<numZoneCourante+1; i++){
-    if(store.get(`zone${i}`))
+  for (var i = 1; i < numZoneCourante + 1; i++) {
+    if (store.get(`zone${i}`))
       $("#delete" + i).attr('disabled', true);
   }
 }
 
 //Permet d'activer tous les boutons supprimer des zones de données
 function activateAllButtonDelete() {
-  for(var i = 1; i<numZoneCourante+1; i++){
-    if(store.get(`zone${i}`))
+  for (var i = 1; i < numZoneCourante + 1; i++) {
+    if (store.get(`zone${i}`))
       $("#delete" + i).attr('disabled', false);
   }
 }

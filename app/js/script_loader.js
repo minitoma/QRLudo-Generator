@@ -202,5 +202,8 @@ const {
 } = require(`${root}/Model/QRCodeQCM.js`);
 
 
+const {QRCodeQuestionOuverte }
+= require(`${root}/Model/QRCodeQuestionOuverte.js`);
+
 // Instanciate object
 let controllerMultiple = new ControllerMultiple();
