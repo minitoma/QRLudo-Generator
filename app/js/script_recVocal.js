@@ -35,6 +35,38 @@ $("#ajouterQuestion").click(function(){
 
 })
 */
+
+var questionOuverte;
+
+function genererJsonQuestionOuverte(){
+
+  var questionText = $("#Question").val();
+  var reponseText = $("#Bonnereponse").val();
+  var messageBonneReponse = $("#MessageBonnereponse").val();
+  var messageMauvaiseReponse = $("#MessageMauvaisereponse").val();
+
+  questionOuverte = new QRCodeQuestionOuverte(questionText, reponseText, messageBonneReponse, messageMauvaiseReponse);
+
+  console.log(questionOuverte.qrcode);
+
+   // On génére le QrCode a afficher
+ previewQRCodeQuestion();
+ // On affiche le qrCode
+ $('#qrView').show();
+
+}
+
+function previewQRCodeQuestion() {
+  previewQRCode(questionOuverte, $('#qrView')[0]);
+}
+
+// generate and print qr code
+function previewQRCode(qrcode, div) {
+  let facade = new FacadeController();
+  facade.genererQRCode(div, qrcode);
+}
+
+
 // Ajouter une nouvelle Reponse une fois qu'on va clicker sur la button Ajouterreponse
 
 var compteurReponse = 1;
