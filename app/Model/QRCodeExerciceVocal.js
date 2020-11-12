@@ -3,13 +3,12 @@ const {
   } = require(`${root}/Controller/MDFiveConverter`);
  
 
-class QuestionExoVocal {
+class QRCodeQCM {
     //Constructeur d'une Question
-    constructor(title, nombreReponse, reponsesUIDs = [],lettreReponseVocale, text_bonne_reponse, text_mauvaise_reponse, color = '#000000') {
+    constructor(title, reponsesUIDs = [],lettreReponseVocale, text_bonne_reponse, text_mauvaise_reponse, color = '#000000') {
       this.qrcode = {
         id: new Date().getTime(),
         name: title,
-        nbReponse: nombreReponse,
         data: reponsesUIDs,
         type: "ExerciceReconnaissanceVocaleQCM",
         lettreReponseVocale : lettreReponseVocale,

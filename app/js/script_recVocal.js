@@ -1,5 +1,4 @@
-const { QuestionExoVocal } = require(`${root}/Model/QRCodeExerciceVocal.js`);
-
+const { QRCodeQCM } = require(`${root}/Model/QRCodeExerciceVocal.js`);
 
 var question;
 
@@ -18,7 +17,7 @@ function genererJson(){
     reponses.push(reponse);
   });
 
-  question = new QuestionExoVocal(questionText, reponses.length, reponses, isLetter, messageBonneReponse, messageMauvaiseReponse);
+  question = new QRCodeQCM(questionText, reponses, isLetter, messageBonneReponse, messageMauvaiseReponse);
 
   console.log(question.qrcode);
 
