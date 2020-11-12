@@ -1,5 +1,41 @@
+const { ProjetExoVocal, ReponseExoVocal, QuestionExoVocal } = require(`${root}/Model/QRCodeExerciceVocal.js`);
+
+var projet;
+
+function genererJson(){
+  var questionText = $("#projectId").val();
+  var isLetter = $("#label2");
+  var messageBonneReponse = $("#bonneReponse");
+  var messageMauvaiseReponse = $("#mauvaiseReponse");
+
+  var reponses = [];
+  $("#repContainer .form-row").each(function(){
+    var controlLabel = $("this.control-label").val();
+    var isGoodAnswer = $(".isGoodAnswer").val();
+    var responseText = $(".textReponse").val();
+    var reponse = new ReponseExoVocal(controlLabel, isGoodAnswer, responseText);
+    reponses.push(reponse);
+  });
+
+var question = new QuestionExoVocal(questionText, reponses.length, reponses, isLetter, messageBonneReponse, messageMauvaiseReponse);
+var reponsesText;
+var counter = 0;
+reponses.forEach(element => {
+  reponsesText += reponsesText + "{" + element.getId() +","+element.getName()+","+element.getIsAnswer()+","+element.getDataString()+"}";
+  counter ++;
+  if(reponses.length < counter){
+    reponsesText += ","
+  }
+});
+var json  = "{"+question.getId()+","+question.getName()+",["+reponsesText+"],"+messageBonneReponse+","+messageMauvaiseReponse+"}";
+console.log(json)
+
+projet = new ProjetExoVocal("ExoVocal", question, reponses);
+
+console.log(projet);
 
 
+}
 // Ajouter une nouvelle Reponse une fois qu'on va clicker sur la button Ajouterreponse
 var counter = 0
 
@@ -14,12 +50,12 @@ $("#ajouterQuestion").click(function(){
                                   <label class="control-label">`+alphaTab[counter]+`</label>
                                 </div>
                          <div class="form-group col-md-2">
-                                   <input class="form-check-input" type="checkbox" name="gridRadios" id="gridCheck`+alphaTab[counter]+`" style="width:70px;" value="option1" >
+                                   <input class="form-check-input isGoodAnswer" type="checkbox" name="gridRadios" id="gridCheck`+alphaTab[counter]+`" style="width:70px;" value="option1" >
                                       <label class="form-check-label" for="gridCheck1">
                             </div>
                           <div class="form-group col-md-5">
-                                 <input type="text" class="form-control col-sm-6" id="projectId`+alphaTab[counter]+`" rows="2" name="nomprojet"
-                                placeholder="Reponse" onkeyup="activerSave();" />
+                                 <input type="text" class="form-control col-sm-6 textReponse" id="projectId`+alphaTab[counter]+`" rows="2" name="nomprojet"
+                                placeholder="Reponse" />
                            </div>
                             <div class="form-group col-md-3">
                                 <button id="deleteType`+alphaTab[counter]+`" type="button"
@@ -77,14 +113,6 @@ $(document).ready(function() {
   });
 
   //*********************************************************************//
-  function previewQRCode(qrcode, div) {
-    let facade = new FacadeController();
-    facade.genererQRCode(div, qrcode);
-  }
-
-
-
-
 
 
 

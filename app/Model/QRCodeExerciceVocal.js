@@ -89,15 +89,15 @@ const {
  
 class QuestionExoVocal {
     //Constructeur d'une Question
-    constructor(title, nombreReponse, reponsesUIDs = [], text_bonne_reponse, text_mauvaise_reponse, color = '#000000') {
+    constructor(title, nombreReponse, reponsesUIDs = [],lettreReponseVocale, text_bonne_reponse, text_mauvaise_reponse, color = '#000000') {
       this.qrcode = {
         id: new Date().getTime(),
         name: title,
         nbReponse: nombreReponse,
         data: reponsesUIDs,
-        type: "questionExoVocal",
+        type: "ExerciceReconnaissanceVocaleQCM",
+        lettreReponseVocale : lettreReponseVocale,
         color: color,
-        text: "",
         text_bonne_reponse: text_bonne_reponse,
         text_mauvaise_reponse: text_mauvaise_reponse
       };
@@ -186,11 +186,11 @@ class QuestionExoVocal {
    *Classe permettant de creer une reponse
    */
   class ReponseExoVocal {
-    constructor(name, isAnswer, color = '#000000') {
+    constructor(name,reponseText, isAnswer, color = '#000000') {
       this.qrcode = {
         id: new Date().getTime(),
         name: name,
-        data: [],
+        data: reponseText,
         type: "reponseExoVocal",
         color: color,
         isAnswer: isAnswer
