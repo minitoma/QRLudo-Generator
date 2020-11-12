@@ -12,7 +12,7 @@ function genererJson(){
     var controlLabel = $(this).find(".control-label").html();
     var isGoodAnswer = $(this).find(".isGoodAnswer").is(':checked');
     var responseText = $(this).find(".textReponse").val();
-    var reponse = "{"+controlLabel+","+isGoodAnswer+","+responseText+"}";
+    var reponse = [controlLabel+","+isGoodAnswer+","+responseText];
     reponses.push(reponse);
   });
 

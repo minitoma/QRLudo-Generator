@@ -9,9 +9,9 @@ class QRCodeQCM {
         data: reponses,
         type: "ExerciceReconnaissanceVocaleQCM",
         lettreReponseVocale : lettreReponseVocale,
-        color: color,
         text_bonne_reponse: text_bonne_reponse,
-        text_mauvaise_reponse: text_mauvaise_reponse
+        m_text_mauvaise_rep: text_mauvaise_reponse,
+        color: color
       };
     }
   
