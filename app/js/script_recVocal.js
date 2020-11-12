@@ -1,41 +1,47 @@
-const { ProjetExoVocal, ReponseExoVocal, QuestionExoVocal } = require(`${root}/Model/QRCodeExerciceVocal.js`);
+const { QuestionExoVocal } = require(`${root}/Model/QRCodeExerciceVocal.js`);
 
-var projet;
+
+var question;
 
 function genererJson(){
   var questionText = $("#projectId").val();
-  var isLetter = $("#label2");
-  var messageBonneReponse = $("#bonneReponse");
-  var messageMauvaiseReponse = $("#mauvaiseReponse");
+  var isLetter = $("#label2").is(':checked');
+  var messageBonneReponse = $("#bonneReponse").val();
+  var messageMauvaiseReponse = $("#mauvaiseReponse").val();
 
   var reponses = [];
   $("#repContainer .form-row").each(function(){
-    var controlLabel = $("this.control-label").val();
-    var isGoodAnswer = $(".isGoodAnswer").val();
-    var responseText = $(".textReponse").val();
-    var reponse = new ReponseExoVocal(controlLabel, isGoodAnswer, responseText);
+    var controlLabel = $(this).find(".control-label").html();
+    var isGoodAnswer = $(this).find(".isGoodAnswer").is(':checked');
+    var responseText = $(this).find(".textReponse").val();
+    var reponse = "{"+controlLabel+","+isGoodAnswer+","+responseText+"}";
     reponses.push(reponse);
   });
 
-var question = new QuestionExoVocal(questionText, reponses.length, reponses, isLetter, messageBonneReponse, messageMauvaiseReponse);
-var reponsesText;
-var counter = 0;
-reponses.forEach(element => {
-  reponsesText += reponsesText + "{" + element.getId() +","+element.getName()+","+element.getIsAnswer()+","+element.getDataString()+"}";
-  counter ++;
-  if(reponses.length < counter){
-    reponsesText += ","
-  }
-});
-var json  = "{"+question.getId()+","+question.getName()+",["+reponsesText+"],"+messageBonneReponse+","+messageMauvaiseReponse+"}";
-console.log(json)
+  question = new QuestionExoVocal(questionText, reponses.length, reponses, isLetter, messageBonneReponse, messageMauvaiseReponse);
 
-projet = new ProjetExoVocal("ExoVocal", question, reponses);
+  console.log(question.qrcode);
 
-console.log(projet);
-
+   // On génére le QrCode a afficher
+ previewQRCodeQuestion();
+ // On affiche le qrCode
+ $('#qrView').show();
 
 }
+
+function previewQRCodeQuestion() {
+  previewQRCode(question, $('#qrView')[0]);
+}
+
+// generate and print qr code
+function previewQRCode(qrcode, div) {
+  let facade = new FacadeController();
+  facade.genererQRCode(div, qrcode);
+}
+
+
+
+
 // Ajouter une nouvelle Reponse une fois qu'on va clicker sur la button Ajouterreponse
 var counter = 0
 

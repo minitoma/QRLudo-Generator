@@ -46,7 +46,7 @@ class FacadeController {
       var rawconstants = fs.readFileSync(`${root}/constants.json`);
 
       var constants = JSON.parse(rawconstants);
-      qrcode.qrcode.version = constants.version;
+      qrcode.version = constants.version;
 
       let args = [qrcode, divImg];
 
