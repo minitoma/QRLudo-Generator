@@ -1,16 +1,14 @@
-const {
-    MdFiveConverter
-  } = require(`${root}/Controller/MDFiveConverter`);
+
  
 
 class QRCodeQuestionOuverte {
-    //Constructeur d'une Question
+    //Constructeur d'une question question ouverte
     constructor(title, reponse, text_bonne_reponse, text_mauvaise_reponse, color = '#000000') {
       this.qrcode = {
         id: new Date().getTime(),
         name: title,
-        data: reponse,
-        type: "ExerciceReconnaissanceVocaleQCM",
+        type: "ExerciceReconnaissanceVocaleQuestionOuverte",
+        data: [reponse],
         color: color,
         text_bonne_reponse: text_bonne_reponse,
         text_mauvaise_reponse: text_mauvaise_reponse
@@ -45,7 +43,7 @@ class QRCodeQuestionOuverte {
       }
     }
   
-    getReponses() {
+    getReponse() {
       return this.qrcode.data;
     }
   
@@ -59,36 +57,6 @@ class QRCodeQuestionOuverte {
   
     getType(){
       return this.qrcode.type;
-    }
-  
-    getReponseUIDByIndex(indice) {
-      return this.qrcode.data[indice];
-    }
-  
-    getReponseById(reponseUid){
-      for(let rep of this.qrcode.data){
-        if(rep.id == reponseUid){
-          return rep;
-        }
-      }
-      return null;
-    }
-  
-    addReponse(reponseUid, message) {
-      this.qrcode.data.push({"id": reponseUid, "message":message});
-  
-      this.setText();
-    }
-  
-    removeReponse(reponseUid){
-      for(let rep of this.qrcode.data){
-        if(rep.id == reponseUid){
-          var index = this.qrcode.data.indexOf(rep);
-          this.qrcode.data.splice(index, 1);
-        }
-      }
-  
-      this.setText();
     }
   
     getDataString() {
