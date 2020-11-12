@@ -12,8 +12,8 @@ function genererJson(){
     var controlLabel = $(this).find(".control-label").html();
     var isGoodAnswer = $(this).find(".isGoodAnswer").is(':checked');
     var responseText = $(this).find(".textReponse").val();
-    var reponse = [controlLabel+","+isGoodAnswer+","+responseText];
-    reponses.push(reponse);
+    let reponse = new ReponseVocale(controlLabel, isGoodAnswer, responseText);
+    reponses.push([reponse.getNumeroEnigme(), reponse.getEstBonneReponse(), reponse.getTextQuestion()]);
   });
 
   question = new QRCodeQCM(questionText, reponses, isLetter, messageBonneReponse, messageMauvaiseReponse);
@@ -74,22 +74,6 @@ $("#ajouterQuestion").click(function(){
   }
 
 })
-/*
-$(function() {
-  var $crossButton = $('#deleteType'),
-    $content = $("#form-row");
-
-  $content.on("click", ".deleteType", function() {
-    if ($(this).is("#deleteType")) return false;
-    var $cross = $(this);
-    $(this).next().slideUp(400, function() {
-      $(this).remove();
-      $deleteType.remove();
-    });
-  });
-
-})*/
-
 
 $(document).ready(function() {
   $('div.info-content').css('display', 'none');

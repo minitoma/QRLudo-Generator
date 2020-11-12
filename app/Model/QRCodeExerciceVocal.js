@@ -2,12 +2,12 @@
 
 class QRCodeQCM {
     //Constructeur d'une Question
-    constructor(title, reponses = [],lettreReponseVocale, text_bonne_reponse, text_mauvaise_reponse, color = '#000000') {
+    constructor(title, reponses = [], lettreReponseVocale, text_bonne_reponse, text_mauvaise_reponse, color = '#000000') {
       this.qrcode = {
         id: new Date().getTime(),
         name: title,
-        data: reponses,
         type: "ExerciceReconnaissanceVocaleQCM",
+        data: reponses,
         lettreReponseVocale : lettreReponseVocale,
         text_bonne_reponse: text_bonne_reponse,
         m_text_mauvaise_rep: text_mauvaise_reponse,
@@ -72,8 +72,8 @@ class QRCodeQCM {
       return null;
     }
   
-    addReponse(reponseUid, message) {
-      this.qrcode.data.push({"id": reponseUid, "message":message});
+    addReponse(reponseVocale) {
+      this.qrcode.data.push(reponseVocale);
   
       this.setText();
     }
@@ -94,6 +94,31 @@ class QRCodeQCM {
     }
   }
   
+
+  /*
+ * Classe permettant de créer une réponse QCM
+ */
+  class ReponseVocale {
+    constructor(numeroEnigme, estBonneReponse, textQuestion) {
+        this.numeroEnigme = numeroEnigme;
+        this.estBonneReponse = estBonneReponse;
+        this.textQuestion = textQuestion;
+    }
+
+    getNumeroEnigme() {
+      return this.numeroEnigme;
+    }
+
+    getEstBonneReponse() {
+      return this.estBonneReponse;
+    }
+
+    getTextQuestion() {
+      return this.textQuestion;
+    }
+  }
+
   module.exports = {
-    QRCodeQCM
+    QRCodeQCM,
+    ReponseVocale
   };

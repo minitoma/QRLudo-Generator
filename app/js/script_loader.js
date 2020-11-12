@@ -197,7 +197,8 @@ const {
 } = require(`${root}/Model/QRCodeQCM`);
 
 const { 
-  QRCodeQCM 
+  QRCodeQCM,
+  ReponseVocale  
 } = require(`${root}/Model/QRCodeExerciceVocal.js`);
 
 
