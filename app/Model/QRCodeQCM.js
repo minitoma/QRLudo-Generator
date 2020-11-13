@@ -2,13 +2,13 @@
 
 class QRCodeQCM {
     //Constructeur d'une Question
-    constructor(title, reponses = [], lettreReponseVocale, text_bonne_reponse, text_mauvaise_reponse, color = '#000000') {
+    constructor(title, reponses = [], reponseParIdentifiant, text_bonne_reponse, text_mauvaise_reponse, color = '#000000') {
       this.qrcode = {
         id: new Date().getTime(),
         name: title,
         type: "ExerciceReconnaissanceVocaleQCM",
         data: reponses,
-        lettreReponseVocale : lettreReponseVocale,
+        lettreReponseVocale : reponseParIdentifiant,
         text_bonne_reponse: text_bonne_reponse,
         m_text_mauvaise_rep: text_mauvaise_reponse,
         color: color

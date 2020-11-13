@@ -13,13 +13,13 @@ var questionQCM;
 
 function genererJsonQCM(){
   var questionText = $("#QuestionQCM").val();
-  var isLetter = $("#label2").is(':checked');
+  var reponseParIdentifiant = $("#reponseParIdentifiant").is(':checked');
   var messageBonneReponse = $("#MessageBonnereponseQCM").val();
   var messageMauvaiseReponse = $("#MessageMauvaisereponseQCM").val();
 
   var reponses = [];
   // Ajout de la réponse 1 
-  var controlLabel1 = $("#divQuestion1 .control-label").html();
+  var controlLabel1 = "réponse numéro 1";
   var isGoodAnswer1 = $("#divQuestion1 #gridCheck1").is(':checked');
   var responseText1 = $("#divQuestion1 #reponseinitiale").val();
   let reponse1 = new ReponseVocale(controlLabel1, isGoodAnswer1, responseText1);
@@ -28,14 +28,14 @@ function genererJsonQCM(){
   // Ajout des autres réponses
   $("#repContainer .form-row").each(function(index){
     console.log(index);
-    var controlLabel = $(this).find(".control-label").html();
+    var controlLabel = "réponse numéro ".concat(index + 2);
     var isGoodAnswer = $(this).find("#gridCheck".concat(index + 2)).is(':checked');
     var responseText = $(this).find("#reponse".concat(index + 2)).val();
     let reponse = new ReponseVocale(controlLabel, isGoodAnswer, responseText);
     reponses.push([reponse.getNumeroEnigme(), reponse.getEstBonneReponse(), reponse.getTextQuestion()]);
   });
 
-  questionQCM = new QRCodeQCM(questionText, reponses, isLetter, messageBonneReponse, messageMauvaiseReponse);
+  questionQCM = new QRCodeQCM(questionText, reponses, reponseParIdentifiant, messageBonneReponse, messageMauvaiseReponse);
 
   console.log(questionQCM.qrcode);
 
@@ -167,20 +167,6 @@ $("#emptyFields").click(function(){
   })
 
 
-/*function myFunction() {
-  document.getElementById("formulaireQCM").reset();
-}*/
-
-/*function viderZone(){
-  controllerMultiple = new ControllerMultiple();
-  $('#Question').val('');
-  $('#Bonnereponse').val('');
-  $('#MessageBonnereponse').val('');
-  $('#MessageMauvaisereponse').val('');
-  console.log("zaki");
-
-}*/
-
 function viderChamps(){
   document.getElementById("Question").value="";
   document.getElementById("Bonnereponse").value="";
@@ -188,23 +174,12 @@ function viderChamps(){
   document.getElementById("MessageMauvaisereponse").value="";
   document.getElementById("reponseinitiale").value="";
   document.getElementById("QuestionQCM").value="";
-  if($("#checkboxQR").is(':checked') == true){
-    console.log("couco");
-    $('#checkboxQR').prop('checked', false);
-    console.log("dd")
-  }
+  $('#reponseParIdentifiant').prop('checked', false);
   $('#gridCheck1').prop('checked', false);
   document.getElementById("MessageBonnereponseQCM").value="";
   document.getElementById("MessageMauvaisereponseQCM").value="";
-  console.log(compteurReponse);
-   /*document.getElementById("reponse2").value="";
+  
+  $("#repContainer").empty();
 
-  for(var i =0; i < compteurReponse; i++){
-      document.getElementById(`reponse${i}`).value="";
-    }*/
-    $("#repContainer").empty();
-
-   compteurReponse = 1; 
-
-
+  compteurReponse = 1; 
 }
