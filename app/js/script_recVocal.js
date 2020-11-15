@@ -156,7 +156,12 @@ function viderChamps(){
   for(var i =0; i < compteurReponse; i++){
       document.getElementById(`reponse${i}`).value="";
     }*/
+
     $("#repContainer").empty();
+    localStorage.removeItem("Question");
+    localStorage.removeItem("Bonnereponse");
+    localStorage.removeItem("MessageBonnereponse");
+    localStorage.removeItem("MessageMauvaisereponse");
 
    compteurReponse = 1; 
 
@@ -164,3 +169,45 @@ function viderChamps(){
 }
 
 
+
+
+
+
+
+
+document.getElementById("Question").value = getSavedValue("Question");    // set the value to this input
+document.getElementById("Bonnereponse").value = getSavedValue("Bonnereponse");   // set the value to this input
+document.getElementById("MessageBonnereponse").value = getSavedValue("MessageBonnereponse");    // set the value to this input
+document.getElementById("MessageMauvaisereponse").value = getSavedValue("MessageMauvaisereponse");   // set the value to this input
+    var checkbox = document.getElementById('checkboxQR');
+    localStorage.setItem('checkboxQR', checkbox.checked); 
+
+function load(){    
+    var checked = JSON.parse(localStorage.getItem('checkboxQR'));
+    document.getElementById("checkboxQR").checked = checked;
+    console.log('zzzz');
+}
+load();
+function saveValue(e){
+         var id = e.id;  
+         var val = e.value; 
+         localStorage.setItem(id, val);
+}
+
+        
+function getSavedValue  (v){
+
+  if (!localStorage.getItem(v)) {
+     return "";
+     }
+     return localStorage.getItem(v);
+}
+
+//test2
+/*
+//méthode gérant al continuité sur les eones de texte Question, Bonne Reponse, Mauvaise Reponse et nb reponse
+function activerSave(text){
+  
+  var newText = $("#"+text).val();
+  store.set(text,newText);
+}*/
