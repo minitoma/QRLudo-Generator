@@ -37,16 +37,45 @@ $("#ajouterQuestion").click(function(){
 */
 
 
+
+/*const Store = require('electron-store');
+ 
+const store = new Store();
+ 
+store.set('unicorn', '🦄');
+console.log(store.get('unicorn'));
+//=> '🦄'
+ 
+// Use dot-notation to access nested properties
+store.set('foo.bar', true);
+console.log(store.get('foo'));
+//=> {bar: true}
+ 
+store.delete('unicorn');
+console.log(store.get('unicorn'));
+*/7
+
+
+
+var projet = new Projet();
+
+
 $(document).ready(function() {
 
   //méthode gérant la continuité
   enregistrement();
 
   // Ajouter une nouvelle Reponse une fois qu'on va clicker sur la button Ajouterreponse
-  var compteurReponse = 1;
   $("#ajouterQuestion").click(function () {
+    Ajouternouvellereponse();
 
-    compteurReponse++;
+  })
+});
+
+//function Ajouter une nouvelle Reponse
+var compteurReponse = 1;
+function Ajouternouvellereponse(reponse){
+  compteurReponse++;
     if (compteurReponse < 30) {
       type = "Rreponse";
       let reponse = document.createElement('div');
@@ -72,8 +101,8 @@ $(document).ready(function() {
       let container = $("#repContainer");
       container.append(reponse);
     }
-  })
-});
+
+}
 
 //Pour supprimer une énigme ou bien une réponse 
 function supprLigne(idLigne, element) {
@@ -158,12 +187,24 @@ function viderChamps(){
   $('#gridCheck1').prop('checked', false);
   $('#MessageMauvaisereponseQCM').val('');
   $('#MessageBonnereponseQCM').val('');
-  console.log(compteurReponse);
-    $("#repContainer").empty();
-    /*localStorage.removeItem("Question");
-    localStorage.removeItem("Bonnereponse");
-    localStorage.removeItem("MessageBonnereponse");
-    localStorage.removeItem("MessageMauvaisereponse");*/
+  $("#repContainer").empty();
+
+  deleteStore(`Question`);
+
+  deleteStore(`Bonnereponse`);
+
+  deleteStore('MessageBonnereponse');
+
+  deleteStore('MessageMauvaisereponse');
+
+  deleteStore(`reponseinitiale`);
+
+  deleteStore(`QuestionQCM`);
+
+  deleteStore(`MessageMauvaisereponseQCM`);
+
+  deleteStore('MessageBonnereponseQCM');
+
    compteurReponse = 1; 
 
 
@@ -207,19 +248,6 @@ function getSavedValue  (v){
 
 
 
-
-
-
-
-//test2
-/*
-//méthode gérant al continuité sur les eones de texte Question, Bonne Reponse, Mauvaise Reponse et nb reponse
-function activerSave(text){
-  
-  var newText = $("#"+text).val();
-  store.set(text,newText);
-}*/
-
 function enregistrement(){
 
   if(store.get(`Question`))
@@ -236,8 +264,44 @@ function enregistrement(){
   if(store.get('MessageMauvaisereponse'))
     $("#MessageMauvaisereponse").val(store.get('MessageMauvaisereponse'));
 
+  if(store.get('QuestionQCM'))
+    $("#QuestionQCM").val(store.get('QuestionQCM'));
+
+  if(store.get('MessageMauvaisereponseQCM'))
+    $("#MessageMauvaisereponseQCM").val(store.get('MessageMauvaisereponseQCM'));
+
+  if(store.get('MessageBonnereponseQCM'))
+    $("#MessageBonnereponseQCM").val(store.get('MessageBonnereponseQCM'));
+
+  if(store.get('reponseinitiale'))
+    $("#reponseinitiale").val(store.get('reponseinitiale'));
+
+  /*for(var i = 1; i<compteurReponse+1; i++){
+    if(store.get('reponse'+i)){
+      console.log('zakkk')
+      $("#reposne"+i).val(store.get('reponse'+i));
+
+    }
+  }
+
+   for(var i = 1; i<numReponse+1; i++){
+    if(store.get('reponse'+i)){
+
+
+      var new_rep = new QCM(store.get('reponse'+i),store.get('data'+i), store.get('reponseColor'+i)); // cretation d'une nouvelle reponse
+      new_rep.setId(store.get('reponseId'+i));
+      projet.addReponse(new_rep);
+
+      projet.getQuestion().addReponse(new_rep.getId(), new_rep.getData());
+      addReponseLine(new_rep);
+
+    }
+  }*/
+
 
 }
+
+
 
 function activerSave(text){
   deleteStore(text);
@@ -250,3 +314,4 @@ function deleteStore(del){
   if(store.get(del) )
     store.delete(del);
 }
+
