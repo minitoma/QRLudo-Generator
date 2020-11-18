@@ -42,36 +42,37 @@ $(document).ready(function() {
   //méthode gérant la continuité
   enregistrement();
 
-// Ajouter une nouvelle Reponse une fois qu'on va clicker sur la button Ajouterreponse
+  // Ajouter une nouvelle Reponse une fois qu'on va clicker sur la button Ajouterreponse
+  var compteurReponse = 1;
+  $("#ajouterQuestion").click(function () {
 
-var compteurReponse = 1;
-$("#ajouterQuestion").click(function () {
-  compteurReponse++;
-  if (compteurReponse < 30) {
-    type = "Rreponse";
-    let reponse = document.createElement('div');
-    reponse.innerHTML = `<div class="form-row" id="divQuestion` + compteurReponse + `">
-                            <div class="form-group col-md-3">
-                                  <label class="control-label">Réponse `+ compteurReponse + ` :</label>
-                                </div>
-                         <div class="form-group col-md-2">
-                                   <input class="form-check-input" type="checkbox" name="gridRadios" id="gridCheck`+ compteurReponse + `" style="width:70px;" value="option"` + compteurReponse + ` >
-                                      <label class="form-check-label" for="gridCheck`+ compteurReponse + `">
+    compteurReponse++;
+    if (compteurReponse < 30) {
+      type = "Rreponse";
+      let reponse = document.createElement('div');
+      reponse.innerHTML = `<div class="form-row" id="divQuestion` + compteurReponse + `">
+                              <div class="form-group col-md-3">
+                                    <label class="control-label">Réponse `+ compteurReponse + ` :</label>
+                                  </div>
+                          <div class="form-group col-md-2">
+                                    <input class="form-check-input" type="checkbox" name="gridRadios" id="gridCheck`+ compteurReponse + `" style="width:70px;" value="option"` + compteurReponse + ` >
+                                        <label class="form-check-label" for="gridCheck`+ compteurReponse + `">
+                              </div>
+                            <div class="form-group col-md-6">
+                                  <input type="text" class="form-control col-sm-6" id="reponse`+ compteurReponse + `" rows="2" name="nomprojet"
+                                  placeholder="Réponse" />
                             </div>
-                          <div class="form-group col-md-6">
-                                 <input type="text" class="form-control col-sm-6" id="reponse`+ compteurReponse + `" rows="2" name="nomprojet"
-                                placeholder="Réponse" />
-                           </div>
-                            <div class="form-group col-md-1">
-                                <button id="deleteQRCode`+ compteurReponse + `" type="button"
-                                    class="btn btn-outline-success align-self-center" onclick="supprLigne(` + compteurReponse + ",\'" + type + `\');">
-                                    <i class="fa fa-trash"></i></button>
-                                    </div>
-                            </div>`;
+                              <div class="form-group col-md-1">
+                                  <button id="deleteQRCode`+ compteurReponse + `" type="button"
+                                      class="btn btn-outline-success align-self-center" onclick="supprLigne(` + compteurReponse + ",\'" + type + `\');">
+                                      <i class="fa fa-trash"></i></button>
+                                      </div>
+                              </div>`;
 
-    let container = $("#repContainer");
-    container.append(reponse);
-  }
+      let container = $("#repContainer");
+      container.append(reponse);
+    }
+  })
 });
 
 //Pour supprimer une énigme ou bien une réponse 
@@ -222,8 +223,9 @@ function activerSave(text){
 function enregistrement(){
 
   if(store.get(`Question`))
-    Question = store.get(`Question`);
-   $("#Question").val(store.get(`Question`));
+    $("#Question").val(store.get(`Question`));
+  
+//Question = store.get(`Question`);
 
   if(store.get(`Bonnereponse`) )
     $("#Bonnereponse").val(store.get(`Bonnereponse`));
