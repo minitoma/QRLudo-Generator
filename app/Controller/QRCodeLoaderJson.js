@@ -73,6 +73,14 @@ class QRCodeLoaderJson {
           qrcode.setId(qr.id);
           break;
 
+        case "ExerciceReconnaissanceVocaleQCM":
+          qrcode = new new QRCodeQCM(qr.name, qr.data, qr.text_bonne_reponse, qr.text_mauvaise_reponse);
+         break;
+
+        case "ExerciceReconnaissanceVocaleQuestionOuverte":
+          qrcode = new QRCodeQuestionOuverte(qr.name, qr.data, qr.reponseParIdentifiant, qr.text_bonne_reponse, qr.m_text_mauvaise_reponse);
+        break;
+
         default:
           throw "QR Code invalide";
           break;
