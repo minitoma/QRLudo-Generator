@@ -35,6 +35,13 @@ $("#ajouterQuestion").click(function(){
 
 })
 */
+
+
+$(document).ready(function() {
+
+  //méthode gérant la continuité
+  enregistrement();
+
 // Ajouter une nouvelle Reponse une fois qu'on va clicker sur la button Ajouterreponse
 
 var compteurReponse = 1;
@@ -136,33 +143,26 @@ $("#emptyFields").click(function(){
 }*/
 
 function viderChamps(){
-  document.getElementById("Question").value="";
-  document.getElementById("Bonnereponse").value="";
-  document.getElementById("MessageBonnereponse").value="";
-  document.getElementById("MessageMauvaisereponse").value="";
-  document.getElementById("reponseinitiale").value="";
-  document.getElementById("QuestionQCM").value="";
+  $('#Question').val('');
+  $('#Bonnereponse').val('');
+  $('#MessageBonnereponse').val('');
+  $('#MessageMauvaisereponse').val('');
+  $('#reponseinitiale').val('');
+  $('#QuestionQCM').val('');
   if($("#checkboxQR").is(':checked') == true){
     console.log("couco");
     $('#checkboxQR').prop('checked', false);
     console.log("dd")
   }
   $('#gridCheck1').prop('checked', false);
-  document.getElementById("MessageBonnereponseQCM").value="";
-  document.getElementById("MessageMauvaisereponseQCM").value="";
+  $('#MessageMauvaisereponseQCM').val('');
+  $('#MessageBonnereponseQCM').val('');
   console.log(compteurReponse);
-   /*document.getElementById("reponse2").value="";
-
-  for(var i =0; i < compteurReponse; i++){
-      document.getElementById(`reponse${i}`).value="";
-    }*/
-
     $("#repContainer").empty();
-    localStorage.removeItem("Question");
+    /*localStorage.removeItem("Question");
     localStorage.removeItem("Bonnereponse");
     localStorage.removeItem("MessageBonnereponse");
-    localStorage.removeItem("MessageMauvaisereponse");
-
+    localStorage.removeItem("MessageMauvaisereponse");*/
    compteurReponse = 1; 
 
 
@@ -174,8 +174,8 @@ function viderChamps(){
 
 
 
-
-document.getElementById("Question").value = getSavedValue("Question");    // set the value to this input
+//test1
+/*document.getElementById("Question").value = getSavedValue("Question");    // set the value to this input
 document.getElementById("Bonnereponse").value = getSavedValue("Bonnereponse");   // set the value to this input
 document.getElementById("MessageBonnereponse").value = getSavedValue("MessageBonnereponse");    // set the value to this input
 document.getElementById("MessageMauvaisereponse").value = getSavedValue("MessageMauvaisereponse");   // set the value to this input
@@ -202,6 +202,13 @@ function getSavedValue  (v){
      }
      return localStorage.getItem(v);
 }
+*/
+
+
+
+
+
+
 
 //test2
 /*
@@ -211,3 +218,33 @@ function activerSave(text){
   var newText = $("#"+text).val();
   store.set(text,newText);
 }*/
+
+function enregistrement(){
+
+  if(store.get(`Question`))
+    Question = store.get(`Question`);
+   $("#Question").val(store.get(`Question`));
+
+  if(store.get(`Bonnereponse`) )
+    $("#Bonnereponse").val(store.get(`Bonnereponse`));
+
+  if(store.get(`MessageBonnereponse`) )
+    $("#MessageBonnereponse").val(store.get(`MessageBonnereponse`));
+
+  if(store.get('MessageMauvaisereponse'))
+    $("#MessageMauvaisereponse").val(store.get('MessageMauvaisereponse'));
+
+
+}
+
+function activerSave(text){
+  deleteStore(text);
+
+  var newText = $("#"+text).val();
+  store.set(text,newText);
+}
+
+function deleteStore(del){
+  if(store.get(del) )
+    store.delete(del);
+}
