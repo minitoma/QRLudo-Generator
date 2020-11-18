@@ -194,7 +194,24 @@ const {
   ProjetQCM,
   ReponseQCM,
   QuestionQCM
-} = require(`${root}/Model/QRCodeQCM`);
+} = require(`${root}/Model/QRCodeQCM_old`);
+
+const { 
+  QRCodeQCM,
+  ReponseVocale  
+} = require(`${root}/Model/QRCodeQCM.js`);
+
+const { 
+  ProjetSeriousGame, 
+  QRCodeSeriousGame, 
+  QRCodeQuestion, 
+  RecVocaleQuestion 
+} = require('./Model/QRCodeSeriousGame');
+
+const {
+  QRCodeQuestionOuverte 
+}
+= require(`${root}/Model/QRCodeQuestionOuverte.js`);
 
 const { 
   ProjetSeriousGame, 
