@@ -196,5 +196,12 @@ const {
   QuestionQCM
 } = require(`${root}/Model/QRCodeQCM`);
 
+const { 
+  ProjetSeriousGame, 
+  QRCodeSeriousGame, 
+  QRCodeQuestion, 
+  RecVocaleQuestion 
+} = require(`${root}/Model/QRCodeSeriousGame`);
+
 // Instanciate object
 let controllerMultiple = new ControllerMultiple();
