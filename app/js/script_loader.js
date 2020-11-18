@@ -213,12 +213,5 @@ const {
 }
 = require(`${root}/Model/QRCodeQuestionOuverte.js`);
 
-const { 
-  ProjetSeriousGame, 
-  QRCodeSeriousGame, 
-  QRCodeQuestion, 
-  RecVocaleQuestion 
-} = require(`${root}/Model/QRCodeSeriousGame`);
-
 // Instanciate object
 let controllerMultiple = new ControllerMultiple();
