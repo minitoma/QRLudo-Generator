@@ -1,17 +1,17 @@
+
  
 
-class QRCodeQCM {
-    //Constructeur d'une Question
-    constructor(title, reponses = [], reponseParIdentifiant, text_bonne_reponse, text_mauvaise_reponse, color = '#000000') {
+class QRCodeQuestionOuverte {
+    //Constructeur d'une question question ouverte
+    constructor(title, reponse, text_bonne_reponse, text_mauvaise_reponse, color = '#000000') {
       this.qrcode = {
         id: new Date().getTime(),
         name: title,
-        type: "ExerciceReconnaissanceVocaleQCM",
-        data: reponses,
-        lettreReponseVocale : reponseParIdentifiant,
+        type: "ExerciceReconnaissanceVocaleQuestionOuverte",
+        data: [reponse],
+        color: color,
         text_bonne_reponse: text_bonne_reponse,
-        m_text_mauvaise_rep: text_mauvaise_reponse,
-        color: color
+        text_mauvaise_reponse: text_mauvaise_reponse
       };
     }
   
@@ -43,7 +43,7 @@ class QRCodeQCM {
       }
     }
   
-    getReponses() {
+    getReponse() {
       return this.qrcode.data;
     }
   
@@ -64,31 +64,6 @@ class QRCodeQCM {
     }
   }
   
-
-  /*
- * Classe permettant de créer une réponse QCM
- */
-  class ReponseVocale {
-    constructor(numeroEnigme, estBonneReponse, textQuestion) {
-        this.numeroEnigme = numeroEnigme;
-        this.estBonneReponse = estBonneReponse;
-        this.textQuestion = textQuestion;
-    }
-
-    getNumeroEnigme() {
-      return this.numeroEnigme;
-    }
-
-    getEstBonneReponse() {
-      return this.estBonneReponse;
-    }
-
-    getTextQuestion() {
-      return this.textQuestion;
-    }
-  }
-
   module.exports = {
-    QRCodeQCM,
-    ReponseVocale
+    QRCodeQuestionOuverte
   };

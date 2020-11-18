@@ -1,0 +1,182 @@
+<script src="js/script_recVocal.js"></script>
+<!-- contenu page QuesRep -->
+<!--Panel-->
+
+<div class="col-sm-12 card">
+    <div class="text-center" id="textPresentation">
+        Création de QR Code Serious Game.<br>
+        Jeu à but pédagogique. <br />
+        Les réponses attendues peuvent être à reconnaisance vocale, scan de QR Code, ...
+    </div>
+    <div class="alert alert-success" role="alert" id="alertExportationOk" style="display:none;"> Votre projet a bien été
+        enregistré. </div>
+    <div class="alert alert-danger" role="alert" id="alertQuestionVideError" style="display:none;"> Veuillez saisir le
+        texte lié à votre jeu. </div>
+    <div class="alert alert-danger" role="alert" id="alertNombreReponseVideError" style="display:none;"> Veuillez saisir
+        un nombre de réponses correct. </div>
+    <div class="alert alert-danger" role="alert" id="alertQuestionExistError" style="display:none"> La question existe
+        déjà. </div>
+    <form id="formulaireQCM" onsubmit="return false;">
+        <div class="card-body">
+            <h6 class="card-title"></h6>
+            <nav class="nav nav-tabs">
+            <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                    <a class="nav-link active"  href="#onglet-QuesOuverte">Question Ouverte </a></li>  
+                    <li class="nav-item">
+                    <a class="nav-link" data-toggle="tab" href="#onglet-QCM">QCM</a></li>
+            </ul>
+          </nav>
+          <div class="tab-content">
+             <div class="tab-pane" id="onglet-QCM">
+                <div id="newProject" class="tab-pane fade in active show" role="tabpanel">
+                  <div class="container-fluid">
+                    <div class="row">
+                      <div class="col-lg-6 form-inline">
+                        <label class="control-label" style="color:#28a745;padding-right:32px;">Question :
+                            </label>
+                            <input type="text" class="form-control input-lg" style="width:450px;"  id="QuestionQCM" cols="10" name="nomprojet"
+                                placeholder="Quelle est Votre Question" />
+                      </div>
+
+                      <div class="col-lg-5 mt-5">
+                          <div class="form-group form-inline">
+                              <input type="checkbox" form="label2" id="reponseParIdentifiant" class="form-control row">
+                              <label id="label2" class="ml-3">Utiliser l'identifiant de la question comme réponse</label>
+                          </div>
+                        </div>
+                               </div>
+                               <br>
+                              <div class="form-row">
+                                <div class="form-group col-md-1">
+                               <label></label>
+                               </div>
+                                <div class="form-group col-md-3">
+                               <label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;Bonne(s) réponse(s)</label>
+                               </div>
+                               <div class="form-group col-md-4">
+                               <label></label>
+                               </div>
+                               <div class="form-group col-md-4">
+                               <label></label>
+                               </div>
+                              </div>
+                              <div class="form-row" id="divQuestion1">
+                                  <div class="form-group col-md-3">
+                                      <label class="control-label">Réponse 1 :</label>
+                                  </div>
+                                  <div class="form-group col-md-2">
+                                    <input class="form-check-input" type="checkbox" name="gridRadios" id="gridCheck1" style="width:70px;" 
+                                      value="option">
+                                        <label class="form-check-label" for="gridCheck1">
+                                  </div>
+                                  <div class="form-group col-md-6">
+                                      <input type="text" class="form-control col-sm-6" id="reponseinitiale" rows="2" name="nomprojet"
+                                            placeholder="Réponse" onkeyup="activerSave();" />
+                                  </div>
+                              </div>
+                              <div id="repContainer"></div>
+                              <div class="form-group col-md-6">
+                                  <label style="color:#a5b2af;">Ajouter une réponse</label>
+                                  <button id="ajouterQuestion" type="button"
+                                    class="btn btn-outline-success align-self-center" style="color:#a5b2af;" name="ajouterQuestion">
+                                    <i class="fa fa-plus" aria-hidden="true"></i>
+                                  </button>
+                                </div>
+
+                               <form>
+                                <br>
+                                <br>
+                              <div class="form-group row">
+                                <label for="inputEmail3" class="col-sm-4 col-form-label">Message de bonne réponse :</label>
+                                <div class="col-sm-8">
+                                  <input type="text" class="form-control" id="MessageBonnereponseQCM" placeholder="Bravo !">
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                 <label for="inputEmail3" class="col-sm-4 col-form-label">Message de mauvaise réponse :</label>
+                                <div class="col-sm-8">
+                                  <input type="text" class="form-control" id="MessageMauvaisereponseQCM" placeholder="Dommage !">
+                                </div>
+                              </div>
+                            </form>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    <div class="tab-pane fade in active show" id="onglet-QuesOuverte">
+                     
+                      <br>
+                       <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Question :</label>
+                                <div class="col-sm-8">
+                                  <input type="text" class="form-control" id="Question" style="height: 70px;">
+                                </div>
+                              </div>
+                      <br>
+                       <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Bonne réponse :</label>
+                                <div class="col-sm-8">
+                                  <input type="text" class="form-control" id="Bonnereponse">
+                                </div>
+                              </div>
+                      <br>
+                         <div class="form-group row">
+                                <label class="col-sm-4 col-form-label">Message de bonne réponse :</label>
+                                <div class="col-sm-8">
+                                  <input type="text" class="form-control" id="MessageBonnereponse" placeholder="Bravo !">
+                                </div>
+                              </div>
+                              <div class="form-group row">
+                                 <label class="col-sm-4 col-form-label">Message de mauvaise réponse :</label>
+                                <div class="col-sm-8">
+                                  <input type="text" class="form-control" id="MessageMauvaisereponse" placeholder="Dommage !">
+                                </div>
+                              </div> 
+                    </div>
+                  </div>
+                </div>
+     </form>
+     <div class="card-footer form-inline">
+          <div class="card col-md-auto">
+            <button style="margin-top:10px" type="reset" class="btn btn-outline-success btn-unique-xl" data-toggle="modal" id="emptyZones" data-target="#confirmation">
+              <i class="fa fa-undo"></i>&nbsp;&nbsp;Réinitialiser
+            </button>
+          </div>
+          <div class="card col-md-auto">
+            <button type="button" class="btn btn-outline-success btn-unique-xl " id="saveQRCode" disabled>
+              <i class="fa fa-download"></i>&nbsp;&nbsp;Exporter
+            </button>
+            <button type="submit" style="margin-top:10px" class="btn btn-outline-success " id="preview" onclick="genererJson()">
+              <i class="fa fa-cogs" ></i>&nbsp;&nbsp;Générer
+            </button>
+          </div>
+      </div>
+</div>
+  
+<!--/.Panel-->
+<div class="modal fade" id="confirmation" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalCenterTitle">Etes vous sûr de vouloir réinitialiser ?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Annuler</button>
+        <button type="button" class="btn btn-outline-success" data-dismiss="modal" id="emptyFields">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!--Panel -> zone pour afficher le QrCode produit -->
+<div class="col-sm-4 card" id="qr-zone">
+    <script>
+        $("#qr-zone").load("Views/QR-zone.html");
+    </script>
+</div>
+
+

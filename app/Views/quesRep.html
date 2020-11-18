@@ -2,7 +2,11 @@
 <!-- contenu page QuesRep -->
 <!--Panel-->
 
+
 <div class="col-sm-12 card">
+  <div id="btnInfo">
+    <button class="btn btn-outline-success" id="infos-questRep"><i class="fa fa-info-circle"></i></button>
+  </div>
   <div class="text-center" id="textPresentation">
       Création de QR Code Exercice.<br>
       Les exercices permettent de prendre connaissance des réponses avant validation.<br>
@@ -100,7 +104,7 @@
     <div class="card-footer form-inline">
       <div class="card col-md-auto ">
         <button  type="button" class="btn btn-outline-success" data-toggle="modal" data-target="#dialogAjoutReponse" id= "ajoutNewReponse" disabled ><i class="fa fa-plus-square"  ></i>&nbsp;&nbsp;Ajouter réponse</button>
-        <button style="margin-top:10px" type="button" class="btn btn-outline-success" id="annuler"><i class="fa fa-undo"></i>&nbsp;&nbsp;Réinitialiser</button>
+        <button style="margin-top:10px" class="btn btn-outline-success" data-toggle="modal" id="emptyZones" data-target="#confirmation"><i class="fa fa-undo"></i>&nbsp;&nbsp;Réinitialiser</button>
       </div>
       <div class="card col-md-auto">
         <button  type="button" class="btn btn-outline-success " id="saveQRCode" disabled>
@@ -112,7 +116,6 @@
       </div>
     </div>
   </form>
-
 
 </div>
 
@@ -169,6 +172,99 @@
 </div>
 </div>
 <!-- fin fenetre pour ajouter nouvelle reponse  -->
+<!--Début Modal-1 -->
+<div class="modal fade" id="confirmation" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+  <div class="modal-dialog modal-dialog-centered" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="exampleModalCenterTitle">Etes vous sûr de vouloir réinitialiser ?</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-outline-danger" data-dismiss="modal">Annuler</button>
+        <button type="button" class="btn btn-outline-success" data-dismiss="modal" id="emptyFields">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+<!--Fin Modal-1-->
+
+
+<div class="modal" id="errorModalQuestion" role="dialog">
+  <div class="modal-dialog" role="document"><div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">Erreur</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      </div>
+      <div class="modal-body">
+        <p>Veuillez d'abord saisir une question</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="errorModalBReponse" role="dialog">
+  <div class="modal-dialog" role="document"><div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">Erreur</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      </div>
+      <div class="modal-body">
+        <p>Veuillez saisir le message de bonne réponse à la question</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="errorModalMReponse" role="dialog">
+  <div class="modal-dialog" role="document"><div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">Erreur</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      </div>
+      <div class="modal-body">
+        <p>Veuillez saisir le message de mauvaise réponse à la question</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+<div class="modal" id="errorModalNombreReponse" role="dialog">
+  <div class="modal-dialog" role="document"><div class="modal-content">
+    <div class="modal-header">
+      <h5 class="modal-title">Erreur</h5>
+      <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+        <span aria-hidden="true">&times;</span>
+      </button>
+      </div>
+      <div class="modal-body">
+        <p>Veuillez saisir le nombre de bonne reponse minimum</p>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" data-dismiss="modal" onclick="">OK</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 
 <!-- Js pour la parti des question et reponse l -->
 <script src="./js/script_question_reponse.js"></script>
+<script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" crossorigin="anonymous"></script>

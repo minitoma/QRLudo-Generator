@@ -213,6 +213,23 @@ a.article:hover {
   border: 1px solid white;
 }
 
+#infos {
+  margin-left: 25px;
+  margin-bottom: 10px;
+  background-color: white;
+}
+
+#infos:hover {
+  background-color: #28a745;
+  border: 1px solid white;
+}
+.btn-bottom {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  z-index: 1030;
+}
+
 /* ---------------------------------------------------
     CONTENT STYLE
 ----------------------------------------------------- */
@@ -255,6 +272,10 @@ label.error {
 label.qrludo {
   color: #28a745;
   padding-top: 10px;
+}
+
+#labelBonneReponse {
+  padding-left: 180px;
 }
 
 .qrludo-QR {
@@ -472,7 +493,7 @@ input[type="color"]::-webkit-color-swatch {
   .modalMusic, .modalAjoutReponse, .champReponse, .modalAjoutReponseCreerReponse,
   .modalAjoutReponseReponseAjoutee, .importerProjetDialog, .projetImporte,
   .exporterProjetDialog, .modalCharger, .zonemultiple {
-    display: none;
+    /*display: none;*/
   }
 
   #info-multiple>ul>li:nth-child(5)>video {
@@ -480,4 +501,12 @@ input[type="color"]::-webkit-color-swatch {
   }
 }
 
+#containerEnigme {
+  counter-reset: section;
+}
+
+.count:after {
+  counter-increment: section;
+  content: counter(section);
+}
 /*end info*/

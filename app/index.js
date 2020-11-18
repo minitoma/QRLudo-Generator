@@ -22,6 +22,10 @@ require('electron-debug')({
 let mainWindow;
 let infoWindow = null;
 
+global.sharedObject = {
+  someProperty: 'default value'
+}
+
 
 function createWindow() {
   let display = electron.screen.getPrimaryDisplay();
