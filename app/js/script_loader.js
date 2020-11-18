@@ -201,6 +201,12 @@ const {
   ReponseVocale  
 } = require(`${root}/Model/QRCodeQCM.js`);
 
+const { 
+  ProjetSeriousGame, 
+  QRCodeSeriousGame, 
+  QRCodeQuestion, 
+  RecVocaleQuestion 
+} = require('./Model/QRCodeSeriousGame');
 
 const {
   QRCodeQuestionOuverte 
