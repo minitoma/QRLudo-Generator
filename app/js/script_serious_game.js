@@ -1,5 +1,3 @@
-const { ProjetSeriousGame, QRCodeSeriousGame, QRCodeQuestion, RecVocaleQuestion } = require('./Model/QRCodeSeriousGame');
-
 var projetSeriousGame = new ProjetSeriousGame();
 
 var audioSource = "";
