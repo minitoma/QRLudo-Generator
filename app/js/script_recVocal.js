@@ -10,9 +10,10 @@ function genererJson() {
 }
 
 var questionQCM;
-var questionQCMQRCode;
+var questionOuverte;
 
 function genererJsonQCM(){
+  questionOuverte = null;
   var questionText = $("#QuestionQCM").val();
   var reponseParIdentifiant = $("#reponseParIdentifiant").is(':checked');
   var messageBonneReponse = $("#MessageBonnereponseQCM").val();
@@ -51,11 +52,8 @@ function previewQRCodeQCM() {
   previewQRCode(questionQCM, $('#qrView')[0]);
 }
 
-
-var questionOuverte;
-
 function genererJsonQuestionOuverte(){
-
+  questionQCM = null;
   var questionText = $("#Question").val();
   var reponseText = $("#Bonnereponse").val();
   var messageBonneReponse = $("#MessageBonnereponse").val();
@@ -168,7 +166,7 @@ $("#emptyFields").click(function(){
   });
 
   $("#saveQRCode").click(e => {
-    saveQRCodeImage();
+    saveQRCodeImage(questionQCM, questionOuverte);
   });
 
 
@@ -190,13 +188,18 @@ function viderChamps(){
 }
 
 // save image qr code
-function saveQRCodeImage() {
+function saveQRCodeImage(questionQCM, questionOuverte) {
   const fs = require('fs');
 
   let img = $('#qrView img')[0].src;
-
+var qrcode
   var data = img.replace(/^data:image\/[^;]/, 'data:application/octet-stream');
-  var qrcode = questionQCM;
+  if(questionQCM != null){
+    qrcode = questionQCM;
+  }
+  else if (questionOuverte != null){
+    qrcode = questionOuverte
+  }
   var xhr = new XMLHttpRequest();
   xhr.responseType = 'blob';
   console.log(data);
