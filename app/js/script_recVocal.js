@@ -10,8 +10,10 @@ function genererJson() {
 }
 
 var questionQCM;
+var questionOuverte;
 
 function genererJsonQCM(){
+  questionOuverte = null;
   var questionText = $("#QuestionQCM").val();
   var reponseParIdentifiant = $("#reponseParIdentifiant").is(':checked');
   var messageBonneReponse = $("#MessageBonnereponseQCM").val();
@@ -38,7 +40,7 @@ function genererJsonQCM(){
   questionQCM = new QRCodeQCM(questionText, reponses, reponseParIdentifiant, messageBonneReponse, messageMauvaiseReponse);
 
   console.log(questionQCM.qrcode);
-
+  questionQCMQRCode = questionQCM.qrcode
   // On génére le QrCode a afficher
   previewQRCodeQCM();
   // On affiche le qrCode
@@ -50,11 +52,8 @@ function previewQRCodeQCM() {
   previewQRCode(questionQCM, $('#qrView')[0]);
 }
 
-
-var questionOuverte;
-
 function genererJsonQuestionOuverte(){
-
+  questionQCM = null;
   var questionText = $("#Question").val();
   var reponseText = $("#Bonnereponse").val();
   var messageBonneReponse = $("#MessageBonnereponse").val();
@@ -164,7 +163,11 @@ $(document).ready(function() {
 //script 
 $("#emptyFields").click(function(){
     viderChamps();
-  })
+  });
+
+  $("#saveQRCode").click(e => {
+    saveQRCodeImage(questionQCM, questionOuverte);
+  });
 
 
 function viderChamps(){
@@ -182,4 +185,37 @@ function viderChamps(){
   $("#repContainer").empty();
 
   compteurReponse = 1; 
+}
+
+// save image qr code
+function saveQRCodeImage(questionQCM, questionOuverte) {
+  const fs = require('fs');
+
+  let img = $('#qrView img')[0].src;
+var qrcode
+  var data = img.replace(/^data:image\/[^;]/, 'data:application/octet-stream');
+  if(questionQCM != null){
+    qrcode = questionQCM;
+  }
+  else if (questionOuverte != null){
+    qrcode = questionOuverte
+  }
+  var xhr = new XMLHttpRequest();
+  xhr.responseType = 'blob';
+  console.log(data);
+  xhr.open('GET', data, true);
+
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState == xhr.DONE) {
+      var filesaver = require('file-saver');
+      console.log(xhr.response);
+      //Dans les deux cas filsaver.saveAs renvoie rien qui s'apparente à un bolléen
+      if (filesaver.saveAs(xhr.response, qrcode.getName() + '.jpeg') == true) {
+        console.log(filesaver.saveAs(xhr.response, qrcode.getName() + '.jpeg').getName);
+        messageInfos("Le QR code a bien été enregistré", "success"); //message a afficher en haut de la page
+      }
+
+    }
+  }
+  xhr.send();
 }
