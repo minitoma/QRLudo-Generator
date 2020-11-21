@@ -208,6 +208,9 @@ class QRCodeQuestion {
     getBonneReponse(){
         return this.bonneReponseQR;
     }
+    getId(){
+        return this.idQR ;
+    }
 }
 
 /*
