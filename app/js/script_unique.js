@@ -167,7 +167,8 @@ $('#preview').click(e => {
   let qrName = $('#qrName').val();
   let qrData = [];
 
-  for (data of $('.qrData')) {
+  for (data of document.getElementsByClassName("form-control qrData")) {
+    console.log(data);
     if (data.name == 'AudioName') {
       let dataAudio = {
         type: 'music',
@@ -178,7 +179,7 @@ $('#preview').click(e => {
       let jsonAudio = JSON.stringify(dataAudio);
       qrData.push(JSON.parse(jsonAudio));
     } else
-      qrData.push($(data).val());
+      qrData.push(data.value);
   }
 
   qrType = $('#typeQRCode').val();
@@ -539,22 +540,30 @@ function verifNombreCaractere(num) {
   }
 }
 
-
-//supprimeun le textarea correspondant au numText
+var champInitialeSupprime = false;
+//supprime un le textarea correspondant au numText
 function supprimerChampLegende(e, numText) {
-
+  console.log(e + " " + numText);
 
   decrementerNbZoneDonne();
 
   //suppression dans le store de la zone de txt correspondante
   store.delete(`text` + numText);
   store.delete(`zone` + numText);
-
-  $(e).parents('div#legendeTextarea').remove();
+  if(numText == 1){
+    if(!champInitialeSupprime){
+      $(e).parents('div#legendeTextareaInitiale').remove();
+      champInitialeSupprime = true;
+    }
+    else
+      $(e).parents('div#legendeTextarea' + numText).remove();
+  }
+  else
+    $(e).parents('div#legendeTextarea' + numText).remove();
 
   activateButtonAddNewData();
 
-  if (nbZoneDonne == 1) {
+  if (nbZoneDonne == 0) {
     disableButtonDelete();
   }
   //calcul et mise a jour de la bar de progression
