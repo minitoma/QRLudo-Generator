@@ -9,8 +9,8 @@ function genererJson() {
   }
 }
 
-var questionQCM;
-var questionOuverte;
+var questionQCM =null;
+var questionQCMQRCode;
 
 function genererJsonQCM(){
   questionOuverte = null;
@@ -52,6 +52,9 @@ function previewQRCodeQCM() {
   previewQRCode(questionQCM, $('#qrView')[0]);
 }
 
+
+var questionOuverte=null;
+
 function genererJsonQuestionOuverte(){
   questionQCM = null;
   var questionText = $("#Question").val();
@@ -83,10 +86,10 @@ function previewQRCode(qrcode, div) {
 // Ajouter une nouvelle Reponse une fois qu'on va clicker sur la button Ajouterreponse
 
 var compteurReponse = 1;
-$("#ajouterQuestion").click(function () {
+$("#ajouterQuestion").click(function() {
   compteurReponse++;
   if (compteurReponse < 30) {
-    type = "Rreponse";
+    type = "Reponse";
     let reponse = document.createElement('div');
     reponse.innerHTML = `<div class="form-row" id="divQuestion` + compteurReponse + `">
                             <div class="form-group col-md-3">
@@ -112,6 +115,8 @@ $("#ajouterQuestion").click(function () {
     container.append(reponse);
   }
 });
+
+
 
 //Pour supprimer une énigme ou bien une réponse 
 function supprLigne(idLigne, element) {
@@ -194,12 +199,14 @@ function saveQRCodeImage(questionQCM, questionOuverte) {
   let img = $('#qrView img')[0].src;
 var qrcode
   var data = img.replace(/^data:image\/[^;]/, 'data:application/octet-stream');
-  if(questionQCM != null){
-    qrcode = questionQCM;
+
+  if (questionOuverte == null) {
+    var qrcode = questionQCM;
   }
-  else if (questionOuverte != null){
-    qrcode = questionOuverte
+  else {
+    var qrcode = questionOuverte;
   }
+  
   var xhr = new XMLHttpRequest();
   xhr.responseType = 'blob';
   console.log(data);
