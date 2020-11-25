@@ -329,7 +329,7 @@ $("#ajouterEnigme").click(function () {
                         name="ajouterSon" data-toggle="modal" data-target="#listeMusic" onclick="addAudioReco()">
                         <i class="fa fa-music"></i>&nbsp;&nbsp;Audio
                     </button>
-                    <button id="deleteAudioQRCode` + compteurEnigme + `" type="button" onclick="deleteAudioQRCode(` + compteurEnigme + `)"
+                    <button id="deleteAudioQRCode` + compteurEnigme + `" type="button" onclick="deleteAudioReco(` + compteurEnigme + `)"
                         class="btn btn-outline-success align-self-center"><i class="fa fa-trash"></i>
                     </button>
                 </div>
@@ -666,6 +666,11 @@ $("#deleteAudioFin").click(function () {
 function deleteAudioQRCode(idEnigme) {
   document.getElementById('questQRCode' + idEnigme).value = "";
   $("#questQRCode" + idEnigme).prop('disabled', false);
+}
+
+function deleteAudioReco(idEnigme) {
+  document.getElementById('questRecVocal' + idEnigme).value = "";
+  $("#questRecVocal" + idEnigme).prop('disabled', false);
 }
 
 // Appeler lorsqu'on click sur Générer
