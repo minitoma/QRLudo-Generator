@@ -33,7 +33,8 @@ function drawQRCodeImport(qrcode) {
     $("#charger-page").load(path.join(__dirname, "Views/unique.html"), function() {
       $('input#qrColor').val(qrcode.getColor()); // restaurer la couleur du qrcode
       $('input#qrName').val(qrcode.getName()); //restaurer le nom du qrcode
-      
+      store.set(`titreUnique`, qrcode.getName());
+      isImportationQRUnique = true;
       $('#preview, #empty').attr('disabled', false);
       drawQRCodeData(qrcode);
     });
@@ -62,8 +63,11 @@ function drawQRCodeImport(qrcode) {
 function drawQRCodeData(qrcode) {
   let data = qrcode.getData();
   
+  for (var i = 1; i <= store.get(`numZoneCourante`); i++) {
+    store.delete(`zone${i}`);
+  }
+
   for (var i = 0; i < data.length; i++) {
-    console.log(i);
     if (typeof data[i] === "string") {
       ajouterChampLegende(data[i]);
     } else if (typeof data[i] === "object") {
