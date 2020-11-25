@@ -30,7 +30,13 @@ class QRCodeQuestionOuverte {
     setName(name){
       this.qrcode.name = name;
     }
-  
+    getGoodAnswer() {
+      return this.qrcode.text_bonne_reponse;
+    }
+
+    getBadAnswer() {
+      return this.qrcode.text_mauvaise_reponse;
+    }
     getText(){
       return this.qrcode.text;
     }

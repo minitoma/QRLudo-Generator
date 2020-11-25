@@ -30,6 +30,22 @@ class QRCodeQCM {
     setName(name){
       this.qrcode.name = name;
     }
+
+    getData() {
+      return this.qrcode.data;
+    }
+
+    getGoodAnswer() {
+      return this.qrcode.text_bonne_reponse;
+    }
+
+    getBadAnswer() {
+      return this.qrcode.m_text_mauvaise_rep;
+    }
+
+    getLettreReponseVocale() {
+      return this.qrcode.lettreReponseVocale
+    }
   
     getText(){
       return this.qrcode.text;
