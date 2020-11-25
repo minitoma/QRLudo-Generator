@@ -11,6 +11,9 @@ $("#addAudioFin").click(function () {
 function addAudioQRCode() {
   audioSource = "qrcode";
 };
+function addAudioReco() {
+  audioSource = "vocale";
+};
 
 function getMusicFromUrl() {
   let modal = $('#listeMusic').find('div.modal-body.scrollbar-success');
@@ -96,6 +99,11 @@ function ajouterChampSon(nom, url) {
   }
   else if (audioSource == "qrcode") {
     let text = document.getElementById("questQRCode" + currentEnigme);
+    text.value = nom;
+    text.setAttribute("disabled", "true");
+  }
+  else if (audioSource == "vocale") {
+    let text = document.getElementById("questRecVocal" + currentEnigme);
     text.value = nom;
     text.setAttribute("disabled", "true");
   }
@@ -202,6 +210,7 @@ $("#ajouterEnigme").click(function () {
   if (compteurEnigme < 30) {
     type = "enigme";
     let reponse = document.createElement('div');
+    let dropDown = document.createElement('div');
     let popUpQRCode = document.createElement('div');
     let popUpRecVocale = document.createElement('div');
     reponse.innerHTML = `<div class="form-group">
@@ -209,17 +218,27 @@ $("#ajouterEnigme").click(function () {
                               <label class="control-label"
                               style="color:#28a745;padding-top:10px;padding-right:54px;">Énigme `+ compteurEnigme + ` : </label>
                               <input type="text" class="form-control" id="enigme`+ compteurEnigme + `" name="nombreReponse"
-                              placeholder="Détails sur l'énigme `+ compteurEnigme + `" onkeyup="activerSave();" />
-                              <label class="control-label" style="color:#28a745;padding-top:10px;padding-right:10px; padding-left:20px;">Type d'énigme : </label>
-                              <button type="button" id="scanQR`+ compteurEnigme + `" name="ajouterQR` + compteurEnigme + `" data-toggle="modal"
-                                  data-target="#popupQRCode` + compteurEnigme + `" class="btn btn-outline-success align-self-center">
+                              placeholder="Nom de l'énigme `+ compteurEnigme + `" onkeyup="activerSave();" />
+                              &nbsp;
+                              <div class="btn-group" style="display:true" id="menuDeroulant`+ compteurEnigme +`">
+                                <button type="button" class="btn btn-outline-success align-self-center dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Type énigme        &nbsp;&nbsp; &nbsp;
+                                </button>
+                                <div class="dropdown-menu" >
+                                  <button type="button" id="scanQR`+ compteurEnigme + `" name="ajouterQR` + compteurEnigme + `" data-toggle="modal"
+                                  data-target="#popupQRCode` + compteurEnigme + `" class="dropdown-item">
                                   <i class="fa fa-qrcode"></i>&nbsp;&nbsp;QR CODE</button>&nbsp;
-                              <button id="recVocale`+ compteurEnigme + `" type="button" class="btn btn-outline-success align-self-center"
+                                  <button id="recVocale`+ compteurEnigme + `" type="button" class="dropdown-item"
                                   data-toggle="modal" data-target="#popupRecVocale` + compteurEnigme + `">
-                                  <i class="fa fa-microphone"></i>&nbsp;&nbsp;Reconnaissance vocale</button>&nbsp;
-                              <button id="deleteEnigme`+ compteurEnigme + `" type="button" onclick="supprLigne(` + compteurEnigme + ",\'" + type + `\');" class="btn btn-outline-success align-self-center">
-                                  <i class="fa fa-trash"></i></button>
-                              </div>
+                                  <i class="fa fa-microphone"></i>&nbsp;&nbsp;Reconnaissance vocale</button>
+                                  </div>
+                                </div>
+                                <div id="modification`+ compteurEnigme +`">
+                                </div>
+                                &nbsp;
+                                <button id="deleteEnigme`+ compteurEnigme + `" type="button" onclick="supprLigne(` + compteurEnigme + ",\'" + type + `\');" class="btn btn-outline-success align-self-center">
+                                <i class="fa fa-trash"></i></button>
+                              </div>                              
                           </div>`;
 
     popUpQRCode.innerHTML = `<div class="modal fade bd-example-modal-lg" id="popupQRCode` + compteurEnigme + `" tabindex="-1" role="dialog" data-backdrop="static"
@@ -237,7 +256,7 @@ $("#ajouterEnigme").click(function () {
                 <div class="col-lg-12 form-inline">
                     <label class="control-label" style="color:#28a745;padding-right:32px;">Question :</label>
                     <input type="text" class="form-control input-lg" style="width:500px;" id="questQRCode` + compteurEnigme + `" cols="10"
-                        name="nomprojet" placeholder="Saisissez votre question" onkeyup="activerSave();" />
+                        name="nomprojet" placeholder="Saisissez votre question" onkeyup="activerSave();" />&nbsp;
                     <button type="button" id="addAudioQRCode` + compteurEnigme + `" class="btn btn-outline-success btn-unique-xl  "
                         name="ajouterSon" data-toggle="modal" data-target="#listeMusic" onclick="addAudioQRCode()">
                         <i class="fa fa-music"></i>&nbsp;&nbsp;Audio
@@ -293,7 +312,7 @@ $("#ajouterEnigme").click(function () {
 
     popUpRecVocale.innerHTML = `<div class="modal fade" id="popupRecVocale` + compteurEnigme + `" tabindex="-1" role="dialog" data-backdrop="static"
     aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-keyboard="false">
-    <div class="modal-dialog modal-lg modal-dialog-centered" role="dialog" style="max-width: 40% !important">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="dialog" style="max-width: 50% !important">
         <div class="modal-content" style="padding: 20px;">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalCenterTitle">Reconnaissance Vocale</h5>
@@ -305,14 +324,21 @@ $("#ajouterEnigme").click(function () {
             <div class="form-group">
                 <div class="col-lg-12 form-inline">
                     <label class="control-label" style="color:#28a745;padding-right:32px;">Question :</label>
-                    <input type="text" class="form-control input-lg" style="width:1450px;" id="questRecVocal` + compteurEnigme + `" cols="10"
-                        name="nomprojet" placeholder="Saisissez votre question" onkeyup="activerSave();" />
+                    <input type="text" class="form-control input-lg" style="width:500px;" id="questRecVocal` + compteurEnigme + `" cols="10"
+                        name="nomprojet" placeholder="Saisissez votre question" onkeyup="activerSave();" />&nbsp;
+                        <button type="button" id="addAudioReco` + compteurEnigme + `" class="btn btn-outline-success btn-unique-xl  "
+                        name="ajouterSon" data-toggle="modal" data-target="#listeMusic" onclick="addAudioReco()">
+                        <i class="fa fa-music"></i>&nbsp;&nbsp;Audio
+                    </button>
+                    <button id="deleteAudioQRCode` + compteurEnigme + `" type="button" onclick="deleteAudioQRCode(` + compteurEnigme + `)"
+                        class="btn btn-outline-success align-self-center"><i class="fa fa-trash"></i>
+                    </button>
                 </div>
                 <hr>
                 <div class="alert alert-danger" role="alert" id="alertReponseEmptyError" style="display:none"> Veuillez d'abord saisir une réponse </div>
                 <div class="col-lg-12 form-inline">
                     <label class="control-label" style="color:#28a745;padding-right:32px;">Réponse :</label>
-                    <input type="text" class="form-control input-lg" style="width:1450px;" id="repRecVocal` + compteurEnigme + `" cols="10"
+                    <input type="text" class="form-control input-lg" style="width:500px;" id="repRecVocal` + compteurEnigme + `" cols="10"
                         name="nomprojet" placeholder="Saisissez votre question" onkeyup="activerSave();" />
                 </div>
             </div>
@@ -433,9 +459,11 @@ function supprLigne(idLigne, element) {
           console.log(projetSeriousGame.getQuestionsReco());
         }
       });
-    }else{
+    } else {
       document.getElementsByName("nombreReponse")[0].value = "";
-      console.log(document.getElementsByName("nombreReponse")[0]);
+      $("#menuDeroulant"+idLigne).attr("style","display:true");
+      $("#modification"+idLigne).empty();
+      $("#modification"+idLigne).attr("style","display:none");
     }
   } else if (element == "qrcode") {
     compteurQuestion--;
@@ -495,6 +523,7 @@ function validerQuestion(idEnigme, type) {
       if (reponse == "") {
         tousLesChampsSontRemplies = false;
         $("#popupQRCode" + idEnigme + "  #alertReponsesEmptyError").attr("style", "display:true");
+        console.log("test");
       } else if (tousLesChampsSontRemplies) {
         $("#popupQRCode" + idEnigme + "  #alertReponsesEmptyError").attr("style", "display:none");
       }
@@ -518,14 +547,6 @@ function validerQuestion(idEnigme, type) {
       console.log(projetSeriousGame.getQuestionsQr());
     }
 
-    if (tousLesChampsSontRemplies == true) {
-      annulerQuestion(idEnigme, type);
-      // On rajoute l'attribut bootstrap pour fermer le modal sur le bouton valider
-      jQuery("#addQRCode" + idEnigme).attr("data-dismiss", "modal");
-      // On simule l'appuie du bouton
-      $("#addQRCode" + idEnigme).trigger({ type: "click" });
-      $("#addQRCode" + idEnigme).removeAttr("data-dismiss");
-    }
   }
   else if (type == "vocale") {
     let textQuestion = document.getElementById("questRecVocal" + idEnigme).value;
@@ -547,7 +568,7 @@ function validerQuestion(idEnigme, type) {
       if (projetSeriousGame.getQuestionRecoFromId(idEnigme) !== null) {
         // Si c'est le cas on change les champs de cette question
         projetSeriousGame.getQuestionRecoFromId(idEnigme).setQuestion(textQuestion);
-        projetSeriousGame.getQuestionRecoFromId(idEnigme).setReponse(tabReponses);
+        projetSeriousGame.getQuestionRecoFromId(idEnigme).setReponse(textReponse);
       } else {
         // Sinon on ajout une question au projet
         projetSeriousGame.getQuestionsReco().push(new RecVocaleQuestion(textQuestion, textReponse, idEnigme));
@@ -555,19 +576,68 @@ function validerQuestion(idEnigme, type) {
       console.log(projetSeriousGame.getQuestionsReco());
     }
 
-    if (tousLesChampsSontRemplies == true) {
-      annulerQuestion(idEnigme, type);
+
+  }
+
+  if (tousLesChampsSontRemplies == true) {
+    annulerQuestion(idEnigme, type);
+
+    // On cache le menu déroulant pour mettre et afficher un bouton modifier dans le div id="modification"
+    $("#menuDeroulant"+idEnigme).attr("style", "display:none");
+    let modification = document.getElementById("modification"+idEnigme);
+    if (type == "qrcode") {
       // On rajoute l'attribut bootstrap pour fermer le modal sur le bouton valider
-      jQuery("#addRecVocal" + idEnigme).attr("data-dismiss", "modal");
+      jQuery("#addQRCode" + idEnigme).attr("data-dismiss", "modal");
+      // On simule l'appuie du bouton
+      $("#addQRCode" + idEnigme).trigger({ type: "click" });
+      $("#addQRCode" + idEnigme).removeAttr("data-dismiss");
+
+      modification.innerHTML = `<button type="button" id="scanQR`+ idEnigme + `" name="ajouterQR` + idEnigme + `" data-toggle="modal"
+      data-target="#popupQRCode` + idEnigme + `" class="btn btn-outline-success align-self-center" onclick="chargerQuestion(`+idEnigme+`,'qrcode');">
+      <i class="fa fa-qrcode"></i>&nbsp;&nbsp;Modifier</button>&nbsp;`;
+      
+    }
+    else if (type == "vocale") {
+      // On rajoute l'attribut bootstrap pour fermer le modal sur le bouton valider
+      $("#addRecVocal" + idEnigme).attr("data-dismiss", "modal");
       // On simule l'appuie du bouton
       $("#addRecVocal" + idEnigme).trigger({ type: "click" });
       $("#addRecVocal" + idEnigme).removeAttr("data-dismiss");
+
+      modification.innerHTML = `<button id="recVocale`+ idEnigme + `" type="button" class="btn btn-outline-success align-self-center"
+      data-toggle="modal" data-target="#popupRecVocale` + idEnigme + `" onclick="chargerQuestion(`+idEnigme+`,'vocale');">
+      <i class="fa fa-microphone"></i>&nbsp;&nbsp;Modifier</button>`;
     }
+
+  }
+}
+
+// Fonction qui charger les données des popup qrcode
+function chargerQuestion(idEnigme, type){
+  // On affecte les valeurs rentrées à la popup pour la modification
+  if(type == "qrcode"){
+    $("#popupQRCode"+idEnigme+" #questQRCode"+idEnigme).val(projetSeriousGame.getQuestionQrFromId(idEnigme).getQuestion()); // le champs de question
+
+    for(let i=0; i < projetSeriousGame.getQuestionQrFromId(idEnigme).getReponses().length; i++){// les champs de réponses
+      if(i>0) ajouterQuestions(idEnigme);// La popup n'a qu'1 reponse donc on en ajoute
+      $("#popupQRCode"+idEnigme+" #projectId"+idEnigme+""+(i+1)).val(projetSeriousGame.getQuestionQrFromId(idEnigme).getReponses()[i]);
+    }
+    $("#popupQRCode"+idEnigme+" #gridCheck"+idEnigme+""+projetSeriousGame.getQuestionQrFromId(idEnigme).getBonneReponse()).prop("checked",true);
+    // On cache les messages d'erreurs
+    $("#popupQRCode" + idEnigme + "  #alertQuestionEmptyError").attr("style", "display:none");
+    $("#popupQRCode" + idEnigme + "  #alertReponsesEmptyError").attr("style", "display:none");
+  }if(type == "vocale"){
+    console.log(projetSeriousGame.getQuestionRecoFromId(idEnigme));
+    $("#popupRecVocale"+idEnigme+" #questRecVocal"+idEnigme).val(projetSeriousGame.getQuestionRecoFromId(idEnigme).getQuestion()); // le champs de la question
+    $("#popupRecVocale"+idEnigme+" #repRecVocal"+idEnigme).val(projetSeriousGame.getQuestionRecoFromId(idEnigme).getReponse()); // le champs de la reponse
+    // On cache les messages d'erreurs
+    $("#popupRecVocale" + idEnigme + "  #alertQuestionEmptyError").attr("style", "display:none");
+    $("#popupRecVocale" + idEnigme + "  #alertReponseEmptyError").attr("style", "display:none");
+    
   }
 
-
-
 }
+
 // Supprime la question dans la liste des questions du projetSeriousGame
 function verifEnigmeValide(idEnigme) {
   for (let i = 0; i < projetSeriousGame.getQuestionsQr().length; ++i) {
