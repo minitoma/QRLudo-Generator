@@ -80,26 +80,10 @@ function previewQRCode(qrcode, div) {
   facade.genererQRCode(div, qrcode);
 }
 
+// Ajouter une nouvelle Reponse une fois qu'on va clicker sur la button Ajouterreponse
 
-
-var projet = new Projet();
-
-
-$(document).ready(function() {
-
-  //méthode gérant la continuité
-  enregistrement();
-
-  // Ajouter une nouvelle Reponse une fois qu'on va clicker sur la button Ajouterreponse
-  $("#ajouterQuestion").click(function () {
-    Ajouternouvellereponse();
-
-  })
-});
-
-//function Ajouter une nouvelle Reponse
 var compteurReponse = 1;
-function Ajouternouvellereponse(reponse){
+$("#ajouterQuestion").click(function () {
   compteurReponse++;
   if (compteurReponse < 30) {
     type = "Rreponse";
@@ -113,18 +97,21 @@ function Ajouternouvellereponse(reponse){
                                       value="option"` + compteurReponse + `" >
                                       <label class="form-check-label" for="gridCheck`+ compteurReponse + `">
                             </div>
-                              <div class="form-group col-md-1">
-                                  <button id="deleteQRCode`+ compteurReponse + `" type="button"
-                                      class="btn btn-outline-success align-self-center" onclick="supprLigne(` + compteurReponse + ",\'" + type + `\');">
-                                      <i class="fa fa-trash"></i></button>
-                                      </div>
-                              </div>`;
+                          <div class="form-group col-md-6">
+                                 <input type="text" class="form-control col-sm-6" id="reponse`+ compteurReponse + `" rows="2" name="nomprojet"
+                                placeholder="Réponse" />
+                           </div>
+                            <div class="form-group col-md-1">
+                                <button id="deleteQRCode`+ compteurReponse + `" type="button"
+                                    class="btn btn-outline-success align-self-center" onclick="supprLigne(` + compteurReponse + ",\'" + type + `\');">
+                                    <i class="fa fa-trash"></i></button>
+                                    </div>
+                            </div>`;
 
-      let container = $("#repContainer");
-      container.append(reponse);
-    }
-
-}
+    let container = $("#repContainer");
+    container.append(reponse);
+  }
+});
 
 //Pour supprimer une énigme ou bien une réponse 
 function supprLigne(idLigne, element) {
@@ -184,38 +171,18 @@ $("#emptyFields").click(function(){
 
 
 function viderChamps(){
-  $('#Question').val('');
-  $('#Bonnereponse').val('');
-  $('#MessageBonnereponse').val('');
-  $('#MessageMauvaisereponse').val('');
-  $('#reponseinitiale').val('');
-  $('#QuestionQCM').val('');
-  if($("#checkboxQR").is(':checked') == true){
-    console.log("couco");
-    $('#checkboxQR').prop('checked', false);
-    console.log("dd")
-  }
+  document.getElementById("Question").value="";
+  document.getElementById("Bonnereponse").value="";
+  document.getElementById("MessageBonnereponse").value="";
+  document.getElementById("MessageMauvaisereponse").value="";
+  document.getElementById("reponseinitiale").value="";
+  document.getElementById("QuestionQCM").value="";
+  $('#reponseParIdentifiant').prop('checked', false);
   $('#gridCheck1').prop('checked', false);
-  $('#MessageMauvaisereponseQCM').val('');
-  $('#MessageBonnereponseQCM').val('');
-  //$("#repContainer").empty();
-  $("#repContainer").hide();
-
-  deleteStore(`Question`);
-
-  deleteStore(`Bonnereponse`);
-
-  deleteStore('MessageBonnereponse');
-
-  deleteStore('MessageMauvaisereponse');
-
-  deleteStore(`reponseinitiale`);
-
-  deleteStore(`QuestionQCM`);
-
-  deleteStore(`MessageMauvaisereponseQCM`);
-
-  deleteStore('MessageBonnereponseQCM');
+  document.getElementById("MessageBonnereponseQCM").value="";
+  document.getElementById("MessageMauvaisereponseQCM").value="";
+  
+  $("#repContainer").empty();
 
   compteurReponse = 1; 
 }
@@ -252,108 +219,3 @@ var qrcode
   }
   xhr.send();
 }
-
-
-
-
-
-
-//test1
-/*document.getElementById("Question").value = getSavedValue("Question");    // set the value to this input
-document.getElementById("Bonnereponse").value = getSavedValue("Bonnereponse");   // set the value to this input
-document.getElementById("MessageBonnereponse").value = getSavedValue("MessageBonnereponse");    // set the value to this input
-document.getElementById("MessageMauvaisereponse").value = getSavedValue("MessageMauvaisereponse");   // set the value to this input
-    var checkbox = document.getElementById('checkboxQR');
-    localStorage.setItem('checkboxQR', checkbox.checked); 
-
-function load(){    
-    var checked = JSON.parse(localStorage.getItem('checkboxQR'));
-    document.getElementById("checkboxQR").checked = checked;
-    console.log('zzzz');
-}
-load();
-function saveValue(e){
-         var id = e.id;  
-         var val = e.value; 
-         localStorage.setItem(id, val);
-}
-
-        
-function getSavedValue  (v){
-
-  if (!localStorage.getItem(v)) {
-     return "";
-     }
-     return localStorage.getItem(v);
-}
-*/
-
-
-
-function enregistrement(){
-
-  if(store.get(`Question`))
-    $("#Question").val(store.get(`Question`));
-  
-//Question = store.get(`Question`);
-
-  if(store.get(`Bonnereponse`) )
-    $("#Bonnereponse").val(store.get(`Bonnereponse`));
-
-  if(store.get(`MessageBonnereponse`) )
-    $("#MessageBonnereponse").val(store.get(`MessageBonnereponse`));
-
-  if(store.get('MessageMauvaisereponse'))
-    $("#MessageMauvaisereponse").val(store.get('MessageMauvaisereponse'));
-
-  if(store.get('QuestionQCM'))
-    $("#QuestionQCM").val(store.get('QuestionQCM'));
-
-  if(store.get('MessageMauvaisereponseQCM'))
-    $("#MessageMauvaisereponseQCM").val(store.get('MessageMauvaisereponseQCM'));
-
-  if(store.get('MessageBonnereponseQCM'))
-    $("#MessageBonnereponseQCM").val(store.get('MessageBonnereponseQCM'));
-
-  if(store.get('reponseinitiale'))
-    $("#reponseinitiale").val(store.get('reponseinitiale'));
-
-  /*for(var i = 1; i<compteurReponse+1; i++){
-    if(store.get('reponse'+i)){
-      console.log('zakkk')
-      $("#reposne"+i).val(store.get('reponse'+i));
-
-    }
-  }
-
-   for(var i = 1; i<numReponse+1; i++){
-    if(store.get('reponse'+i)){
-
-
-      var new_rep = new QCM(store.get('reponse'+i),store.get('data'+i), store.get('reponseColor'+i)); // cretation d'une nouvelle reponse
-      new_rep.setId(store.get('reponseId'+i));
-      projet.addReponse(new_rep);
-
-      projet.getQuestion().addReponse(new_rep.getId(), new_rep.getData());
-      addReponseLine(new_rep);
-
-    }
-  }*/
-
-
-}
-
-
-
-function activerSave(text){
-  deleteStore(text);
-
-  var newText = $("#"+text).val();
-  store.set(text,newText);
-}
-
-function deleteStore(del){
-  if(store.get(del) )
-    store.delete(del);
-}
-
