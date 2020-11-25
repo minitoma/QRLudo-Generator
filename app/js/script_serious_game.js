@@ -8,17 +8,19 @@ $("#addAudioIntro").click(function () {
 $("#addAudioFin").click(function () {
   audioSource = "fin";
 });
-function addAudioQRCode() {
+function addAudioQRCode(idEnigme) {
+  currentEnigme = idEnigme;
   audioSource = "qrcode";
 };
-function addAudioReco() {
+function addAudioReco(idEnigme) {
+  currentEnigme = idEnigme;
   audioSource = "vocale";
 };
 
 // Fonction pour ajouter un fichier audio
 
 function getMusicFromUrl() {
-  let modal = $('#listeMusic').find('div.modal-body.scrollbar-success');
+  let modal = $('#listeMusic'+currentEnigme).find('div.modal-body.scrollbar-success');
   let loader = document.createElement('div');
   let errorMsg = document.createElement('label');
 
@@ -109,6 +111,7 @@ function ajouterChampSon(nom, url) {
     text.setAttribute("disabled", "true");
   }
   else if (audioSource == "vocale") {
+    console.log(currentEnigme);
     let text = document.getElementById("questRecVocal" + currentEnigme);
     text.value = nom;
     text.name = url;
@@ -265,7 +268,7 @@ $("#ajouterEnigme").click(function () {
                     <input type="text" class="form-control input-lg" style="width:500px;" id="questQRCode` + compteurEnigme + `" cols="10"
                         name="nomprojet" placeholder="Saisissez votre question" onkeyup="activerSave();" />&nbsp;
                     <button type="button" id="addAudioQRCode` + compteurEnigme + `" class="btn btn-outline-success btn-unique-xl  "
-                        name="ajouterSon" data-toggle="modal" data-target="#listeMusic" onclick="addAudioQRCode()">
+                        name="ajouterSon" data-toggle="modal" data-target="#listeMusic" onclick="addAudioQRCode(` + compteurEnigme + `)">
                         <i class="fa fa-music"></i>&nbsp;&nbsp;Audio
                     </button>
                     <button id="deleteAudioQRCode` + compteurEnigme + `" type="button" onclick="deleteAudioQRCode(` + compteurEnigme + `)"
@@ -334,7 +337,7 @@ $("#ajouterEnigme").click(function () {
                     <input type="text" class="form-control input-lg" style="width:500px;" id="questRecVocal` + compteurEnigme + `" cols="10"
                         name="nomprojet" placeholder="Saisissez votre question" onkeyup="activerSave();" />&nbsp;
                         <button type="button" id="addAudioReco` + compteurEnigme + `" class="btn btn-outline-success btn-unique-xl  "
-                        name="ajouterSon" data-toggle="modal" data-target="#listeMusic" onclick="addAudioReco()">
+                        name="ajouterSon" data-toggle="modal" data-target="#listeMusic" onclick="addAudioReco(` + compteurEnigme + `)">
                         <i class="fa fa-music"></i>&nbsp;&nbsp;Audio
                     </button>
                     <button id="deleteAudioQRCode` + compteurEnigme + `" type="button" onclick="deleteAudioReco(` + compteurEnigme + `)"
@@ -401,6 +404,7 @@ function ajouterQuestions(idEnigme) {
 
 //Pour supprimer une énigme ou bien une réponse des QRCode
 function supprLigne(idLigne, element) {
+  console.log(currentEnigme);
   if (element == "enigme") {
     // On regarde le nombre d'énigme crée, et si il y en a qu'une seule on supprime juste la value de l'input text
     if ($("[name=nombreReponse]").length > 1) {
@@ -513,6 +517,7 @@ function annulerQuestion(idEnigme, type) {
 
 // Fonction pour valider une question à ajouter dans une enigme
 function validerQuestion(idEnigme, type) {
+  currentEnigme = idEnigme;
   let tousLesChampsSontRemplies = true; // Variable pour vérifier le remplissage des champs
   // On regarde le type de l'énigme
   if (type == "qrcode") {
@@ -565,6 +570,9 @@ function validerQuestion(idEnigme, type) {
   }
   else if (type == "vocale") {
     let textQuestion = document.getElementById("questRecVocal" + idEnigme).value;
+    if(textQuestion.substring(textQuestion.length-3, textQuestion.length) == "mp3"){
+      textQuestion = document.getElementById("questRecVocal" + idEnigme).name;
+    }
     if (textQuestion == "") {
       tousLesChampsSontRemplies = false;
       $("#popupRecVocale" + idEnigme + "  #alertQuestionEmptyError").attr("style", "display:true");
@@ -629,6 +637,8 @@ function validerQuestion(idEnigme, type) {
 
 // Fonction qui charger les données des popup qrcode
 function chargerQuestion(idEnigme, type){
+  currentEnigme = idEnigme;
+  console.log("hello "+currentEnigme);
   // On affecte les valeurs rentrées à la popup pour la modification
   if(type == "qrcode"){
     $("#popupQRCode"+idEnigme+" #questQRCode"+idEnigme).val(projetSeriousGame.getQuestionQrFromId(idEnigme).getQuestion()); // le champs de question
