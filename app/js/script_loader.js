@@ -18,9 +18,6 @@ numZoneCourante = 0;
 //nombre de fichier ajouté dans l'onglet multiple
 numFich = 0;
 
-//nombre de reponse soumises à la question dans l'onglet QCM
-numReponseQCM = 0;
-
 //numero de la reponse dans QR Exercice
 numReponse = 0;
 
@@ -189,12 +186,6 @@ const {
   Reponse,
   Question
 } = require(`${root}/Model/QRCodeQuestionReponse`);
-
-const {
-  ProjetQCM,
-  ReponseQCM,
-  QuestionQCM
-} = require(`${root}/Model/QRCodeQCM_old`);
 
 const { 
   QRCodeQCM,
