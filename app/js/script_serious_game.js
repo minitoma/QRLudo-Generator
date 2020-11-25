@@ -15,6 +15,8 @@ function addAudioReco() {
   audioSource = "vocale";
 };
 
+// Fonction pour ajouter un fichier audio
+
 function getMusicFromUrl() {
   let modal = $('#listeMusic').find('div.modal-body.scrollbar-success');
   let loader = document.createElement('div');
@@ -87,24 +89,29 @@ function getMusicFromUrl() {
   });
 }
 
+// Fonction pour ajouter au bon endroit le fichier audio
 function ajouterChampSon(nom, url) {
   if (audioSource == "intro") {
     let textArea = document.getElementById("textAreaIntro");
     textArea.value = nom;
+    textArea.name = url;
     textArea.setAttribute("disabled", "true");
   } else if (audioSource == "fin") {
     let textArea = document.getElementById("textAreaFin");
     textArea.value = nom;
+    textArea.name = url;
     textArea.setAttribute("disabled", "true");
   }
   else if (audioSource == "qrcode") {
     let text = document.getElementById("questQRCode" + currentEnigme);
     text.value = nom;
+    text.name = url;
     text.setAttribute("disabled", "true");
   }
   else if (audioSource == "vocale") {
     let text = document.getElementById("questRecVocal" + currentEnigme);
     text.value = nom;
+    text.name = url;
     text.setAttribute("disabled", "true");
   }
 }
@@ -148,6 +155,7 @@ $(document).ready(function () {
   });
 });
 
+// Fonction pour vérifier l'écriture dans un champ texte
 function activerSave() {
   console.log("Activer Save");
 }
@@ -483,6 +491,7 @@ function supprLigne(idLigne, element) {
   }
 }
 
+// Fonction pour réinitialise les champs question dans la popup QRCode
 function annulerQuestion(idEnigme, type) {
   if (type == "qrcode") {
     let nbQuestions = document.getElementById("repContainer" + idEnigme).childElementCount;
@@ -502,17 +511,24 @@ function annulerQuestion(idEnigme, type) {
   }
 }
 
+// Fonction pour valider une question à ajouter dans une enigme
 function validerQuestion(idEnigme, type) {
   let tousLesChampsSontRemplies = true; // Variable pour vérifier le remplissage des champs
   // On regarde le type de l'énigme
   if (type == "qrcode") {
     let textQuestion = document.getElementById("questQRCode" + idEnigme).value;
+
     if (textQuestion == "") {
       tousLesChampsSontRemplies = false;
       $("#popupQRCode" + idEnigme + "  #alertQuestionEmptyError").attr("style", "display:true");
     } else {
       $("#popupQRCode" + idEnigme + "  #alertQuestionEmptyError").attr("style", "display:none");
     }
+    
+    if(textQuestion.substring(textQuestion.length-3, textQuestion.length) == "mp3"){
+      textQuestion = document.getElementById("questQRCode" + idEnigme).name;
+    }
+      
     let tabReponses = new Array();
     let estBonneReponse = 1;
     let nbReponses = document.getElementById("repContainer" + idEnigme).childElementCount;
@@ -637,7 +653,8 @@ function chargerQuestion(idEnigme, type){
 
 }
 
-// Supprime la question dans la liste des questions du projetSeriousGame
+// Supprime la question dans la liste des questions du projetSeriousGame 
+// Fonction qui vérifie si une énigme est valide
 function verifEnigmeValide(idEnigme) {
   for (let i = 0; i < projetSeriousGame.getQuestionsQr().length; ++i) {
     if (projetSeriousGame.getQuestionsQr()[i].getId() == idEnigme) {
@@ -698,7 +715,13 @@ function genereJsonSeriousGame() {
   // On extrait les valeurs des champs utiles du html
   let nomSeriousGame = $("#projectId").val();
   let textIntro = $("#textAreaIntro").val();
+  if(textIntro.substring(textIntro.length-3, textIntro.length) == "mp3"){
+    textIntro = document.getElementById("textAreaIntro").name;
+  }
   let textFin = $("#textAreaFin").val();
+  if(textFin.substring(textFin.length-3, textFin.length) == "mp3"){
+    textFin = document.getElementById("textAreaIntro").name;
+  }
   let qrColor = $('#qrColor').val();
 
   if (nomSeriousGame == "" || textIntro == "" || textFin == "" || qrColor == "") {
