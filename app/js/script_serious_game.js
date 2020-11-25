@@ -239,10 +239,11 @@ $("#ajouterEnigme").click(function () {
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
+            <div class="alert alert-danger" role="alert" id="alertQuestionEmptyError" style="display:none"> Veuillez d'abord saisir une question </div>
             <div class="row">
                 <div class="col-lg-12 form-inline">
                     <label class="control-label" style="color:#28a745;padding-right:32px;">Question :</label>
-                    <input type="text" class="form-control input-lg" style="width:700px;" id="questQRCode` + compteurEnigme + `" cols="10"
+                    <input type="text" class="form-control input-lg" style="width:500px;" id="questQRCode` + compteurEnigme + `" cols="10"
                         name="nomprojet" placeholder="Saisissez votre question" onkeyup="activerSave();" />
                     <button type="button" id="addAudioQRCode` + compteurEnigme + `" class="btn btn-outline-success btn-unique-xl  "
                         name="ajouterSon" data-toggle="modal" data-target="#listeMusic" onclick="addAudioQRCode()">
@@ -254,6 +255,7 @@ $("#ajouterEnigme").click(function () {
                 </div>
             </div>
             <hr>
+            <div class="alert alert-danger" role="alert" id="alertReponsesEmptyError" style="display:none"> Veuillez d'abord saisir toutes vos réponses </div>
             <div class="form-row">
                 <div class="form-group col-md-6" id="labelBonneReponse` + compteurEnigme + `">
                     <label>&nbsp;&nbsp;&nbsp;&nbsp;Bonne réponse :</label>
@@ -290,7 +292,7 @@ $("#ajouterEnigme").click(function () {
               <div class="modal-footer">
                   <button type="button" class="btn btn-outline-success" data-dismiss="modal"
                       id="cancelQRCode` + compteurEnigme + `" onclick="annulerQuestion(` + compteurEnigme + `, \'qrcode\')">Annuler</button>
-                  <button type="button" class="btn btn-outline-success" data-dismiss="modal" id="addQRCode` + compteurEnigme + `" onclick="validerQuestion(` + compteurEnigme + `, \'qrcode\')">Valider</button>
+                  <button type="button" class="btn btn-outline-success" id="addQRCode` + compteurEnigme + `" onclick="validerQuestion(` + compteurEnigme + `, \'qrcode\')">Valider</button>
               </div>
           </div>
       </div>
@@ -306,6 +308,7 @@ $("#ajouterEnigme").click(function () {
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
+            <div class="alert alert-danger" role="alert" id="alertQuestionEmptyError" style="display:none"> Veuillez d'abord saisir une question </div>
             <div class="form-group">
                 <div class="col-lg-12 form-inline">
                     <label class="control-label" style="color:#28a745;padding-right:32px;">Question :</label>
@@ -313,6 +316,7 @@ $("#ajouterEnigme").click(function () {
                         name="nomprojet" placeholder="Saisissez votre question" onkeyup="activerSave();" />
                 </div>
                 <hr>
+                <div class="alert alert-danger" role="alert" id="alertReponseEmptyError" style="display:none"> Veuillez d'abord saisir une réponse </div>
                 <div class="col-lg-12 form-inline">
                     <label class="control-label" style="color:#28a745;padding-right:32px;">Réponse :</label>
                     <input type="text" class="form-control input-lg" style="width:1450px;" id="repRecVocal` + compteurEnigme + `" cols="10"
@@ -322,7 +326,7 @@ $("#ajouterEnigme").click(function () {
             <div class="modal-footer">
                 <button type="button" class="btn btn-outline-success" data-dismiss="modal"
                     id="cancelRecVocal` + compteurEnigme + `" onclick="annulerQuestion(` + compteurEnigme + `, \'vocale\')">Annuler</button>
-                <button type="button" class="btn btn-outline-success" data-dismiss="modal" id="addRecVocal` + compteurEnigme + `" onclick="validerQuestion(` + compteurEnigme + `, \'vocale\')">Valider</button>
+                <button type="button" class="btn btn-outline-success" id="addRecVocal` + compteurEnigme + `" onclick="validerQuestion(` + compteurEnigme + `, \'vocale\')">Valider</button>
             </div>
         </div>
     </div>
@@ -333,6 +337,8 @@ $("#ajouterEnigme").click(function () {
     container.append(popUpRecVocale);
   }
 });
+// On ajoute une enigme de base
+$("#ajouterEnigme").trigger("click");
 
 //Ajouter autant de réponses que souhaité dans la popup QRCode
 var compteurQuestion = 1;
@@ -370,65 +376,74 @@ function ajouterQuestions(idEnigme) {
 //Pour supprimer une énigme ou bien une réponse des QRCode
 function supprLigne(idLigne, element) {
   if (element == "enigme") {
-    compteurEnigme--;
-    $("#divEnigme" + idLigne).on('click', function () {
-      verifEnigmeValide(idLigne);
-      $(this).remove();
-      for (let cpt = idLigne; cpt <= compteurEnigme; cpt++) {
-        let id = cpt + 1;
-        let div = $("#divEnigme" + id)[0];
-        div.getElementsByTagName("label")[0].innerHTML = "Énigme " + cpt + " :";
-        div.getElementsByTagName("input")[0].id = "enigme" + cpt;
-        div.getElementsByTagName("input")[0].placeholder = "Détails sur l'énigme " + cpt;
-        let boutons = div.getElementsByTagName("button");
-        boutons[0].id = "scanQR" + cpt;
-        boutons[0].setAttribute("data-target", "#popupQRCode" + cpt);
-        boutons[0].name = "ajouterQR" + cpt;
-        boutons[1].id = "recVocale" + cpt;
-        boutons[1].setAttribute("data-target", "popupRecVocale" + cpt);
-        boutons[2].id = "deleteEnigme" + cpt;
-        boutons[2].setAttribute("onclick", "supprLigne(" + cpt + ",\'" + element + "\')");
-        div.id = "divEnigme" + cpt;
-        document.getElementById("popupQRCode" + id).id = "popupQRCode" + cpt;
-        document.getElementById("questQRCode" + id).id = "questQRCode" + cpt;
-        document.getElementById("addAudioQRCode" + id).id = "addAudioQRCode" + cpt;
-        document.getElementById("deleteAudioQRCode" + id).id = "deleteAudioQRCode" + cpt;
-        document.getElementById("labelBonneReponse" + id).id = "labelBonneReponse" + cpt;
-        for (let i = 1; i <= document.getElementById("repContainer" + id).childElementCount; ++i) {
-          document.getElementById("divQuestion" + id + i).id = "divQuestion" + cpt + i;
-          document.getElementById("gridCheck" + id + i).name = "gridRadios" + cpt;
-          document.getElementById("gridCheck" + id + i).id = "gridCheck" + cpt + i;
-          document.getElementById("projectId" + id + i).id = "projectId" + cpt + i;
-          document.getElementById("deleteQRCode" + id + i).setAttribute("onclick", "supprLigne(" + cpt + ",\'qrcode\')");
-          document.getElementById("deleteQRCode" + id + i).id = "deleteQRCode" + cpt + i;
-        }
-        document.getElementById("ajouterQuestion" + id).setAttribute("onclick", "ajouterQuestions(" + cpt + ")");
-        document.getElementById("ajouterQuestion" + id).id = "ajouterQuestion" + cpt;
-        document.getElementById("cancelQRCode" + id).setAttribute("onclick", "annulerQuestion(" + cpt + ",\'qrcode\')");
-        document.getElementById("cancelQRCode" + id).id = "cancelQRCode" + cpt;
-        document.getElementById("addQRCode" + id).setAttribute("onclick", "validerQuestion(" + cpt + ",\'qrcode\')");
-        document.getElementById("addQRCode" + id).id = "addQRCode" + cpt;
-        document.getElementById("repContainer" + id).id = "repContainer" + cpt;
-        document.getElementById("popupRecVocale" + id).id = "popupRecVocale" + cpt;
-        document.getElementById("questRecVocal" + id).id = "questRecVocal" + cpt;
-        document.getElementById("repRecVocal" + id).id = "repRecVocal" + cpt;
-        document.getElementById("cancelRecVocal" + id).setAttribute("onclick", "annulerQuestion(" + cpt + ",\'qrcode\')");
-        document.getElementById("cancelRecVocal" + id).id = "cancelRecVocal" + cpt;
-        document.getElementById("addRecVocal" + id).setAttribute("onclick", "validerQuestion(" + cpt + ",\'qrcode\')");
-        document.getElementById("addRecVocal" + id).id = "addRecVocal" + cpt;
-        //for(let i = 0; i < questionsQR.length; ++i){
-        for (let i = 0; i < projetSeriousGame.getQuestionsQr().length; ++i) {
-          if (projetSeriousGame.getQuestionsQr()[i].id == id) {
-            projetSeriousGame.getQuestionsQr()[i].id = cpt;
+    // On regarde le nombre d'énigme crée, et si il y en a qu'une seule on supprime juste la value de l'input text
+    if ($("[name=nombreReponse]").length > 1) {
+      compteurEnigme--;
+      $("#divEnigme" + idLigne).on('click', function () {
+        verifEnigmeValide(idLigne);
+        $(this).remove();
+        for (let cpt = idLigne; cpt <= compteurEnigme; cpt++) {
+          let id = cpt + 1;
+          let div = $("#divEnigme" + id)[0];
+          div.getElementsByTagName("label")[0].innerHTML = "Énigme " + cpt + " :";
+          div.getElementsByTagName("input")[0].id = "enigme" + cpt;
+          div.getElementsByTagName("input")[0].placeholder = "Détails sur l'énigme " + cpt;
+          let boutons = div.getElementsByTagName("button");
+          boutons[0].id = "scanQR" + cpt;
+          boutons[0].setAttribute("data-target", "#popupQRCode" + cpt);
+          boutons[0].name = "ajouterQR" + cpt;
+          boutons[1].id = "recVocale" + cpt;
+          boutons[1].setAttribute("data-target", "#popupRecVocale" + cpt);
+          boutons[2].id = "deleteEnigme" + cpt;
+          boutons[2].setAttribute("onclick", "supprLigne(" + cpt + ",\'" + element + "\')");
+          div.id = "divEnigme" + cpt;
+          document.getElementById("popupQRCode" + id).id = "popupQRCode" + cpt;
+          document.getElementById("questQRCode" + id).id = "questQRCode" + cpt;
+          document.getElementById("addAudioQRCode" + id).id = "addAudioQRCode" + cpt;
+          document.getElementById("deleteAudioQRCode" + id).id = "deleteAudioQRCode" + cpt;
+          document.getElementById("labelBonneReponse" + id).id = "labelBonneReponse" + cpt;
+          for (let i = 1; i <= document.getElementById("repContainer" + id).childElementCount; ++i) {
+            document.getElementById("divQuestion" + id + i).id = "divQuestion" + cpt + i;
+            document.getElementById("gridCheck" + id + i).name = "gridRadios" + cpt;
+            if (i == 1) document.getElementById("gridCheck" + id + i).checked = true;
+            document.getElementById("gridCheck" + id + i).id = "gridCheck" + cpt + i;
+            document.getElementById("projectId" + id + i).id = "projectId" + cpt + i;
+            document.getElementById("deleteQRCode" + id + i).setAttribute("onclick", "supprLigne(" + cpt + ",\'qrcode\')");
+            document.getElementById("deleteQRCode" + id + i).id = "deleteQRCode" + cpt + i;
           }
-        }
-        for (let i = 0; i < projetSeriousGame.getQuestionsReco().length; ++i) {
-          if (projetSeriousGame.getQuestionsReco()[i].id == id) {
-            projetSeriousGame.getQuestionsReco()[i].id = cpt;
+          document.getElementById("ajouterQuestion" + id).setAttribute("onclick", "ajouterQuestions(" + cpt + ")");
+          document.getElementById("ajouterQuestion" + id).id = "ajouterQuestion" + cpt;
+          document.getElementById("cancelQRCode" + id).setAttribute("onclick", "annulerQuestion(" + cpt + ",\'qrcode\')");
+          document.getElementById("cancelQRCode" + id).id = "cancelQRCode" + cpt;
+          document.getElementById("addQRCode" + id).setAttribute("onclick", "validerQuestion(" + cpt + ",\'qrcode\')");
+          document.getElementById("addQRCode" + id).id = "addQRCode" + cpt;
+          document.getElementById("repContainer" + id).id = "repContainer" + cpt;
+          document.getElementById("popupRecVocale" + id).id = "popupRecVocale" + cpt;
+          document.getElementById("questRecVocal" + id).id = "questRecVocal" + cpt;
+          document.getElementById("repRecVocal" + id).id = "repRecVocal" + cpt;
+          document.getElementById("cancelRecVocal" + id).setAttribute("onclick", "annulerQuestion(" + cpt + ",\'vocale\')");
+          document.getElementById("cancelRecVocal" + id).id = "cancelRecVocal" + cpt;
+          document.getElementById("addRecVocal" + id).setAttribute("onclick", "validerQuestion(" + cpt + ",\'vocale\')");
+          document.getElementById("addRecVocal" + id).id = "addRecVocal" + cpt;
+
+          for (let i = 0; i < projetSeriousGame.getQuestionsQr().length; ++i) {
+            if (projetSeriousGame.getQuestionsQr()[i].getId() == id) {
+              projetSeriousGame.getQuestionsQr()[i].setId(cpt);
+            }
           }
+          console.log(projetSeriousGame.getQuestionsQr());
+          for (let i = 0; i < projetSeriousGame.getQuestionsReco().length; ++i) {
+            if (projetSeriousGame.getQuestionsReco()[i].getId() == id) {
+              projetSeriousGame.getQuestionsReco()[i].setId(cpt);
+            }
+          }
+          console.log(projetSeriousGame.getQuestionsReco());
         }
-      }
-    });
+      });
+    }else{
+      document.getElementsByName("nombreReponse")[0].value = "";
+      console.log(document.getElementsByName("nombreReponse")[0]);
+    }
   } else if (element == "qrcode") {
     compteurQuestion--;
     $("#divQuestion" + currentEnigme + idLigne).on('click', function () {
@@ -468,51 +483,119 @@ function annulerQuestion(idEnigme, type) {
   }
 }
 
+
 var questionsQR = new Array();
 var questionsRec = new Array();
 
 // Fonction pour valider une question à ajouter dans une enigme
 function validerQuestion(idEnigme, type) {
+  let tousLesChampsSontRemplies = true; // Variable pour vérifier le remplissage des champs
+  // On regarde le type de l'énigme
   if (type == "qrcode") {
     let textQuestion = document.getElementById("questQRCode" + idEnigme).value;
+
+    if (textQuestion == "") {
+      tousLesChampsSontRemplies = false;
+      $("#popupQRCode" + idEnigme + "  #alertQuestionEmptyError").attr("style", "display:true");
+    } else {
+      $("#popupQRCode" + idEnigme + "  #alertQuestionEmptyError").attr("style", "display:none");
+    }
+    
     if(textQuestion.substring(textQuestion.length-3, textQuestion.length) == "mp3"){
       textQuestion = document.getElementById("questQRCode" + idEnigme).name;
     }
+      
     let tabReponses = new Array();
     let estBonneReponse = 1;
     let nbReponses = document.getElementById("repContainer" + idEnigme).childElementCount;
     for (let i = 1; i <= nbReponses; ++i) {
       let divs = document.getElementById("divQuestion" + idEnigme + i).getElementsByTagName('div');
       let reponse = divs[2].getElementsByTagName('input')[0].value;
+      if (reponse == "") {
+        tousLesChampsSontRemplies = false;
+        $("#popupQRCode" + idEnigme + "  #alertReponsesEmptyError").attr("style", "display:true");
+      } else if (tousLesChampsSontRemplies) {
+        $("#popupQRCode" + idEnigme + "  #alertReponsesEmptyError").attr("style", "display:none");
+      }
       tabReponses.push(reponse);
       if (divs[1].getElementsByTagName('input')[0].checked == true) {
         estBonneReponse = i;
       }
     }
-    projetSeriousGame.getQuestionsQr().push(new QRCodeQuestion(textQuestion, tabReponses, estBonneReponse, idEnigme));
-    console.log(projetSeriousGame.getQuestionsQr());
+    if (tousLesChampsSontRemplies == true) {
+      console.log(projetSeriousGame.getQuestionQrFromId(idEnigme));
+      // On regarde s'il n'y a pas déjà une question avec cet idEnigme
+      if (projetSeriousGame.getQuestionQrFromId(idEnigme) !== null) {
+        // Si c'est le cas on change les champs de cette question
+        projetSeriousGame.getQuestionQrFromId(idEnigme).setQuestion(textQuestion);
+        projetSeriousGame.getQuestionQrFromId(idEnigme).setReponses(tabReponses);
+        projetSeriousGame.getQuestionQrFromId(idEnigme).setBonneReponseQR(estBonneReponse);
+      } else {
+        // Sinon on ajout une question au projet
+        projetSeriousGame.getQuestionsQr().push(new QRCodeQuestion(textQuestion, tabReponses, estBonneReponse, idEnigme));
+      }
+      console.log(projetSeriousGame.getQuestionsQr());
+    }
+
+    if (tousLesChampsSontRemplies == true) {
+      annulerQuestion(idEnigme, type);
+      // On rajoute l'attribut bootstrap pour fermer le modal sur le bouton valider
+      jQuery("#addQRCode" + idEnigme).attr("data-dismiss", "modal");
+      // On simule l'appuie du bouton
+      $("#addQRCode" + idEnigme).trigger({ type: "click" });
+      $("#addQRCode" + idEnigme).removeAttr("data-dismiss");
+    }
   }
   else if (type == "vocale") {
     let textQuestion = document.getElementById("questRecVocal" + idEnigme).value;
+    if (textQuestion == "") {
+      tousLesChampsSontRemplies = false;
+      $("#popupRecVocale" + idEnigme + "  #alertQuestionEmptyError").attr("style", "display:true");
+    } else {
+      $("#popupRecVocale" + idEnigme + "  #alertQuestionEmptyError").attr("style", "display:none");
+    }
     let textReponse = document.getElementById("repRecVocal" + idEnigme).value;
-    projetSeriousGame.getQuestionsReco().push(new RecVocaleQuestion(textQuestion, textReponse, idEnigme));
-    console.log(projetSeriousGame.getQuestionsReco());
+    if (textReponse == "") {
+      tousLesChampsSontRemplies = false;
+      $("#popupRecVocale" + idEnigme + "  #alertReponseEmptyError").attr("style", "display:true");
+    } else {
+      $("#popupRecVocale" + idEnigme + "  #alertReponseEmptyError").attr("style", "display:none");
+    }
+    if (tousLesChampsSontRemplies == true) {
+      // On regarde s'il n'y a pas déjà une question avec cet idEnigme
+      if (projetSeriousGame.getQuestionRecoFromId(idEnigme) !== null) {
+        // Si c'est le cas on change les champs de cette question
+        projetSeriousGame.getQuestionRecoFromId(idEnigme).setQuestion(textQuestion);
+        projetSeriousGame.getQuestionRecoFromId(idEnigme).setReponse(tabReponses);
+      } else {
+        // Sinon on ajout une question au projet
+        projetSeriousGame.getQuestionsReco().push(new RecVocaleQuestion(textQuestion, textReponse, idEnigme));
+      }
+      console.log(projetSeriousGame.getQuestionsReco());
+    }
+
+    if (tousLesChampsSontRemplies == true) {
+      annulerQuestion(idEnigme, type);
+      // On rajoute l'attribut bootstrap pour fermer le modal sur le bouton valider
+      jQuery("#addRecVocal" + idEnigme).attr("data-dismiss", "modal");
+      // On simule l'appuie du bouton
+      $("#addRecVocal" + idEnigme).trigger({ type: "click" });
+      $("#addRecVocal" + idEnigme).removeAttr("data-dismiss");
+    }
   }
-
-  annulerQuestion(idEnigme, type);
 }
-
+ 
 // Fonction qui vérifie si une énigme est valide
 function verifEnigmeValide(idEnigme) {
   for (let i = 0; i < projetSeriousGame.getQuestionsQr().length; ++i) {
-    if (projetSeriousGame.getQuestionsQr()[i].idQR == idEnigme) {
-      projetSeriousGame.getQuestionsQr().splice(i, i + 1);
+    if (projetSeriousGame.getQuestionsQr()[i].getId() == idEnigme) {
+      projetSeriousGame.getQuestionsQr().splice(i, 1);
       return;
     }
   }
   for (let i = 0; i < projetSeriousGame.getQuestionsReco().length; ++i) {
-    if (projetSeriousGame.getQuestionsReco()[i].idRec == idEnigme) {
-      projetSeriousGame.getQuestionsReco().splice(i, i + 1);
+    if (projetSeriousGame.getQuestionsReco()[i].getId() == idEnigme) {
+      projetSeriousGame.getQuestionsReco().splice(i, 1);
       return;
     }
   }
@@ -535,23 +618,28 @@ function deleteAudioQRCode(idEnigme) {
 
 // Appeler lorsqu'on click sur Générer
 $("#generateSG").on("click", function () {
-  // On génère le qrcodeSeriousGame
-  genereJsonSeriousGame();
-  // On génére le QrCode a afficher
-  previewQRCodeQuestion();
-  console.log("Preview faite")
-  // On affiche le qrCode
-  $('#qrView').show();
+  // Si genereJSonSeriousGame renvoie true, cela veut dire qu'on as bien générer le json sinon il renvoie false car les champs ne sont pas remplis
+  if (genereJsonSeriousGame()) {
+    $("#alertChampsEmptyError").attr("style", "display:none");
+    // On génére le QrCode a afficher
+    previewQRCodeQuestion();
+    console.log("Preview faite")
+    // On affiche le qrCode
+    $('#qrView').show();
+  } else {
+    // Affiche un message d'erreur
+    $("#alertChampsEmptyError").attr("style", "display:true");
+  }
+
 });
 /* On générère le QRCodeSeriousGame en récupérant les valeurs des champs la page html et des question QRCOde et Reco qui ont été stockées dans le projetSeriousGame
  * 
  */
 function genereJsonSeriousGame() {
+  let tousLesChampsSontRemplies = true;
   console.log("Generating Json Serious Game");
   // On extrait les valeurs des champs utiles du html
   let nomSeriousGame = $("#projectId").val();
-  // On affecte le nom du seriousGame au nom du projet
-  projetSeriousGame.setName(nomSeriousGame);
   let textIntro = $("#textAreaIntro").val();
   if(textIntro.substring(textIntro.length-3, textIntro.length) == "mp3"){
     textIntro = document.getElementById("textAreaIntro").name;
@@ -562,16 +650,26 @@ function genereJsonSeriousGame() {
   }
   let qrColor = $('#qrColor').val();
 
+  if (nomSeriousGame == "" || textIntro == "" || textFin == "" || qrColor == "") {
+    tousLesChampsSontRemplies = false;
+  }
+
+  // On affecte le nom du seriousGame au nom du projet
+  projetSeriousGame.setName(nomSeriousGame);
+
   let enigmes = [];
+  if (projetSeriousGame.getQuestionsQr().length == 0 && projetSeriousGame.getQuestionsReco().length == 0) tousLesChampsSontRemplies = false;
   // On rempli le tableau d'enigme à partir les tableaux de questions QR et RecoVocale
   for (let i = 0; i < projetSeriousGame.getQuestionsQr().length; i++) {
     let detailEnigme = $("#enigme" + projetSeriousGame.getQuestionsQr()[i].idQR).val();
+    if (detailEnigme == "") tousLesChampsSontRemplies = false;
     console.log("Ajout Qrcode");
     console.log(projetSeriousGame.getQuestionsQr()[i]);
     enigmes.push([projetSeriousGame.getQuestionsQr()[i].idQR.toString(), detailEnigme, "questionQRCode"]);
   }
   for (let i = 0; i < projetSeriousGame.getQuestionsReco().length; i++) {
     let detailEnigme = $("#enigme" + projetSeriousGame.getQuestionsReco()[i].idRec).val();
+    if (detailEnigme == "") tousLesChampsSontRemplies = false;
     console.log("Ajout Reco");
     console.log(projetSeriousGame.getQuestionsReco()[i]);
     enigmes.push([projetSeriousGame.getQuestionsReco()[i].idRec.toString(), detailEnigme, "questionRecoVocale"]);
@@ -585,10 +683,18 @@ function genereJsonSeriousGame() {
   console.log(projetSeriousGame.getQuestionsQr());
   console.log(projetSeriousGame.getQuestionsReco());
 
-  // On crée le Json de SeriousGame avec QRCodeSeriousGame
-  let jsonSeriousGame = new QRCodeSeriousGame(nomSeriousGame, textIntro, textFin, enigmes, projetSeriousGame.getQuestionsQrForJson(), projetSeriousGame.getQuestionsRecoForJson(), qrColor);
-  projetSeriousGame.setQuestion(jsonSeriousGame);
-  console.log(projetSeriousGame.getQuestion());
+  if (tousLesChampsSontRemplies) {
+    console.log("Generation successfull");
+    // On crée le Json de SeriousGame avec QRCodeSeriousGame
+    let jsonSeriousGame = new QRCodeSeriousGame(nomSeriousGame, textIntro, textFin, enigmes, projetSeriousGame.getQuestionsQrForJson(), projetSeriousGame.getQuestionsRecoForJson(), qrColor);
+    projetSeriousGame.setQuestion(jsonSeriousGame);
+    console.log(projetSeriousGame.getQuestion());
+    return true;
+  } else {
+    console.log("Generation failed");
+    return false;
+  }
+
 }
 
 function previewQRCodeQuestion() {
@@ -627,7 +733,7 @@ $("#saveQRCode").click(function () {
 
 
     // Idem pour les reponses des questions Qrcode
-    projetSeriousGame.getReponsesQrCode().forEach(function(reponse){
+    projetSeriousGame.getReponsesQrCode().forEach(function (reponse) {
       let div = document.createElement('div');
       facade.genererQRCode(div, reponse);
       saveQRCodeImage(div, reponse, dir_path);
