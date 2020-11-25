@@ -38,25 +38,6 @@ $("#ajouterQuestion").click(function(){
 
 
 
-/*const Store = require('electron-store');
- 
-const store = new Store();
- 
-store.set('unicorn', '🦄');
-console.log(store.get('unicorn'));
-//=> '🦄'
- 
-// Use dot-notation to access nested properties
-store.set('foo.bar', true);
-console.log(store.get('foo'));
-//=> {bar: true}
- 
-store.delete('unicorn');
-console.log(store.get('unicorn'));
-*/7
-
-
-
 var projet = new Projet();
 
 
@@ -187,7 +168,8 @@ function viderChamps(){
   $('#gridCheck1').prop('checked', false);
   $('#MessageMauvaisereponseQCM').val('');
   $('#MessageBonnereponseQCM').val('');
-  $("#repContainer").empty();
+  //$("#repContainer").empty();
+  $("#repContainer").hide();
 
   deleteStore(`Question`);
 
