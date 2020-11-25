@@ -210,7 +210,6 @@ $("#ajouterEnigme").click(function () {
   if (compteurEnigme < 30) {
     type = "enigme";
     let reponse = document.createElement('div');
-    let dropDown = document.createElement('div');
     let popUpQRCode = document.createElement('div');
     let popUpRecVocale = document.createElement('div');
     reponse.innerHTML = `<div class="form-group">
