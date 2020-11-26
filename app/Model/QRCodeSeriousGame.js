@@ -115,7 +115,7 @@ class ProjetSeriousGame {
     // retoune le RecVocaleQuestion de la question posédant cet id d'énigme sinon renvoie null
     getQuestionRecoFromId(id){
         for(let i = 0 ; i < this.projet.questionsRecoVocale.length; i++){
-            if(this.projet.questionsRecoVocale[i].idQR == id){
+            if(this.projet.questionsRecoVocale[i].idRec == id){
                 return this.projet.questionsRecoVocale[i];
             }
         }

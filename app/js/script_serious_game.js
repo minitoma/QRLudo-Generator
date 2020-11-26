@@ -8,14 +8,19 @@ $("#addAudioIntro").click(function () {
 $("#addAudioFin").click(function () {
   audioSource = "fin";
 });
-function addAudioQRCode() {
+function addAudioQRCode(idEnigme) {
+  currentEnigme = idEnigme;
   audioSource = "qrcode";
+};
+function addAudioReco(idEnigme) {
+  currentEnigme = idEnigme;
+  audioSource = "vocale";
 };
 
 // Fonction pour ajouter un fichier audio
 
 function getMusicFromUrl() {
-  let modal = $('#listeMusic').find('div.modal-body.scrollbar-success');
+  let modal = $('#listeMusic' + currentEnigme).find('div.modal-body.scrollbar-success');
   let loader = document.createElement('div');
   let errorMsg = document.createElement('label');
 
@@ -101,6 +106,13 @@ function ajouterChampSon(nom, url) {
   }
   else if (audioSource == "qrcode") {
     let text = document.getElementById("questQRCode" + currentEnigme);
+    text.value = nom;
+    text.name = url;
+    text.setAttribute("disabled", "true");
+  }
+  else if (audioSource == "vocale") {
+    console.log(currentEnigme);
+    let text = document.getElementById("questRecVocal" + currentEnigme);
     text.value = nom;
     text.name = url;
     text.setAttribute("disabled", "true");
@@ -216,17 +228,27 @@ $("#ajouterEnigme").click(function () {
                               <label class="control-label"
                               style="color:#28a745;padding-top:10px;padding-right:54px;">Énigme `+ compteurEnigme + ` : </label>
                               <input type="text" class="form-control" id="enigme`+ compteurEnigme + `" name="nombreReponse"
-                              placeholder="Détails sur l'énigme `+ compteurEnigme + `" onkeyup="activerSave();" />
-                              <label class="control-label" style="color:#28a745;padding-top:10px;padding-right:10px; padding-left:20px;">Type d'énigme : </label>
-                              <button type="button" id="scanQR`+ compteurEnigme + `" name="ajouterQR` + compteurEnigme + `" data-toggle="modal"
-                                  data-target="#popupQRCode` + compteurEnigme + `" class="btn btn-outline-success align-self-center">
+                              placeholder="Nom de l'énigme `+ compteurEnigme + `" onkeyup="activerSave();" />
+                              &nbsp;
+                              <div class="btn-group" style="display:true" id="menuDeroulant`+ compteurEnigme + `">
+                                <button type="button" class="btn btn-outline-success align-self-center dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Type énigme        &nbsp;&nbsp; &nbsp;
+                                </button>
+                                <div class="dropdown-menu" >
+                                  <button type="button" id="scanQR`+ compteurEnigme + `" name="ajouterQR` + compteurEnigme + `" data-toggle="modal"
+                                  data-target="#popupQRCode` + compteurEnigme + `" class="dropdown-item">
                                   <i class="fa fa-qrcode"></i>&nbsp;&nbsp;QR CODE</button>&nbsp;
-                              <button id="recVocale`+ compteurEnigme + `" type="button" class="btn btn-outline-success align-self-center"
+                                  <button id="recVocale`+ compteurEnigme + `" type="button" class="dropdown-item"
                                   data-toggle="modal" data-target="#popupRecVocale` + compteurEnigme + `">
-                                  <i class="fa fa-microphone"></i>&nbsp;&nbsp;Reconnaissance vocale</button>&nbsp;
-                              <button id="deleteEnigme`+ compteurEnigme + `" type="button" onclick="supprLigne(` + compteurEnigme + ",\'" + type + `\');" class="btn btn-outline-success align-self-center">
-                                  <i class="fa fa-trash"></i></button>
-                              </div>
+                                  <i class="fa fa-microphone"></i>&nbsp;&nbsp;Reconnaissance vocale</button>
+                                  </div>
+                                </div>
+                                <div id="modification`+ compteurEnigme + `">
+                                </div>
+                                &nbsp;
+                                <button id="deleteEnigme`+ compteurEnigme + `" type="button" onclick="supprLigne(` + compteurEnigme + ",\'" + type + `\');" class="btn btn-outline-success align-self-center">
+                                <i class="fa fa-trash"></i></button>
+                              </div>                              
                           </div>`;
 
     popUpQRCode.innerHTML = `<div class="modal fade bd-example-modal-lg" id="popupQRCode` + compteurEnigme + `" tabindex="-1" role="dialog" data-backdrop="static"
@@ -244,9 +266,9 @@ $("#ajouterEnigme").click(function () {
                 <div class="col-lg-12 form-inline">
                     <label class="control-label" style="color:#28a745;padding-right:32px;">Question :</label>
                     <input type="text" class="form-control input-lg" style="width:500px;" id="questQRCode` + compteurEnigme + `" cols="10"
-                        name="nomprojet" placeholder="Saisissez votre question" onkeyup="activerSave();" />
+                        name="nomprojet" placeholder="Saisissez votre question" onkeyup="activerSave();" />&nbsp;
                     <button type="button" id="addAudioQRCode` + compteurEnigme + `" class="btn btn-outline-success btn-unique-xl  "
-                        name="ajouterSon" data-toggle="modal" data-target="#listeMusic" onclick="addAudioQRCode()">
+                        name="ajouterSon" data-toggle="modal" data-target="#listeMusic" onclick="addAudioQRCode(` + compteurEnigme + `)">
                         <i class="fa fa-music"></i>&nbsp;&nbsp;Audio
                     </button>
                     <button id="deleteAudioQRCode` + compteurEnigme + `" type="button" onclick="deleteAudioQRCode(` + compteurEnigme + `)"
@@ -300,7 +322,7 @@ $("#ajouterEnigme").click(function () {
 
     popUpRecVocale.innerHTML = `<div class="modal fade" id="popupRecVocale` + compteurEnigme + `" tabindex="-1" role="dialog" data-backdrop="static"
     aria-labelledby="exampleModalCenterTitle" aria-hidden="true" data-keyboard="false">
-    <div class="modal-dialog modal-lg modal-dialog-centered" role="dialog" style="max-width: 40% !important">
+    <div class="modal-dialog modal-lg modal-dialog-centered" role="dialog" style="max-width: 50% !important">
         <div class="modal-content" style="padding: 20px;">
             <div class="modal-header">
                 <h5 class="modal-title" id="exampleModalCenterTitle">Reconnaissance Vocale</h5>
@@ -312,15 +334,22 @@ $("#ajouterEnigme").click(function () {
             <div class="form-group">
                 <div class="col-lg-12 form-inline">
                     <label class="control-label" style="color:#28a745;padding-right:32px;">Question :</label>
-                    <input type="text" class="form-control input-lg" style="width:1450px;" id="questRecVocal` + compteurEnigme + `" cols="10"
-                        name="nomprojet" placeholder="Saisissez votre question" onkeyup="activerSave();" />
+                    <input type="text" class="form-control input-lg" style="width:500px;" id="questRecVocal` + compteurEnigme + `" cols="10"
+                        name="nomprojet" placeholder="Saisissez votre question" onkeyup="activerSave();" />&nbsp;
+                        <button type="button" id="addAudioReco` + compteurEnigme + `" class="btn btn-outline-success btn-unique-xl  "
+                        name="ajouterSon" data-toggle="modal" data-target="#listeMusic" onclick="addAudioReco(` + compteurEnigme + `)">
+                        <i class="fa fa-music"></i>&nbsp;&nbsp;Audio
+                    </button>
+                    <button id="deleteAudioReco` + compteurEnigme + `" type="button" onclick="deleteAudioReco(` + compteurEnigme + `)"
+                        class="btn btn-outline-success align-self-center"><i class="fa fa-trash"></i>
+                    </button>
                 </div>
                 <hr>
                 <div class="alert alert-danger" role="alert" id="alertReponseEmptyError" style="display:none"> Veuillez d'abord saisir une réponse </div>
                 <div class="col-lg-12 form-inline">
                     <label class="control-label" style="color:#28a745;padding-right:32px;">Réponse :</label>
-                    <input type="text" class="form-control input-lg" style="width:1450px;" id="repRecVocal` + compteurEnigme + `" cols="10"
-                        name="nomprojet" placeholder="Saisissez votre question" onkeyup="activerSave();" />
+                    <input type="text" class="form-control input-lg" style="width:500px;" id="repRecVocal` + compteurEnigme + `" cols="10"
+                        name="nomprojet" placeholder="Saisissez votre réponse" onkeyup="activerSave();" />
                 </div>
             </div>
             <div class="modal-footer">
@@ -332,9 +361,10 @@ $("#ajouterEnigme").click(function () {
     </div>
 </div>`;
     let container = $("#containerEnigme");
+    reponse.firstChild.append(popUpQRCode);
+    reponse.firstChild.append(popUpRecVocale);
     container.append(reponse);
-    container.append(popUpQRCode);
-    container.append(popUpRecVocale);
+
   }
 });
 // On ajoute une enigme de base
@@ -375,28 +405,59 @@ function ajouterQuestions(idEnigme) {
 
 //Pour supprimer une énigme ou bien une réponse des QRCode
 function supprLigne(idLigne, element) {
+  console.log(currentEnigme);
   if (element == "enigme") {
     // On regarde le nombre d'énigme crée, et si il y en a qu'une seule on supprime juste la value de l'input text
     if ($("[name=nombreReponse]").length > 1) {
       compteurEnigme--;
       $("#divEnigme" + idLigne).on('click', function () {
         verifEnigmeValide(idLigne);
-        $(this).remove();
+        $(this).parent().parent().remove();
+        // On parcourt les div enigmes suivants pour changer les valeurs
         for (let cpt = idLigne; cpt <= compteurEnigme; cpt++) {
+          console.log("Compteur Enigme: "+compteurEnigme);
+          console.log(" Compteur : "+cpt);
           let id = cpt + 1;
+          console.log("id compteur : "+ id);
           let div = $("#divEnigme" + id)[0];
           div.getElementsByTagName("label")[0].innerHTML = "Énigme " + cpt + " :";
           div.getElementsByTagName("input")[0].id = "enigme" + cpt;
-          div.getElementsByTagName("input")[0].placeholder = "Détails sur l'énigme " + cpt;
-          let boutons = div.getElementsByTagName("button");
-          boutons[0].id = "scanQR" + cpt;
-          boutons[0].setAttribute("data-target", "#popupQRCode" + cpt);
-          boutons[0].name = "ajouterQR" + cpt;
-          boutons[1].id = "recVocale" + cpt;
-          boutons[1].setAttribute("data-target", "#popupRecVocale" + cpt);
-          boutons[2].id = "deleteEnigme" + cpt;
-          boutons[2].setAttribute("onclick", "supprLigne(" + cpt + ",\'" + element + "\')");
+          div.getElementsByTagName("input")[0].placeholder = "Nom de l'énigme " + cpt;
+
+          // Bouton Qr        
+          if($("#divEnigme" + id + " #scanQR" + id).length > 1){
+            $("#divEnigme" + id + " #scanQR" + id)[0].id = "scanQR" + cpt;
+            $("#divEnigme" + id + " #scanQR" + cpt)[0].setAttribute("data-target", "#popupQRCode" + cpt);
+            $("#divEnigme" + id + " #scanQR" + cpt)[0].name = "ajouterQR" + cpt;
+            $("#modification" + id + " #scanQR" + id).attr("id","scanQR" + cpt);
+            $("#modification" + id + " #scanQR" + cpt).attr("data-target", "#popupQRCode" + cpt);
+            $("#modification" + id + " #scanQR" + cpt).attr("name","ajouterQR" + cpt);
+            $("#modification" + id + " #scanQR" + cpt).attr("onclick","chargerQuestion("+cpt+",'qrcode');");
+          }else{
+            $("#divEnigme" + id + " #scanQR" + id).attr("id","scanQR" + cpt);
+            $("#divEnigme" + id + " #scanQR" + cpt).attr("data-target", "#popupQRCode" + cpt);
+            $("#divEnigme" + id + " #scanQR" + cpt).attr("name","ajouterQR" + cpt);
+          }
+
+          // Bouton Reco          
+          if($("#divEnigme" + id + " #recVocale" + id).length > 1 ){
+            $("#divEnigme" + id + " #recVocale" + id)[0].setAttribute("id","recVocale" + cpt);
+            $("#divEnigme" + id + " #recVocale" + cpt)[0].setAttribute("data-target", "#popupRecVocale" + cpt);
+            $("#modification" + id + " #recVocale" + id).attr("id","recVocale" + cpt);
+            $("#modification" + id + " #recVocale" + cpt).attr("data-target", "#popupRecVocale" + cpt);
+            $("#modification" + id + " #recVocale" + cpt).attr("onclick","chargerQuestion("+cpt+",'vocale');");
+          }else{
+            $("#divEnigme" + id + " #recVocale" + id).attr("id","recVocale" + cpt);
+            $("#divEnigme" + id + " #recVocale" + cpt).attr("data-target", "#popupRecVocale" + cpt);
+          }
+            
+          // Bouton delete enigme
+          document.getElementById("deleteEnigme" + id).id = "deleteEnigme" + cpt;
+          document.getElementById("deleteEnigme" + cpt).setAttribute("onclick", "supprLigne(" + cpt + ",\'" + element + "\')");
+
           div.id = "divEnigme" + cpt;
+          document.getElementById("modification" + id).id = "modification" + cpt;
+          document.getElementById("menuDeroulant" + id).id = "menuDeroulant" + cpt;
           document.getElementById("popupQRCode" + id).id = "popupQRCode" + cpt;
           document.getElementById("questQRCode" + id).id = "questQRCode" + cpt;
           document.getElementById("addAudioQRCode" + id).id = "addAudioQRCode" + cpt;
@@ -425,24 +486,27 @@ function supprLigne(idLigne, element) {
           document.getElementById("cancelRecVocal" + id).id = "cancelRecVocal" + cpt;
           document.getElementById("addRecVocal" + id).setAttribute("onclick", "validerQuestion(" + cpt + ",\'vocale\')");
           document.getElementById("addRecVocal" + id).id = "addRecVocal" + cpt;
+          document.getElementById("addAudioReco" + id).id = "addAudioReco" + cpt;// button audio
+          document.getElementById("deleteAudioReco" + id).id = "deleteAudioReco" + cpt; // button delete audio
+
 
           for (let i = 0; i < projetSeriousGame.getQuestionsQr().length; ++i) {
             if (projetSeriousGame.getQuestionsQr()[i].getId() == id) {
               projetSeriousGame.getQuestionsQr()[i].setId(cpt);
             }
           }
-          console.log(projetSeriousGame.getQuestionsQr());
           for (let i = 0; i < projetSeriousGame.getQuestionsReco().length; ++i) {
             if (projetSeriousGame.getQuestionsReco()[i].getId() == id) {
               projetSeriousGame.getQuestionsReco()[i].setId(cpt);
             }
           }
-          console.log(projetSeriousGame.getQuestionsReco());
         }
       });
-    }else{
+    } else {
       document.getElementsByName("nombreReponse")[0].value = "";
-      console.log(document.getElementsByName("nombreReponse")[0]);
+      $("#menuDeroulant" + idLigne).attr("style", "display:true");
+      $("#modification" + idLigne).empty();
+      $("#modification" + idLigne).attr("style", "display:none");
     }
   } else if (element == "qrcode") {
     compteurQuestion--;
@@ -483,12 +547,9 @@ function annulerQuestion(idEnigme, type) {
   }
 }
 
-
-var questionsQR = new Array();
-var questionsRec = new Array();
-
 // Fonction pour valider une question à ajouter dans une enigme
 function validerQuestion(idEnigme, type) {
+  currentEnigme = idEnigme;
   let tousLesChampsSontRemplies = true; // Variable pour vérifier le remplissage des champs
   // On regarde le type de l'énigme
   if (type == "qrcode") {
@@ -500,11 +561,11 @@ function validerQuestion(idEnigme, type) {
     } else {
       $("#popupQRCode" + idEnigme + "  #alertQuestionEmptyError").attr("style", "display:none");
     }
-    
-    if(textQuestion.substring(textQuestion.length-3, textQuestion.length) == "mp3"){
+
+    if (textQuestion.substring(textQuestion.length - 3, textQuestion.length) == "mp3") {
       textQuestion = document.getElementById("questQRCode" + idEnigme).name;
     }
-      
+
     let tabReponses = new Array();
     let estBonneReponse = 1;
     let nbReponses = document.getElementById("repContainer" + idEnigme).childElementCount;
@@ -514,6 +575,7 @@ function validerQuestion(idEnigme, type) {
       if (reponse == "") {
         tousLesChampsSontRemplies = false;
         $("#popupQRCode" + idEnigme + "  #alertReponsesEmptyError").attr("style", "display:true");
+        console.log("test");
       } else if (tousLesChampsSontRemplies) {
         $("#popupQRCode" + idEnigme + "  #alertReponsesEmptyError").attr("style", "display:none");
       }
@@ -537,17 +599,12 @@ function validerQuestion(idEnigme, type) {
       console.log(projetSeriousGame.getQuestionsQr());
     }
 
-    if (tousLesChampsSontRemplies == true) {
-      annulerQuestion(idEnigme, type);
-      // On rajoute l'attribut bootstrap pour fermer le modal sur le bouton valider
-      jQuery("#addQRCode" + idEnigme).attr("data-dismiss", "modal");
-      // On simule l'appuie du bouton
-      $("#addQRCode" + idEnigme).trigger({ type: "click" });
-      $("#addQRCode" + idEnigme).removeAttr("data-dismiss");
-    }
   }
   else if (type == "vocale") {
     let textQuestion = document.getElementById("questRecVocal" + idEnigme).value;
+    if (textQuestion.substring(textQuestion.length - 3, textQuestion.length) == "mp3") {
+      textQuestion = document.getElementById("questRecVocal" + idEnigme).name;
+    }
     if (textQuestion == "") {
       tousLesChampsSontRemplies = false;
       $("#popupRecVocale" + idEnigme + "  #alertQuestionEmptyError").attr("style", "display:true");
@@ -566,7 +623,7 @@ function validerQuestion(idEnigme, type) {
       if (projetSeriousGame.getQuestionRecoFromId(idEnigme) !== null) {
         // Si c'est le cas on change les champs de cette question
         projetSeriousGame.getQuestionRecoFromId(idEnigme).setQuestion(textQuestion);
-        projetSeriousGame.getQuestionRecoFromId(idEnigme).setReponse(tabReponses);
+        projetSeriousGame.getQuestionRecoFromId(idEnigme).setReponse(textReponse);
       } else {
         // Sinon on ajout une question au projet
         projetSeriousGame.getQuestionsReco().push(new RecVocaleQuestion(textQuestion, textReponse, idEnigme));
@@ -574,17 +631,74 @@ function validerQuestion(idEnigme, type) {
       console.log(projetSeriousGame.getQuestionsReco());
     }
 
-    if (tousLesChampsSontRemplies == true) {
-      annulerQuestion(idEnigme, type);
+
+  }
+
+  if (tousLesChampsSontRemplies == true) {
+    annulerQuestion(idEnigme, type);
+
+    // On cache le menu déroulant pour mettre et afficher un bouton modifier dans le div id="modification"
+    $("#menuDeroulant" + idEnigme).attr("style", "display:none");
+    let modification = document.getElementById("modification" + idEnigme);
+    if (type == "qrcode") {
       // On rajoute l'attribut bootstrap pour fermer le modal sur le bouton valider
-      jQuery("#addRecVocal" + idEnigme).attr("data-dismiss", "modal");
+      jQuery("#addQRCode" + idEnigme).attr("data-dismiss", "modal");
+      // On simule l'appuie du bouton
+      $("#addQRCode" + idEnigme).trigger({ type: "click" });
+      $("#addQRCode" + idEnigme).removeAttr("data-dismiss");
+
+      modification.innerHTML = `<button type="button" id="scanQR` + idEnigme + `" name="ajouterQR` + idEnigme + `" data-toggle="modal"
+      data-target="#popupQRCode` + idEnigme + `" class="btn btn-outline-success align-self-center" onclick="chargerQuestion(` + idEnigme + `,'qrcode');">
+      <i class="fa fa-qrcode"></i>&nbsp;&nbsp;Modifier</button>&nbsp;`;
+
+      modification.setAttribute("style","display:true");
+
+    }
+    else if (type == "vocale") {
+      // On rajoute l'attribut bootstrap pour fermer le modal sur le bouton valider
+      $("#addRecVocal" + idEnigme).attr("data-dismiss", "modal");
       // On simule l'appuie du bouton
       $("#addRecVocal" + idEnigme).trigger({ type: "click" });
       $("#addRecVocal" + idEnigme).removeAttr("data-dismiss");
+
+      modification.innerHTML = `<button id="recVocale` + idEnigme + `" type="button" class="btn btn-outline-success align-self-center"
+      data-toggle="modal" data-target="#popupRecVocale` + idEnigme + `" onclick="chargerQuestion(` + idEnigme + `,'vocale');">
+      <i class="fa fa-microphone"></i>&nbsp;&nbsp;Modifier</button>`;
+      modification.setAttribute("style","display:true");
     }
+
   }
 }
- 
+
+// Fonction qui charger les données des popup qrcode
+function chargerQuestion(idEnigme, type) {
+  currentEnigme = idEnigme;
+  console.log("hello " + currentEnigme);
+  // On affecte les valeurs rentrées à la popup pour la modification
+  if (type == "qrcode") {
+    $("#popupQRCode" + idEnigme + " #questQRCode" + idEnigme).val(projetSeriousGame.getQuestionQrFromId(idEnigme).getQuestion()); // le champs de question
+
+    for (let i = 0; i < projetSeriousGame.getQuestionQrFromId(idEnigme).getReponses().length; i++) {// les champs de réponses
+      if (i > 0) ajouterQuestions(idEnigme);// La popup n'a qu'1 reponse donc on en ajoute
+      $("#popupQRCode" + idEnigme + " #projectId" + idEnigme + "" + (i + 1)).val(projetSeriousGame.getQuestionQrFromId(idEnigme).getReponses()[i]);
+    }
+    $("#popupQRCode" + idEnigme + " #gridCheck" + idEnigme + "" + projetSeriousGame.getQuestionQrFromId(idEnigme).getBonneReponse()).prop("checked", true);
+    // On cache les messages d'erreurs
+    $("#popupQRCode" + idEnigme + "  #alertQuestionEmptyError").attr("style", "display:none");
+    $("#popupQRCode" + idEnigme + "  #alertReponsesEmptyError").attr("style", "display:none");
+  } if (type == "vocale") {
+    console.log(projetSeriousGame.getQuestionRecoFromId(idEnigme));
+    $("#popupRecVocale" + idEnigme + " #questRecVocal" + idEnigme).val(projetSeriousGame.getQuestionRecoFromId(idEnigme).getQuestion()); // le champs de la question
+    $("#popupRecVocale" + idEnigme + " #repRecVocal" + idEnigme).val(projetSeriousGame.getQuestionRecoFromId(idEnigme).getReponse()); // le champs de la reponse
+    // On cache les messages d'erreurs
+    $("#popupRecVocale" + idEnigme + "  #alertQuestionEmptyError").attr("style", "display:none");
+    $("#popupRecVocale" + idEnigme + "  #alertReponseEmptyError").attr("style", "display:none");
+
+  }
+
+}
+
+// Supprime la question dans la liste des questions du projetSeriousGame 
 // Fonction qui vérifie si une énigme est valide
 function verifEnigmeValide(idEnigme) {
   for (let i = 0; i < projetSeriousGame.getQuestionsQr().length; ++i) {
@@ -616,6 +730,11 @@ function deleteAudioQRCode(idEnigme) {
   $("#questQRCode" + idEnigme).prop('disabled', false);
 }
 
+function deleteAudioReco(idEnigme) {
+  document.getElementById('questRecVocal' + idEnigme).value = "";
+  $("#questRecVocal" + idEnigme).prop('disabled', false);
+}
+
 // Appeler lorsqu'on click sur Générer
 $("#generateSG").on("click", function () {
   // Si genereJSonSeriousGame renvoie true, cela veut dire qu'on as bien générer le json sinon il renvoie false car les champs ne sont pas remplis
@@ -641,12 +760,13 @@ function genereJsonSeriousGame() {
   // On extrait les valeurs des champs utiles du html
   let nomSeriousGame = $("#projectId").val();
   let textIntro = $("#textAreaIntro").val();
-  if(textIntro.substring(textIntro.length-3, textIntro.length) == "mp3"){
+  if (textIntro.substring(textIntro.length - 3, textIntro.length) == "mp3") {
     textIntro = document.getElementById("textAreaIntro").name;
   }
   let textFin = $("#textAreaFin").val();
-  if(textFin.substring(textFin.length-3, textFin.length) == "mp3"){
-    textFin = document.getElementById("textAreaIntro").name;
+  console.log(textFin);
+  if (textFin.substring(textFin.length - 3, textFin.length) == "mp3") {
+    textFin = document.getElementById("textAreaFin").name;
   }
   let qrColor = $('#qrColor').val();
 
@@ -699,6 +819,9 @@ function genereJsonSeriousGame() {
 
 function previewQRCodeQuestion() {
   var question = projetSeriousGame.getQuestion();
+  if($('#qrView')[0].childElementCount == 0){
+    document.getElementById("qrView").append(document.createElement("div"));
+  }
   previewQRCode(question, $('#qrView')[0]);
 }
 
