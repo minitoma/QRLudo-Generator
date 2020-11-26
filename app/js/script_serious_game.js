@@ -340,7 +340,7 @@ $("#ajouterEnigme").click(function () {
                         name="ajouterSon" data-toggle="modal" data-target="#listeMusic" onclick="addAudioReco(` + compteurEnigme + `)">
                         <i class="fa fa-music"></i>&nbsp;&nbsp;Audio
                     </button>
-                    <button id="deleteAudioQRCode` + compteurEnigme + `" type="button" onclick="deleteAudioReco(` + compteurEnigme + `)"
+                    <button id="deleteAudioReco` + compteurEnigme + `" type="button" onclick="deleteAudioReco(` + compteurEnigme + `)"
                         class="btn btn-outline-success align-self-center"><i class="fa fa-trash"></i>
                     </button>
                 </div>
@@ -415,15 +415,16 @@ function supprLigne(idLigne, element) {
         $(this).parent().parent().remove();
         // On parcourt les div enigmes suivants pour changer les valeurs
         for (let cpt = idLigne; cpt <= compteurEnigme; cpt++) {
+          console.log("Compteur Enigme: "+compteurEnigme);
+          console.log(" Compteur : "+cpt);
           let id = cpt + 1;
+          console.log("id compteur : "+ id);
           let div = $("#divEnigme" + id)[0];
           div.getElementsByTagName("label")[0].innerHTML = "Énigme " + cpt + " :";
           div.getElementsByTagName("input")[0].id = "enigme" + cpt;
           div.getElementsByTagName("input")[0].placeholder = "Nom de l'énigme " + cpt;
 
-          // Bouton Qr
-          console.log($("#divEnigme" + id)[0]);
-          console.log($("#divEnigme" + id + " #scanQR" + id));          
+          // Bouton Qr        
           if($("#divEnigme" + id + " #scanQR" + id).length > 1){
             $("#divEnigme" + id + " #scanQR" + id)[0].id = "scanQR" + cpt;
             $("#divEnigme" + id + " #scanQR" + cpt)[0].setAttribute("data-target", "#popupQRCode" + cpt);
@@ -485,19 +486,20 @@ function supprLigne(idLigne, element) {
           document.getElementById("cancelRecVocal" + id).id = "cancelRecVocal" + cpt;
           document.getElementById("addRecVocal" + id).setAttribute("onclick", "validerQuestion(" + cpt + ",\'vocale\')");
           document.getElementById("addRecVocal" + id).id = "addRecVocal" + cpt;
+          document.getElementById("addAudioReco" + id).id = "addAudioReco" + cpt;// button audio
+          document.getElementById("deleteAudioReco" + id).id = "deleteAudioReco" + cpt; // button delete audio
+
 
           for (let i = 0; i < projetSeriousGame.getQuestionsQr().length; ++i) {
             if (projetSeriousGame.getQuestionsQr()[i].getId() == id) {
               projetSeriousGame.getQuestionsQr()[i].setId(cpt);
             }
           }
-          console.log(projetSeriousGame.getQuestionsQr());
           for (let i = 0; i < projetSeriousGame.getQuestionsReco().length; ++i) {
             if (projetSeriousGame.getQuestionsReco()[i].getId() == id) {
               projetSeriousGame.getQuestionsReco()[i].setId(cpt);
             }
           }
-          console.log(projetSeriousGame.getQuestionsReco());
         }
       });
     } else {
