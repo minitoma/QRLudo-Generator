@@ -20,7 +20,7 @@ function addAudioReco(idEnigme) {
 // Fonction pour ajouter un fichier audio
 
 function getMusicFromUrl() {
-  let modal = $('#listeMusic'+currentEnigme).find('div.modal-body.scrollbar-success');
+  let modal = $('#listeMusic' + currentEnigme).find('div.modal-body.scrollbar-success');
   let loader = document.createElement('div');
   let errorMsg = document.createElement('label');
 
@@ -230,7 +230,7 @@ $("#ajouterEnigme").click(function () {
                               <input type="text" class="form-control" id="enigme`+ compteurEnigme + `" name="nombreReponse"
                               placeholder="Nom de l'énigme `+ compteurEnigme + `" onkeyup="activerSave();" />
                               &nbsp;
-                              <div class="btn-group" style="display:true" id="menuDeroulant`+ compteurEnigme +`">
+                              <div class="btn-group" style="display:true" id="menuDeroulant`+ compteurEnigme + `">
                                 <button type="button" class="btn btn-outline-success align-self-center dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Type énigme        &nbsp;&nbsp; &nbsp;
                                 </button>
@@ -243,7 +243,7 @@ $("#ajouterEnigme").click(function () {
                                   <i class="fa fa-microphone"></i>&nbsp;&nbsp;Reconnaissance vocale</button>
                                   </div>
                                 </div>
-                                <div id="modification`+ compteurEnigme +`">
+                                <div id="modification`+ compteurEnigme + `">
                                 </div>
                                 &nbsp;
                                 <button id="deleteEnigme`+ compteurEnigme + `" type="button" onclick="supprLigne(` + compteurEnigme + ",\'" + type + `\');" class="btn btn-outline-success align-self-center">
@@ -349,7 +349,7 @@ $("#ajouterEnigme").click(function () {
                 <div class="col-lg-12 form-inline">
                     <label class="control-label" style="color:#28a745;padding-right:32px;">Réponse :</label>
                     <input type="text" class="form-control input-lg" style="width:500px;" id="repRecVocal` + compteurEnigme + `" cols="10"
-                        name="nomprojet" placeholder="Saisissez votre question" onkeyup="activerSave();" />
+                        name="nomprojet" placeholder="Saisissez votre réponse" onkeyup="activerSave();" />
                 </div>
             </div>
             <div class="modal-footer">
@@ -361,9 +361,10 @@ $("#ajouterEnigme").click(function () {
     </div>
 </div>`;
     let container = $("#containerEnigme");
+    reponse.firstChild.append(popUpQRCode);
+    reponse.firstChild.append(popUpRecVocale);
     container.append(reponse);
-    container.append(popUpQRCode);
-    container.append(popUpRecVocale);
+
   }
 });
 // On ajoute une enigme de base
@@ -411,22 +412,51 @@ function supprLigne(idLigne, element) {
       compteurEnigme--;
       $("#divEnigme" + idLigne).on('click', function () {
         verifEnigmeValide(idLigne);
-        $(this).remove();
+        $(this).parent().parent().remove();
+        // On parcourt les div enigmes suivants pour changer les valeurs
         for (let cpt = idLigne; cpt <= compteurEnigme; cpt++) {
           let id = cpt + 1;
           let div = $("#divEnigme" + id)[0];
           div.getElementsByTagName("label")[0].innerHTML = "Énigme " + cpt + " :";
           div.getElementsByTagName("input")[0].id = "enigme" + cpt;
-          div.getElementsByTagName("input")[0].placeholder = "Détails sur l'énigme " + cpt;
-          let boutons = div.getElementsByTagName("button");
-          boutons[0].id = "scanQR" + cpt;
-          boutons[0].setAttribute("data-target", "#popupQRCode" + cpt);
-          boutons[0].name = "ajouterQR" + cpt;
-          boutons[1].id = "recVocale" + cpt;
-          boutons[1].setAttribute("data-target", "#popupRecVocale" + cpt);
-          boutons[2].id = "deleteEnigme" + cpt;
-          boutons[2].setAttribute("onclick", "supprLigne(" + cpt + ",\'" + element + "\')");
+          div.getElementsByTagName("input")[0].placeholder = "Nom de l'énigme " + cpt;
+
+          // Bouton Qr
+          console.log($("#divEnigme" + id)[0]);
+          console.log($("#divEnigme" + id + " #scanQR" + id));          
+          if($("#divEnigme" + id + " #scanQR" + id).length > 1){
+            $("#divEnigme" + id + " #scanQR" + id)[0].id = "scanQR" + cpt;
+            $("#divEnigme" + id + " #scanQR" + cpt)[0].setAttribute("data-target", "#popupQRCode" + cpt);
+            $("#divEnigme" + id + " #scanQR" + cpt)[0].name = "ajouterQR" + cpt;
+            $("#modification" + id + " #scanQR" + id).attr("id","scanQR" + cpt);
+            $("#modification" + id + " #scanQR" + cpt).attr("data-target", "#popupQRCode" + cpt);
+            $("#modification" + id + " #scanQR" + cpt).attr("name","ajouterQR" + cpt);
+            $("#modification" + id + " #scanQR" + cpt).attr("onclick","chargerQuestion("+cpt+",'qrcode');");
+          }else{
+            $("#divEnigme" + id + " #scanQR" + id).attr("id","scanQR" + cpt);
+            $("#divEnigme" + id + " #scanQR" + cpt).attr("data-target", "#popupQRCode" + cpt);
+            $("#divEnigme" + id + " #scanQR" + cpt).attr("name","ajouterQR" + cpt);
+          }
+
+          // Bouton Reco          
+          if($("#divEnigme" + id + " #recVocale" + id).length > 1 ){
+            $("#divEnigme" + id + " #recVocale" + id)[0].setAttribute("id","recVocale" + cpt);
+            $("#divEnigme" + id + " #recVocale" + cpt)[0].setAttribute("data-target", "#popupRecVocale" + cpt);
+            $("#modification" + id + " #recVocale" + id).attr("id","recVocale" + cpt);
+            $("#modification" + id + " #recVocale" + cpt).attr("data-target", "#popupRecVocale" + cpt);
+            $("#modification" + id + " #recVocale" + cpt).attr("onclick","chargerQuestion("+cpt+",'vocale');");
+          }else{
+            $("#divEnigme" + id + " #recVocale" + id).attr("id","recVocale" + cpt);
+            $("#divEnigme" + id + " #recVocale" + cpt).attr("data-target", "#popupRecVocale" + cpt);
+          }
+            
+          // Bouton delete enigme
+          document.getElementById("deleteEnigme" + id).id = "deleteEnigme" + cpt;
+          document.getElementById("deleteEnigme" + cpt).setAttribute("onclick", "supprLigne(" + cpt + ",\'" + element + "\')");
+
           div.id = "divEnigme" + cpt;
+          document.getElementById("modification" + id).id = "modification" + cpt;
+          document.getElementById("menuDeroulant" + id).id = "menuDeroulant" + cpt;
           document.getElementById("popupQRCode" + id).id = "popupQRCode" + cpt;
           document.getElementById("questQRCode" + id).id = "questQRCode" + cpt;
           document.getElementById("addAudioQRCode" + id).id = "addAudioQRCode" + cpt;
@@ -472,9 +502,9 @@ function supprLigne(idLigne, element) {
       });
     } else {
       document.getElementsByName("nombreReponse")[0].value = "";
-      $("#menuDeroulant"+idLigne).attr("style","display:true");
-      $("#modification"+idLigne).empty();
-      $("#modification"+idLigne).attr("style","display:none");
+      $("#menuDeroulant" + idLigne).attr("style", "display:true");
+      $("#modification" + idLigne).empty();
+      $("#modification" + idLigne).attr("style", "display:none");
     }
   } else if (element == "qrcode") {
     compteurQuestion--;
@@ -529,11 +559,11 @@ function validerQuestion(idEnigme, type) {
     } else {
       $("#popupQRCode" + idEnigme + "  #alertQuestionEmptyError").attr("style", "display:none");
     }
-    
-    if(textQuestion.substring(textQuestion.length-3, textQuestion.length) == "mp3"){
+
+    if (textQuestion.substring(textQuestion.length - 3, textQuestion.length) == "mp3") {
       textQuestion = document.getElementById("questQRCode" + idEnigme).name;
     }
-      
+
     let tabReponses = new Array();
     let estBonneReponse = 1;
     let nbReponses = document.getElementById("repContainer" + idEnigme).childElementCount;
@@ -570,7 +600,7 @@ function validerQuestion(idEnigme, type) {
   }
   else if (type == "vocale") {
     let textQuestion = document.getElementById("questRecVocal" + idEnigme).value;
-    if(textQuestion.substring(textQuestion.length-3, textQuestion.length) == "mp3"){
+    if (textQuestion.substring(textQuestion.length - 3, textQuestion.length) == "mp3") {
       textQuestion = document.getElementById("questRecVocal" + idEnigme).name;
     }
     if (textQuestion == "") {
@@ -606,8 +636,8 @@ function validerQuestion(idEnigme, type) {
     annulerQuestion(idEnigme, type);
 
     // On cache le menu déroulant pour mettre et afficher un bouton modifier dans le div id="modification"
-    $("#menuDeroulant"+idEnigme).attr("style", "display:none");
-    let modification = document.getElementById("modification"+idEnigme);
+    $("#menuDeroulant" + idEnigme).attr("style", "display:none");
+    let modification = document.getElementById("modification" + idEnigme);
     if (type == "qrcode") {
       // On rajoute l'attribut bootstrap pour fermer le modal sur le bouton valider
       jQuery("#addQRCode" + idEnigme).attr("data-dismiss", "modal");
@@ -615,10 +645,12 @@ function validerQuestion(idEnigme, type) {
       $("#addQRCode" + idEnigme).trigger({ type: "click" });
       $("#addQRCode" + idEnigme).removeAttr("data-dismiss");
 
-      modification.innerHTML = `<button type="button" id="scanQR`+ idEnigme + `" name="ajouterQR` + idEnigme + `" data-toggle="modal"
-      data-target="#popupQRCode` + idEnigme + `" class="btn btn-outline-success align-self-center" onclick="chargerQuestion(`+idEnigme+`,'qrcode');">
+      modification.innerHTML = `<button type="button" id="scanQR` + idEnigme + `" name="ajouterQR` + idEnigme + `" data-toggle="modal"
+      data-target="#popupQRCode` + idEnigme + `" class="btn btn-outline-success align-self-center" onclick="chargerQuestion(` + idEnigme + `,'qrcode');">
       <i class="fa fa-qrcode"></i>&nbsp;&nbsp;Modifier</button>&nbsp;`;
-      
+
+      modification.setAttribute("style","display:true");
+
     }
     else if (type == "vocale") {
       // On rajoute l'attribut bootstrap pour fermer le modal sur le bouton valider
@@ -627,38 +659,39 @@ function validerQuestion(idEnigme, type) {
       $("#addRecVocal" + idEnigme).trigger({ type: "click" });
       $("#addRecVocal" + idEnigme).removeAttr("data-dismiss");
 
-      modification.innerHTML = `<button id="recVocale`+ idEnigme + `" type="button" class="btn btn-outline-success align-self-center"
-      data-toggle="modal" data-target="#popupRecVocale` + idEnigme + `" onclick="chargerQuestion(`+idEnigme+`,'vocale');">
+      modification.innerHTML = `<button id="recVocale` + idEnigme + `" type="button" class="btn btn-outline-success align-self-center"
+      data-toggle="modal" data-target="#popupRecVocale` + idEnigme + `" onclick="chargerQuestion(` + idEnigme + `,'vocale');">
       <i class="fa fa-microphone"></i>&nbsp;&nbsp;Modifier</button>`;
+      modification.setAttribute("style","display:true");
     }
 
   }
 }
 
 // Fonction qui charger les données des popup qrcode
-function chargerQuestion(idEnigme, type){
+function chargerQuestion(idEnigme, type) {
   currentEnigme = idEnigme;
-  console.log("hello "+currentEnigme);
+  console.log("hello " + currentEnigme);
   // On affecte les valeurs rentrées à la popup pour la modification
-  if(type == "qrcode"){
-    $("#popupQRCode"+idEnigme+" #questQRCode"+idEnigme).val(projetSeriousGame.getQuestionQrFromId(idEnigme).getQuestion()); // le champs de question
+  if (type == "qrcode") {
+    $("#popupQRCode" + idEnigme + " #questQRCode" + idEnigme).val(projetSeriousGame.getQuestionQrFromId(idEnigme).getQuestion()); // le champs de question
 
-    for(let i=0; i < projetSeriousGame.getQuestionQrFromId(idEnigme).getReponses().length; i++){// les champs de réponses
-      if(i>0) ajouterQuestions(idEnigme);// La popup n'a qu'1 reponse donc on en ajoute
-      $("#popupQRCode"+idEnigme+" #projectId"+idEnigme+""+(i+1)).val(projetSeriousGame.getQuestionQrFromId(idEnigme).getReponses()[i]);
+    for (let i = 0; i < projetSeriousGame.getQuestionQrFromId(idEnigme).getReponses().length; i++) {// les champs de réponses
+      if (i > 0) ajouterQuestions(idEnigme);// La popup n'a qu'1 reponse donc on en ajoute
+      $("#popupQRCode" + idEnigme + " #projectId" + idEnigme + "" + (i + 1)).val(projetSeriousGame.getQuestionQrFromId(idEnigme).getReponses()[i]);
     }
-    $("#popupQRCode"+idEnigme+" #gridCheck"+idEnigme+""+projetSeriousGame.getQuestionQrFromId(idEnigme).getBonneReponse()).prop("checked",true);
+    $("#popupQRCode" + idEnigme + " #gridCheck" + idEnigme + "" + projetSeriousGame.getQuestionQrFromId(idEnigme).getBonneReponse()).prop("checked", true);
     // On cache les messages d'erreurs
     $("#popupQRCode" + idEnigme + "  #alertQuestionEmptyError").attr("style", "display:none");
     $("#popupQRCode" + idEnigme + "  #alertReponsesEmptyError").attr("style", "display:none");
-  }if(type == "vocale"){
+  } if (type == "vocale") {
     console.log(projetSeriousGame.getQuestionRecoFromId(idEnigme));
-    $("#popupRecVocale"+idEnigme+" #questRecVocal"+idEnigme).val(projetSeriousGame.getQuestionRecoFromId(idEnigme).getQuestion()); // le champs de la question
-    $("#popupRecVocale"+idEnigme+" #repRecVocal"+idEnigme).val(projetSeriousGame.getQuestionRecoFromId(idEnigme).getReponse()); // le champs de la reponse
+    $("#popupRecVocale" + idEnigme + " #questRecVocal" + idEnigme).val(projetSeriousGame.getQuestionRecoFromId(idEnigme).getQuestion()); // le champs de la question
+    $("#popupRecVocale" + idEnigme + " #repRecVocal" + idEnigme).val(projetSeriousGame.getQuestionRecoFromId(idEnigme).getReponse()); // le champs de la reponse
     // On cache les messages d'erreurs
     $("#popupRecVocale" + idEnigme + "  #alertQuestionEmptyError").attr("style", "display:none");
     $("#popupRecVocale" + idEnigme + "  #alertReponseEmptyError").attr("style", "display:none");
-    
+
   }
 
 }
@@ -725,12 +758,13 @@ function genereJsonSeriousGame() {
   // On extrait les valeurs des champs utiles du html
   let nomSeriousGame = $("#projectId").val();
   let textIntro = $("#textAreaIntro").val();
-  if(textIntro.substring(textIntro.length-3, textIntro.length) == "mp3"){
+  if (textIntro.substring(textIntro.length - 3, textIntro.length) == "mp3") {
     textIntro = document.getElementById("textAreaIntro").name;
   }
   let textFin = $("#textAreaFin").val();
-  if(textFin.substring(textFin.length-3, textFin.length) == "mp3"){
-    textFin = document.getElementById("textAreaIntro").name;
+  console.log(textFin);
+  if (textFin.substring(textFin.length - 3, textFin.length) == "mp3") {
+    textFin = document.getElementById("textAreaFin").name;
   }
   let qrColor = $('#qrColor').val();
 
@@ -783,6 +817,9 @@ function genereJsonSeriousGame() {
 
 function previewQRCodeQuestion() {
   var question = projetSeriousGame.getQuestion();
+  if($('#qrView')[0].childElementCount == 0){
+    document.getElementById("qrView").append(document.createElement("div"));
+  }
   previewQRCode(question, $('#qrView')[0]);
 }
 
