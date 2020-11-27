@@ -543,8 +543,6 @@ function verifNombreCaractere(num) {
 var champInitialeSupprime = false;
 //supprime un le textarea correspondant au numText
 function supprimerChampLegende(e, numText) {
-  console.log(e + " " + numText);
-
   decrementerNbZoneDonne();
 
   //suppression dans le store de la zone de txt correspondante
@@ -552,6 +550,7 @@ function supprimerChampLegende(e, numText) {
   store.delete(`zone` + numText);
   if(numText == 1){
     if(!champInitialeSupprime){
+      console.log("ChampInitial");
       $(e).parents('div#legendeTextareaInitiale').remove();
       champInitialeSupprime = true;
     }
