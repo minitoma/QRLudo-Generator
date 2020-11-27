@@ -95,15 +95,15 @@ $("#ajouterQuestion").click(function() {
                             <div class="form-group col-md-3">
                                   <label class="control-label">Réponse `+ compteurReponse + ` :</label>
                                 </div>
-                         <div class="form-group col-md-2">
-                                   <input class="form-check-input" type="checkbox" name="gridRadios" id="gridCheck`+ compteurReponse + `" style="width:70px;" 
-                                      value="option"` + compteurReponse + `" >
-                                      <label class="form-check-label" for="gridCheck`+ compteurReponse + `">
-                            </div>
                           <div class="form-group col-md-6">
                                  <input type="text" class="form-control col-sm-6" id="reponse`+ compteurReponse + `" rows="2" name="nomprojet"
                                 placeholder="Réponse" />
                            </div>
+                           <div class="form-group col-md-2">
+                                   <input class="form-check-input" type="checkbox" name="gridRadios" id="gridCheck`+ compteurReponse + `" style="width:70px;" 
+                                      value="option"` + compteurReponse + `" >
+                                      <label class="form-check-label" for="gridCheck`+ compteurReponse + `">
+                            </div>
                             <div class="form-group col-md-1">
                                 <button id="deleteQRCode`+ compteurReponse + `" type="button"
                                     class="btn btn-outline-success align-self-center" onclick="supprLigne(` + compteurReponse + ",\'" + type + `\');">
@@ -120,7 +120,7 @@ $("#ajouterQuestion").click(function() {
 
 //Pour supprimer une énigme ou bien une réponse 
 function supprLigne(idLigne, element) {
-  if (element == "Rreponse") {
+  if (element == "Reponse") {
     compteurReponse--;
     $("#divQuestion" + idLigne).on('click', function() {
       $(this).remove();
@@ -128,9 +128,9 @@ function supprLigne(idLigne, element) {
         let id = cpt+1;
         let div = $("#divQuestion" + id)[0].getElementsByTagName("div");
         div[0].getElementsByTagName("label")[0].innerHTML = "Réponse " + cpt + " :";
-        div[1].getElementsByTagName("input")[0].id = "gridCheck" + cpt;
-        div[1].getElementsByTagName("label")[0].for = "gridCheck" + cpt;
-        div[2].getElementsByTagName("input")[0].id = "reponse" + cpt;
+        div[2].getElementsByTagName("input")[0].id = "gridCheck" + cpt;
+        div[2].getElementsByTagName("label")[0].for = "gridCheck" + cpt;
+        div[1].getElementsByTagName("input")[0].id = "reponse" + cpt;
         div[3].getElementsByTagName("button")[0].id = "deleteQRCode" + cpt;
         div[3].getElementsByTagName("button")[0].setAttribute("onclick", "supprLigne(" + cpt + ",\'" + element +"\')");
         $("#divQuestion" + id)[0].id = "divQuestion" + cpt;
