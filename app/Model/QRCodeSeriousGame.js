@@ -153,6 +153,18 @@ class QRCodeSeriousGame {
         return this.qrcode.type;
     }
 
+    getIntro() {
+        return this.qrcode.introduction;
+    }
+
+    getEnd() {
+        return this.qrcode.fin;
+    }
+
+    getEnigmes(){
+        return this.qrcode.enigmes;
+    }
+
     getDataString() {
         return JSON.stringify(this.qrcode);
     }

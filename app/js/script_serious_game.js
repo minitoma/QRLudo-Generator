@@ -698,6 +698,7 @@ function chargerQuestion(idEnigme, type) {
 
 }
 
+
 // Supprime la question dans la liste des questions du projetSeriousGame 
 // Fonction qui vérifie si une énigme est valide
 function verifEnigmeValide(idEnigme) {
