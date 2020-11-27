@@ -516,21 +516,27 @@ function supprLigne(idLigne, element) {
     $("#modification" + idLigne).attr("style", "display:none");
   }
 } else if (element == "qrcode") {
-  compteurQuestion--;
-  $("#divQuestion" + currentEnigme + idLigne).on('click', function () {
-    $(this).remove();
-    for (let cpt = idLigne; cpt <= compteurQuestion; cpt++) {
-      let id = cpt + 1;
-      let div = $("#divQuestion" + currentEnigme + id)[0].getElementsByTagName("div");
-      div[0].getElementsByTagName("label")[0].innerHTML = "Réponse " + cpt + " :";
-      div[2].getElementsByTagName("input")[0].id = "gridCheck" + currentEnigme + cpt;
-      div[2].getElementsByTagName("label")[0].for = "gridCheck" + currentEnigme + cpt;
-      div[1].getElementsByTagName("input")[0].id = "projectId" + currentEnigme + cpt;
-      div[3].getElementsByTagName("button")[0].id = "deleteQRCode" + currentEnigme + cpt;
-      div[3].getElementsByTagName("button")[0].setAttribute("onclick", "supprLigne(" + cpt + ",\'" + element + "\')");
-      $("#divQuestion" + currentEnigme + id)[0].id = "divQuestion" + currentEnigme + cpt;
-    }
-  });
+  if(compteurQuestion > 1){
+    compteurQuestion--;
+    $("#divQuestion" + currentEnigme + idLigne).on('click', function () {
+      $(this).remove();
+      for (let cpt = idLigne; cpt <= compteurQuestion; cpt++) {
+        let id = cpt + 1;
+        let div = $("#divQuestion" + currentEnigme + id)[0].getElementsByTagName("div");
+        div[0].getElementsByTagName("label")[0].innerHTML = "Réponse " + cpt + " :";
+        div[2].getElementsByTagName("input")[0].id = "gridCheck" + currentEnigme + cpt;
+        div[2].getElementsByTagName("label")[0].for = "gridCheck" + currentEnigme + cpt;
+        div[1].getElementsByTagName("input")[0].id = "projectId" + currentEnigme + cpt;
+        div[3].getElementsByTagName("button")[0].id = "deleteQRCode" + currentEnigme + cpt;
+        div[3].getElementsByTagName("button")[0].setAttribute("onclick", "supprLigne(" + cpt + ",\'" + element + "\')");
+        $("#divQuestion" + currentEnigme + id)[0].id = "divQuestion" + currentEnigme + cpt;
+      }
+    });
+  }
+  else {
+    let div = $("#divQuestion" + currentEnigme + "1")[0].getElementsByTagName("div");
+    div[1].getElementsByTagName("input")[0].value = "";
+  }
 }
 }
 
