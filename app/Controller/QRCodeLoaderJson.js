@@ -63,16 +63,6 @@ class QRCodeLoaderJson {
           qrcode.setId(qr.id);
           break;
 
-        case "questionQCM":
-          qrcode = new QuestionQCM(qr.name, qr.data, qr.color);
-          qrcode.setId(qr.id);
-          break;
-
-        case "reponseQCM":
-          qrcode = new ReponseQCM(qr.name, qr.isAnswer, qr.color);
-          qrcode.setId(qr.id);
-          break;
-
         case "ExerciceReconnaissanceVocaleQCM":
           qrcode = new QRCodeQCM(qr.name, qr.data, qr.lettreReponseVocale, qr.text_bonne_reponse, qr.m_text_mauvaise_rep, qr.color);
          break;
