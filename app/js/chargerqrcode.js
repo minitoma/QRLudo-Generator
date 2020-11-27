@@ -4,6 +4,7 @@
  * @Last modified time: 25/11/2020
  */
 
+
 $().ready(function() {
   //require("./js/script_unique.js");
 
@@ -77,6 +78,14 @@ function drawQRCodeImport(qrcode) {
     $("#MessageBonnereponse").val(qrcode.getGoodAnswer());
     $("#MessageMauvaisereponse").val(qrcode.getBadAnswer());
   });
+}else if (qrcode.getType() == 'SeriousGameScenario') {
+  $("#charger-page").load(path.join(__dirname, "Views/serious-game.html"), function() {
+    $("#projectId").val(qrcode.getName());
+    $("#textAreaIntro").val(qrcode.getIntro());
+    $("#textAreaFin").val(qrcode.getEnd());
+    var projet = new ProjetSeriousGame(qrcode.getName(), qrcode.getQuestionQRCode(), qrcode.getQuestionRecoVocale());
+    drawQRCodeSeriousGameEnigma(qrcode);
+  });
 }
 }
 
@@ -148,6 +157,22 @@ function drawQRCodeDataRecVocale(qrcode) {
     
   }
 }
+
+// recréer les inputs d'un qrcode Scenario Serious Game
+function drawQRCodeSeriousGameEnigma(qrcode) {
+  let enigmes = qrcode.getEnigmes();
+  console.log(enigmes);
+  for (var i = 0; i < enigmes.length; i++) {
+    if(i==0){
+      $("#enigme1").val(enigmes[i][1]);
+      
+    }else{
+      ajouterEnigme(enigmes[i]);
+    }
+
+    
+  }
+}
 var compteurReponse = 1;
 function ajouterLigneReponse(data) {
   compteurReponse++;
@@ -178,6 +203,55 @@ function ajouterLigneReponse(data) {
     container.append(reponse);
   }
 }
+
+
+
+
+//Pour ajouter autant d'énigme que souhaité
+var type = "";
+var compteurEnigme = 1;
+var currentEnigme = 1;
+
+function ajouterEnigme(enigme) {
+  compteurEnigme++;
+  if (compteurEnigme < 30) {
+    type = "enigme";
+    let reponse = document.createElement('div');
+    reponse.innerHTML = `<div class="form-group">
+                            <div class="form-inline" class="col-sm-12" id="divEnigme` + compteurEnigme + `">
+                              <label class="control-label"
+                              style="color:#28a745;padding-top:10px;padding-right:54px;">Énigme `+ compteurEnigme + ` : </label>
+                              <input type="text" class="form-control" id="enigme`+ compteurEnigme + `" name="nombreReponse"
+                              placeholder="Nom de l'énigme `+ compteurEnigme + `" onkeyup="activerSave();" value="`+enigme[1]+`"/>
+                              &nbsp;
+                              <div class="btn-group" style="display:true" id="menuDeroulant`+ compteurEnigme + `">
+                                <button type="button" class="btn btn-outline-success align-self-center dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Type énigme        &nbsp;&nbsp; &nbsp;
+                                </button>
+                                <div class="dropdown-menu" >
+                                  <button type="button" id="scanQR`+ compteurEnigme + `" name="ajouterQR` + compteurEnigme + `" data-toggle="modal"
+                                  data-target="#popupQRCode` + compteurEnigme + `" class="dropdown-item">
+                                  <i class="fa fa-qrcode"></i>&nbsp;&nbsp;QR CODE</button>&nbsp;
+                                  <button id="recVocale`+ compteurEnigme + `" type="button" class="dropdown-item"
+                                  data-toggle="modal" data-target="#popupRecVocale` + compteurEnigme + `">
+                                  <i class="fa fa-microphone"></i>&nbsp;&nbsp;Reconnaissance vocale</button>
+                                  </div>
+                                </div>
+                                <div id="modification`+ compteurEnigme + `">
+                                &nbsp;
+                                <button id="deleteEnigme`+ compteurEnigme + `" type="button" onclick="supprLigne(` + compteurEnigme + ",\'" + type + `\');" class="btn btn-outline-success align-self-center">
+                                <i class="fa fa-trash"></i></button>
+                              </div>                              
+                          </div>`;
+
+    let container = $("#containerEnigme");
+    container.append(reponse);
+  }
+};
+
+
+
+
 
 // télécharger la musique correspondante et l'enregistrer
 function restoreSavedMusic(data) {
