@@ -289,7 +289,7 @@ $("#ajouterEnigme").click(function () {
             <hr>
             <div class="alert alert-danger" role="alert" id="alertReponsesEmptyError" style="display:none"> Veuillez d'abord saisir toutes vos réponses </div>
             <div class="form-row" style="text-align: right;">
-                <div class="form-group col-md-11" id="labelBonneReponse` + compteurEnigme + `">
+                <div class="form-group col-md-10" id="labelBonneReponse` + compteurEnigme + `">
                     <label>Bonne réponse :</label>
                 </div>
             </div>
