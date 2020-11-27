@@ -4,6 +4,7 @@
  * @Last modified time: 25/11/2020
  */
 
+
 $().ready(function() {
   //require("./js/script_unique.js");
 
@@ -81,7 +82,9 @@ function drawQRCodeImport(qrcode) {
     $("#projectId").val(qrcode.getName());
     $("#textAreaIntro").val(qrcode.getIntro());
     $("#textAreaFin").val(qrcode.getEnd());
-    drawQRCodeSeriousGameEnigma(qrcode);
+    var projet = new ProjetSeriousGame(qrcode.getName(), qrcode.getQuestionQRCode(), qrcode.getQuestionRecoVocale())
+    console.log(projet);
+    drawQRCodeSeriousGameEnigma(qrcode, projet.getDataString());
   });
 }
 }
@@ -153,15 +156,20 @@ function drawQRCodeDataRecVocale(qrcode) {
 }
 
 // recréer les inputs d'un qrcode Scenario Serious Game
-function drawQRCodeSeriousGameEnigma(qrcode) {
+function drawQRCodeSeriousGameEnigma(qrcode, projet) {
   let enigmes = qrcode.getEnigmes();
   console.log(enigmes);
   for (var i = 0; i < enigmes.length; i++) {
     if(i==0){
-      $("#enigme1").val(enigmes[i][1])
+      $("#enigme1").val(enigmes[i][1]);
+      $("#menuDeroulant1").css("display", "none");
+      $("#modification1").css("display", "block");
+      $("#modification1").html('<i class="fa fa-qrcode"></i>Modifier');
+      $("#modification1").addClass("btn btn-outline-success align-self-center dropdown-toggle");
+      $("#modification1").attr("onclick", rechargerQuestion(1,"qrcode",projet));
       
     }else{
-      ajouterEnigme(enigmes[i]);
+      ajouterEnigme(enigmes[i], projet);
     }
 
     
@@ -205,7 +213,7 @@ function ajouterLigneReponse(data) {
 var type = "";
 var compteurEnigme = 1;
 var currentEnigme = 1;
-function ajouterEnigme(enigme) {
+function ajouterEnigme(enigme, projet) {
   compteurEnigme++;
   if (compteurEnigme < 30) {
     type = "enigme";
@@ -230,7 +238,7 @@ function ajouterEnigme(enigme) {
                                   <i class="fa fa-microphone"></i>&nbsp;&nbsp;Reconnaissance vocale</button>
                                   </div>
                                 </div>
-                                <div id="modification`+ compteurEnigme + `" class="btn btn-outline-success align-self-center dropdown-toggle" style="display:block" onclick="chargerQuestion(`+compteurEnigme+`,'qrcode');">
+                                <div id="modification`+ compteurEnigme + `" class="btn btn-outline-success align-self-center dropdown-toggle" style="display:block" onclick='rechargerQuestion(`+compteurEnigme+`,"qrcode",`+Object.assign(projet)+`);'>
                                 <i class="fa fa-qrcode"></i>
                                 Modifier</div>
                                 &nbsp;

@@ -52,6 +52,10 @@ class ProjetSeriousGame {
         this.projet.nom = nom;
     }
 
+    getProject() {
+        return this.projet;
+    }
+
     getName() {
         return this.projet.nom;
     }
@@ -159,6 +163,14 @@ class QRCodeSeriousGame {
 
     getEnd() {
         return this.qrcode.fin;
+    }
+
+    getQuestionQRCode() {
+        return this.qrcode.questionsQrCode;
+    }
+
+    getQuestionRecoVocale() {
+        return this.qrcode.questionsRecoVocale;
     }
 
     getEnigmes(){
