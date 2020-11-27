@@ -165,7 +165,9 @@ function activerSave() {
 
 // Réinitialise les champs du Scénario
 function deleteGame() {
-  console.log("Delete Game");
+  for (let i = compteurEnigme; i >= 1; --i) {
+    supprLigne(i, "enigme");
+  }
 }
 
 //Import d'un projet existant à partir d'un répertoire
@@ -405,126 +407,123 @@ function ajouterQuestions(idEnigme) {
 
 //Pour supprimer une énigme ou bien une réponse des QRCode
 function supprLigne(idLigne, element) {
-  console.log(currentEnigme);
   if (element == "enigme") {
     // On regarde le nombre d'énigme crée, et si il y en a qu'une seule on supprime juste la value de l'input text
     if ($("[name=nombreReponse]").length > 1) {
       compteurEnigme--;
-      $("#divEnigme" + idLigne).on('click', function () {
-        verifEnigmeValide(idLigne);
-        $(this).parent().parent().remove();
-        // On parcourt les div enigmes suivants pour changer les valeurs
-        for (let cpt = idLigne; cpt <= compteurEnigme; cpt++) {
-          console.log("Compteur Enigme: "+compteurEnigme);
-          console.log(" Compteur : "+cpt);
-          let id = cpt + 1;
-          console.log("id compteur : "+ id);
-          let div = $("#divEnigme" + id)[0];
-          div.getElementsByTagName("label")[0].innerHTML = "Énigme " + cpt + " :";
-          div.getElementsByTagName("input")[0].id = "enigme" + cpt;
-          div.getElementsByTagName("input")[0].placeholder = "Nom de l'énigme " + cpt;
+      verifEnigmeValide(idLigne);
+      $("#divEnigme" + idLigne).parent().parent().remove();
+      // On parcourt les div enigmes suivants pour changer les valeurs
+      for (let cpt = idLigne; cpt <= compteurEnigme; cpt++) {
+        console.log("Compteur Enigme: " + compteurEnigme);
+        console.log(" Compteur : " + cpt);
+        let id = cpt + 1;
+        console.log("id compteur : " + id);
+        let div = $("#divEnigme" + id)[0];
+        div.getElementsByTagName("label")[0].innerHTML = "Énigme " + cpt + " :";
+        div.getElementsByTagName("input")[0].id = "enigme" + cpt;
+        div.getElementsByTagName("input")[0].placeholder = "Nom de l'énigme " + cpt;
 
-          // Bouton Qr        
-          if($("#divEnigme" + id + " #scanQR" + id).length > 1){
-            $("#divEnigme" + id + " #scanQR" + id)[0].id = "scanQR" + cpt;
-            $("#divEnigme" + id + " #scanQR" + cpt)[0].setAttribute("data-target", "#popupQRCode" + cpt);
-            $("#divEnigme" + id + " #scanQR" + cpt)[0].name = "ajouterQR" + cpt;
-            $("#modification" + id + " #scanQR" + id).attr("id","scanQR" + cpt);
-            $("#modification" + id + " #scanQR" + cpt).attr("data-target", "#popupQRCode" + cpt);
-            $("#modification" + id + " #scanQR" + cpt).attr("name","ajouterQR" + cpt);
-            $("#modification" + id + " #scanQR" + cpt).attr("onclick","chargerQuestion("+cpt+",'qrcode');");
-          }else{
-            $("#divEnigme" + id + " #scanQR" + id).attr("id","scanQR" + cpt);
-            $("#divEnigme" + id + " #scanQR" + cpt).attr("data-target", "#popupQRCode" + cpt);
-            $("#divEnigme" + id + " #scanQR" + cpt).attr("name","ajouterQR" + cpt);
-          }
+        // Bouton Qr        
+        if ($("#divEnigme" + id + " #scanQR" + id).length > 1) {
+          $("#divEnigme" + id + " #scanQR" + id)[0].id = "scanQR" + cpt;
+          $("#divEnigme" + id + " #scanQR" + cpt)[0].setAttribute("data-target", "#popupQRCode" + cpt);
+          $("#divEnigme" + id + " #scanQR" + cpt)[0].name = "ajouterQR" + cpt;
+          $("#modification" + id + " #scanQR" + id).attr("id", "scanQR" + cpt);
+          $("#modification" + id + " #scanQR" + cpt).attr("data-target", "#popupQRCode" + cpt);
+          $("#modification" + id + " #scanQR" + cpt).attr("name", "ajouterQR" + cpt);
+          $("#modification" + id + " #scanQR" + cpt).attr("onclick", "chargerQuestion(" + cpt + ",'qrcode');");
+        } else {
+          $("#divEnigme" + id + " #scanQR" + id).attr("id", "scanQR" + cpt);
+          $("#divEnigme" + id + " #scanQR" + cpt).attr("data-target", "#popupQRCode" + cpt);
+          $("#divEnigme" + id + " #scanQR" + cpt).attr("name", "ajouterQR" + cpt);
+        }
 
-          // Bouton Reco          
-          if($("#divEnigme" + id + " #recVocale" + id).length > 1 ){
-            $("#divEnigme" + id + " #recVocale" + id)[0].setAttribute("id","recVocale" + cpt);
-            $("#divEnigme" + id + " #recVocale" + cpt)[0].setAttribute("data-target", "#popupRecVocale" + cpt);
-            $("#modification" + id + " #recVocale" + id).attr("id","recVocale" + cpt);
-            $("#modification" + id + " #recVocale" + cpt).attr("data-target", "#popupRecVocale" + cpt);
-            $("#modification" + id + " #recVocale" + cpt).attr("onclick","chargerQuestion("+cpt+",'vocale');");
-          }else{
-            $("#divEnigme" + id + " #recVocale" + id).attr("id","recVocale" + cpt);
-            $("#divEnigme" + id + " #recVocale" + cpt).attr("data-target", "#popupRecVocale" + cpt);
-          }
-            
-          // Bouton delete enigme
-          document.getElementById("deleteEnigme" + id).id = "deleteEnigme" + cpt;
-          document.getElementById("deleteEnigme" + cpt).setAttribute("onclick", "supprLigne(" + cpt + ",\'" + element + "\')");
+        // Bouton Reco          
+        if ($("#divEnigme" + id + " #recVocale" + id).length > 1) {
+          $("#divEnigme" + id + " #recVocale" + id)[0].setAttribute("id", "recVocale" + cpt);
+          $("#divEnigme" + id + " #recVocale" + cpt)[0].setAttribute("data-target", "#popupRecVocale" + cpt);
+          $("#modification" + id + " #recVocale" + id).attr("id", "recVocale" + cpt);
+          $("#modification" + id + " #recVocale" + cpt).attr("data-target", "#popupRecVocale" + cpt);
+          $("#modification" + id + " #recVocale" + cpt).attr("onclick", "chargerQuestion(" + cpt + ",'vocale');");
+        } else {
+          $("#divEnigme" + id + " #recVocale" + id).attr("id", "recVocale" + cpt);
+          $("#divEnigme" + id + " #recVocale" + cpt).attr("data-target", "#popupRecVocale" + cpt);
+        }
 
-          div.id = "divEnigme" + cpt;
-          document.getElementById("modification" + id).id = "modification" + cpt;
-          document.getElementById("menuDeroulant" + id).id = "menuDeroulant" + cpt;
-          document.getElementById("popupQRCode" + id).id = "popupQRCode" + cpt;
-          document.getElementById("questQRCode" + id).id = "questQRCode" + cpt;
-          document.getElementById("addAudioQRCode" + id).id = "addAudioQRCode" + cpt;
-          document.getElementById("deleteAudioQRCode" + id).id = "deleteAudioQRCode" + cpt;
-          document.getElementById("labelBonneReponse" + id).id = "labelBonneReponse" + cpt;
-          for (let i = 1; i <= document.getElementById("repContainer" + id).childElementCount; ++i) {
-            document.getElementById("divQuestion" + id + i).id = "divQuestion" + cpt + i;
-            document.getElementById("gridCheck" + id + i).name = "gridRadios" + cpt;
-            if (i == 1) document.getElementById("gridCheck" + id + i).checked = true;
-            document.getElementById("gridCheck" + id + i).id = "gridCheck" + cpt + i;
-            document.getElementById("projectId" + id + i).id = "projectId" + cpt + i;
-            document.getElementById("deleteQRCode" + id + i).setAttribute("onclick", "supprLigne(" + cpt + ",\'qrcode\')");
-            document.getElementById("deleteQRCode" + id + i).id = "deleteQRCode" + cpt + i;
-          }
-          document.getElementById("ajouterQuestion" + id).setAttribute("onclick", "ajouterQuestions(" + cpt + ")");
-          document.getElementById("ajouterQuestion" + id).id = "ajouterQuestion" + cpt;
-          document.getElementById("cancelQRCode" + id).setAttribute("onclick", "annulerQuestion(" + cpt + ",\'qrcode\')");
-          document.getElementById("cancelQRCode" + id).id = "cancelQRCode" + cpt;
-          document.getElementById("addQRCode" + id).setAttribute("onclick", "validerQuestion(" + cpt + ",\'qrcode\')");
-          document.getElementById("addQRCode" + id).id = "addQRCode" + cpt;
-          document.getElementById("repContainer" + id).id = "repContainer" + cpt;
-          document.getElementById("popupRecVocale" + id).id = "popupRecVocale" + cpt;
-          document.getElementById("questRecVocal" + id).id = "questRecVocal" + cpt;
-          document.getElementById("repRecVocal" + id).id = "repRecVocal" + cpt;
-          document.getElementById("cancelRecVocal" + id).setAttribute("onclick", "annulerQuestion(" + cpt + ",\'vocale\')");
-          document.getElementById("cancelRecVocal" + id).id = "cancelRecVocal" + cpt;
-          document.getElementById("addRecVocal" + id).setAttribute("onclick", "validerQuestion(" + cpt + ",\'vocale\')");
-          document.getElementById("addRecVocal" + id).id = "addRecVocal" + cpt;
-          document.getElementById("addAudioReco" + id).id = "addAudioReco" + cpt;// button audio
-          document.getElementById("deleteAudioReco" + id).id = "deleteAudioReco" + cpt; // button delete audio
+        // Bouton delete enigme
+        document.getElementById("deleteEnigme" + id).id = "deleteEnigme" + cpt;
+        document.getElementById("deleteEnigme" + cpt).setAttribute("onclick", "supprLigne(" + cpt + ",\'" + element + "\')");
+
+        div.id = "divEnigme" + cpt;
+        document.getElementById("modification" + id).id = "modification" + cpt;
+        document.getElementById("menuDeroulant" + id).id = "menuDeroulant" + cpt;
+        document.getElementById("popupQRCode" + id).id = "popupQRCode" + cpt;
+        document.getElementById("questQRCode" + id).id = "questQRCode" + cpt;
+        document.getElementById("addAudioQRCode" + id).id = "addAudioQRCode" + cpt;
+        document.getElementById("deleteAudioQRCode" + id).id = "deleteAudioQRCode" + cpt;
+        document.getElementById("labelBonneReponse" + id).id = "labelBonneReponse" + cpt;
+        for (let i = 1; i <= document.getElementById("repContainer" + id).childElementCount; ++i) {
+          document.getElementById("divQuestion" + id + i).id = "divQuestion" + cpt + i;
+          document.getElementById("gridCheck" + id + i).name = "gridRadios" + cpt;
+          if (i == 1) document.getElementById("gridCheck" + id + i).checked = true;
+          document.getElementById("gridCheck" + id + i).id = "gridCheck" + cpt + i;
+          document.getElementById("projectId" + id + i).id = "projectId" + cpt + i;
+          document.getElementById("deleteQRCode" + id + i).setAttribute("onclick", "supprLigne(" + cpt + ",\'qrcode\')");
+          document.getElementById("deleteQRCode" + id + i).id = "deleteQRCode" + cpt + i;
+        }
+        document.getElementById("ajouterQuestion" + id).setAttribute("onclick", "ajouterQuestions(" + cpt + ")");
+        document.getElementById("ajouterQuestion" + id).id = "ajouterQuestion" + cpt;
+        document.getElementById("cancelQRCode" + id).setAttribute("onclick", "annulerQuestion(" + cpt + ",\'qrcode\')");
+        document.getElementById("cancelQRCode" + id).id = "cancelQRCode" + cpt;
+        document.getElementById("addQRCode" + id).setAttribute("onclick", "validerQuestion(" + cpt + ",\'qrcode\')");
+        document.getElementById("addQRCode" + id).id = "addQRCode" + cpt;
+        document.getElementById("repContainer" + id).id = "repContainer" + cpt;
+        document.getElementById("popupRecVocale" + id).id = "popupRecVocale" + cpt;
+        document.getElementById("questRecVocal" + id).id = "questRecVocal" + cpt;
+        document.getElementById("repRecVocal" + id).id = "repRecVocal" + cpt;
+        document.getElementById("cancelRecVocal" + id).setAttribute("onclick", "annulerQuestion(" + cpt + ",\'vocale\')");
+        document.getElementById("cancelRecVocal" + id).id = "cancelRecVocal" + cpt;
+        document.getElementById("addRecVocal" + id).setAttribute("onclick", "validerQuestion(" + cpt + ",\'vocale\')");
+        document.getElementById("addRecVocal" + id).id = "addRecVocal" + cpt;
+        document.getElementById("addAudioReco" + id).id = "addAudioReco" + cpt;// button audio
+        document.getElementById("deleteAudioReco" + id).id = "deleteAudioReco" + cpt; // button delete audio
 
 
-          for (let i = 0; i < projetSeriousGame.getQuestionsQr().length; ++i) {
-            if (projetSeriousGame.getQuestionsQr()[i].getId() == id) {
-              projetSeriousGame.getQuestionsQr()[i].setId(cpt);
-            }
-          }
-          for (let i = 0; i < projetSeriousGame.getQuestionsReco().length; ++i) {
-            if (projetSeriousGame.getQuestionsReco()[i].getId() == id) {
-              projetSeriousGame.getQuestionsReco()[i].setId(cpt);
-            }
+        for (let i = 0; i < projetSeriousGame.getQuestionsQr().length; ++i) {
+          if (projetSeriousGame.getQuestionsQr()[i].getId() == id) {
+            projetSeriousGame.getQuestionsQr()[i].setId(cpt);
           }
         }
-      });
-    } else {
-      document.getElementsByName("nombreReponse")[0].value = "";
-      $("#menuDeroulant" + idLigne).attr("style", "display:true");
-      $("#modification" + idLigne).empty();
-      $("#modification" + idLigne).attr("style", "display:none");
-    }
-  } else if (element == "qrcode") {
-    compteurQuestion--;
-    $("#divQuestion" + currentEnigme + idLigne).on('click', function () {
-      $(this).remove();
-      for (let cpt = idLigne; cpt <= compteurQuestion; cpt++) {
-        let id = cpt + 1;
-        let div = $("#divQuestion" + currentEnigme + id)[0].getElementsByTagName("div");
-        div[0].getElementsByTagName("label")[0].innerHTML = "Réponse " + cpt + " :";
-        div[1].getElementsByTagName("input")[0].id = "gridCheck" + currentEnigme + cpt;
-        div[1].getElementsByTagName("label")[0].for = "gridCheck" + currentEnigme + cpt;
-        div[2].getElementsByTagName("input")[0].id = "projectId" + currentEnigme + cpt;
-        div[3].getElementsByTagName("button")[0].id = "deleteQRCode" + currentEnigme + cpt;
-        div[3].getElementsByTagName("button")[0].setAttribute("onclick", "supprLigne(" + cpt + ",\'" + element + "\')");
-        $("#divQuestion" + currentEnigme + id)[0].id = "divQuestion" + currentEnigme + cpt;
+        for (let i = 0; i < projetSeriousGame.getQuestionsReco().length; ++i) {
+          if (projetSeriousGame.getQuestionsReco()[i].getId() == id) {
+            projetSeriousGame.getQuestionsReco()[i].setId(cpt);
+          }
+        }
       }
-    });
+  } else {
+    document.getElementsByName("nombreReponse")[0].value = "";
+    $("#menuDeroulant" + idLigne).attr("style", "display:true");
+    $("#modification" + idLigne).empty();
+    $("#modification" + idLigne).attr("style", "display:none");
   }
+} else if (element == "qrcode") {
+  compteurQuestion--;
+  $("#divQuestion" + currentEnigme + idLigne).on('click', function () {
+    $(this).remove();
+    for (let cpt = idLigne; cpt <= compteurQuestion; cpt++) {
+      let id = cpt + 1;
+      let div = $("#divQuestion" + currentEnigme + id)[0].getElementsByTagName("div");
+      div[0].getElementsByTagName("label")[0].innerHTML = "Réponse " + cpt + " :";
+      div[1].getElementsByTagName("input")[0].id = "gridCheck" + currentEnigme + cpt;
+      div[1].getElementsByTagName("label")[0].for = "gridCheck" + currentEnigme + cpt;
+      div[2].getElementsByTagName("input")[0].id = "projectId" + currentEnigme + cpt;
+      div[3].getElementsByTagName("button")[0].id = "deleteQRCode" + currentEnigme + cpt;
+      div[3].getElementsByTagName("button")[0].setAttribute("onclick", "supprLigne(" + cpt + ",\'" + element + "\')");
+      $("#divQuestion" + currentEnigme + id)[0].id = "divQuestion" + currentEnigme + cpt;
+    }
+  });
+}
 }
 
 // Fonction pour réinitialise les champs question dans la popup QRCode
@@ -651,7 +650,7 @@ function validerQuestion(idEnigme, type) {
       data-target="#popupQRCode` + idEnigme + `" class="btn btn-outline-success align-self-center" onclick="chargerQuestion(` + idEnigme + `,'qrcode');">
       <i class="fa fa-qrcode"></i>&nbsp;&nbsp;Modifier</button>&nbsp;`;
 
-      modification.setAttribute("style","display:true");
+      modification.setAttribute("style", "display:true");
 
     }
     else if (type == "vocale") {
@@ -664,7 +663,7 @@ function validerQuestion(idEnigme, type) {
       modification.innerHTML = `<button id="recVocale` + idEnigme + `" type="button" class="btn btn-outline-success align-self-center"
       data-toggle="modal" data-target="#popupRecVocale` + idEnigme + `" onclick="chargerQuestion(` + idEnigme + `,'vocale');">
       <i class="fa fa-microphone"></i>&nbsp;&nbsp;Modifier</button>`;
-      modification.setAttribute("style","display:true");
+      modification.setAttribute("style", "display:true");
     }
 
   }
@@ -751,6 +750,7 @@ $("#generateSG").on("click", function () {
   }
 
 });
+
 /* On générère le QRCodeSeriousGame en récupérant les valeurs des champs la page html et des question QRCOde et Reco qui ont été stockées dans le projetSeriousGame
  * 
  */
@@ -819,7 +819,7 @@ function genereJsonSeriousGame() {
 
 function previewQRCodeQuestion() {
   var question = projetSeriousGame.getQuestion();
-  if($('#qrView')[0].childElementCount == 0){
+  if ($('#qrView')[0].childElementCount == 0) {
     document.getElementById("qrView").append(document.createElement("div"));
   }
   previewQRCode(question, $('#qrView')[0]);
