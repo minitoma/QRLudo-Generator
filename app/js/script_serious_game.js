@@ -240,7 +240,7 @@ $("#ajouterEnigme").click(function () {
                               <input type="text" class="form-control" id="enigme`+ compteurEnigme + `" name="nombreReponse"
                               placeholder="Nom de l'énigme `+ compteurEnigme + `" onkeyup="activerSave();" />
                               &nbsp;
-                              <div class="btn-group" style="display:true" id="menuDeroulant`+ compteurEnigme + `">
+                              <div class="btn-group" style="display:block" id="menuDeroulant`+ compteurEnigme + `">
                                 <button type="button" class="btn btn-outline-success align-self-center dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Type énigme        &nbsp;&nbsp; &nbsp;
                                 </button>
@@ -511,7 +511,7 @@ function supprLigne(idLigne, element) {
       }
   } else {
     document.getElementsByName("nombreReponse")[0].value = "";
-    $("#menuDeroulant" + idLigne).attr("style", "display:true");
+    $("#menuDeroulant" + idLigne).attr("style", "display:block");
     $("#modification" + idLigne).empty();
     $("#modification" + idLigne).attr("style", "display:none");
   }
@@ -570,7 +570,7 @@ function validerQuestion(idEnigme, type) {
 
     if (textQuestion == "") {
       tousLesChampsSontRemplies = false;
-      $("#popupQRCode" + idEnigme + "  #alertQuestionEmptyError").attr("style", "display:true");
+      $("#popupQRCode" + idEnigme + "  #alertQuestionEmptyError").attr("style", "display:block");
     } else {
       $("#popupQRCode" + idEnigme + "  #alertQuestionEmptyError").attr("style", "display:none");
     }
@@ -584,15 +584,15 @@ function validerQuestion(idEnigme, type) {
     let nbReponses = document.getElementById("repContainer" + idEnigme).childElementCount;
     for (let i = 1; i <= nbReponses; ++i) {
       let divs = document.getElementById("divQuestion" + idEnigme + i).getElementsByTagName('div');
-      let reponse = divs[2].getElementsByTagName('input')[0].value;
+      let reponse = divs[1].getElementsByTagName('input')[0].value;
       if (reponse == "") {
         tousLesChampsSontRemplies = false;
-        $("#popupQRCode" + idEnigme + "  #alertReponsesEmptyError").attr("style", "display:true");
+        $("#popupQRCode" + idEnigme + "  #alertReponsesEmptyError").attr("style", "display:block");
       } else if (tousLesChampsSontRemplies) {
         $("#popupQRCode" + idEnigme + "  #alertReponsesEmptyError").attr("style", "display:none");
       }
       tabReponses.push(reponse);
-      if (divs[1].getElementsByTagName('input')[0].checked == true) {
+      if (divs[2].getElementsByTagName('input')[0].checked == true) {
         estBonneReponse = i;
       }
     }
@@ -619,14 +619,14 @@ function validerQuestion(idEnigme, type) {
     }
     if (textQuestion == "") {
       tousLesChampsSontRemplies = false;
-      $("#popupRecVocale" + idEnigme + "  #alertQuestionEmptyError").attr("style", "display:true");
+      $("#popupRecVocale" + idEnigme + "  #alertQuestionEmptyError").attr("style", "display:block");
     } else {
       $("#popupRecVocale" + idEnigme + "  #alertQuestionEmptyError").attr("style", "display:none");
     }
     let textReponse = document.getElementById("repRecVocal" + idEnigme).value;
     if (textReponse == "") {
       tousLesChampsSontRemplies = false;
-      $("#popupRecVocale" + idEnigme + "  #alertReponseEmptyError").attr("style", "display:true");
+      $("#popupRecVocale" + idEnigme + "  #alertReponseEmptyError").attr("style", "display:block");
     } else {
       $("#popupRecVocale" + idEnigme + "  #alertReponseEmptyError").attr("style", "display:none");
     }
@@ -663,7 +663,7 @@ function validerQuestion(idEnigme, type) {
       data-target="#popupQRCode` + idEnigme + `" class="btn btn-outline-success align-self-center" onclick="chargerQuestion(` + idEnigme + `,'qrcode');">
       <i class="fa fa-qrcode"></i>&nbsp;&nbsp;Modifier</button>&nbsp;`;
 
-      modification.setAttribute("style", "display:true");
+      modification.setAttribute("style", "display:block");
 
     }
     else if (type == "vocale") {
@@ -676,7 +676,7 @@ function validerQuestion(idEnigme, type) {
       modification.innerHTML = `<button id="recVocale` + idEnigme + `" type="button" class="btn btn-outline-success align-self-center"
       data-toggle="modal" data-target="#popupRecVocale` + idEnigme + `" onclick="chargerQuestion(` + idEnigme + `,'vocale');">
       <i class="fa fa-microphone"></i>&nbsp;&nbsp;Modifier</button>`;
-      modification.setAttribute("style", "display:true");
+      modification.setAttribute("style", "display:block");
     }
 
   }
@@ -759,7 +759,7 @@ $("#generateSG").on("click", function () {
     $('#qrView').show();
   } else {
     // Affiche un message d'erreur
-    $("#alertChampsEmptyError").attr("style", "display:true");
+    $("#alertChampsEmptyError").attr("style", "display:block");
   }
 
 });
