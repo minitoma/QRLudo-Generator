@@ -288,8 +288,8 @@ $("#ajouterEnigme").click(function () {
             </div>
             <hr>
             <div class="alert alert-danger" role="alert" id="alertReponsesEmptyError" style="display:none"> Veuillez d'abord saisir toutes vos réponses </div>
-            <div class="form-row">
-                <div class="form-group col-md-6" id="labelBonneReponse` + compteurEnigme + `" style="margin-left: 450px">
+            <div class="form-row" style="text-align: right;">
+                <div class="form-group col-md-11" id="labelBonneReponse` + compteurEnigme + `">
                     <label>Bonne réponse :</label>
                 </div>
             </div>
@@ -394,13 +394,13 @@ function ajouterQuestions(idEnigme) {
     reponse.innerHTML = `<div class="form-group col-md-3">
                             <label class="control-label">Réponse `+ compteurQuestion + ` :</label>
                          </div>
+                         <div class="form-group col-md-6">
+                            <input type="text" class="form-control col-sm-6" id="projectId` + idEnigme + compteurQuestion + `" rows="2" name="nomprojet"
+                              placeholder="Réponse" onkeyup="activerSave();" />
+                          </div>
                          <div class="form-group col-md-2">
                             <input class="form-check-input" type="radio" name="gridRadios` + idEnigme + `" id="gridCheck` + idEnigme + compteurQuestion + `" style="width:70px;" value="option` + compteurQuestion + `">
                             <label class="form-check-label" for="gridCheck` + idEnigme + compteurQuestion + `">
-                          </div>
-                          <div class="form-group col-md-6">
-                            <input type="text" class="form-control col-sm-6" id="projectId` + idEnigme + compteurQuestion + `" rows="2" name="nomprojet"
-                              placeholder="Réponse" onkeyup="activerSave();" />
                           </div>
                           <div class="form-group col-md-1">
                             <button id="deleteQRCode` + idEnigme + compteurQuestion + `" type="button"
@@ -523,9 +523,9 @@ function supprLigne(idLigne, element) {
       let id = cpt + 1;
       let div = $("#divQuestion" + currentEnigme + id)[0].getElementsByTagName("div");
       div[0].getElementsByTagName("label")[0].innerHTML = "Réponse " + cpt + " :";
-      div[1].getElementsByTagName("input")[0].id = "gridCheck" + currentEnigme + cpt;
-      div[1].getElementsByTagName("label")[0].for = "gridCheck" + currentEnigme + cpt;
-      div[2].getElementsByTagName("input")[0].id = "projectId" + currentEnigme + cpt;
+      div[2].getElementsByTagName("input")[0].id = "gridCheck" + currentEnigme + cpt;
+      div[2].getElementsByTagName("label")[0].for = "gridCheck" + currentEnigme + cpt;
+      div[1].getElementsByTagName("input")[0].id = "projectId" + currentEnigme + cpt;
       div[3].getElementsByTagName("button")[0].id = "deleteQRCode" + currentEnigme + cpt;
       div[3].getElementsByTagName("button")[0].setAttribute("onclick", "supprLigne(" + cpt + ",\'" + element + "\')");
       $("#divQuestion" + currentEnigme + id)[0].id = "divQuestion" + currentEnigme + cpt;
