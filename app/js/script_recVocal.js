@@ -9,8 +9,8 @@ function genererJson() {
   }
 }
 
-var questionQCM;
-var questionOuverte;
+var questionQCM =null;
+var questionQCMQRCode;
 
 function genererJsonQCM(){
   questionOuverte = null;
@@ -52,6 +52,9 @@ function previewQRCodeQCM() {
   previewQRCode(questionQCM, $('#qrView')[0]);
 }
 
+
+var questionOuverte=null;
+
 function genererJsonQuestionOuverte(){
   questionQCM = null;
   var questionText = $("#Question").val();
@@ -83,24 +86,24 @@ function previewQRCode(qrcode, div) {
 // Ajouter une nouvelle Reponse une fois qu'on va clicker sur la button Ajouterreponse
 
 var compteurReponse = 1;
-$("#ajouterQuestion").click(function () {
+$("#ajouterQuestion").click(function() {
   compteurReponse++;
   if (compteurReponse < 30) {
-    type = "Rreponse";
+    type = "Reponse";
     let reponse = document.createElement('div');
     reponse.innerHTML = `<div class="form-row" id="divQuestion` + compteurReponse + `">
                             <div class="form-group col-md-3">
                                   <label class="control-label">Réponse `+ compteurReponse + ` :</label>
                                 </div>
-                         <div class="form-group col-md-2">
-                                   <input class="form-check-input" type="checkbox" name="gridRadios" id="gridCheck`+ compteurReponse + `" style="width:70px;" 
-                                      value="option"` + compteurReponse + `" >
-                                      <label class="form-check-label" for="gridCheck`+ compteurReponse + `">
-                            </div>
                           <div class="form-group col-md-6">
                                  <input type="text" class="form-control col-sm-6" id="reponse`+ compteurReponse + `" rows="2" name="nomprojet"
                                 placeholder="Réponse" />
                            </div>
+                           <div class="form-group col-md-2">
+                                   <input class="form-check-input" type="checkbox" name="gridRadios" id="gridCheck`+ compteurReponse + `" style="width:70px;" 
+                                      value="option"` + compteurReponse + `" >
+                                      <label class="form-check-label" for="gridCheck`+ compteurReponse + `">
+                            </div>
                             <div class="form-group col-md-1">
                                 <button id="deleteQRCode`+ compteurReponse + `" type="button"
                                     class="btn btn-outline-success align-self-center" onclick="supprLigne(` + compteurReponse + ",\'" + type + `\');">
@@ -113,9 +116,11 @@ $("#ajouterQuestion").click(function () {
   }
 });
 
+
+
 //Pour supprimer une énigme ou bien une réponse 
 function supprLigne(idLigne, element) {
-  if (element == "Rreponse") {
+  if (element == "Reponse") {
     compteurReponse--;
     $("#divQuestion" + idLigne).on('click', function() {
       $(this).remove();
@@ -123,9 +128,9 @@ function supprLigne(idLigne, element) {
         let id = cpt+1;
         let div = $("#divQuestion" + id)[0].getElementsByTagName("div");
         div[0].getElementsByTagName("label")[0].innerHTML = "Réponse " + cpt + " :";
-        div[1].getElementsByTagName("input")[0].id = "gridCheck" + cpt;
-        div[1].getElementsByTagName("label")[0].for = "gridCheck" + cpt;
-        div[2].getElementsByTagName("input")[0].id = "reponse" + cpt;
+        div[2].getElementsByTagName("input")[0].id = "gridCheck" + cpt;
+        div[2].getElementsByTagName("label")[0].for = "gridCheck" + cpt;
+        div[1].getElementsByTagName("input")[0].id = "reponse" + cpt;
         div[3].getElementsByTagName("button")[0].id = "deleteQRCode" + cpt;
         div[3].getElementsByTagName("button")[0].setAttribute("onclick", "supprLigne(" + cpt + ",\'" + element +"\')");
         $("#divQuestion" + id)[0].id = "divQuestion" + cpt;
@@ -194,12 +199,14 @@ function saveQRCodeImage(questionQCM, questionOuverte) {
   let img = $('#qrView img')[0].src;
 var qrcode
   var data = img.replace(/^data:image\/[^;]/, 'data:application/octet-stream');
-  if(questionQCM != null){
-    qrcode = questionQCM;
+
+  if (questionOuverte == null) {
+    var qrcode = questionQCM;
   }
-  else if (questionOuverte != null){
-    qrcode = questionOuverte
+  else {
+    var qrcode = questionOuverte;
   }
+  
   var xhr = new XMLHttpRequest();
   xhr.responseType = 'blob';
   console.log(data);

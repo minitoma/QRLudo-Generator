@@ -6,14 +6,15 @@
         Jeu à but pédagogique. <br />
         Les réponses attendues peuvent être à reconnaisance vocale, scan de QR Code, ...
     </div>
-    <div class="alert alert-success" role="alert" id="alertExportationOk" style="display:none;"> Votre projet a bien été
+    <div class="alert alert-success" role="alert" id="alertExportationOk" style="display:none"> Votre projet a bien été
         enregistré. </div>
-    <div class="alert alert-danger" role="alert" id="alertQuestionVideError" style="display:none;"> Veuillez saisir le
+    <div class="alert alert-danger" role="alert" id="alertQuestionVideError" style="display:none"> Veuillez saisir le
         texte lié à votre jeu. </div>
-    <div class="alert alert-danger" role="alert" id="alertNombreReponseVideError" style="display:none;"> Veuillez saisir
+    <div class="alert alert-danger" role="alert" id="alertNombreReponseVideError" style="display:none"> Veuillez saisir
         un nombre de réponses correct. </div>
     <div class="alert alert-danger" role="alert" id="alertQuestionExistError" style="display:none"> La question existe
         déjà. </div>
+    <div class="alert alert-danger" role="alert" id="alertChampsEmptyError" style="display:none"> Veuillez remplir tous les champs </div>
     <form id="formulaireQCM" onsubmit="return false;">
         <div class="card-body">
             <h6 class="card-title"></h6>
@@ -90,7 +91,7 @@
                     id="generateSG">
                     <i class="fa fa-cogs"></i>&nbsp;&nbsp;Générer
                 </button>
-                <button type="reset" style="margin-top:10px" data-toggle="modal" class="btn btn-outline-success btn-unique-xl"
+                <button type="button" style="margin-top:10px" data-toggle="modal" class="btn btn-outline-success btn-unique-xl"
                      data-target="#confirmation">
                     <i class="fa fa-undo"></i>&nbsp;&nbsp;Réinitialiser
                 </button>

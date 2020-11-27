@@ -64,6 +64,16 @@ class ProjetSeriousGame {
         return this.projet.questionsQrCode;
     }
 
+    // retoune le QRCodeQuestion de la question posédant cet id d'énigme sinon renvoie null
+    getQuestionQrFromId(id){
+        for(let i = 0 ; i < this.projet.questionsQrCode.length; i++){
+            if(this.projet.questionsQrCode[i].idQR == id){
+                return this.projet.questionsQrCode[i];
+            }
+        }
+        return null;
+    }
+
     // Retourne un tableau de toutes les réponses de toutes les questions QRCodes sous forme de ReponseQuestionsQR
     getReponsesQrCode() {
         let reponses = [];
@@ -100,6 +110,16 @@ class ProjetSeriousGame {
             questions.push([element.idRec.toString(), element.questionRec, element.reponseRec]);
         });
         return questions;
+    }
+
+    // retoune le RecVocaleQuestion de la question posédant cet id d'énigme sinon renvoie null
+    getQuestionRecoFromId(id){
+        for(let i = 0 ; i < this.projet.questionsRecoVocale.length; i++){
+            if(this.projet.questionsRecoVocale[i].idRec == id){
+                return this.projet.questionsRecoVocale[i];
+            }
+        }
+        return null;
     }
 
     getDataString() {
@@ -160,6 +180,37 @@ class QRCodeQuestion {
         this.bonneReponseQR = estBonneReponse;
         this.idQR = idEnigme;
     }
+
+    setQuestion(question){
+        this.questionQR = question;
+    }
+
+    setReponses(reponses = []){
+        this.reponsesQR = reponses;
+    }
+
+    setBonneReponseQR(reponse){
+        this.bonneReponseQR=reponse;
+    }
+
+    setId(id){
+        this.idQR = id;
+    }
+
+    getQuestion(){
+        return this.questionQR;
+    }
+
+    getReponses(){
+        return this.reponsesQR;
+    }
+
+    getBonneReponse(){
+        return this.bonneReponseQR;
+    }
+    getId(){
+        return this.idQR ;
+    }
 }
 
 /*
@@ -171,6 +222,31 @@ class RecVocaleQuestion {
         this.reponseRec = textReponse;
         this.idRec = idEnigme;
     }
+
+    setQuestion(question){
+        this.questionRec = question;
+    }
+
+    setReponse(reponse){
+        this.reponseRec = reponse;
+    }
+
+    setId(id){
+        this.idRec = id;
+    }
+
+    getQuestion(){
+        return this.questionRec ;
+    }
+
+    getReponse(){
+        return this.reponseRec ;
+    }
+
+    getId(){
+        return this.idRec ;
+    }
+
 }
 /*
  * Classe Représentant une réponse d'un questionQR
