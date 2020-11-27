@@ -7,6 +7,7 @@ $().ready(function() {
 
   //pour chaque item dans le menu on charge une page html
   $("#unique-html").click(function() {
+    isImportationQRUnique = false;
     $("#charger-page").load(path.join(__dirname, "Views/unique.html"), loadDefaultColor);
   });
   $("#multiple-html").click(function() {

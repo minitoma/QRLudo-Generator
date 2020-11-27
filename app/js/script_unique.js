@@ -102,51 +102,44 @@ $(document).ready(function () {
     //aficher popup quand on click sur reinitialiser
     // cache le qr générer & desactivation du bouton exporter
 
-      //Les différents store sont clean ici
-      //if(store.get(`titreUnique`)){
-        store.delete(`titreUnique`);
-      //implémentation des différentes zones de txt enregistrées
-      for(var i = 0; i<=numZoneCourante; i++){
-        if (store.get(`zone${i}`)){
-          store.delete(`zone${i}`);
-        }
-    //  }
-      console.log("2");
-      //On parcours le store pour afficher les texte enregistré dans les zones correspondantes
-      for(var i = 0; i<=numZoneCourante; i++){
-        if (store.get(`text${i}`)){
-          store.delete(`text${i}`);
-        }
+    store.delete(`titreUnique`);
+    //implémentation des différentes zones de txt enregistrées
+    for(var i = 0; i<=numZoneCourante; i++){
+      if (store.get(`zone${i}`)){
+        store.delete(`zone${i}`);
       }
-      console.log("3");
-      store.delete("numZoneCourante");
-      numZoneCourante = 0;
-      store.set(`numZoneCourante`,numZoneCourante);
-      store.delete("nbZoneDonne")
-      nbZoneDonne = 0;
-      store.set(`nbZoneDonne`,nbZoneDonne);
-
-      console.log("4");
-
-      //supprimer les textarea, inputs ..
-      var divChamps = $('#cible');
-      divChamps.children($('.legendeQR')).remove();
-      ajouterChampLegendeInitial();
-
-      $('#qrView').hide();
-      $('#saveQRCode').attr('disabled', true);
-      $('#preview').attr('disabled', true);
-
-      var settings = require("electron-settings");
-      if (settings.has("defaultColor")) {
-        $("#qrColor").val(settings.get("defaultColor"));
-      }
-
-      $("#ajouterTexte").attr('disabled', false);
     }
-  /*  else {
-      $("button#annuler").removeAttr('type');
-    }*/
+
+    //On parcours le store pour afficher les texte enregistré dans les zones correspondantes
+    for(var i = 0; i<=numZoneCourante; i++){
+      if (store.get(`text${i}`)){
+        store.delete(`text${i}`);
+      }
+    }
+
+    store.delete("numZoneCourante");
+    numZoneCourante = 0;
+    store.set(`numZoneCourante`,numZoneCourante);
+    store.delete("nbZoneDonne")
+    nbZoneDonne = 0;
+    store.set(`nbZoneDonne`,nbZoneDonne);
+
+    //supprimer les textarea, inputs ..
+    var divChamps = $('#cible');
+    divChamps.children($('.legendeQR')).remove();
+    ajouterChampLegende();
+
+
+    $('#qrView').hide();
+    $('#saveQRCode').attr('disabled', true);
+    $('#preview').attr('disabled', true);
+
+    var settings = require("electron-settings");
+    if (settings.has("defaultColor")) {
+      $("#qrColor").val(settings.get("defaultColor"));
+    }
+
+    $("#ajouterTexte").attr('disabled', false);
   });
 });
 
@@ -204,10 +197,6 @@ function chargement() {
   else
     store.set(`nbZoneDonne`, nbZoneDonne);
 
-  if (nbZoneDonne >= 3) {
-    disableButtonAddNewData();
-  }
-
   //indice des zones textes presente, peut etre superieur au zone texte presente
   if (store.get(`numZoneCourante`))
     numZoneCourante = store.get(`numZoneCourante`);
@@ -218,23 +207,25 @@ function chargement() {
     $('#qrName').val(store.get(`titreUnique`));
   }
 
-  //implémentation des différentes zones de txt enregistrées
-  for (var i = 1; i <= numZoneCourante; i++) {
-    if (store.get(`zone${i}`)) {
-      var text = document.createElement('div');
-      text.innerHTML = store.get(`zone${i}`);
-      text.setAttribute("class", "d-flex align-items-start legendeQR");
+  if(!isImportationQRUnique) {
+      //implémentation des différentes zones de txt enregistrées
+      for (var i = 1; i <= numZoneCourante; i++) {
+        if (store.get(`zone${i}`)) {
+          var text = document.createElement('div');
+          text.innerHTML = store.get(`zone${i}`);
+          text.setAttribute("class", "d-flex align-items-start legendeQR");
 
-      // L'id du div est différent si c'est une zone de texte ou un fichier audio
-      if (store.get(`zone${i}`).indexOf("textarea") != -1) {
-        text.setAttribute("id", "legendeTextarea");
-      }
-      else {
-        text.setAttribute("id", "inputAudio");
-      }
+          // L'id du div est différent si c'est une zone de texte ou un fichier audio
+          if (store.get(`zone${i}`).indexOf("textarea") != -1) {
+            text.setAttribute("id", "legendeTextarea");
+          }
+          else {
+            text.setAttribute("id", "inputAudio");
+          }
 
-      $('#cible').append(text);
-    }
+          $('#cible').append(text);
+        }
+      }
   }
 
   //On parcours le store pour afficher les texte enregistré dans les zones correspondantes
@@ -246,7 +237,7 @@ function chargement() {
 
   //insertion du premier champ Texte
   if(nbZoneDonne == 0){
-    ajouterChampLegendeInitial();
+    ajouterChampLegende();
   }
 
   //On desactive le bouton supprimer quand il y a qu'un seul text area
@@ -421,45 +412,9 @@ function activer_button() {
 //ajouter une nvlle legende (textarea) a chaque click sur button Texte (pour chaque textarea il faut rajouter à l'attribut class la valeur qrData class="... qrData")
 function ajouterChampLegende(valeur = "") {
 
-
-    var textareaLegende = document.createElement('div');
-    textareaLegende.innerHTML = `<i class='fa fa-play align-self-center icon-player'></i><i class="fa fa-pause align-self-center icon-player"></i>
-      <textarea id='textarea${numZoneCourante}' class='form-control qrData test' rows='3' name='legendeQR' placeholder='Tapez votre texte (255 caractères maximum)' maxlength='255'  onkeydown="verifNombreCaractere(${numZoneCourante});" onchange="verifNombreCaractere(${numZoneCourante});">${valeur}</textarea>
-      <button id='delete${numZoneCourante}' type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='supprimerChampLegende(this, ${numZoneCourante});'>
-      <div class="inline-block">
-        <i class='fa fa-trash-alt'></i></button>
-        <button type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='moveUp(this, ${numZoneCourante});'>
-        <i class='fa fa-arrow-up'></i></button>
-        <button type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='moveDown(this, ${numZoneCourante});'>
-        <i class='fa fa-arrow-down'></i></button>`;
-    textareaLegende.setAttribute("class", "d-flex align-items-start legendeQR");
-    textareaLegende.setAttribute("id", `legendeTextarea${numZoneCourante}`);
-  
-    document.getElementById('cible').appendChild(textareaLegende);
-
-  activateAllButtonDelete();
-  incrementerNbZoneDonne();
-  incrementerNumZoneCourante();
-  //Permet d'enregistrer l'ajout de case texte
-  store.set(`zone${numZoneCourante}`,textareaLegende.innerHTML);
-
-  //limiter zone de texte a 3 par example
-  if (nbZoneDonne>=3){
-    //disableButtonAddNewData();
-  }
-  //reasignation du nombre total de caractère restant pour la nouvelle zone
-  var totatCaractere= SetProgressBar();
-  $('#textarea'+numZoneCourante).attr('maxlength',(255-totatCaractere));
-}
-
-function ajouterChampLegendeInitial(valeur = "") {
-
-  incrementerNbZoneDonne();
-
-  incrementerNumZoneCourante();
   var textareaLegende = document.createElement('div');
   textareaLegende.innerHTML = `<i class='fa fa-play align-self-center icon-player'></i><i class="fa fa-pause align-self-center icon-player"></i>
-    <textarea id='textarea${numZoneCourante}' class='form-control qrData' rows='3' name='legendeQR' placeholder='Tapez votre texte (255 caractères maximum)' maxlength='255'  onkeydown="verifNombreCaractere(${numZoneCourante});" onchange="verifNombreCaractere(${numZoneCourante});">${valeur}</textarea>
+    <textarea id='textarea${numZoneCourante}' class='form-control qrData test' rows='3' name='legendeQR' placeholder='Tapez votre texte (255 caractères maximum)' maxlength='255'  onkeydown="verifNombreCaractere(${numZoneCourante});" onchange="verifNombreCaractere(${numZoneCourante});">${valeur}</textarea>
     <button id='delete${numZoneCourante}' type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='supprimerChampLegende(this, ${numZoneCourante});'>
     <div class="inline-block">
       <i class='fa fa-trash-alt'></i></button>
@@ -468,25 +423,20 @@ function ajouterChampLegendeInitial(valeur = "") {
       <button type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='moveDown(this, ${numZoneCourante});'>
       <i class='fa fa-arrow-down'></i></button>`;
   textareaLegende.setAttribute("class", "d-flex align-items-start legendeQR");
-  textareaLegende.setAttribute("id", "legendeTextareaInitiale");
+  textareaLegende.setAttribute("id", `legendeTextarea${numZoneCourante}`);
 
   document.getElementById('cible').appendChild(textareaLegende);
 
   activateAllButtonDelete();
+  incrementerNbZoneDonne();
+  incrementerNumZoneCourante();
 
-  //Permet d'enregistrer l'ajout de case texte
-  store.set(`zone${numZoneCourante}`, textareaLegende.innerHTML);
+  store.set(`zone${numZoneCourante}`,textareaLegende.innerHTML);
 
-  //limiter zone de texte a 3 par example
-  if (nbZoneDonne >= 3) {
-    //disableButtonAddNewData();
-  }
   //reasignation du nombre total de caractère restant pour la nouvelle zone
-  var totatCaractere = SetProgressBar();
-  $('#textarea' + numZoneCourante).attr('maxlength', (255 - totatCaractere));
+  var totatCaractere= SetProgressBar();
+  $('#textarea'+numZoneCourante).attr('maxlength',(255-totatCaractere));
 }
-
-
 
 //foncion qui  calcule le nombre de caractère dans les zones de texte et met la valeur sur les progress bar
 function SetProgressBar() {
@@ -596,9 +546,6 @@ function ajouterChampSon(nom, url) {
 
   activateAllButtonDelete();
 
-  if (nbZoneDonne >= 3) {
-    //disableButtonAddNewData();
-  }
   //calcul et mise a jour de la bar de progression
   SetProgressBar();
 }

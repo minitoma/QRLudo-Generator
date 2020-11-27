@@ -9,6 +9,9 @@
 const Store = require('electron-store');
 const store = new Store();
 
+// Boolean qui permet de detecter si l'onglet unique est load dans le cas de l'importation d'un QR unique
+isImportationQRUnique = false;
+
 //Déclaration de l'entier renseignant le nombre de zones de donnee dans l'onglet qr unique (les zones de textes ou les fichier audio)
 nbZoneDonne = 0;
 
