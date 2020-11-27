@@ -168,6 +168,14 @@ function deleteGame() {
   for (let i = compteurEnigme; i >= 1; --i) {
     supprLigne(i, "enigme");
   }
+  document.getElementById("projectId").value = "";
+  document.getElementById("textAreaIntro").value = "";
+  if(document.getElementById("textAreaIntro").disabled == true){
+    document.getElementById("textAreaIntro").disabled = false;
+  }
+  document.getElementById("textAreaFin").value = "";
+  if(document.getElementById("textAreaFin").disabled == true)
+    document.getElementById("textAreaFin").disabled = false;
 }
 
 //Import d'un projet existant à partir d'un répertoire
@@ -574,7 +582,6 @@ function validerQuestion(idEnigme, type) {
       if (reponse == "") {
         tousLesChampsSontRemplies = false;
         $("#popupQRCode" + idEnigme + "  #alertReponsesEmptyError").attr("style", "display:true");
-        console.log("test");
       } else if (tousLesChampsSontRemplies) {
         $("#popupQRCode" + idEnigme + "  #alertReponsesEmptyError").attr("style", "display:none");
       }
