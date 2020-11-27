@@ -698,35 +698,6 @@ function chargerQuestion(idEnigme, type) {
 
 }
 
-// Fonction qui recharger les données des popup qrcode
-function rechargerQuestion(idEnigme, type, projet) {
-  currentEnigme = idEnigme;
-  projetSeriousGame = projet;
-  console.log(projet);
-  console.log("hello " + currentEnigme);
-  // On affecte les valeurs rentrées à la popup pour la modification
-  if (type == "questionQRCode") {
-    $("#popupQRCode" + idEnigme + " #questQRCode" + idEnigme).val(projetSeriousGame.getQuestionQrFromId(idEnigme).getQuestion()); // le champs de question
-
-    for (let i = 0; i < projetSeriousGame.getQuestionQrFromId(idEnigme).getReponses().length; i++) {// les champs de réponses
-      if (i > 0) ajouterQuestions(idEnigme);// La popup n'a qu'1 reponse donc on en ajoute
-      $("#popupQRCode" + idEnigme + " #projectId" + idEnigme + "" + (i + 1)).val(projetSeriousGame.getQuestionQrFromId(idEnigme).getReponses()[i]);
-    }
-    $("#popupQRCode" + idEnigme + " #gridCheck" + idEnigme + "" + projetSeriousGame.getQuestionQrFromId(idEnigme).getBonneReponse()).prop("checked", true);
-    // On cache les messages d'erreurs
-    $("#popupQRCode" + idEnigme + "  #alertQuestionEmptyError").attr("style", "display:none");
-    $("#popupQRCode" + idEnigme + "  #alertReponsesEmptyError").attr("style", "display:none");
-  } if (type == "vocale") {
-    console.log(projetSeriousGame.getQuestionRecoFromId(idEnigme));
-    $("#popupRecVocale" + idEnigme + " #questRecVocal" + idEnigme).val(projetSeriousGame.getQuestionRecoFromId(idEnigme).getQuestion()); // le champs de la question
-    $("#popupRecVocale" + idEnigme + " #repRecVocal" + idEnigme).val(projetSeriousGame.getQuestionRecoFromId(idEnigme).getReponse()); // le champs de la reponse
-    // On cache les messages d'erreurs
-    $("#popupRecVocale" + idEnigme + "  #alertQuestionEmptyError").attr("style", "display:none");
-    $("#popupRecVocale" + idEnigme + "  #alertReponseEmptyError").attr("style", "display:none");
-
-  }
-
-}
 
 // Supprime la question dans la liste des questions du projetSeriousGame 
 // Fonction qui vérifie si une énigme est valide

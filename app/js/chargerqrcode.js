@@ -82,9 +82,8 @@ function drawQRCodeImport(qrcode) {
     $("#projectId").val(qrcode.getName());
     $("#textAreaIntro").val(qrcode.getIntro());
     $("#textAreaFin").val(qrcode.getEnd());
-    var projet = new ProjetSeriousGame(qrcode.getName(), qrcode.getQuestionQRCode(), qrcode.getQuestionRecoVocale())
-    console.log(projet);
-    drawQRCodeSeriousGameEnigma(qrcode, projet.getDataString());
+    var projet = new ProjetSeriousGame(qrcode.getName(), qrcode.getQuestionQRCode(), qrcode.getQuestionRecoVocale());
+    drawQRCodeSeriousGameEnigma(qrcode);
   });
 }
 }
@@ -156,20 +155,15 @@ function drawQRCodeDataRecVocale(qrcode) {
 }
 
 // recréer les inputs d'un qrcode Scenario Serious Game
-function drawQRCodeSeriousGameEnigma(qrcode, projet) {
+function drawQRCodeSeriousGameEnigma(qrcode) {
   let enigmes = qrcode.getEnigmes();
   console.log(enigmes);
   for (var i = 0; i < enigmes.length; i++) {
     if(i==0){
       $("#enigme1").val(enigmes[i][1]);
-      $("#menuDeroulant1").css("display", "none");
-      $("#modification1").css("display", "block");
-      $("#modification1").html('<i class="fa fa-qrcode"></i>Modifier');
-      $("#modification1").addClass("btn btn-outline-success align-self-center dropdown-toggle");
-      $("#modification1").attr("onclick", rechargerQuestion(1,"qrcode",projet));
       
     }else{
-      ajouterEnigme(enigmes[i], projet);
+      ajouterEnigme(enigmes[i]);
     }
 
     
@@ -213,7 +207,8 @@ function ajouterLigneReponse(data) {
 var type = "";
 var compteurEnigme = 1;
 var currentEnigme = 1;
-function ajouterEnigme(enigme, projet) {
+
+function ajouterEnigme(enigme) {
   compteurEnigme++;
   if (compteurEnigme < 30) {
     type = "enigme";
@@ -225,7 +220,7 @@ function ajouterEnigme(enigme, projet) {
                               <input type="text" class="form-control" id="enigme`+ compteurEnigme + `" name="nombreReponse"
                               placeholder="Nom de l'énigme `+ compteurEnigme + `" onkeyup="activerSave();" value="`+enigme[1]+`"/>
                               &nbsp;
-                              <div class="btn-group" style="display:none" id="menuDeroulant`+ compteurEnigme + `">
+                              <div class="btn-group" style="display:true" id="menuDeroulant`+ compteurEnigme + `">
                                 <button type="button" class="btn btn-outline-success align-self-center dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Type énigme        &nbsp;&nbsp; &nbsp;
                                 </button>
@@ -238,9 +233,7 @@ function ajouterEnigme(enigme, projet) {
                                   <i class="fa fa-microphone"></i>&nbsp;&nbsp;Reconnaissance vocale</button>
                                   </div>
                                 </div>
-                                <div id="modification`+ compteurEnigme + `" class="btn btn-outline-success align-self-center dropdown-toggle" style="display:block" onclick='rechargerQuestion(`+compteurEnigme+`,"qrcode",`+Object.assign(projet)+`);'>
-                                <i class="fa fa-qrcode"></i>
-                                Modifier</div>
+                                <div id="modification`+ compteurEnigme + `">
                                 &nbsp;
                                 <button id="deleteEnigme`+ compteurEnigme + `" type="button" onclick="supprLigne(` + compteurEnigme + ",\'" + type + `\');" class="btn btn-outline-success align-self-center">
                                 <i class="fa fa-trash"></i></button>
