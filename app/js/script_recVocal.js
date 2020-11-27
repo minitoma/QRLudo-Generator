@@ -9,9 +9,11 @@ function genererJson() {
   }
 }
 
-var questionQCM;
+var questionQCM =null;
+var questionQCMQRCode;
 
 function genererJsonQCM(){
+  questionOuverte = null;
   var questionText = $("#QuestionQCM").val();
   var reponseParIdentifiant = $("#reponseParIdentifiant").is(':checked');
   var messageBonneReponse = $("#MessageBonnereponseQCM").val();
@@ -38,7 +40,7 @@ function genererJsonQCM(){
   questionQCM = new QRCodeQCM(questionText, reponses, reponseParIdentifiant, messageBonneReponse, messageMauvaiseReponse);
 
   console.log(questionQCM.qrcode);
-
+  questionQCMQRCode = questionQCM.qrcode
   // On génére le QrCode a afficher
   previewQRCodeQCM();
   // On affiche le qrCode
@@ -51,10 +53,10 @@ function previewQRCodeQCM() {
 }
 
 
-var questionOuverte;
+var questionOuverte=null;
 
 function genererJsonQuestionOuverte(){
-
+  questionQCM = null;
   var questionText = $("#Question").val();
   var reponseText = $("#Bonnereponse").val();
   var messageBonneReponse = $("#MessageBonnereponse").val();
@@ -84,10 +86,10 @@ function previewQRCode(qrcode, div) {
 // Ajouter une nouvelle Reponse une fois qu'on va clicker sur la button Ajouterreponse
 
 var compteurReponse = 1;
-$("#ajouterQuestion").click(function () {
+$("#ajouterQuestion").click(function() {
   compteurReponse++;
   if (compteurReponse < 30) {
-    type = "Rreponse";
+    type = "Reponse";
     let reponse = document.createElement('div');
     reponse.innerHTML = `<div class="form-row" id="divQuestion` + compteurReponse + `">
                             <div class="form-group col-md-3">
@@ -113,6 +115,8 @@ $("#ajouterQuestion").click(function () {
     container.append(reponse);
   }
 });
+
+
 
 //Pour supprimer une énigme ou bien une réponse 
 function supprLigne(idLigne, element) {
@@ -164,7 +168,11 @@ $(document).ready(function() {
 //script 
 $("#emptyFields").click(function(){
     viderChamps();
-  })
+  });
+
+  $("#saveQRCode").click(e => {
+    saveQRCodeImage(questionQCM, questionOuverte);
+  });
 
 
 function viderChamps(){
@@ -182,4 +190,39 @@ function viderChamps(){
   $("#repContainer").empty();
 
   compteurReponse = 1; 
+}
+
+// save image qr code
+function saveQRCodeImage(questionQCM, questionOuverte) {
+  const fs = require('fs');
+
+  let img = $('#qrView img')[0].src;
+var qrcode
+  var data = img.replace(/^data:image\/[^;]/, 'data:application/octet-stream');
+
+  if (questionOuverte == null) {
+    var qrcode = questionQCM;
+  }
+  else {
+    var qrcode = questionOuverte;
+  }
+  
+  var xhr = new XMLHttpRequest();
+  xhr.responseType = 'blob';
+  console.log(data);
+  xhr.open('GET', data, true);
+
+  xhr.onreadystatechange = function () {
+    if (xhr.readyState == xhr.DONE) {
+      var filesaver = require('file-saver');
+      console.log(xhr.response);
+      //Dans les deux cas filsaver.saveAs renvoie rien qui s'apparente à un bolléen
+      if (filesaver.saveAs(xhr.response, qrcode.getName() + '.jpeg') == true) {
+        console.log(filesaver.saveAs(xhr.response, qrcode.getName() + '.jpeg').getName);
+        messageInfos("Le QR code a bien été enregistré", "success"); //message a afficher en haut de la page
+      }
+
+    }
+  }
+  xhr.send();
 }

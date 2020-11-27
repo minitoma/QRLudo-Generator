@@ -1,7 +1,7 @@
 /**
  * @Date:   2018-12-04T08:24:59+01:00
- * @Last modified by:   alassane
- * @Last modified time: 2019-02-04T21:10:01+01:00
+ * @Last modified by:   louis cuegniet
+ * @Last modified time: 25/11/2020
  */
 
 $().ready(function() {
@@ -55,7 +55,28 @@ function drawQRCodeImport(qrcode) {
       $("#newMauvaiseReponseText").val(qrcode.getBadAnswer());
       $("#newNbMinimalBonneReponse").val(qrcode.getMinAnswer());
     });
-  }
+  } else if (qrcode.getType() == 'ExerciceReconnaissanceVocaleQCM') {
+    $("#charger-page").load(path.join(__dirname, "Views/recVocal.html"), function() {
+      $("#questionOuverteOnglet").removeClass("active");
+      $("#onglet-QuesOuverte").removeClass("active");
+      $("#questionQCMOnglet").addClass("active");
+      $("#onglet-QCM").addClass("active");
+      $("#QuestionQCM").val(qrcode.getName());
+      if(qrcode.getLettreReponseVocale()){
+        $("#reponseParIdentifiant").prop( "checked", true );;
+      }
+      $("#MessageBonnereponseQCM").val(qrcode.getGoodAnswer());
+      $("#MessageMauvaisereponseQCM").val(qrcode.getBadAnswer());
+      drawQRCodeDataRecVocale(qrcode);
+    });
+}else if (qrcode.getType() == 'ExerciceReconnaissanceVocaleQuestionOuverte') {
+  $("#charger-page").load(path.join(__dirname, "Views/recVocal.html"), function() {
+    $("#Question").val(qrcode.getName());
+    $("#Bonnereponse").val(qrcode.getReponse());
+    $("#MessageBonnereponse").val(qrcode.getGoodAnswer());
+    $("#MessageMauvaisereponse").val(qrcode.getBadAnswer());
+  });
+}
 }
 
 // recréer les input d'un qrcode unique
@@ -101,6 +122,57 @@ function drawQRCodeMultipleUnique(qrcode) {
     controllerMultiple.setQRCodeAtomiqueInArray(qr);
   }
   // recuperationQrCodeUnique(qrcode);
+}
+
+// recréer les inputs d'un qrcode RecVocal
+function drawQRCodeDataRecVocale(qrcode) {
+  let data = qrcode.getData();
+  console.log(data);
+  for (var i = 0; i < data.length; i++) {
+    console.log(i);
+    var reponse = new ReponseVocale(data[i][0], data[i][1], data[i][2])
+    if(i==0) {
+
+      $("#reponseinitiale").val(reponse.getTextQuestion());
+      if(reponse.getEstBonneReponse()){
+        $("#gridCheck1").prop("checked", true);
+      }
+    }
+    else {
+      ajouterLigneReponse(reponse);
+    }
+    
+  }
+}
+var compteurReponse = 1;
+function ajouterLigneReponse(data) {
+  compteurReponse++;
+  if (compteurReponse < 30) {
+    type = "Reponse";
+    let reponse = document.createElement('div');
+    reponse.innerHTML = `<div class="form-row" id="divQuestion` + compteurReponse + `">
+                            <div class="form-group col-md-3">
+                                  <label class="control-label">Réponse `+ compteurReponse + ` :</label>
+                                </div>
+                         <div class="form-group col-md-2">
+                                   <input class="form-check-input" type="checkbox" name="gridRadios" id="gridCheck`+ compteurReponse + `" style="width:70px;" 
+                                      value="option"` + compteurReponse + `" value ="`+data.getEstBonneReponse()+`">
+                                      <label class="form-check-label" for="gridCheck`+ compteurReponse + `">
+                            </div>
+                          <div class="form-group col-md-6">
+                                 <input type="text" class="form-control col-sm-6" id="reponse`+ compteurReponse + `" rows="2" name="nomprojet"
+                                placeholder="Réponse" value ="`+data.getTextQuestion()+`"/>
+                           </div>
+                            <div class="form-group col-md-1">
+                                <button id="deleteQRCode`+ compteurReponse + `" type="button"
+                                    class="btn btn-outline-success align-self-center" onclick="supprLigne(` + compteurReponse + ",\'" + type + `\');">
+                                    <i class="fa fa-trash"></i></button>
+                                    </div>
+                            </div>`;
+
+    let container = $("#repContainer");
+    container.append(reponse);
+  }
 }
 
 // télécharger la musique correspondante et l'enregistrer
