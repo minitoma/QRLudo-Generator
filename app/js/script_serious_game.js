@@ -279,8 +279,8 @@ $("#ajouterEnigme").click(function () {
             <hr>
             <div class="alert alert-danger" role="alert" id="alertReponsesEmptyError" style="display:none"> Veuillez d'abord saisir toutes vos réponses </div>
             <div class="form-row">
-                <div class="form-group col-md-6" id="labelBonneReponse` + compteurEnigme + `">
-                    <label>&nbsp;&nbsp;&nbsp;&nbsp;Bonne réponse :</label>
+                <div class="form-group col-md-6" id="labelBonneReponse` + compteurEnigme + `" style="margin-left: 450px">
+                    <label>Bonne réponse :</label>
                 </div>
             </div>
             <div id="repContainer` + compteurEnigme + `">
@@ -288,13 +288,13 @@ $("#ajouterEnigme").click(function () {
                   <div class="form-group col-md-3">
                       <label class="control-label">Réponse 1 :</label>
                   </div>
-                  <div class="form-group col-md-2">
-                      <input class="form-check-input" type="radio" name="gridRadios` + compteurEnigme + `" id="gridCheck` + compteurEnigme + `1" checked style="width:70px;" value="option1">
-                      <label class="form-check-label" for="gridCheck` + compteurEnigme + `1">
-                  </div>
                   <div class="form-group col-md-6">
                     <input type="text" class="form-control col-sm-6" id="projectId` + compteurEnigme + `1" rows="2" name="nomprojet"
                     placeholder="Réponse" onkeyup="activerSave();" />
+                  </div>
+                  <div class="form-group col-md-2">
+                      <input class="form-check-input" type="radio" name="gridRadios` + compteurEnigme + `" id="gridCheck` + compteurEnigme + `1" checked style="width:70px;" value="option1">
+                      <label class="form-check-label" for="gridCheck` + compteurEnigme + `1">
                   </div>
                   <div class="form-group col-md-1">
                     <button id="deleteQRCode` + compteurEnigme + `1" type="button"
