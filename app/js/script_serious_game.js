@@ -689,9 +689,9 @@ function chargerQuestion(idEnigme, type) {
   // On affecte les valeurs rentrées à la popup pour la modification
   if (type == "qrcode") {
     $("#popupQRCode" + idEnigme + " #questQRCode" + idEnigme).val(projetSeriousGame.getQuestionQrFromId(idEnigme).getQuestion()); // le champs de question
-
+    console.log(projetSeriousGame.getQuestionQrFromId(idEnigme).getReponses().length);
     for (let i = 0; i < projetSeriousGame.getQuestionQrFromId(idEnigme).getReponses().length; i++) {// les champs de réponses
-      if (i > 0) ajouterQuestions(idEnigme);// La popup n'a qu'1 reponse donc on en ajoute
+      if (i > 0 && i >= $("#repContainer" + idEnigme)[0].childElementCount) {ajouterQuestions(idEnigme);}// La popup n'a qu'1 reponse donc on en ajoute
       $("#popupQRCode" + idEnigme + " #projectId" + idEnigme + "" + (i + 1)).val(projetSeriousGame.getQuestionQrFromId(idEnigme).getReponses()[i]);
     }
     $("#popupQRCode" + idEnigme + " #gridCheck" + idEnigme + "" + projetSeriousGame.getQuestionQrFromId(idEnigme).getBonneReponse()).prop("checked", true);
