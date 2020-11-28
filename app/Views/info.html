@@ -7,7 +7,9 @@
     <nav class="nav nav-tabs">
       <a class="nav-item nav-link" id="unique-info" href="#info-unique">Unique</a>
       <a class="nav-item nav-link" id="multiple-info" href="#info-multiple">Multiple</a>
-      <a class="nav-item nav-link" id="questRep-info" href="#info-exercice">Exercice</a>
+      <a class="nav-item nav-link" id="exo-qrcode-info" href="#info-exercice-qrcode">Exercice - QR Code</a>
+      <a class="nav-item nav-link" id="exo-reco-vocale-info" href="#info-exercice-reco-vocale">Exercice - Reco vocale</a>
+      <a class="nav-item nav-link" id="serious-game-info" href="#info-serious-game">Serious Game</a>
       <a class="nav-item nav-link" id="music-info" href="#info-MusicInput">Musique</a>
       <a class="nav-item nav-link" id="import-info" href="#info-Import">Import</a>
     </nav>
@@ -167,9 +169,8 @@
         </div>
       </div>
 
-      <div class="tab-pane" id="info-exercice">
-        <div class="tab-pane" id="info-exo">
-          <h5>Comment utiliser les QR Exercice ?</h5>
+      <div class="tab-pane" id="info-exercice-qrcode">
+          <h5>Comment utiliser les QR Exercices ?</h5>
           <hr>
 
           <h5><a href="#affichageVideoExercice">Vidéo explicative</a></h5>
@@ -177,13 +178,20 @@
             <iframe width="560" height="315" src="https://www.youtube.com/embed/2PGPMnRpgwE" frameborder="0"
               allow="accelerometer; autoplay; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
           </div>
-        </div>
+      </div>
+
+      <div class="tab-pane" id="info-exercice-reco-vocale">
+        <h5>Comment utiliser l'onglet "Exercice - Reco Vocale" ?</h5>
+      </div>
+    
+    
+      <div class="tab-pane" id="info-serious-game">
+        <h5>Comment utiliser l'onglet "Serious Game" ?</h5>
       </div>
     </div>
-
     <hr>
-
   </div>
+
 </div>
 
 
@@ -198,9 +206,17 @@
         document.getElementById("multiple-info").classList.add("active");
         document.getElementById("info-multiple").style.display = "block";
         break;
-      case 'questRep':
-        document.getElementById("questRep-info").classList.add("active");
-        document.getElementById("info-exercice").style.display = "block";
+      case 'exerciceQrCode':
+        document.getElementById("exo-qrcode-info").classList.add("active");
+        document.getElementById("info-exercice-qrcode").style.display = "block";
+        break;
+      case 'exerciceRecoVocale':
+        document.getElementById("exo-reco-vocale-info").classList.add("active");
+        document.getElementById("info-exercice-reco-vocale").style.display = "block";
+        break;
+      case 'seriousGame':
+        document.getElementById("serious-game-info").classList.add("active");
+        document.getElementById("info-serious-game").style.display = "block";
         break;
     }
   });

@@ -226,3 +226,10 @@ var qrcode
   }
   xhr.send();
 }
+
+
+//pour ouvrir la page info.html quand on clique sur le bouton info du haut
+$("#infos-exercice-reco-vocale").click(function () {
+  require('electron').remote.getGlobal('sharedObject').someProperty = 'exerciceRecoVocale'
+  $("#charger-page").load(path.join(__dirname, "Views/info.html"));
+});

@@ -897,3 +897,10 @@ function saveQRCodeImage(div, qrcode, directoryName) {
     console.log('The file has been saved!');
   });
 }
+
+
+//pour ouvrir la page info.html quand on clique sur le bouton info du haut
+$("#infos-serious-game").click(function () {
+  require('electron').remote.getGlobal('sharedObject').someProperty = 'seriousGame'
+  $("#charger-page").load(path.join(__dirname, "Views/info.html"));
+});
