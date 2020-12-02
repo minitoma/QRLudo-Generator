@@ -191,20 +191,42 @@ $("#emptyFields").click(function(){
 
 
 function viderChamps(){
-  document.getElementById("Question").value="";
-  document.getElementById("Bonnereponse").value="";
-  document.getElementById("MessageBonnereponse").value="";
-  document.getElementById("MessageMauvaisereponse").value="";
-  document.getElementById("reponseinitiale").value="";
-  document.getElementById("QuestionQCM").value="";
-  $('#reponseParIdentifiant').prop('checked', false);
+   $('#Question').val('');
+  $('#Bonnereponse').val('');
+  $('#MessageBonnereponse').val('');
+  $('#MessageMauvaisereponse').val('');
+  $('#reponseinitiale').val('');
+  $('#QuestionQCM').val('');
+  if($("#checkboxQR").is(':checked') == true){
+    console.log("couco");
+    $('#checkboxQR').prop('checked', false);
+    console.log("dd")
+  }
   $('#gridCheck1').prop('checked', false);
-  document.getElementById("MessageBonnereponseQCM").value="";
-  document.getElementById("MessageMauvaisereponseQCM").value="";
-  
+  $('#MessageMauvaisereponseQCM').val('');
+  $('#MessageBonnereponseQCM').val('');
   $("#repContainer").empty();
+  //$("#repContainer").hide();
 
-  compteurReponse = 1; 
+  deleteStore(`Question`);
+
+  deleteStore(`Bonnereponse`);
+
+  deleteStore('MessageBonnereponse');
+
+  deleteStore('MessageMauvaisereponse');
+
+  deleteStore(`reponseinitiale`);
+
+  deleteStore(`QuestionQCM`);
+
+  deleteStore(`MessageMauvaisereponseQCM`);
+
+  deleteStore('MessageBonnereponseQCM');
+  localStorage.setItem("k",1);
+
+   compteurReponse = 1; 
+
 }
 
 // save image qr code
@@ -291,3 +313,17 @@ function enregistrement(){
 
     }
   }
+
+
+//méthode gérant al continuité sur les eones de texte Question, Bonne Reponse, Mauvaise Reponse et nb reponse
+function activerSave(text){
+
+  var newText = $("#"+text).val();
+  store.set(text,newText);
+}
+
+//methode de suppression dans le store
+function deleteStore(del){
+  if(store.get(del) )
+    store.delete(del);
+}
