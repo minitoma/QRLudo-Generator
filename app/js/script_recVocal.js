@@ -8,7 +8,8 @@ function genererJson() {
     genererJsonQuestionOuverte();
   }
 }
-
+var k = localStorage.getItem("k");
+console.log(k);
 var questionQCM =null;
 var questionQCMQRCode;
 
@@ -83,10 +84,22 @@ function previewQRCode(qrcode, div) {
   facade.genererQRCode(div, qrcode);
 }
 
+$(document).ready(function() {
+
+  //méthode gérant la continuité
+  enregistrement();
+
+  // Ajouter une nouvelle Reponse une fois qu'on va clicker sur la button Ajouterreponse
+  $("#ajouterQuestion").click(function () {
+    ajouterNouvelleReponse();
+
+  })
+});
+
 // Ajouter une nouvelle Reponse une fois qu'on va clicker sur la button Ajouterreponse
 
 var compteurReponse = 1;
-$("#ajouterQuestion").click(function() {
+function ajouterNouvelleReponse(){
   compteurReponse++;
   if (compteurReponse < 30) {
     type = "Reponse";
@@ -113,8 +126,9 @@ $("#ajouterQuestion").click(function() {
 
     let container = $("#repContainer");
     container.append(reponse);
+    localStorage.setItem("k",compteurReponse);
   }
-});
+}
 
 
 
@@ -122,6 +136,7 @@ $("#ajouterQuestion").click(function() {
 function supprLigne(idLigne, element) {
   if (element == "Reponse") {
     compteurReponse--;
+    localStorage.setItem("k",compteurReponse);
     $("#divQuestion" + idLigne).on('click', function() {
       $(this).remove();
       for(let cpt = idLigne; cpt <= compteurReponse; cpt++) {
@@ -176,20 +191,42 @@ $("#emptyFields").click(function(){
 
 
 function viderChamps(){
-  document.getElementById("Question").value="";
-  document.getElementById("Bonnereponse").value="";
-  document.getElementById("MessageBonnereponse").value="";
-  document.getElementById("MessageMauvaisereponse").value="";
-  document.getElementById("reponseinitiale").value="";
-  document.getElementById("QuestionQCM").value="";
-  $('#reponseParIdentifiant').prop('checked', false);
+   $('#Question').val('');
+  $('#Bonnereponse').val('');
+  $('#MessageBonnereponse').val('');
+  $('#MessageMauvaisereponse').val('');
+  $('#reponseinitiale').val('');
+  $('#QuestionQCM').val('');
+  if($("#checkboxQR").is(':checked') == true){
+    console.log("couco");
+    $('#checkboxQR').prop('checked', false);
+    console.log("dd")
+  }
   $('#gridCheck1').prop('checked', false);
-  document.getElementById("MessageBonnereponseQCM").value="";
-  document.getElementById("MessageMauvaisereponseQCM").value="";
-  
+  $('#MessageMauvaisereponseQCM').val('');
+  $('#MessageBonnereponseQCM').val('');
   $("#repContainer").empty();
+  //$("#repContainer").hide();
 
-  compteurReponse = 1; 
+  deleteStore(`Question`);
+
+  deleteStore(`Bonnereponse`);
+
+  deleteStore('MessageBonnereponse');
+
+  deleteStore('MessageMauvaisereponse');
+
+  deleteStore(`reponseinitiale`);
+
+  deleteStore(`QuestionQCM`);
+
+  deleteStore(`MessageMauvaisereponseQCM`);
+
+  deleteStore('MessageBonnereponseQCM');
+  localStorage.setItem("k",1);
+
+   compteurReponse = 1; 
+
 }
 
 // save image qr code
@@ -233,3 +270,60 @@ $("#infos-exercice-reco-vocale").click(function () {
   require('electron').remote.getGlobal('sharedObject').someProperty = 'exerciceRecoVocale'
   $("#charger-page").load(path.join(__dirname, "Views/info.html"));
 });
+
+
+
+
+function enregistrement(){
+
+  if(store.get(`Question`))
+    $("#Question").val(store.get(`Question`));
+  
+//Question = store.get(`Question`);
+
+  if(store.get(`Bonnereponse`) )
+    $("#Bonnereponse").val(store.get(`Bonnereponse`));
+
+  if(store.get(`MessageBonnereponse`) )
+    $("#MessageBonnereponse").val(store.get(`MessageBonnereponse`));
+
+  if(store.get('MessageMauvaisereponse'))
+    $("#MessageMauvaisereponse").val(store.get('MessageMauvaisereponse'));
+
+  if(store.get('QuestionQCM'))
+    $("#QuestionQCM").val(store.get('QuestionQCM'));
+
+  if(store.get('MessageMauvaisereponseQCM'))
+    $("#MessageMauvaisereponseQCM").val(store.get('MessageMauvaisereponseQCM'));
+
+  if(store.get('MessageBonnereponseQCM'))
+    $("#MessageBonnereponseQCM").val(store.get('MessageBonnereponseQCM'));
+
+  if(store.get('reponseinitiale'))
+    $("#reponseinitiale").val(store.get('reponseinitiale'));
+
+   for(var i = 1; i<k; i++){
+      /*var p;
+      if (store.get('reponse'+i)) {
+        p = $("#reponse"+i).val(store.get('reponse'+i));
+      }
+      var ma_reponse = new ReponseVocale(p[0], p[1], p[2])
+      console.log('test1');*/
+      ajouterNouvelleReponse(/*ma_reponse*/);
+
+    }
+  }
+
+
+//méthode gérant al continuité sur les eones de texte Question, Bonne Reponse, Mauvaise Reponse et nb reponse
+function activerSave(text){
+
+  var newText = $("#"+text).val();
+  store.set(text,newText);
+}
+
+//methode de suppression dans le store
+function deleteStore(del){
+  if(store.get(del) )
+    store.delete(del);
+}
