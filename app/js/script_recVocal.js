@@ -1,15 +1,13 @@
 
 function genererJson() {
-  // Si le champs "QuestionQCM" est rempli, nous sommes dans l'onglet QCM
-  // Sinon, nous sommes dans l'onglet QuestionOuverte
-  if($("#QuestionQCM").val() != "") {
+  if(store.get(`sousOnglet`) == "qcm") {
     genererJsonQCM();
-  } else {
+  } else if(store.get(`sousOnglet`) == "question_ouverte") {
     genererJsonQuestionOuverte();
   }
 }
+
 var k = localStorage.getItem("k");
-console.log(k);
 var questionQCM =null;
 var questionQCMQRCode;
 
@@ -30,7 +28,6 @@ function genererJsonQCM(){
 
   // Ajout des autres réponses
   $("#repContainer .form-row").each(function(index){
-    console.log(index);
     var controlLabel = "réponse numéro ".concat(index + 2);
     var isGoodAnswer = $(this).find("#gridCheck".concat(index + 2)).is(':checked');
     var responseText = $(this).find("#reponse".concat(index + 2)).val();
@@ -46,7 +43,6 @@ function genererJsonQCM(){
   previewQRCodeQCM();
   // On affiche le qrCode
   $('#qrView').show();
-
 }
 
 function previewQRCodeQCM() {
@@ -99,7 +95,7 @@ $(document).ready(function() {
 // Ajouter une nouvelle Reponse une fois qu'on va clicker sur la button Ajouterreponse
 
 var compteurReponse = 1;
-function ajouterNouvelleReponse(){
+function ajouterNouvelleReponse(contenu = ""){
   compteurReponse++;
   if (compteurReponse < 30) {
     type = "Reponse";
@@ -110,7 +106,7 @@ function ajouterNouvelleReponse(){
                                 </div>
                           <div class="form-group col-md-6">
                                  <input type="text" class="form-control col-sm-6" id="reponse`+ compteurReponse + `" rows="2" name="nomprojet"
-                                placeholder="Réponse" />
+                                placeholder="Réponse" onkeyup="activerSave('reponse`+compteurReponse+`');">
                            </div>
                            <div class="form-group col-md-2">
                                    <input class="form-check-input" type="checkbox" name="gridRadios" id="gridCheck`+ compteurReponse + `" style="width:70px;" 
@@ -126,6 +122,9 @@ function ajouterNouvelleReponse(){
 
     let container = $("#repContainer");
     container.append(reponse);
+
+    $("#reponse"+ compteurReponse).val(contenu);
+
     localStorage.setItem("k",compteurReponse);
   }
 }
@@ -149,7 +148,10 @@ function supprLigne(idLigne, element) {
         div[3].getElementsByTagName("button")[0].id = "deleteQRCode" + cpt;
         div[3].getElementsByTagName("button")[0].setAttribute("onclick", "supprLigne(" + cpt + ",\'" + element +"\')");
         $("#divQuestion" + id)[0].id = "divQuestion" + cpt;
+
+        store.set(`reponse${cpt}`, store.get(`reponse${id}`));
       }
+      deleteStore("reponse"+compteurReponse+1);
     });
   }
 }
@@ -191,42 +193,34 @@ $("#emptyFields").click(function(){
 
 
 function viderChamps(){
-   $('#Question').val('');
+  $('#Question').val('');
   $('#Bonnereponse').val('');
   $('#MessageBonnereponse').val('');
   $('#MessageMauvaisereponse').val('');
   $('#reponseinitiale').val('');
   $('#QuestionQCM').val('');
   if($("#checkboxQR").is(':checked') == true){
-    console.log("couco");
     $('#checkboxQR').prop('checked', false);
-    console.log("dd")
   }
   $('#gridCheck1').prop('checked', false);
   $('#MessageMauvaisereponseQCM').val('');
   $('#MessageBonnereponseQCM').val('');
   $("#repContainer").empty();
-  //$("#repContainer").hide();
 
   deleteStore(`Question`);
-
   deleteStore(`Bonnereponse`);
-
   deleteStore('MessageBonnereponse');
-
   deleteStore('MessageMauvaisereponse');
-
   deleteStore(`reponseinitiale`);
-
   deleteStore(`QuestionQCM`);
-
   deleteStore(`MessageMauvaisereponseQCM`);
-
   deleteStore('MessageBonnereponseQCM');
+  for(var i = 2; i<=compteurReponse; i++) {
+    deleteStore(`reponse${i}`);
+  }
   localStorage.setItem("k",1);
 
-   compteurReponse = 1; 
-
+  compteurReponse = 1; 
 }
 
 // save image qr code
@@ -274,13 +268,19 @@ $("#infos-exercice-reco-vocale").click(function () {
 
 
 
-function enregistrement(){
+function enregistrement() {
+
+  if(!store.get(`sousOnglet`) || store.get(`sousOnglet`) == "question_ouverte") {
+    $("#onglet-QuesOuverte").attr('class','tab-pane fade in active show');
+    $("#questionOuverteOnglet").attr('class','nav-link active');
+  } else if(store.get(`sousOnglet`) == "qcm") {
+    $("#onglet-QCM").attr('class','tab-pane fade in active show');
+    $("#questionQCMOnglet").attr('class','nav-link active');
+  }
 
   if(store.get(`Question`))
     $("#Question").val(store.get(`Question`));
   
-//Question = store.get(`Question`);
-
   if(store.get(`Bonnereponse`) )
     $("#Bonnereponse").val(store.get(`Bonnereponse`));
 
@@ -302,22 +302,14 @@ function enregistrement(){
   if(store.get('reponseinitiale'))
     $("#reponseinitiale").val(store.get('reponseinitiale'));
 
-   for(var i = 1; i<k; i++){
-      /*var p;
-      if (store.get('reponse'+i)) {
-        p = $("#reponse"+i).val(store.get('reponse'+i));
-      }
-      var ma_reponse = new ReponseVocale(p[0], p[1], p[2])
-      console.log('test1');*/
-      ajouterNouvelleReponse(/*ma_reponse*/);
-
-    }
+  for(var i=2; i<=k; i++) {
+    ajouterNouvelleReponse(store.get(`reponse${i}`));
   }
+}
 
 
 //méthode gérant al continuité sur les eones de texte Question, Bonne Reponse, Mauvaise Reponse et nb reponse
 function activerSave(text){
-
   var newText = $("#"+text).val();
   store.set(text,newText);
 }
@@ -327,3 +319,12 @@ function deleteStore(del){
   if(store.get(del) )
     store.delete(del);
 }
+
+//On stocke dans le store, le sous onglet "question_ouverte"
+$("#questionOuverteOnglet").click(function() {
+  store.set("sousOnglet", "question_ouverte");
+});
+//On stocke dans le store, le sous onglet "qcm"
+$("#questionQCMOnglet").click(function() {
+  store.set("sousOnglet", "qcm");
+});
