@@ -8,7 +8,6 @@ function genererJson() {
 }
 
 var k = localStorage.getItem("k");
-console.log(k);
 var questionQCM =null;
 var questionQCMQRCode;
 
@@ -29,7 +28,6 @@ function genererJsonQCM(){
 
   // Ajout des autres réponses
   $("#repContainer .form-row").each(function(index){
-    console.log(index);
     var controlLabel = "réponse numéro ".concat(index + 2);
     var isGoodAnswer = $(this).find("#gridCheck".concat(index + 2)).is(':checked');
     var responseText = $(this).find("#reponse".concat(index + 2)).val();
@@ -97,7 +95,7 @@ $(document).ready(function() {
 // Ajouter une nouvelle Reponse une fois qu'on va clicker sur la button Ajouterreponse
 
 var compteurReponse = 1;
-function ajouterNouvelleReponse(){
+function ajouterNouvelleReponse(contenu = ""){
   compteurReponse++;
   if (compteurReponse < 30) {
     type = "Reponse";
@@ -108,7 +106,7 @@ function ajouterNouvelleReponse(){
                                 </div>
                           <div class="form-group col-md-6">
                                  <input type="text" class="form-control col-sm-6" id="reponse`+ compteurReponse + `" rows="2" name="nomprojet"
-                                placeholder="Réponse" />
+                                placeholder="Réponse" onkeyup="activerSave('reponse`+compteurReponse+`');">
                            </div>
                            <div class="form-group col-md-2">
                                    <input class="form-check-input" type="checkbox" name="gridRadios" id="gridCheck`+ compteurReponse + `" style="width:70px;" 
@@ -124,6 +122,9 @@ function ajouterNouvelleReponse(){
 
     let container = $("#repContainer");
     container.append(reponse);
+
+    $("#reponse"+ compteurReponse).val(contenu);
+
     localStorage.setItem("k",compteurReponse);
   }
 }
@@ -147,7 +148,10 @@ function supprLigne(idLigne, element) {
         div[3].getElementsByTagName("button")[0].id = "deleteQRCode" + cpt;
         div[3].getElementsByTagName("button")[0].setAttribute("onclick", "supprLigne(" + cpt + ",\'" + element +"\')");
         $("#divQuestion" + id)[0].id = "divQuestion" + cpt;
+
+        store.set(`reponse${cpt}`, store.get(`reponse${id}`));
       }
+      deleteStore("reponse"+compteurReponse+1);
     });
   }
 }
@@ -196,9 +200,7 @@ function viderChamps(){
   $('#reponseinitiale').val('');
   $('#QuestionQCM').val('');
   if($("#checkboxQR").is(':checked') == true){
-    console.log("couco");
     $('#checkboxQR').prop('checked', false);
-    console.log("dd")
   }
   $('#gridCheck1').prop('checked', false);
   $('#MessageMauvaisereponseQCM').val('');
@@ -206,20 +208,16 @@ function viderChamps(){
   $("#repContainer").empty();
 
   deleteStore(`Question`);
-
   deleteStore(`Bonnereponse`);
-
   deleteStore('MessageBonnereponse');
-
   deleteStore('MessageMauvaisereponse');
-
   deleteStore(`reponseinitiale`);
-
   deleteStore(`QuestionQCM`);
-
   deleteStore(`MessageMauvaisereponseQCM`);
-
   deleteStore('MessageBonnereponseQCM');
+  for(var i = 2; i<=compteurReponse; i++) {
+    deleteStore(`reponse${i}`);
+  }
   localStorage.setItem("k",1);
 
   compteurReponse = 1; 
@@ -270,7 +268,7 @@ $("#infos-exercice-reco-vocale").click(function () {
 
 
 
-function enregistrement(){
+function enregistrement() {
 
   if(!store.get(`sousOnglet`) || store.get(`sousOnglet`) == "question_ouverte") {
     $("#onglet-QuesOuverte").attr('class','tab-pane fade in active show');
@@ -304,17 +302,10 @@ function enregistrement(){
   if(store.get('reponseinitiale'))
     $("#reponseinitiale").val(store.get('reponseinitiale'));
 
-   for(var i = 1; i<k; i++){
-      /*var p;
-      if (store.get('reponse'+i)) {
-        p = $("#reponse"+i).val(store.get('reponse'+i));
-      }
-      var ma_reponse = new ReponseVocale(p[0], p[1], p[2])
-      console.log('test1');*/
-      ajouterNouvelleReponse(/*ma_reponse*/);
-
-    }
+  for(var i=2; i<=k; i++) {
+    ajouterNouvelleReponse(store.get(`reponse${i}`));
   }
+}
 
 
 //méthode gérant al continuité sur les eones de texte Question, Bonne Reponse, Mauvaise Reponse et nb reponse
