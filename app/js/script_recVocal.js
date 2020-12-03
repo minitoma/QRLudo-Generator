@@ -1,13 +1,12 @@
 
 function genererJson() {
-  // Si le champs "QuestionQCM" est rempli, nous sommes dans l'onglet QCM
-  // Sinon, nous sommes dans l'onglet QuestionOuverte
-  if($("#QuestionQCM").val() != "") {
+  if(store.get(`sousOnglet`) == "qcm") {
     genererJsonQCM();
-  } else {
+  } else if(store.get(`sousOnglet`) == "question_ouverte") {
     genererJsonQuestionOuverte();
   }
 }
+
 var k = localStorage.getItem("k");
 console.log(k);
 var questionQCM =null;
@@ -46,7 +45,6 @@ function genererJsonQCM(){
   previewQRCodeQCM();
   // On affiche le qrCode
   $('#qrView').show();
-
 }
 
 function previewQRCodeQCM() {
@@ -191,7 +189,7 @@ $("#emptyFields").click(function(){
 
 
 function viderChamps(){
-   $('#Question').val('');
+  $('#Question').val('');
   $('#Bonnereponse').val('');
   $('#MessageBonnereponse').val('');
   $('#MessageMauvaisereponse').val('');
@@ -206,7 +204,6 @@ function viderChamps(){
   $('#MessageMauvaisereponseQCM').val('');
   $('#MessageBonnereponseQCM').val('');
   $("#repContainer").empty();
-  //$("#repContainer").hide();
 
   deleteStore(`Question`);
 
@@ -225,8 +222,7 @@ function viderChamps(){
   deleteStore('MessageBonnereponseQCM');
   localStorage.setItem("k",1);
 
-   compteurReponse = 1; 
-
+  compteurReponse = 1; 
 }
 
 // save image qr code
@@ -276,11 +272,17 @@ $("#infos-exercice-reco-vocale").click(function () {
 
 function enregistrement(){
 
+  if(!store.get(`sousOnglet`) || store.get(`sousOnglet`) == "question_ouverte") {
+    $("#onglet-QuesOuverte").attr('class','tab-pane fade in active show');
+    $("#questionOuverteOnglet").attr('class','nav-link active');
+  } else if(store.get(`sousOnglet`) == "qcm") {
+    $("#onglet-QCM").attr('class','tab-pane fade in active show');
+    $("#questionQCMOnglet").attr('class','nav-link active');
+  }
+
   if(store.get(`Question`))
     $("#Question").val(store.get(`Question`));
   
-//Question = store.get(`Question`);
-
   if(store.get(`Bonnereponse`) )
     $("#Bonnereponse").val(store.get(`Bonnereponse`));
 
@@ -317,7 +319,6 @@ function enregistrement(){
 
 //méthode gérant al continuité sur les eones de texte Question, Bonne Reponse, Mauvaise Reponse et nb reponse
 function activerSave(text){
-
   var newText = $("#"+text).val();
   store.set(text,newText);
 }
@@ -327,3 +328,12 @@ function deleteStore(del){
   if(store.get(del) )
     store.delete(del);
 }
+
+//On stocke dans le store, le sous onglet "question_ouverte"
+$("#questionOuverteOnglet").click(function() {
+  store.set("sousOnglet", "question_ouverte");
+});
+//On stocke dans le store, le sous onglet "qcm"
+$("#questionQCMOnglet").click(function() {
+  store.set("sousOnglet", "qcm");
+});
