@@ -7,7 +7,6 @@ function genererJson() {
   }
 }
 
-var k = localStorage.getItem("k");
 var questionQCM =null;
 var questionQCMQRCode;
 
@@ -95,7 +94,7 @@ $(document).ready(function() {
 // Ajouter une nouvelle Reponse une fois qu'on va clicker sur la button Ajouterreponse
 
 var compteurReponse = 1;
-function ajouterNouvelleReponse(contenu = ""){
+function ajouterNouvelleReponse(contenu = "", isBonneRep = false){
   compteurReponse++;
   if (compteurReponse < 30) {
     type = "Reponse";
@@ -110,7 +109,7 @@ function ajouterNouvelleReponse(contenu = ""){
                            </div>
                            <div class="form-group col-md-2">
                                    <input class="form-check-input" type="checkbox" name="gridRadios" id="gridCheck`+ compteurReponse + `" style="width:70px;" 
-                                      value="option"` + compteurReponse + `" >
+                                      value="option"` + compteurReponse + `" onclick="activerSaveCheckbox('gridCheck`+compteurReponse+`')" >
                                       <label class="form-check-label" for="gridCheck`+ compteurReponse + `">
                             </div>
                             <div class="form-group col-md-1">
@@ -124,8 +123,9 @@ function ajouterNouvelleReponse(contenu = ""){
     container.append(reponse);
 
     $("#reponse"+ compteurReponse).val(contenu);
+    $("#gridCheck"+ compteurReponse).prop('checked', isBonneRep);
 
-    localStorage.setItem("k",compteurReponse);
+    store.set("nbReponse",compteurReponse);
   }
 }
 
@@ -135,7 +135,7 @@ function ajouterNouvelleReponse(contenu = ""){
 function supprLigne(idLigne, element) {
   if (element == "Reponse") {
     compteurReponse--;
-    localStorage.setItem("k",compteurReponse);
+    store.set("nbReponse",compteurReponse);
     $("#divQuestion" + idLigne).on('click', function() {
       $(this).remove();
       for(let cpt = idLigne; cpt <= compteurReponse; cpt++) {
@@ -149,10 +149,14 @@ function supprLigne(idLigne, element) {
         div[3].getElementsByTagName("button")[0].setAttribute("onclick", "supprLigne(" + cpt + ",\'" + element +"\')");
         $("#divQuestion" + id)[0].id = "divQuestion" + cpt;
 
-        store.set(`reponse${cpt}`, store.get(`reponse${id}`));
+        if(store.get(`reponse${id}`) && store.get(`gridCheck${id}`)) {
+          store.set(`reponse${cpt}`, store.get(`reponse${id}`));
+          store.set(`gridCheck${cpt}`, store.get(`gridCheck${id}`));
+        }
       }
-      deleteStore("reponse"+compteurReponse+1);
     });
+    deleteStore("reponse"+compteurReponse+1);
+    deleteStore("gridCheck"+compteurReponse+1)
   }
 }
 
@@ -199,9 +203,7 @@ function viderChamps(){
   $('#MessageMauvaisereponse').val('');
   $('#reponseinitiale').val('');
   $('#QuestionQCM').val('');
-  if($("#checkboxQR").is(':checked') == true){
-    $('#checkboxQR').prop('checked', false);
-  }
+  $('#reponseParIdentifiant').prop('checked', false);
   $('#gridCheck1').prop('checked', false);
   $('#MessageMauvaisereponseQCM').val('');
   $('#MessageBonnereponseQCM').val('');
@@ -215,12 +217,15 @@ function viderChamps(){
   deleteStore(`QuestionQCM`);
   deleteStore(`MessageMauvaisereponseQCM`);
   deleteStore('MessageBonnereponseQCM');
+  deleteStore('reponseParIdentifiant');
+  deleteStore('gridCheck1');
   for(var i = 2; i<=compteurReponse; i++) {
     deleteStore(`reponse${i}`);
+    deleteStore(`gridCheck${i}`);
   }
-  localStorage.setItem("k",1);
 
-  compteurReponse = 1; 
+  compteurReponse = 1;
+  store.set("nbReponse", compteurReponse);
 }
 
 // save image qr code
@@ -293,6 +298,9 @@ function enregistrement() {
   if(store.get('QuestionQCM'))
     $("#QuestionQCM").val(store.get('QuestionQCM'));
 
+  if(store.get('reponseParIdentifiant'))
+    $("#reponseParIdentifiant").prop('checked', store.get('reponseParIdentifiant'));
+
   if(store.get('MessageMauvaisereponseQCM'))
     $("#MessageMauvaisereponseQCM").val(store.get('MessageMauvaisereponseQCM'));
 
@@ -302,8 +310,15 @@ function enregistrement() {
   if(store.get('reponseinitiale'))
     $("#reponseinitiale").val(store.get('reponseinitiale'));
 
-  for(var i=2; i<=k; i++) {
-    ajouterNouvelleReponse(store.get(`reponse${i}`));
+  if(store.get('gridCheck1'))
+    $("#gridCheck1").prop('checked', store.get('gridCheck1'));
+
+  var nbRep = 0;
+  if(store.get('nbReponse'))
+    nbRep = store.get('nbReponse');
+
+  for(var i=2; i<=nbRep; i++) {
+    ajouterNouvelleReponse(store.get(`reponse${i}`), store.get(`gridCheck${i}`));
   }
 }
 
@@ -312,6 +327,11 @@ function enregistrement() {
 function activerSave(text){
   var newText = $("#"+text).val();
   store.set(text,newText);
+}
+
+function activerSaveCheckbox(text){
+  var b = $("#"+text).is(':checked');
+  store.set(text, b);
 }
 
 //methode de suppression dans le store
@@ -328,3 +348,4 @@ $("#questionOuverteOnglet").click(function() {
 $("#questionQCMOnglet").click(function() {
   store.set("sousOnglet", "qcm");
 });
+
