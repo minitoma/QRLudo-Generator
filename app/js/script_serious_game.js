@@ -20,7 +20,7 @@ function addAudioReco(idEnigme) {
 // Fonction pour ajouter un fichier audio
 
 function getMusicFromUrl() {
-  let modal = $('#listeMusic' + currentEnigme).find('div.modal-body.scrollbar-success');
+  let modal = $('#listeMusic').find('div.modal-body.scrollbar-success');
   let loader = document.createElement('div');
   let errorMsg = document.createElement('label');
 
@@ -155,6 +155,11 @@ $(document).ready(function () {
       info_activ = false;
     }
     //ipcRenderer.send('showInfoWindow', null);
+  });
+
+  $('#closeModalListeMusic').click(e => {
+    $('#musicUrl').val('');
+    $('#listeMusic').find('.errorLoader').remove();
   });
 
   $("#play-sound-div").hide();
