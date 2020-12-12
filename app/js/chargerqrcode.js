@@ -71,6 +71,7 @@ function drawQRCodeImport(qrcode) {
       $("#MessageMauvaisereponseQCM").val(qrcode.getBadAnswer());
       isImportationExerciceRecoVocaleQCM = true;
       drawQRCodeDataRecVocale(qrcode);
+      store.set("sousOnglet", "qcm");
     });
 }else if (qrcode.getType() == 'ExerciceReconnaissanceVocaleQuestionOuverte') {
   $("#charger-page").load(path.join(__dirname, "Views/recVocal.html"), function() {
@@ -78,6 +79,7 @@ function drawQRCodeImport(qrcode) {
     $("#Bonnereponse").val(qrcode.getReponse());
     $("#MessageBonnereponse").val(qrcode.getGoodAnswer());
     $("#MessageMauvaisereponse").val(qrcode.getBadAnswer());
+    store.set("sousOnglet", "question_ouverte");
   });
 }else if (qrcode.getType() == 'SeriousGameScenario') {
   $("#charger-page").load(path.join(__dirname, "Views/serious-game.html"), function() {

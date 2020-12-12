@@ -534,6 +534,7 @@ function saveQRCodeImage() {
 
 function previewQRCodeQuestion(){
   var question = projet.getQuestion();
+  question.qrcode.color = $('#qrColor').val();
   previewQRCode(question, $('#qrView')[0]);
 }
 

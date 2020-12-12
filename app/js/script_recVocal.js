@@ -97,10 +97,13 @@ function previewQRCodeQuestionOuverte() {
 // generate and print qr code
 function previewQRCode(qrcode, div) {
   let facade = new FacadeController();
+  qrcode.qrcode.color = $('#qrColor').val();
   facade.genererQRCode(div, qrcode);
 }
 
 $(document).ready(function() {
+
+  store.set("sousOnglet", "question_ouverte");
 
   if(!isImportationExerciceRecoVocaleQCM) {
     //méthode gérant la continuité
