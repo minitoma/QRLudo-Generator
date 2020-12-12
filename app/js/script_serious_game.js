@@ -254,7 +254,7 @@ $("#ajouterEnigme").click(function () {
                                 <div class="dropdown-menu" >
                                   <button type="button" id="scanQR`+ compteurEnigme + `" name="ajouterQR` + compteurEnigme + `" data-toggle="modal"
                                   data-target="#popupQRCode` + compteurEnigme + `" class="dropdown-item">
-                                  <i class="fa fa-qrcode"></i>&nbsp;&nbsp;QR CODE</button>&nbsp;
+                                  <i class="fa fa-qrcode"></i>&nbsp;&nbsp;Scan de QR Codes</button>&nbsp;
                                   <button id="recVocale`+ compteurEnigme + `" type="button" class="dropdown-item"
                                   data-toggle="modal" data-target="#popupRecVocale` + compteurEnigme + `">
                                   <i class="fa fa-microphone"></i>&nbsp;&nbsp;Reconnaissance vocale</button>
