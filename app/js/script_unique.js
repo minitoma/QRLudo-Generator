@@ -97,7 +97,7 @@ $(document).ready(function () {
     $("#progressbarId").text(0);
     $("#textarea1").val("");
     $("#qrName").val("");
-    console.log("1");
+
     //FIN progress bar gestion
     //aficher popup quand on click sur reinitialiser
     // cache le qr générer & desactivation du bouton exporter
@@ -217,7 +217,7 @@ function chargement() {
 
           // L'id du div est différent si c'est une zone de texte ou un fichier audio
           if (store.get(`zone${i}`).indexOf("textarea") != -1) {
-            text.setAttribute("id", "legendeTextarea");
+            text.setAttribute("id", "legendeTextarea"+i);
           }
           else {
             text.setAttribute("id", "inputAudio");
@@ -235,14 +235,9 @@ function chargement() {
     }
   }
 
-  //insertion du premier champ Texte
-  if(nbZoneDonne == 0){
-    ajouterChampLegende();
-  }
-
-  //On desactive le bouton supprimer quand il y a qu'un seul text area
-  if (nbZoneDonne == 1) {
-    disableButtonDelete();
+  //insertion du premier champ Texte s'il y en a pas
+  if(numZoneCourante < 1){
+     ajouterChampLegende();
   }
 }
 
@@ -411,6 +406,8 @@ function activer_button() {
 
 //ajouter une nvlle legende (textarea) a chaque click sur button Texte (pour chaque textarea il faut rajouter à l'attribut class la valeur qrData class="... qrData")
 function ajouterChampLegende(valeur = "") {
+  incrementerNbZoneDonne();
+  incrementerNumZoneCourante();
 
   var textareaLegende = document.createElement('div');
   textareaLegende.innerHTML = `<i class='fa fa-play align-self-center icon-player'></i><i class="fa fa-pause align-self-center icon-player"></i>
@@ -426,10 +423,6 @@ function ajouterChampLegende(valeur = "") {
   textareaLegende.setAttribute("id", `legendeTextarea${numZoneCourante}`);
 
   document.getElementById('cible').appendChild(textareaLegende);
-
-  activateAllButtonDelete();
-  incrementerNbZoneDonne();
-  incrementerNumZoneCourante();
 
   store.set(`zone${numZoneCourante}`,textareaLegende.innerHTML);
 
@@ -490,7 +483,6 @@ function verifNombreCaractere(num) {
   }
 }
 
-var champInitialeSupprime = false;
 //supprime un le textarea correspondant au numText
 function supprimerChampLegende(e, numText) {
   decrementerNbZoneDonne();
@@ -498,23 +490,11 @@ function supprimerChampLegende(e, numText) {
   //suppression dans le store de la zone de txt correspondante
   store.delete(`text` + numText);
   store.delete(`zone` + numText);
-  if(numText == 1){
-    if(!champInitialeSupprime){
-      console.log("ChampInitial");
-      $(e).parents('div#legendeTextareaInitiale').remove();
-      champInitialeSupprime = true;
-    }
-    else
-      $(e).parents('div#legendeTextarea' + numText).remove();
-  }
-  else
-    $(e).parents('div#legendeTextarea' + numText).remove();
+  
+  $(e).parents('div#legendeTextarea' + numText).remove();
 
   activateButtonAddNewData();
 
-  if (nbZoneDonne == 0) {
-    disableButtonDelete();
-  }
   //calcul et mise a jour de la bar de progression
   SetProgressBar();
 }
@@ -528,7 +508,7 @@ function ajouterChampSon(nom, url) {
   inputSon.innerHTML = `<i class='fa fa-play align-self-center icon-player'></i><i class='fa fa-pause align-self-center icon-player'></i>
       <!-- <input type='text' id='${url}' name='AudioName' class='form-control qrData' value='${nom}' readonly>  -->
     <textarea id='${url}' class='form-control qrData'  name='AudioName'  maxlength='255'  readonly>${nom}'</textarea>
-    <button id='delete${numZoneCourante}' type='button' class='btn btn-outline-success legendeQR-close-btn align-self-center' onclick='supprimerChampSon(this,${numZoneCourante});'>
+    <button id='delete${numZoneCourante}' type='button' class='btn btn-outline-success legendeQR-close-btn align-self-center' onclick='supprimerChampLegende(this,${numZoneCourante});'>
     <div class="inline-block">
       <i class='fa fa-trash-alt'></i></button>
       <button type='button' class='btn btn-outline-success align-self-center legendeQR-close-btn' onclick='moveUp(this,${numZoneCourante});'>
@@ -537,35 +517,14 @@ function ajouterChampSon(nom, url) {
       <i class='fa fa-arrow-down'></i></button>
     </div>`;
   inputSon.setAttribute("class", "d-flex align-items-start legendeQR");
-  inputSon.setAttribute("id", "inputAudio");
+  inputSon.setAttribute("id", `legendeTextarea${numZoneCourante}`);
   document.getElementById('cible').appendChild(inputSon);
 
   $('#listeMusic .close').click();
 
   store.set(`zone${numZoneCourante}`, inputSon.innerHTML);
 
-  activateAllButtonDelete();
-
   //calcul et mise a jour de la bar de progression
-  SetProgressBar();
-}
-
-//supprimer un champ Audio -> event onclick
-function supprimerChampSon(e, numText) {
-  decrementerNbZoneDonne();
-
-
-  //suppression dans le store de la zone de txt correspondante
-  store.delete(`text` + numText);
-  store.delete(`zone` + numText);
-
-  $(e).parents('div#inputAudio').remove();
-
-  activateButtonAddNewData();
-
-  if (nbZoneDonne == 1) {
-    disableButtonDelete();
-  }
   SetProgressBar();
 }
 
@@ -632,22 +591,6 @@ function incrementerNumZoneCourante() {
   store.delete(`numZoneCourante`);
   numZoneCourante++; // Nouveau numero pour le prochain textarea
   store.set(`numZoneCourante`, numZoneCourante);
-}
-
-//Permet de desactiver le bouton supprimer de la zone de donnée restante
-function disableButtonDelete() {
-  for (var i = 1; i < numZoneCourante + 1; i++) {
-    if (store.get(`zone${i}`))
-      $("#delete" + i).attr('disabled', true);
-  }
-}
-
-//Permet d'activer tous les boutons supprimer des zones de données
-function activateAllButtonDelete() {
-  for (var i = 1; i < numZoneCourante + 1; i++) {
-    if (store.get(`zone${i}`))
-      $("#delete" + i).attr('disabled', false);
-  }
 }
 
 //Permet d'activer les boutons qui ajoutes des nouvelles zones de données
