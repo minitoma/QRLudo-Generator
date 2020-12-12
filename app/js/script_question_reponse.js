@@ -13,6 +13,8 @@ $(document).ready(function() {
   //méthode gérant la continuité
   enregistrement();
 
+  initMessages();
+
   if (numReponse > 0)
     document.getElementById("ajoutNewReponse").disabled = false;
 
@@ -29,20 +31,18 @@ $(document).ready(function() {
 
         //On verifie qu'il y a une question de créée
         if (projet.getQuestion() == null) {
-          alert ("pas de question");
           return ;
         }
 
-        //On verifie que le texte de la reponse n'est pas vide
-        if (identifiant === ""){
-          alert("pas d'identifiant")
-          return ; // si le champ est vide on sort
+        //On verifie que les champs de la réponse ne sont pas vide
+        if (identifiant === "" || reponseVocale === ""){
+          $("#alertChampManquantError").show();
+          setTimeout(function () {
+            $('#alertChampManquantError').hide();
+          }, 3500);
+          return false; // si le champ est vide on sort
         }
-        //On verifie que le texte du retour vocal n'est pas vide
-        if(reponseVocale === "") {
-          alert("pas de reponse vocale");
-          return;
-        }
+
         qrData.push(reponseVocale);
         var new_rep = new QRCodeUnique(identifiant, qrData,  qrColor);
         var new_rep_vocal = reponseVocale;
@@ -73,7 +73,10 @@ $(document).ready(function() {
           }
         });
         if (existe){
-          alert ("Cette Reponse existe deja");
+          $("#alertReponseDoublonError").show();
+          setTimeout(function () {
+            $('#alertReponseDoublonError').hide();
+          }, 3500);
           return false;
         }
 
@@ -172,8 +175,6 @@ function addReponseLine(reponse){
   "</div>";
 
   $("#cible").append(newRepLine);
-  document.getElementById('Nbbonne').innerHTML = numReponse;
-  //console.log(numReponse);
 }
 
    
@@ -185,45 +186,23 @@ $("#genererQestion").click(function() {
   let mauvaiseReponse = $('#newMauvaiseReponseText').val();
   let nbMinBoneReponse = $('#newNbMinimalBonneReponse').val();
   let qrColor = $('#qrColor').val();
-  let qrData = [];
-
 
   //On verifie si le texte de la question n'est pas vide
-  if (question=== ""){
-    $("#errorModalQuestion").modal('show');
-        return; // si le champ est vide on sort
-  }
-  else if (bonneReponse=== ""){
-    $("#errorModalBReponse").modal('show');
-        return; // si le champ est vide on sort
-  }
-  else if (mauvaiseReponse=== ""){
-    $("#errorModalMReponse").modal('show');
-        return; // si le champ est vide on sort
-  }
-  else if (nbMinBoneReponse=== ""){ 
-    $("#errorModalNombreReponse").modal('show');
-        return; // si le champ est vide on sort
-  }
-  else {
-    let nouvQuestion = new Question (question,bonneReponse,mauvaiseReponse, qrData ,nbMinBoneReponse, $("#qrColor").val());
+  if (question !== "" && bonneReponse !== "" && mauvaiseReponse !== "" && nbMinBoneReponse !== ""){
+    let nouvQuestion = new Question (question,bonneReponse,mauvaiseReponse, [], nbMinBoneReponse, qrColor);
     projet.setQuestion(nouvQuestion);
 
-    //addQuestionLine(nouvQuestion);
-    var questions = projet.getQuestion();
+    initMessages();
 
     //affichage de la zone de question
     $("#dropZone").show();
 
     //on cache le bouton question
     $("#genererQestion").hide();
-
+  } else {
+    messageInfos("Veuillez renseigner tous les champs", "danger");
   }
 });
-
-
-
-
 
 
 
@@ -370,13 +349,13 @@ function affichageLigneParDefault() {
             }
           });
           if (existe){
-            alert ("Cette Reponse exite deja");
+            messageInfos("Cette réponse existe déjà.", "danger");
             return ;
           }
 
           //verification que le QR code a un id     &&
           if(qrCode.getId() == null){
-            alert ("Votre Qr Code n'a pas d'identifiant ERROR!");
+            messageInfos("Votre Qr Code n'a pas d'identifiant ERROR!", "danger");
             return ;
           }
 
@@ -386,17 +365,9 @@ function affichageLigneParDefault() {
           projet.getQuestion().addReponse( (new_rep.getId() ), new_rep_vocal);
           //console.log(projet.getQuestion());
           addReponseLine(new_rep);
-
-
-        //  console.log(new_rep_vocal);
-          console.log(projet.getQuestion());
-          console.log("--------------------");
-          console.log(projet.getReponses());
-          console.log("--------------------");
-          console.log(projet.getQuestion().getReponses());
         }
         else
-          alert("Mauvais format de qr Code ! ");
+          messageInfos("Mauvais format de qr Code ! ", "danger");
      });
     }
   };
@@ -461,10 +432,6 @@ function deleteReponse(button){
   
 
   }
-  document.getElementById('Nbbonne').innerHTML = numReponse;
-
- 
-
 }
 
 //Méthode appliqué au chargement pour récupérer les élément enregistrés
