@@ -86,7 +86,6 @@ $(document).ready(function () {
       document.getElementById('elementsAudio').removeChild(info);
       info_activ = false;
     }
-    //ipcRenderer.send('showInfoWindow', null);
   });
 
   $('button#emptyFields').click(function() {
@@ -154,7 +153,6 @@ $('#preview').click(e => {
   initMessages();
   let inputArray = $('input, textarea');
 
-  // if (validateForm(inputArray)) { // all fields are filled
   // get all required attributes for qrcode
   let qrColor = $('#qrColor').val();
   let qrName = $('#qrName').val();
@@ -183,7 +181,6 @@ $('#preview').click(e => {
   let newQrUnique = new QRCodeUnique(qrName, qrData, qrColor);
   console.log(newQrUnique);
   previewQRCode(qrName, qrData, qrColor, div);
-  //console.log();
   $('#emptyZones').attr('disabled', false);
 });
 
@@ -663,7 +660,6 @@ function disableButtonAddNewData() {
   $('#ajouterTexte').attr('disabled', true);
   $('#showAudio').attr('disabled', true);
 }
-
 
 //pour ouvrir la page info.html quand on clique sur le bouton info du haut
 $("#infos-unique").click(function () {
