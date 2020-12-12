@@ -516,6 +516,8 @@ function supprLigne(idLigne, element) {
       }
   } else {
     document.getElementsByName("nombreReponse")[0].value = "";
+    $("#questQRCode1").val("");
+    $("#projectId11").val("");
     $("#menuDeroulant" + idLigne).attr("style", "display:block");
     $("#modification" + idLigne).empty();
     $("#modification" + idLigne).attr("style", "display:none");
@@ -540,6 +542,8 @@ function supprLigne(idLigne, element) {
   }
   else {
     let div = $("#divQuestion" + currentEnigme + "1")[0].getElementsByTagName("div");
+    console.log(div);
+
     div[1].getElementsByTagName("input")[0].value = "";
   }
 }
