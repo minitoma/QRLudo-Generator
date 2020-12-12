@@ -114,6 +114,9 @@ $(document).ready(function() {
     ajouterNouvelleReponse();
 
   })
+
+  // Aucun champs audio à lire dans cet onglet
+  $("#play-sound-div").hide();
 });
 
 // Ajouter une nouvelle Reponse une fois qu'on va clicker sur la button Ajouterreponse

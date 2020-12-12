@@ -156,6 +156,8 @@ $(document).ready(function () {
     }
     //ipcRenderer.send('showInfoWindow', null);
   });
+
+  $("#play-sound-div").hide();
 });
 
 // Fonction pour vérifier l'écriture dans un champ texte
