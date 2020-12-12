@@ -41,10 +41,10 @@
                                 placeholder="Quelle est Votre Question" onkeyup="activerSave('QuestionQCM');" />
                       </div>
 
-                      <div class="col-lg-5 mt-5">
+                      <div class="col-lg-6 mt-5">
                           <div class="form-group form-inline">
-                              <input type="checkbox" form="label2" id="reponseParIdentifiant" class="form-control row" onclick="activerSaveCheckbox('reponseParIdentifiant');">
-                              <label id="label2" class="ml-3">Utiliser l'identifiant de la question comme réponse</label>
+                              <input type="checkbox" form="label2" id="reponseParIdentifiant" class="form-control" onclick="activerSaveCheckbox('reponseParIdentifiant');">
+                              <label id="label2" class="ml-3">Utiliser le numéro de la réponse comme réponse vocale</label>
                           </div>
                         </div>
                                </div>
@@ -59,9 +59,14 @@
                                       <label class="control-label">Réponse 1 :</label>
                                   </div>
                                   <div class="form-group col-md-6">
-                                    <input type="text" class="form-control col-sm-6" id="reponseinitiale" rows="2" name="nomprojet"
-                                          placeholder="Réponse" onkeyup="activerSave('reponseinitiale');" />
-                                </div>
+                                    <span class="row">
+                                      <input type="text" class="form-control col-sm-6" id="reponseinitiale" rows="2" name="nomprojet"
+                                            placeholder="Réponse" onkeyup="activerSave('reponseinitiale');" />
+                                      <i class="fas fa-info-circle mt-2 ml-2" 
+                                        title="Nous vous conseillons de cocher la case 'Utiliser le numéro de la réponse comme réponse vocale' si votre réponse est longue ou difficilement prononçable" 
+                                        data-toggle="tooltip" data-placement="right"></i>
+                                    </span>
+                                  </div>
                                   <div class="form-group col-md-2">
                                     <input class="form-check-input" type="checkbox" name="gridRadios" id="gridCheck1" style="width:70px;" 
                                       value="option" onclick="activerSaveCheckbox('gridCheck1');">
@@ -110,20 +115,25 @@
                        <div class="form-group row">
                                 <label for="inputEmail3" class="col-sm-4 col-form-label" style="color:#28a745;padding-right:32px;">Bonne réponse :</label>
                                 <div class="col-sm-8">
-                                  <input type="text" class="form-control" id="Bonnereponse" onkeyup="activerSave('Bonnereponse');">
+                                  <span class="row">
+                                    <input type="text" class="form-control ml-3 col-11" id="Bonnereponse" onkeyup="activerSave('Bonnereponse');">
+                                    <i class="fas fa-info-circle mt-2 ml-2" 
+                                      title="Nous vous conseillons de choisir une réponse courte et facilement prononçable par l'utilisateur. Ne pas oublier les accents dans votre réponse."
+                                      data-toggle="tooltip" data-placement="right"></i>
+                                  </span>
                                 </div>
                               </div>
                       <br>
                          <div class="form-group row">
                                 <label for="inputEmail3" class="col-sm-4 col-form-label" style="color:#28a745;padding-right:32px;">Message de bonne réponse :</label>
                                 <div class="col-sm-8">
-                                  <input type="text" class="form-control" id="MessageBonnereponse" placeholder="Bonne" onkeyup="activerSave('MessageBonnereponse');">
+                                  <input type="text" class="form-control" id="MessageBonnereponse" placeholder="Bravo !" onkeyup="activerSave('MessageBonnereponse');">
                                 </div>
                               </div>
                               <div class="form-group row">
                                  <label for="inputEmail3" class="col-sm-4 col-form-label" style="color:#28a745;padding-right:32px;">Message de mauvaise réponse :</label>
                                 <div class="col-sm-8">
-                                  <input type="text" class="form-control" id="MessageMauvaisereponse" placeholder="Mauvaise" onkeyup="activerSave('MessageMauvaisereponse');">
+                                  <input type="text" class="form-control" id="MessageMauvaisereponse" placeholder="Dommage !" onkeyup="activerSave('MessageMauvaisereponse');">
                                 </div>
                               </div> 
                     </div>

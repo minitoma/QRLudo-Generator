@@ -360,6 +360,9 @@ $("#ajouterEnigme").click(function () {
                     <label class="control-label" style="color:#28a745;padding-right:32px;">Réponse :</label>
                     <input type="text" class="form-control input-lg" style="width:500px;" id="repRecVocal` + compteurEnigme + `" cols="10"
                         name="nomprojet" placeholder="Saisissez votre réponse" onkeyup="activerSave();" />
+                    <i class="fas fa-info-circle mt-1 ml-2"
+                        title="Nous vous conseillons de choisir une réponse courte et facilement prononçable par l'utilisateur. Ne pas oublier les accents dans votre réponse."
+                        data-toggle="tooltip" data-placement="right"></i>
                 </div>
             </div>
             <div class="modal-footer">

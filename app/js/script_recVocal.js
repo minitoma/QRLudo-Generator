@@ -104,8 +104,13 @@ function ajouterNouvelleReponse(contenu = "", isBonneRep = false){
                                   <label class="control-label">Réponse `+ compteurReponse + ` :</label>
                                 </div>
                           <div class="form-group col-md-6">
-                                 <input type="text" class="form-control col-sm-6" id="reponse`+ compteurReponse + `" rows="2" name="nomprojet"
-                                placeholder="Réponse" onkeyup="activerSave('reponse`+compteurReponse+`');">
+                            <span class="row">
+                                <input type="text" class="form-control col-sm-6" id="reponse`+ compteurReponse + `" rows="2" name="nomprojet"
+                                    placeholder="Réponse" onkeyup="activerSave('reponse`+compteurReponse+`');">
+                                <i class="fas fa-info-circle mt-2 ml-2" 
+                                    title="Nous vous conseillons de cocher la case 'Utiliser le numéro de la réponse comme réponse vocale' si votre réponse est longue ou difficilement prononçable" 
+                                    data-toggle="tooltip" data-placement="right"></i>
+                              </span>
                            </div>
                            <div class="form-group col-md-2">
                                    <input class="form-check-input" type="checkbox" name="gridRadios" id="gridCheck`+ compteurReponse + `" style="width:70px;" 
