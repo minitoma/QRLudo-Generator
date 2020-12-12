@@ -10,14 +10,6 @@
         Création d'exercice à reconnaissance vocale<br>
         Il y a deux types d'exercices : les questions ouvertes et les QCM
     </div>
-    <div class="alert alert-success" role="alert" id="alertExportationOk" style="display:none;"> Votre projet a bien été
-        enregistré. </div>
-    <div class="alert alert-danger" role="alert" id="alertQuestionVideError" style="display:none;"> Veuillez saisir le
-        texte lié à votre jeu. </div>
-    <div class="alert alert-danger" role="alert" id="alertNombreReponseVideError" style="display:none;"> Veuillez saisir
-        un nombre de réponses correct. </div>
-    <div class="alert alert-danger" role="alert" id="alertQuestionExistError" style="display:none"> La question existe
-        déjà. </div>
     <form id="formulaireQCM" onsubmit="return false;">
         <div class="card-body">
             <h6 class="card-title"></h6>
@@ -30,6 +22,8 @@
             </ul>
           </nav>
           <div class="tab-content">
+            <div class="mt-2" id="messages"></div>
+
              <div class="tab-pane" id="onglet-QCM">
                 <div id="newProject" class="tab-pane fade in active show" role="tabpanel">
                   <div class="container-fluid">

@@ -34,14 +34,29 @@ function genererJsonQCM(){
     reponses.push([reponse.getNumeroEnigme(), reponse.getEstBonneReponse(), reponse.getTextQuestion()]);
   });
 
-  questionQCM = new QRCodeQCM(questionText, reponses, reponseParIdentifiant, messageBonneReponse, messageMauvaiseReponse);
+  // On vérifie que les réponses sont complètes avant de générer le QR code
+  var reponsesComplete = true;
+  for(let i = 0; i < reponses.length; i++) {
+    if(reponses[i][2] === "") { // reponses[i][2] correspond au texte de la réponse
+      reponsesComplete = false;
+      break;
+    }
+  }
 
-  console.log(questionQCM.qrcode);
-  questionQCMQRCode = questionQCM.qrcode
-  // On génére le QrCode a afficher
-  previewQRCodeQCM();
-  // On affiche le qrCode
-  $('#qrView').show();
+  if(questionText !== "" && messageBonneReponse != "" && messageMauvaiseReponse != "" && reponsesComplete) {
+    questionQCM = new QRCodeQCM(questionText, reponses, reponseParIdentifiant, messageBonneReponse, messageMauvaiseReponse);
+    
+    initMessages();
+
+    console.log(questionQCM.qrcode);
+    questionQCMQRCode = questionQCM.qrcode
+    // On génére le QrCode a afficher
+    previewQRCodeQCM();
+    // On affiche le qrCode
+    $('#qrView').show();
+  } else {
+    messageInfos("Veuillez remplir tous les champs.", "danger");
+  }
 }
 
 function previewQRCodeQCM() {
@@ -58,14 +73,20 @@ function genererJsonQuestionOuverte(){
   var messageBonneReponse = $("#MessageBonnereponse").val();
   var messageMauvaiseReponse = $("#MessageMauvaisereponse").val();
 
-  questionOuverte = new QRCodeQuestionOuverte(questionText, reponseText, messageBonneReponse, messageMauvaiseReponse);
+  if(questionText !== "" && reponseText !== "" && messageBonneReponse !== "" && messageMauvaiseReponse !== "") {
+    questionOuverte = new QRCodeQuestionOuverte(questionText, reponseText, messageBonneReponse, messageMauvaiseReponse);
 
-  console.log(questionOuverte.qrcode);
+    initMessages();
 
-  // On génére le QrCode a afficher
-  previewQRCodeQuestionOuverte();
-  // On affiche le qrCode
-  $('#qrView').show();
+    console.log(questionOuverte.qrcode);
+
+    // On génére le QrCode a afficher
+    previewQRCodeQuestionOuverte();
+    // On affiche le qrCode
+    $('#qrView').show();
+  } else {
+    messageInfos("Veuillez remplir tous les champs.", "danger");
+  }
 
 }
 
@@ -83,6 +104,8 @@ $(document).ready(function() {
 
   //méthode gérant la continuité
   enregistrement();
+
+  initMessages();
 
   // Ajouter une nouvelle Reponse une fois qu'on va clicker sur la button Ajouterreponse
   $("#ajouterQuestion").click(function () {
@@ -348,9 +371,11 @@ function deleteStore(del){
 //On stocke dans le store, le sous onglet "question_ouverte"
 $("#questionOuverteOnglet").click(function() {
   store.set("sousOnglet", "question_ouverte");
+  initMessages();
 });
 //On stocke dans le store, le sous onglet "qcm"
 $("#questionQCMOnglet").click(function() {
   store.set("sousOnglet", "qcm");
+  initMessages();
 });
 
