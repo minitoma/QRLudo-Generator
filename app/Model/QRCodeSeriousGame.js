@@ -28,6 +28,8 @@ class ProjetSeriousGame {
 
         var md5Value = MDFiveConverter.convert(dataString);
 
+        this.scenario = ""
+
         this.projet = {
             id: md5Value,
             nom: nom,
@@ -36,8 +38,8 @@ class ProjetSeriousGame {
         };
     }
 
-    setQuestion(question) {
-        this.projet.question = question;
+    setScenario(scenario) {
+        this.scenario = scenario;
     }
 
     addQuestionQr(question) {
@@ -60,8 +62,8 @@ class ProjetSeriousGame {
         return this.projet.nom;
     }
 
-    getQuestion() {
-        return this.projet.question;
+    getScenario() {
+        return this.scenario;
     }
 
     getQuestionsQr() {
@@ -317,5 +319,6 @@ module.exports = {
     ProjetSeriousGame,
     QRCodeSeriousGame,
     QRCodeQuestion,
-    RecVocaleQuestion
+    RecVocaleQuestion,
+    ReponseQuestionQR
 };

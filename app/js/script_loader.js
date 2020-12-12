@@ -199,7 +199,8 @@ const {
   ProjetSeriousGame, 
   QRCodeSeriousGame, 
   QRCodeQuestion, 
-  RecVocaleQuestion 
+  RecVocaleQuestion,
+  ReponseQuestionQR
 } = require('./Model/QRCodeSeriousGame');
 
 const {

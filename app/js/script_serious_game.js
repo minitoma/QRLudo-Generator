@@ -824,8 +824,8 @@ function genereJsonSeriousGame() {
     console.log("Generation successfull");
     // On crée le Json de SeriousGame avec QRCodeSeriousGame
     let jsonSeriousGame = new QRCodeSeriousGame(nomSeriousGame, textIntro, textFin, enigmes, projetSeriousGame.getQuestionsQrForJson(), projetSeriousGame.getQuestionsRecoForJson(), qrColor);
-    projetSeriousGame.setQuestion(jsonSeriousGame);
-    console.log(projetSeriousGame.getQuestion());
+    projetSeriousGame.setScenario(jsonSeriousGame);
+    console.log(projetSeriousGame.getScenario());
     return true;
   } else {
     console.log("Generation failed");
@@ -835,11 +835,11 @@ function genereJsonSeriousGame() {
 }
 
 function previewQRCodeQuestion() {
-  var question = projetSeriousGame.getQuestion();
+  var scenario = projetSeriousGame.getScenario();
   if ($('#qrView')[0].childElementCount == 0) {
     document.getElementById("qrView").append(document.createElement("div"));
   }
-  previewQRCode(question, $('#qrView')[0]);
+  previewQRCode(scenario, $('#qrView')[0]);
 }
 
 // generate and print qr code
@@ -866,17 +866,38 @@ $("#saveQRCode").click(function () {
       fs.mkdirSync(dir_path);
     }
 
-    //On enregistre la question
+    //On enregistre le scénario
     let div = document.createElement('div');
-    facade.genererQRCode(div, projetSeriousGame.getQuestion());
-    saveQRCodeImage(div, projetSeriousGame.getQuestion(), dir_path);
+    facade.genererQRCode(div, projetSeriousGame.getScenario());
+    saveQRCodeImage(div, projetSeriousGame.getScenario(), dir_path);
 
 
-    // Idem pour les reponses des questions Qrcode
-    projetSeriousGame.getReponsesQrCode().forEach(function (reponse) {
-      let div = document.createElement('div');
-      facade.genererQRCode(div, reponse);
-      saveQRCodeImage(div, reponse, dir_path);
+    // Enregistrement des réponses aux énigmes de type QR Code dans des sous-repertoires
+    projetSeriousGame.getQuestionsQrForJson().forEach(function(question) {
+
+      // Recherche du nom de l'enigme auquelle est associé la question
+      var nomEnigmeQuestion = "";
+      projetSeriousGame.getScenario().getEnigmes().forEach(function(enigme) {
+          if(enigme[0] == question[0]) {
+            nomEnigmeQuestion = enigme[1];
+            return;
+          }
+      });
+
+      //Création du sous-repertoire
+      var sub_dir_path = dir_path + "/" + nomEnigmeQuestion;
+      if (!fs.existsSync(sub_dir_path)) {
+        fs.mkdirSync(sub_dir_path);
+      }
+
+      var reponses = question[2];
+      reponses.forEach(function(reponse) {
+          var reponseObj = new ReponseQuestionQR(reponse[0], reponse[1], $('#qrColor').val());
+
+          let div2 = document.createElement('div');
+          facade.genererQRCode(div2, reponseObj);
+          saveQRCodeImage(div2, reponseObj, sub_dir_path);
+      });
     });
 
     $("#alertExportationOk").show();
