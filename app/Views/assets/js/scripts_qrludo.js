@@ -17,6 +17,7 @@ $().ready(function() {
     $("#charger-page").load(path.join(__dirname, "Views/quesRep.html"), loadDefaultColor);
   });
   $("#rec-vocale-html").click(function() {
+    isImportationExerciceRecoVocaleQCM = false;
     $("#charger-page").load(path.join(__dirname, "Views/recVocal.html"), loadDefaultColor);
   });
   $("#serious-html").click(function() {

@@ -688,7 +688,7 @@ function validerQuestion(idEnigme, type) {
 // Fonction qui charger les données des popup qrcode
 function chargerQuestion(idEnigme, type) {
   currentEnigme = idEnigme;
-  console.log("hello " + currentEnigme);
+
   // On affecte les valeurs rentrées à la popup pour la modification
   if (type == "qrcode") {
     $("#popupQRCode" + idEnigme + " #questQRCode" + idEnigme).val(projetSeriousGame.getQuestionQrFromId(idEnigme).getQuestion()); // le champs de question

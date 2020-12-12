@@ -102,8 +102,10 @@ function previewQRCode(qrcode, div) {
 
 $(document).ready(function() {
 
-  //méthode gérant la continuité
-  enregistrement();
+  if(!isImportationExerciceRecoVocaleQCM) {
+    //méthode gérant la continuité
+    enregistrement();
+  }
 
   initMessages();
 
