@@ -246,6 +246,9 @@ $("#ajouterEnigme").click(function () {
                               style="color:#28a745;padding-top:10px;padding-right:54px;">Énigme `+ compteurEnigme + ` : </label>
                               <input type="text" class="form-control" id="enigme`+ compteurEnigme + `" name="nombreReponse"
                               placeholder="Nom de l'énigme `+ compteurEnigme + `" onkeyup="activerSave();" />
+                              <i class="fas fa-info-circle mt-1 ml-1 mr-3" 
+                                        title="Nous vous conseillons de choisir un nom d'énigme court et facilement prononçable par l'utilisateur. Ne pas oublier les accents dans votre nom." 
+                                        data-toggle="tooltip" data-placement="right"></i>
                               &nbsp;
                               <div class="btn-group" style="display:block" id="menuDeroulant`+ compteurEnigme + `">
                                 <button type="button" class="btn btn-outline-success align-self-center dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
