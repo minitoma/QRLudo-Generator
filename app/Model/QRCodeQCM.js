@@ -10,7 +10,7 @@ class QRCodeQCM {
         data: reponses,
         lettreReponseVocale : reponseParIdentifiant,
         text_bonne_reponse: text_bonne_reponse,
-        m_text_mauvaise_rep: text_mauvaise_reponse,
+        text_mauvaise_rep: text_mauvaise_reponse,
         color: color
       };
     }
@@ -40,7 +40,7 @@ class QRCodeQCM {
     }
 
     getBadAnswer() {
-      return this.qrcode.m_text_mauvaise_rep;
+      return this.qrcode.text_mauvaise_rep;
     }
 
     getLettreReponseVocale() {

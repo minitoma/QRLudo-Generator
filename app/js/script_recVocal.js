@@ -103,7 +103,8 @@ function previewQRCode(qrcode, div) {
 
 $(document).ready(function() {
 
-  store.set("sousOnglet", "question_ouverte");
+  if(!store.get("sousOnglet"))
+    store.set("sousOnglet", "question_ouverte");
 
   if(!isImportationExerciceRecoVocaleQCM) {
     //méthode gérant la continuité
