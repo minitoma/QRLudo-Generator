@@ -212,10 +212,6 @@ function activer_button() {
               return;
           };
 
-          // console.log("********** zlib **********\n");
-          // console.log(zlib.gzipSync(JSON.stringify(qrcode)));
-          // console.log("zipped data --- : "+zlib.gzipSync(JSON.stringify(qrcode)).toString('base64'));
-
           //upload le fichier json vers le drive on donnant le nom du fichier géneré dans le dossier QR-Unique/json/
           uploadFileToDrive(nouveauNomduFichier);
           messageInfos("votre fichier json est bien sauvegardé","success");

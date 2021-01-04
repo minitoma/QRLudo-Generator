@@ -2,10 +2,13 @@
  * @Author: SALIM Youssef
  * @Date:   2018-Oct
  */
-//ce fichier regroupe toutes les fonctions et scripts en commun avec les autres les pages
+//ce fichier regroupe toutes les fonctions et scripts en commun avec les autres pages
 $().ready(function() {
 
   //pour chaque item dans le menu on charge une page html
+  $("#accueil-html").click(function() {
+    $("#charger-page").load(path.join(__dirname, "Views/accueil.html"), loadDefaultColor);
+  });
   $("#unique-html").click(function() {
     isImportationQRUnique = false;
     $("#charger-page").load(path.join(__dirname, "Views/unique.html"), loadDefaultColor);
@@ -21,7 +24,7 @@ $().ready(function() {
     $("#charger-page").load(path.join(__dirname, "Views/recVocal.html"), loadDefaultColor);
   });
   $("#serious-html").click(function() {
-    $("#charger-page").load(path.join(__dirname, "Views/serious-game.html"), loadDefaultColor); 
+    $("#charger-page").load(path.join(__dirname, "Views/serious-game.html"), loadDefaultColor);
   });
   $("#parametres").click(function(){
     $("#charger-page").load(path.join(__dirname, "Views/parametres.html"));
@@ -29,7 +32,7 @@ $().ready(function() {
   $("#infos").click(function(){
     $("#charger-page").load(path.join(__dirname, "Views/info.html"));
   });
-  
+
 
 
   //l'element du menu courant -> class="... active"

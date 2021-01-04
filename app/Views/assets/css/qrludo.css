@@ -24,6 +24,10 @@ a:focus {
   transition: all 0.3s;
 }
 
+ul {
+  list-style:none;
+}
+
 .navbar {
   /*padding: 15px 10px;*/
   padding: 5px 10px 5px 10px;

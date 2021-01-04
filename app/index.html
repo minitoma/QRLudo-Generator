@@ -14,12 +14,12 @@
   <!-- Our Custom CSS -->
   <link rel="stylesheet" href="Views/assets/css/qrludo.css">
 
-  <!-- <script src="./Views/assets/js/jquery.min.js"></script> -->
-
   <!-- include script from Controller and Model-->
   <script src="./js/script_loader.js"></script>
   <script src="./js/chargerqrcode.js"></script>
 
+  <!-- script to include html file in another-->
+  <script src="https://www.w3schools.com/lib/w3.js"></script>
 
   <!-- Gestion -> Menu | Gestion -> Messages Infos | Fonctions -->
   <script src="./Views/assets/js/scripts_qrludo.js"></script>
@@ -33,7 +33,9 @@
     <!-- Sidebar  -->
     <nav id="sidebar" class="active">
       <div class="sidebar-header">
-        <span class="navbar-left"><img src="Views/assets/images/logo-qrludo.png"></span>
+        <a href="#" id="accueil-html" >
+          <span class="navbar-left"><img src="Views/assets/images/logo-qrludo.png" ></span>
+        </a>
       </div>
 
       <ul class="list-unstyled components" id="menu">
@@ -124,14 +126,12 @@
 
       <!--Pour afficher le titre de chaque page <h4 style="color:#1f7934;">QR-Codes Unique</h4>-->
 
-      <!--<div class="line"></div>-->
-
-
 
       <!-- contenu du Page a afficher depuis le menu gauche -->
 
       <div class="card-deck" id="charger-page">
-
+          <div w3-include-html="Views/accueil.html"></div>
+          <script>w3.includeHTML();</script>
       </div>
 
       <!-- end contenu -->
