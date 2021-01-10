@@ -24,6 +24,7 @@ function getMusicFromUrl() {
   let loader = document.createElement('div');
   let errorMsg = document.createElement('label');
 
+
   const {
     clipboard
   } = require('electron');
@@ -133,6 +134,9 @@ $(document).ready(function () {
   var info = document.createElement('div'); // balise div : contain html information
   var info_activ = false; // boolean : give the etat of info (up/off)
 
+  // Gestion de la continuité
+  enregistrement();
+
   //Show the information about the audio file import (help)
   $('button#showInfo').click(e => {
     e.preventDefault();
@@ -165,11 +169,6 @@ $(document).ready(function () {
   $("#play-sound-div").hide();
 });
 
-// Fonction pour vérifier l'écriture dans un champ texte
-function activerSave() {
-  console.log("Activer Save");
-}
-
 // Réinitialise les champs du Scénario
 function deleteGame() {
   for (let i = compteurEnigme; i >= 1; --i) {
@@ -181,8 +180,14 @@ function deleteGame() {
     document.getElementById("textAreaIntro").disabled = false;
   }
   document.getElementById("textAreaFin").value = "";
-  if(document.getElementById("textAreaFin").disabled == true)
+  if(document.getElementById("textAreaFin").disabled == true){
     document.getElementById("textAreaFin").disabled = false;
+  }
+    
+
+  deleteStore('projectId');
+  deleteStore('textAreaIntro');
+  deleteStore('textAreaFin');
 }
 
 //Import d'un projet existant à partir d'un répertoire
@@ -245,9 +250,9 @@ $("#ajouterEnigme").click(function () {
                               <label class="control-label"
                               style="color:#28a745;padding-top:10px;padding-right:54px;">Énigme `+ compteurEnigme + ` : </label>
                               <input type="text" class="form-control" id="enigme`+ compteurEnigme + `" name="nombreReponse"
-                              placeholder="Nom de l'énigme `+ compteurEnigme + `" onkeyup="activerSave();" />
-                              <i class="fas fa-info-circle mt-1 ml-1 mr-3" 
-                                        title="Nous vous conseillons de choisir un nom d'énigme court et facilement prononçable par l'utilisateur. Ne pas oublier les accents dans votre nom." 
+                              placeholder="Nom de l'énigme `+ compteurEnigme + `" onkeyup="activerSave('enigme`+ compteurEnigme +`);" />
+                              <i class="fas fa-info-circle mt-1 ml-1 mr-3"
+                                        title="Nous vous conseillons de choisir un nom d'énigme court et facilement prononçable par l'utilisateur. Ne pas oublier les accents dans votre nom."
                                         data-toggle="tooltip" data-placement="right"></i>
                               &nbsp;
                               <div class="btn-group" style="display:block" id="menuDeroulant`+ compteurEnigme + `">
@@ -268,7 +273,7 @@ $("#ajouterEnigme").click(function () {
                                 &nbsp;
                                 <button id="deleteEnigme`+ compteurEnigme + `" type="button" onclick="supprLigne(` + compteurEnigme + ",\'" + type + `\');" class="btn btn-outline-success align-self-center">
                                 <i class="fa fa-trash"></i></button>
-                              </div>                              
+                              </div>
                           </div>`;
 
     popUpQRCode.innerHTML = `<div class="modal fade bd-example-modal-lg" id="popupQRCode` + compteurEnigme + `" tabindex="-1" role="dialog" data-backdrop="static"
@@ -284,9 +289,10 @@ $("#ajouterEnigme").click(function () {
             <div class="alert alert-danger" role="alert" id="alertQuestionEmptyError" style="display:none"> Veuillez d'abord saisir une question </div>
             <div class="row">
                 <div class="col-lg-12 form-inline">
-                    <label class="control-label" style="color:#28a745;padding-right:32px;">Question :</label>
-                    <input type="text" class="form-control input-lg" style="width:500px;" id="questQRCode` + compteurEnigme + `" cols="10"
-                        name="nomprojet" placeholder="Saisissez votre question" onkeyup="activerSave();" />&nbsp;
+                    <label class="control-label" style="color:#28a745;padding-right:32px;">Enoncé et Question :</label>
+
+                    <textarea class="form-control input-lg" id="questQRCode` + compteurEnigme + `"
+                        name="nomprojet" rows="4" cols="45" placeholder="Saisissez l'énoncé de l'énigme et la question" ></textarea>
                     <button type="button" id="addAudioQRCode` + compteurEnigme + `" class="btn btn-outline-success btn-unique-xl  "
                         name="ajouterSon" data-toggle="modal" data-target="#listeMusic" onclick="addAudioQRCode(` + compteurEnigme + `)">
                         <i class="fa fa-music"></i>&nbsp;&nbsp;Audio
@@ -353,9 +359,10 @@ $("#ajouterEnigme").click(function () {
             <div class="alert alert-danger" role="alert" id="alertQuestionEmptyError" style="display:none"> Veuillez d'abord saisir une question </div>
             <div class="form-group">
                 <div class="col-lg-12 form-inline">
-                    <label class="control-label" style="color:#28a745;padding-right:32px;">Question :</label>
-                    <input type="text" class="form-control input-lg" style="width:500px;" id="questRecVocal` + compteurEnigme + `" cols="10"
-                        name="nomprojet" placeholder="Saisissez votre question" onkeyup="activerSave();" />&nbsp;
+                    <label class="control-label" style="color:#28a745;padding-right:32px;">Enoncé et Question :</label>
+
+                        <textarea class="form-control input-lg" id="questRecVocal` + compteurEnigme + `"
+                          name="nomprojet" rows="4" cols="45" placeholder="Saisissez l'énoncé de l'énigme et la question" ></textarea>
                         <button type="button" id="addAudioReco` + compteurEnigme + `" class="btn btn-outline-success btn-unique-xl  "
                         name="ajouterSon" data-toggle="modal" data-target="#listeMusic" onclick="addAudioReco(` + compteurEnigme + `)">
                         <i class="fa fa-music"></i>&nbsp;&nbsp;Audio
@@ -445,7 +452,7 @@ function supprLigne(idLigne, element) {
         div.getElementsByTagName("input")[0].id = "enigme" + cpt;
         div.getElementsByTagName("input")[0].placeholder = "Nom de l'énigme " + cpt;
 
-        // Bouton Qr        
+        // Bouton Qr
         if ($("#divEnigme" + id + " #scanQR" + id).length > 1) {
           $("#divEnigme" + id + " #scanQR" + id)[0].id = "scanQR" + cpt;
           $("#divEnigme" + id + " #scanQR" + cpt)[0].setAttribute("data-target", "#popupQRCode" + cpt);
@@ -460,7 +467,7 @@ function supprLigne(idLigne, element) {
           $("#divEnigme" + id + " #scanQR" + cpt).attr("name", "ajouterQR" + cpt);
         }
 
-        // Bouton Reco          
+        // Bouton Reco
         if ($("#divEnigme" + id + " #recVocale" + id).length > 1) {
           $("#divEnigme" + id + " #recVocale" + id)[0].setAttribute("id", "recVocale" + cpt);
           $("#divEnigme" + id + " #recVocale" + cpt)[0].setAttribute("data-target", "#popupRecVocale" + cpt);
@@ -728,7 +735,7 @@ function chargerQuestion(idEnigme, type) {
 }
 
 
-// Supprime la question dans la liste des questions du projetSeriousGame 
+// Supprime la question dans la liste des questions du projetSeriousGame
 // Fonction qui vérifie si une énigme est valide
 function verifEnigmeValide(idEnigme) {
   for (let i = 0; i < projetSeriousGame.getQuestionsQr().length; ++i) {
@@ -783,7 +790,7 @@ $("#generateSG").on("click", function () {
 });
 
 /* On générère le QRCodeSeriousGame en récupérant les valeurs des champs la page html et des question QRCOde et Reco qui ont été stockées dans le projetSeriousGame
- * 
+ *
  */
 function genereJsonSeriousGame() {
   let tousLesChampsSontRemplies = true;
@@ -935,6 +942,33 @@ function saveQRCodeImage(div, qrcode, directoryName) {
     console.log('The file has been saved!');
   });
 }
+
+//méthode gérant la continuité sur les zones de texte 
+function activerSave(text){
+  var newText = $("#"+text).val();
+  store.set(text, newText);
+}
+
+//methode de suppression dans le store
+function deleteStore(del){
+  if(store.get(del) )
+    store.delete(del);
+}
+
+//Méthode appliqué au chargement pour récupérer les élément enregistrés
+function enregistrement(){
+
+  if(store.get(`projectId`))
+    $("#projectId").val(store.get(`projectId`));
+
+  if(store.get('textAreaIntro'))
+    $("#textAreaIntro").val(store.get('textAreaIntro'));
+
+  if(store.get('textAreaFin'))
+    $('#textAreaFin').val(store.get('textAreaFin'));
+
+}
+
 
 
 //pour ouvrir la page info.html quand on clique sur le bouton info du haut

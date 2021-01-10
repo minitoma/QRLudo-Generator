@@ -360,7 +360,7 @@ function enregistrement() {
 }
 
 
-//méthode gérant al continuité sur les eones de texte Question, Bonne Reponse, Mauvaise Reponse et nb reponse
+//méthode gérant la continuité sur les zones de texte Question, Bonne Reponse, Mauvaise Reponse et nb reponse
 function activerSave(text){
   var newText = $("#"+text).val();
   store.set(text,newText);

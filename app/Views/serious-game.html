@@ -35,7 +35,7 @@
                                 du jeu :
                             </label>
                             <input type="text" class="form-control col-sm-6" id="projectId" rows="2" name="nomprojet"
-                                placeholder="Nom du Serious Game" onkeyup="activerSave();" />
+                                placeholder="Nom du Serious Game" onkeyup="activerSave('projectId');" />
                         </div>
                     </div>
 
@@ -44,7 +44,7 @@
                             <div class="form-inline">
                                 <label class="control-label"
                                     style="color:#28a745;padding-top:10px;padding-right:27px;">Introduction : </label>
-                                <textarea id="textAreaIntro" rows="4" cols="45"></textarea>&nbsp;&nbsp;&nbsp;&nbsp;
+                                <textarea id="textAreaIntro" rows="4" cols="45" onkeyup="activerSave('textAreaIntro');"></textarea>&nbsp;&nbsp;&nbsp;&nbsp;
                                 <button type="button" id="addAudioIntro" class="btn btn-outline-success btn-unique-xl  "
                                     name="ajouterSon" data-toggle="modal" data-target="#listeMusic">
                                     <i class="fa fa-music"></i>&nbsp;&nbsp;Audio
@@ -70,7 +70,7 @@
                             <div class="form-inline">
                                 <label class="control-label"
                                     style="color:#28a745;padding-top:10px;padding-right:100px;">Fin : </label>
-                                <textarea id="textAreaFin" rows="4" cols="45"></textarea>
+                                <textarea id="textAreaFin" rows="4" cols="45" onkeyup="activerSave('textAreaFin');"></textarea>
                                 &nbsp;&nbsp;&nbsp;&nbsp;
                                 <button type="button" id="addAudioFin" class="btn btn-outline-success btn-unique-xl  "
                                     name="ajouterSon" data-toggle="modal" data-target="#listeMusic">
