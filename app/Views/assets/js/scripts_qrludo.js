@@ -2,11 +2,15 @@
  * @Author: SALIM Youssef
  * @Date:   2018-Oct
  */
-//ce fichier regroupe toutes les fonctions et scripts en commun avec les autres les pages
+//ce fichier regroupe toutes les fonctions et scripts en commun avec les autres pages
 $().ready(function() {
 
   //pour chaque item dans le menu on charge une page html
+  $("#accueil-html").click(function() {
+    $("#charger-page").load(path.join(__dirname, "Views/accueil.html"), loadDefaultColor);
+  });
   $("#unique-html").click(function() {
+    isImportationQRUnique = false;
     $("#charger-page").load(path.join(__dirname, "Views/unique.html"), loadDefaultColor);
   });
   $("#multiple-html").click(function() {
@@ -15,16 +19,20 @@ $().ready(function() {
   $("#quesRep-html").click(function() {
     $("#charger-page").load(path.join(__dirname, "Views/quesRep.html"), loadDefaultColor);
   });
-  $("#qcm-html").click(function() {
-    $("#charger-page").load(path.join(__dirname, "Views/qcm.html"), loadDefaultColor);
-  })
-  $("#info-html").click(function() {
+  $("#rec-vocale-html").click(function() {
+    isImportationExerciceRecoVocaleQCM = false;
+    $("#charger-page").load(path.join(__dirname, "Views/recVocal.html"), loadDefaultColor);
+  });
+  $("#serious-html").click(function() {
+    $("#charger-page").load(path.join(__dirname, "Views/serious-game.html"), loadDefaultColor);
+  });
+  $("#parametres").click(function(){
+    $("#charger-page").load(path.join(__dirname, "Views/parametres.html"));
+  });
+  $("#infos").click(function(){
     $("#charger-page").load(path.join(__dirname, "Views/info.html"));
   });
 
-  $("#parametres").click(function(){
-    $("#charger-page").load(path.join(__dirname, "Views/parametres.html"));
-  })
 
 
   //l'element du menu courant -> class="... active"

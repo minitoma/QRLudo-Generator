@@ -22,6 +22,10 @@ require('electron-debug')({
 let mainWindow;
 let infoWindow = null;
 
+global.sharedObject = {
+  someProperty: 'default value'
+}
+
 
 function createWindow() {
   let display = electron.screen.getPrimaryDisplay();
@@ -40,7 +44,6 @@ function createWindow() {
   mainWindow.setResizable(true); // autoriser le redimensionnement
 
   mainWindow.loadURL(`file://${__dirname}/index.html`); // on doit charger un chemin absolu
-  //  mainWindow.openDevTools();
 
   mainWindow.on('closed', () => {
     mainWindow = null;
@@ -137,7 +140,6 @@ app.on('activate', () => {
 });
 
 ipcMain.on('showInfoWindow', (e, arg) => {
-
 
     if (infoWindow == null) {
     createInfoWindow();

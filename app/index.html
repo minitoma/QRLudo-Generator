@@ -14,12 +14,12 @@
   <!-- Our Custom CSS -->
   <link rel="stylesheet" href="Views/assets/css/qrludo.css">
 
-  <!-- <script src="./Views/assets/js/jquery.min.js"></script> -->
-
   <!-- include script from Controller and Model-->
   <script src="./js/script_loader.js"></script>
   <script src="./js/chargerqrcode.js"></script>
 
+  <!-- script to include html file in another-->
+  <script src="https://www.w3schools.com/lib/w3.js"></script>
 
   <!-- Gestion -> Menu | Gestion -> Messages Infos | Fonctions -->
   <script src="./Views/assets/js/scripts_qrludo.js"></script>
@@ -33,7 +33,9 @@
     <!-- Sidebar  -->
     <nav id="sidebar" class="active">
       <div class="sidebar-header">
-        <span class="navbar-left"><img src="Views/assets/images/logo-qrludo.png"></span>
+        <a href="#" id="accueil-html" >
+          <span class="navbar-left"><img src="Views/assets/images/logo-qrludo.png" ></span>
+        </a>
       </div>
 
       <ul class="list-unstyled components" id="menu">
@@ -55,44 +57,47 @@
           <a href="#" id="quesRep-html">
             <i class="fa fa-list"></i>
             <br>
-            QR<br>Exercice
+            Exercice
+            <i style="font-size:11px;">QR Code</i>
           </a>
         </li>
-        <li id="QCM">
-          <a href="#" id="qcm-html">
-            <i class="fas fa-th-large"></i>
+        <li id="recVocale">
+          <a href="#" id="rec-vocale-html">
+            <i class="fas fa-microphone"></i>
             <br>
-            QCM
+            Exercice
+            <br>
+            <i style="font-size:11px;">Reco Vocale</i>
+          </a>
+        </li>
+        <li id="seriousGame">
+          <a href="#" id="serious-html">
+            <i class="fa fa-gamepad"></i>
+            <br>
+            Serious Game
           </a>
         </li>
         <li data-toggle="modal" data-target="#modalImport" id="import">
           <a href="" id="charger-html">
             <i class="fa fa-plus-square"></i>
             <br>
-            Charger
+            Importer
           </a>
         </li>
-        <li id="info">
-          <a href="#" id="info-html">
-            <i class="fa fa-info-circle"></i>
-            <br>
-            Info
-          </a>
-        </li>
+        <div class="btn-bottom">
+          <div>
+            <button class="btn btn-outline-success" id="infos"><i class="fa fa-info-circle"></i></button>
+          </div>
+          <div>
+            <button class="btn btn-outline-success" id="parametres"><i class="fa fa-cog"></i></button>
+          </div>
+        </div>
       </ul>
-
-      <button class="btn fixed-bottom btn-outline-success" id="parametres"><i class="fa fa-cog"></i></button>
-
-
     </nav>
-
-
 
     <!-- Page Content  -->
 
     <div id="content">
-
-
 
       <nav class="navbar navbar-light">
 
@@ -108,7 +113,8 @@
 
           </div>
 
-          <span class="navbar-brand pull-right navbar-right"><img src="Views/assets/images/univers-angers.png" class="logo-qrludo img-circle"></span>
+          <span class="navbar-brand pull-right navbar-right"><img src="Views/assets/images/univers-angers.png"
+              class="logo-qrludo img-circle"></span>
 
 
 
@@ -120,14 +126,12 @@
 
       <!--Pour afficher le titre de chaque page <h4 style="color:#1f7934;">QR-Codes Unique</h4>-->
 
-      <!--<div class="line"></div>-->
-
-
 
       <!-- contenu du Page a afficher depuis le menu gauche -->
 
       <div class="card-deck" id="charger-page">
-
+          <div w3-include-html="Views/accueil.html"></div>
+          <script>w3.includeHTML();</script>
       </div>
 
       <!-- end contenu -->
@@ -135,7 +139,8 @@
     </div>
 
     <!-- Popup pour charger un qrcode -->
-    <div class="modal fade" id="modalImport" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+    <div class="modal fade" id="modalImport" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle"
+      aria-hidden="true">
       <div class="modal-dialog modal-dialog-centered" role="document">
         <div class="modal-content">
           <div class="modal-header">
@@ -149,8 +154,10 @@
             <input id="prodId" name="prodId" type="hidden" value="xm234jq">
           </div>
           <div class="modal-footer">
-            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal" id="closeModalImport">Annuler</button>
-            <button type="button" class="btn btn-outline-success" data-dismiss="modal" id="setImportedFile">Valider</button>
+            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal"
+              id="closeModalImport">Annuler</button>
+            <button type="button" class="btn btn-outline-success" data-dismiss="modal"
+              id="setImportedFile">Valider</button>
           </div>
         </div>
       </div>

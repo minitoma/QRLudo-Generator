@@ -1,8 +1,9 @@
 /**
  * @Date:   2018-12-04T08:24:59+01:00
- * @Last modified by:   alassane
- * @Last modified time: 2019-02-04T21:10:01+01:00
+ * @Last modified by:   louis cuegniet
+ * @Last modified time: 25/11/2020
  */
+
 
 $().ready(function() {
   //require("./js/script_unique.js");
@@ -33,7 +34,8 @@ function drawQRCodeImport(qrcode) {
     $("#charger-page").load(path.join(__dirname, "Views/unique.html"), function() {
       $('input#qrColor').val(qrcode.getColor()); // restaurer la couleur du qrcode
       $('input#qrName').val(qrcode.getName()); //restaurer le nom du qrcode
-
+      store.set(`titreUnique`, qrcode.getName());
+      isImportationQRUnique = true;
       $('#preview, #empty').attr('disabled', false);
       drawQRCodeData(qrcode);
     });
@@ -48,14 +50,55 @@ function drawQRCodeImport(qrcode) {
       $('#txtDragAndDrop').remove();
 
     });
-  } else if (qrcode.getType() == 'quesRep') {
-    $("#charger-page").load(path.join(__dirname, "Views/quesRep.html"), function() {});
-  }
+  } else if (qrcode.getType() == 'question') {
+    $("#charger-page").load(path.join(__dirname, "Views/quesRep.html"), function() {
+      $("#newQuestionText").val(qrcode.getName());
+      $("#newBonneReponseText").val(qrcode.getGoodAnswer());
+      $("#newMauvaiseReponseText").val(qrcode.getBadAnswer());
+      $("#newNbMinimalBonneReponse").val(qrcode.getMinAnswer());
+    });
+  } else if (qrcode.getType() == 'ExerciceReconnaissanceVocaleQCM') {
+    $("#charger-page").load(path.join(__dirname, "Views/recVocal.html"), function() {
+      $("#questionOuverteOnglet").removeClass("active");
+      $("#onglet-QuesOuverte").removeClass("active");
+      $("#questionQCMOnglet").addClass("active");
+      $("#onglet-QCM").addClass("active");
+      $("#QuestionQCM").val(qrcode.getName());
+      if(qrcode.getLettreReponseVocale()){
+        $("#reponseParIdentifiant").prop( "checked", true );;
+      }
+      $("#MessageBonnereponseQCM").val(qrcode.getGoodAnswer());
+      $("#MessageMauvaisereponseQCM").val(qrcode.getBadAnswer());
+      isImportationExerciceRecoVocaleQCM = true;
+      drawQRCodeDataRecVocale(qrcode);
+      store.set("sousOnglet", "qcm");
+    });
+}else if (qrcode.getType() == 'ExerciceReconnaissanceVocaleQuestionOuverte') {
+  $("#charger-page").load(path.join(__dirname, "Views/recVocal.html"), function() {
+    $("#Question").val(qrcode.getName());
+    $("#Bonnereponse").val(qrcode.getReponse());
+    $("#MessageBonnereponse").val(qrcode.getGoodAnswer());
+    $("#MessageMauvaisereponse").val(qrcode.getBadAnswer());
+    store.set("sousOnglet", "question_ouverte");
+  });
+}else if (qrcode.getType() == 'SeriousGameScenario') {
+  $("#charger-page").load(path.join(__dirname, "Views/serious-game.html"), function() {
+    $("#projectId").val(qrcode.getName());
+    $("#textAreaIntro").val(qrcode.getIntro());
+    $("#textAreaFin").val(qrcode.getEnd());
+    var projet = new ProjetSeriousGame(qrcode.getName(), qrcode.getQuestionQRCode(), qrcode.getQuestionRecoVocale());
+    drawQRCodeSeriousGameEnigma(qrcode);
+  });
+}
 }
 
 // recréer les input d'un qrcode unique
 function drawQRCodeData(qrcode) {
   let data = qrcode.getData();
+  
+  for (var i = 1; i <= store.get(`numZoneCourante`); i++) {
+    store.delete(`zone${i}`);
+  }
 
   for (var i = 0; i < data.length; i++) {
     if (typeof data[i] === "string") {
@@ -77,18 +120,60 @@ function drawQRCodeMultipleUnique(qrcode) {
     let qrJson = qrcode.getData()[i].qrcode;
     let qr = null;
 
-    if (qrJson.type == "unique")
+    if (qrJson.type == "unique"){
       qr = new QRCodeUnique(qrJson.name, qrJson.data, qrJson.color);
-    else if (qrJson.type == "xl")
+    }
+    else if (qrJson.type == "xl"){
       qr = new QRCodeXL(qrJson.name, qrJson.data, qrJson.color);
-    else if (qrJson.type == "ensemble")
-      qr = new QRCodemultipleJson(qrJson.name, qrJson.data, qrJson.color);
+    }
+    else if (qrJson.type == "ensemble"){
+      qr = new QRCodeMultipleJson(qrJson.name, qrJson.data, qrJson.color);
+    }
+    else if (qrJson.type == "question"){
+      qr = new QRCodeQuestionReponse(qrJson.name, qrJson.data, qrJson.color);
+    }
+
 
     genererLigne(qr.getName());
     controllerMultiple.setQRCodeAtomiqueInArray(qr);
   }
   // recuperationQrCodeUnique(qrcode);
 }
+
+// recréer les inputs d'un qrcode RecVocal
+function drawQRCodeDataRecVocale(qrcode) {
+  let data = qrcode.getData();
+  console.log(data);
+  for (var i = 0; i < data.length; i++) {
+    console.log(i);
+    var reponse = new ReponseVocale(data[i][0], data[i][1], data[i][2])
+    if(i==0) {
+      $("#reponseinitiale").val(reponse.getTextQuestion());
+      if(reponse.getEstBonneReponse()){
+        $("#gridCheck1").prop("checked", true);
+      }
+    }
+    else {
+      ajouterNouvelleReponse(reponse.getTextQuestion(), reponse.getEstBonneReponse())
+    }
+  }
+}
+
+// recréer les inputs d'un qrcode Scenario Serious Game
+function drawQRCodeSeriousGameEnigma(qrcode) {
+  let enigmes = qrcode.getEnigmes();
+  console.log(qrcode);
+  for (var i = 0; i < enigmes.length; i++) {
+    if(i==0){
+      $("#enigme1").val(enigmes[i][1]);
+      
+    }else{
+      $("#ajouterEnigme").trigger("click");
+      $("input#enigme"+(i+1)).val(enigmes[i][1]);
+    }
+  }
+}
+
 
 // télécharger la musique correspondante et l'enregistrer
 function restoreSavedMusic(data) {
