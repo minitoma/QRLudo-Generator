@@ -70,7 +70,7 @@ yarn dist-win64
 
 # Licence
 
-Copyright (C) 2020  MOHR Anaïs, PIGACHE Bastien, DESNOES Mathis, RANDRIAMAMONJISOA Andry, CHOVEAU Etienne, BALAVOINE Kevin, BAH Marouwane
+Copyright (C) 2020 2021 ATTAOUI Zakaria, BENDAOUD Youness, CUEGNIET Louis, DELÉPINE Pierre-Yves, MITATY Simon, MOHR Anaïs, PIGACHE Bastien, DESNOES Mathis, RANDRIAMAMONJISOA Andry, CHOVEAU Etienne, BALAVOINE Kevin, BAH Marouwane
 Copyright (C) 2019 Thibault Condemine, Alassane Diop, Hanane Hadji, Abdessabour Harboul, Florian Lherbeil, Jérôme Martins Mosca, Valentine Rahier, Salim Youssef
 
 This program is free software: you can redistribute it and/or modify
