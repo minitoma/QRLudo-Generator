@@ -44,19 +44,19 @@ npm start
 ### Linux
 Dans le dossier du projet, lancer un un terminal et lancer la commande:
 ```bash
-yarn pack-linux
+npm run pack-linux
 ```
 ### Windows
 
 #### Architecture x86
 Dans le dossier du projet, lancer un un terminal et lancer la commande:
 ```bash
-yarn dist-win32
+npm run dist-win32
 ```
 #### Architecture x64
 Dans le dossier du projet, lancer un un terminal et lancer la commande:
 ```bash
-yarn dist-win64
+npm run dist-win64
 ```
 > NOTE: Au premier déploiement, Wine demandera d'installer des éléments supplémentaires. Après installation de ces éléments, le déploiement peut crash. Relancer le déploiement corrige le problème.
 
