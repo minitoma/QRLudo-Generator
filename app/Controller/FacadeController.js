@@ -42,34 +42,38 @@ class FacadeController {
       while (divImg.hasChildNodes()) {
         divImg.removeChild(divImg.firstChild);
       }
+      
+      switch (qrcode.qrcode.type) {
+        case "unique":
+          qrcode.qrcode.version = '3';
+          break;
+        case "xl":
+          qrcode.qrcode.version = '3';
+          break;
+        case "ensemble":
+          qrcode.qrcode.version = '3';
+          break;
+        case "question":
+          qrcode.qrcode.version = '3';
+          break;
+        case "reponse":
+          qrcode.qrcode.version = '3';
+          break;
+        case "ExerciceReconnaissanceVocaleQCM":
+          qrcode.qrcode.version = '4';
+         break;
+        case "ExerciceReconnaissanceVocaleQuestionOuverte":
+          qrcode.qrcode.version = '4';
+        break;
+        case "SeriousGameScenario" :
+          qrcode.qrcode.version = '4';
+          break;
+      }
 
-      var rawconstants = fs.readFileSync(`${root}/constants.json`);
-
-      var constants = JSON.parse(rawconstants);
-      qrcode.qrcode.version = constants.version;
+      console.log(qrcode.qrcode.type);
 
       let args = [qrcode, divImg];
 
-      // enable the commented if else block for activate qrcode xl control
-      // //si la taille depasse 500 -> generer un fichier json et le sauvegarder via un click sur le button sauvegarder
-      // if(qrcode.getDataString().length > 500){
-      //   // $('#errorTaille').append("La taille '"+qrcode.getDataString().length+"' de ce QR-Code dépasse le maximum autorisé '500'.&nbsp;&nbsp;&nbsp;<button type='button' class='btn btn-outline-success' id='sauvegarderQRcode' onclick='sauvegarderFichierJsonUnique();'>Sauvegarder</button>");
-      //
-      //   //sauvegarder le fichier json
-      //   //definir le nom du fichier + path
-      //   let now = new Date();
-      //   let nomFichier = now.getDay()+"-"+now.getMonth()+"-"+now.getFullYear()+"-"+now.getHours()+":"+now.getMinutes()+":"+now.getSeconds();
-      //   let path = "./QR-Unique/json/";
-      //   let msg = "La taille '"+qrcode.getDataString().length+"' de ce QR-Code dépasse le maximum autorisé '500'.&nbsp;&nbsp;&nbsp;<button type='button' class='btn btn-outline-success' id='sauvegarderQRcode' onclick='sauvegarderFichierJsonUnique(\""+nomFichier+"\",\""+path+"\");'>Sauvegarder</button>";
-      //
-      //   //message a afficher apres le sauvegarde du fichier json
-      //   messageInfos(msg,"warning");
-      //
-      //   $('#saveQRCode, #listenField, #stop').attr('disabled', true);
-      // }
-      // else{
-      // compress qrcode when length reaches more than 117
-      // compression is interesting only when qrcode reaches more than 117 car
       if (qrcode.getDataString().length > 117) {
         JsonCompressor.compress(qrcode.getDataString(), ImageGeneratorJson.genererQRCode, args);
       } else {
