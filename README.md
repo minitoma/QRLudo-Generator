@@ -41,23 +41,17 @@ npm start
 
 ## Déploiement
 
-### Linux
-Dans le dossier du projet, lancer un un terminal et lancer la commande:
+### Executable et installeur Linux
+Depuis un ordinateur sous linux. Dans le dossier du projet, lancé un terminal et executé la commande:
 ```bash
-npm run pack-linux
+npm run build-installer
 ```
-### Windows
+###  Executable et installeur Windows
+Depuis un ordinateur sous windows. Dans le dossier du projet, lancé un terminal et executé la commande:
+```bash
+npm run build-installer
+```
 
-#### Architecture x86
-Dans le dossier du projet, lancer un un terminal et lancer la commande:
-```bash
-npm run dist-win32
-```
-#### Architecture x64
-Dans le dossier du projet, lancer un un terminal et lancer la commande:
-```bash
-npm run dist-win64
-```
 > NOTE: Au premier déploiement, Wine demandera d'installer des éléments supplémentaires. Après installation de ces éléments, le déploiement peut crash. Relancer le déploiement corrige le problème.
 
 ## Information et liens utiles
