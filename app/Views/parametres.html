@@ -37,22 +37,22 @@
 <script>
 
   $().ready(function(){
-    var settings = require("electron-settings");
+    var settings = require('@electron/remote').require("electron-settings");
 
-    if(settings.has('defaultColor')){
-      $("#defaultColor").val(settings.get("defaultColor"));
+    if(settings.hasSync('defaultColor')){
+      $("#defaultColor").val(settings.getSync("defaultColor"));
     }
 /*
     if(!settings.has('defaultBonneReponse')){
       settings.set("defaultBonneReponse", "Bravo, vous avez trouvé la bonne réponse");
     }
 */
-    $("#defaultBonneReponse").val(settings.get("defaultBonneReponse"));
+    $("#defaultBonneReponse").val(settings.getSync("defaultBonneReponse"));
 
     $("#save").on("click", function(){
-      settings.set("defaultColor", $("#defaultColor").val());
+      settings.setSync("defaultColor", $("#defaultColor").val());
 
-      settings.set("defaultBonneReponse", $("#defaultBonneReponse").val());
+      settings.setSync("defaultBonneReponse", $("#defaultBonneReponse").val());
       $("#alertSauvegardeOk").show();
     });
   });

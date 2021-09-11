@@ -46,10 +46,10 @@ Champ vide.
     <input type="color" id="qrColor" value="#000000">
     <script type="">
       $().ready(function(){
-    var settings = require("electron-settings");
+    var settings = require('@electron/remote').require("electron-settings");
 
-    if(settings.has('defaultColor')){
-      $("#qrColor").val(settings.get("defaultColor"));
+    if(settings.hasSync('defaultColor')){
+      $("#qrColor").val(settings.getSync("defaultColor"));
     }
     
     });
