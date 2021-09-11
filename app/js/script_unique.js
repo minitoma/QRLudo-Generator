@@ -10,13 +10,10 @@ var qrcode;
 var qrType;
 
 var {
-  remote,
   ipcRenderer
 } = require('electron');
-var {
-  Menu,
-  MenuItem
-} = remote;
+const remote = require('@electron/remote');
+var { Menu, MenuItem } = require('@electron/remote');
 
 var menu = new Menu();
 
@@ -36,11 +33,11 @@ $(document).ready(function () {
     $('#preview').attr('disabled', true);
   }
 
-  $("#saveQRCode").click(e => {
+  $("#saveQRCode").on('click',e => {
     saveQRCodeImage();
   });
 
-  $('#closeModalListeMusic').click(e => {
+  $('#closeModalListeMusic').on('click',e => {
     $('#musicUrl').val('');
     $('#listeMusic').find('.errorLoader').remove();
   }); // close modal add music
@@ -66,7 +63,7 @@ $(document).ready(function () {
     }
   });
   //Show the information about the audio file import (help)
-  $('button#showInfo').click(e => {
+  $('button#showInfo').on('click',e => {
     e.preventDefault();
     if (info_activ == false) {
       info.innerHTML = ``;
@@ -88,7 +85,7 @@ $(document).ready(function () {
     }
   });
 
-  $('button#emptyFields').click(function() {
+  $('button#emptyFields').on('click',function() {
 
     //mise ajour des données sur le progress bar
     $("#progressbarId").attr('aria-valuenow', 0);
@@ -133,9 +130,9 @@ $(document).ready(function () {
     $('#saveQRCode').attr('disabled', true);
     $('#preview').attr('disabled', true);
 
-    var settings = require("electron-settings");
-    if (settings.has("defaultColor")) {
-      $("#qrColor").val(settings.get("defaultColor"));
+    var settings = require('@electron/remote').require("electron-settings");
+    if (settings.hasSync("defaultColor")) {
+      $("#qrColor").val(settings.getSync("defaultColor"));
     }
 
     $("#ajouterTexte").attr('disabled', false);
@@ -143,7 +140,7 @@ $(document).ready(function () {
 });
 
 // trigger preview qrcode action
-$('#preview').click(e => {
+$('#preview').on('click',e => {
 
   //re-afficher le qr generer si le bouton est reinitialiser a deja été utilisé
   $("#qrView").show();
@@ -347,7 +344,7 @@ function getMusicFromUrl() {
             fs.writeFileSync(`${temp}/Download/${filename}`, Buffer(new Uint8Array(this.result)));
 
             $(loader, errorMsg).remove();
-            $('#closeModalListeMusic').click(); // close modal add music
+            $('#closeModalListeMusic').on('click',); // close modal add music
           };
           fileReader.readAsArrayBuffer(blob);
 
@@ -517,7 +514,7 @@ function ajouterChampSon(nom, url) {
   inputSon.setAttribute("id", `legendeTextarea${numZoneCourante}`);
   document.getElementById('cible').appendChild(inputSon);
 
-  $('#listeMusic .close').click();
+  $('#listeMusic .close').on('click',);
 
   store.set(`zone${numZoneCourante}`, inputSon.innerHTML);
 
@@ -605,7 +602,7 @@ function disableButtonAddNewData() {
 }
 
 //pour ouvrir la page info.html quand on clique sur le bouton info du haut
-$("#infos-unique").click(function () {
-  require('electron').remote.getGlobal('sharedObject').someProperty = 'unique'
+$("#infos-unique").on('click',function () {
+  require('@electron/remote').getGlobal('sharedObject').someProperty = 'unique'
   $("#charger-page").load(path.join(__dirname, "Views/info.html"));
 });

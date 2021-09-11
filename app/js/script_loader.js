@@ -29,7 +29,7 @@ numReponse = 0;
 
 
 const path = require('path');
-const root = path.dirname(require.main.filename);
+const root = `${process.cwd()}/app`;
 const piexif = require('piexifjs');
 const fs = require('fs');
 window.$ = window.jQuery = require(__dirname + "/Views/assets/js/jquery.min.js");
@@ -111,12 +111,10 @@ if (!navigator.onLine) {
 }
 
 var {
-  remote,
+  dialog,
   ipcRenderer
 } = require('electron');
-const {
-  dialog
-} = remote;
+// Avant : dialog from remote
 
 const {
   CompresseurTexte

@@ -8,7 +8,7 @@
 $().ready(function() {
   //require("./js/script_unique.js");
 
-  $('#setImportedFile').click(function() {
+  $('#setImportedFile').on('click',function() {
     var nomfichier = document.getElementById("importedFile").files[0].path;
     importQRCodeImport(nomfichier);
   });

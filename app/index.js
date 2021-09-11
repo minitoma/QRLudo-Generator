@@ -9,11 +9,11 @@
 
 const electron = require('electron');
 const app = electron.app;
-const {
-  ipcMain
-} = require('electron');
+const { ipcMain } = require('electron');
 const BrowserWindow = electron.BrowserWindow;
 var path = require('path');
+
+require('@electron/remote/main').initialize()
 
 require('electron-debug')({
   showDevTools: true
@@ -38,7 +38,12 @@ function createWindow() {
     maximized: true,
     center: true,
     frame: true, // en faire une fenetre
-    icon: path.join(__dirname, 'Views/assets/images/qrludo-icon.png')
+    icon: path.join(__dirname, 'Views/assets/images/qrludo-icon.png'),
+    webPreferences: {
+      nodeIntegration: true,
+      contextIsolation: false,
+      enableRemoteModule: true,
+    }
   });
 
   mainWindow.setResizable(true); // autoriser le redimensionnement
@@ -141,7 +146,7 @@ app.on('activate', () => {
 
 ipcMain.on('showInfoWindow', (e, arg) => {
 
-    if (infoWindow == null) {
+  if (infoWindow == null) {
     createInfoWindow();
     let display = electron.screen.getPrimaryDisplay();
     let width = display.bounds.width;
@@ -159,7 +164,7 @@ ipcMain.on('exitApp', (e, arg) => {
 function deleteFolderRecursive(path) {
   const fs = require('fs');
   if (fs.existsSync(path)) {
-    fs.readdirSync(path).forEach(function(file, index) {
+    fs.readdirSync(path).forEach(function (file, index) {
       let curPath = path + "/" + file;
       if (fs.lstatSync(curPath).isDirectory()) { // recurse
         deleteFolderRecursive(curPath);

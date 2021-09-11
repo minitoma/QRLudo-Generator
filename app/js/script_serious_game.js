@@ -2,10 +2,10 @@ var projetSeriousGame = new ProjetSeriousGame();
 
 var audioSource = "";
 
-$("#addAudioIntro").click(function () {
+$("#addAudioIntro").on('click',function () {
   audioSource = "intro";
 });
-$("#addAudioFin").click(function () {
+$("#addAudioFin").on('click',function () {
   audioSource = "fin";
 });
 function addAudioQRCode(idEnigme) {
@@ -63,7 +63,7 @@ function getMusicFromUrl() {
             fs.writeFileSync(`${temp}/Download/${filename}`, Buffer(new Uint8Array(this.result)));
 
             $(loader, errorMsg).remove();
-            $('#closeModalListeMusic').click(); // close modal add music
+            $('#closeModalListeMusic').on('click',); // close modal add music
           };
           fileReader.readAsArrayBuffer(blob);
 
@@ -138,7 +138,7 @@ $(document).ready(function () {
   enregistrement();
 
   //Show the information about the audio file import (help)
-  $('button#showInfo').click(e => {
+  $('button#showInfo').on('click',e => {
     e.preventDefault();
     if (info_activ == false) {
       info.innerHTML = ``;
@@ -161,7 +161,7 @@ $(document).ready(function () {
     //ipcRenderer.send('showInfoWindow', null);
   });
 
-  $('#closeModalListeMusic').click(e => {
+  $('#closeModalListeMusic').on('click',e => {
     $('#musicUrl').val('');
     $('#listeMusic').find('.errorLoader').remove();
   });
@@ -191,7 +191,7 @@ function deleteGame() {
 }
 
 //Import d'un projet existant à partir d'un répertoire
-$('#importProjectBtnId').click(function () {
+$('#importProjectBtnId').on('click',function () {
   //Permet de sélectionner le répertoire du projet
   var dir_path = dialog.showOpenDialog({ title: 'Sélectionnez le projet', properties: ['openDirectory'] })[0];
   projet = new ProjetQCM();
@@ -238,7 +238,7 @@ $('#importProjectBtnId').click(function () {
 var type = "";
 var compteurEnigme = 0;
 var currentEnigme = 1;
-$("#ajouterEnigme").click(function () {
+$("#ajouterEnigme").on('click',function () {
   compteurEnigme++;
   if (compteurEnigme < 30) {
     type = "enigme";
@@ -752,12 +752,12 @@ function verifEnigmeValide(idEnigme) {
   }
 }
 
-$("#deleteAudioIntro").click(function () {
+$("#deleteAudioIntro").on('click',function () {
   document.getElementById('textAreaIntro').value = "";
   $("#textAreaIntro").prop('disabled', false);
 });
 
-$("#deleteAudioFin").click(function () {
+$("#deleteAudioFin").on('click',function () {
   document.getElementById('textAreaFin').value = "";
   $("#textAreaFin").prop('disabled', false);
 });
@@ -873,7 +873,7 @@ function previewQRCode(qrcode, div) {
 /*Permet d'exporter un Projet
  On enregistre la questions et les réponses du projet dans le répertoire sélectionné
  par l'utilisateur*/
-$("#saveQRCode").click(function () {
+$("#saveQRCode").on('click',function () {
   //Permet de sélectinner le répertoire où le projet va être enregistré
   var dir_path = dialog.showOpenDialog({ title: 'Sélectionnez un dossier', properties: ['openDirectory'] })[0];
   if (dir_path !== undefined) {
@@ -972,7 +972,7 @@ function enregistrement(){
 
 
 //pour ouvrir la page info.html quand on clique sur le bouton info du haut
-$("#infos-serious-game").click(function () {
-  require('electron').remote.getGlobal('sharedObject').someProperty = 'seriousGame'
+$("#infos-serious-game").on('click',function () {
+  require('@electron/remote').getGlobal('sharedObject').someProperty = 'seriousGame'
   $("#charger-page").load(path.join(__dirname, "Views/info.html"));
 });

@@ -8,7 +8,7 @@
 $(document).ready(function () {
   $('div.info-content').css('display', 'none');
 
-  $("a.nav-link").click(e => {
+  $("a.nav-link").on('click',e => {
     e.preventDefault();
     let element = e.target;
     let tab = $(element).attr('href');
@@ -20,7 +20,7 @@ $(document).ready(function () {
     $(tab).addClass('active');
   });
   
-  $('.tab-content').find('a').click(e => {
+  $('.tab-content').find('a').on('click',e => {
     let href = $(e.target).attr('href');
     let display = $(href).css('display');
 
@@ -31,7 +31,7 @@ $(document).ready(function () {
   });
 });
 
-$("#unique-info").click(function(){
+$("#unique-info").on('click',function(){
   $("#info-unique").css("display","block");
   $("#info-multiple").css("display","none");
   $("#info-exercice-qrcode").css("display","none");
@@ -41,7 +41,7 @@ $("#unique-info").click(function(){
   $("#info-Import").css("display","none");
 });
 
-$("#multiple-info").click(function(){
+$("#multiple-info").on('click',function(){
   $("#info-unique").css("display","none");
   $("#info-multiple").css("display","block");
   $("#info-exercice-qrcode").css("display","none");
@@ -51,7 +51,7 @@ $("#multiple-info").click(function(){
   $("#info-Import").css("display","none");
 });
 
-$("#exo-qrcode-info").click(function(){
+$("#exo-qrcode-info").on('click',function(){
   $("#info-unique").css("display","none");
   $("#info-multiple").css("display","none");
   $("#info-exercice-qrcode").css("display","block");
@@ -61,7 +61,7 @@ $("#exo-qrcode-info").click(function(){
   $("#info-Import").css("display","none");
 });
 
-$("#exo-reco-vocale-info").click(function(){
+$("#exo-reco-vocale-info").on('click',function(){
   $("#info-unique").css("display","none");
   $("#info-multiple").css("display","none");
   $("#info-exercice-qrcode").css("display","none");
@@ -71,7 +71,7 @@ $("#exo-reco-vocale-info").click(function(){
   $("#info-Import").css("display","none");
 });
 
-$("#serious-game-info").click(function(){
+$("#serious-game-info").on('click',function(){
   $("#info-unique").css("display","none");
   $("#info-multiple").css("display","none");
   $("#info-exercice-qrcode").css("display","none");
@@ -81,7 +81,7 @@ $("#serious-game-info").click(function(){
   $("#info-Import").css("display","none");
 });
 
-$("#music-info").click(function(){
+$("#music-info").on('click',function(){
   $("#info-unique").css("display","none");
   $("#info-multiple").css("display","none");
   $("#info-exercice-qrcode").css("display","none");
@@ -91,7 +91,7 @@ $("#music-info").click(function(){
   $("#info-Import").css("display","none");
 });
 
-$("#import-info").click(function(){
+$("#import-info").on('click',function(){
   $("#info-unique").css("display","none");
   $("#info-multiple").css("display","none");
   $("#info-exercice-qrcode").css("display","none");

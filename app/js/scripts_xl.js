@@ -12,7 +12,7 @@
 
      //debut Preview
          // trigger preview qrcode action
-         $('#preview').click(e => {
+         $('#preview').on('click',e => {
 
            //enlever les messages en haut de page
            initMessages();
@@ -65,7 +65,7 @@
 
      //debut reinitialiser
        //btn reinitialiser l'affichage
-       $('#annuler').click(function(){
+       $('#annuler').on('click',function(){
 
          document.getElementById('myFormActive').reset();
 
@@ -130,7 +130,7 @@
        inputSon.setAttribute("id", "inputAudio");
        document.getElementById('cible').appendChild(inputSon);
 
-       $('#listeMusic .close').click();
+       $('#listeMusic .close').on('click',);
 
      }
 
@@ -152,7 +152,7 @@
          inputJson.setAttribute("id", "inputJson");
          document.getElementById('cible').appendChild(inputJson);
 
-         $('#listeJson .close').click();
+         $('#listeJson .close').on('click',);
 
        }
 

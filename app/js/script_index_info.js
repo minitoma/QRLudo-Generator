@@ -13,7 +13,7 @@ $(document).ready(function() {
   $("#charger-page").load(path.join(__dirname, "Views/info.html"));
   $('div.info-content').css('display', 'none');
 
-  $("a.nav-link").click(e => {
+  $("a.nav-link").on('click',e => {
     e.preventDefault();
     let element = e.target;
     let tab = $(element).attr('href');
@@ -25,7 +25,7 @@ $(document).ready(function() {
     $(tab).addClass('active');
   });
 
-  $('.tab-content').find('a').click(e => {
+  $('.tab-content').find('a').on('click',e => {
     let href = $(e.target).attr('href');
     let display = $(href).css('display');
 

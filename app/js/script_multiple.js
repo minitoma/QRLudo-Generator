@@ -14,7 +14,7 @@ $().ready(function() {
 
 
   // Genere le qrCode multiple
-  $("#preview").click(function() {
+  $("#preview").on('click',function() {
 
     affichageLigneParDefault();
 
@@ -39,12 +39,12 @@ $().ready(function() {
     $('#saveQRCode').attr('disabled', false);
   });
 
-  //$("#empty").click(viderZone);
-  $("#emptyFields").click(function(){
+  //$("#empty").on('click',viderZone);
+  $("#emptyFields").on('click',function(){
     viderZone();
   })
 
-  $("#saveQRCode").click(e => {
+  $("#saveQRCode").on('click',e => {
     saveQRCodeImage();
   });
 
@@ -431,7 +431,7 @@ function downItem(e){
 }
 
 //pour ouvrir la page info.html quand on clique sur le bouton info du haut
-$("#infos-multiple").click(function () {
-  require('electron').remote.getGlobal('sharedObject').someProperty = 'multiple'
+$("#infos-multiple").on('click',function () {
+  require('@electron/remote').getGlobal('sharedObject').someProperty = 'multiple'
   $("#charger-page").load(path.join(__dirname, "Views/info.html"));
 });

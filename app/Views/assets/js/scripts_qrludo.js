@@ -3,40 +3,40 @@
  * @Date:   2018-Oct
  */
 //ce fichier regroupe toutes les fonctions et scripts en commun avec les autres pages
-$().ready(function() {
+$(function() {
 
   //pour chaque item dans le menu on charge une page html
-  $("#accueil-html").click(function() {
+  $("#accueil-html").on('click',function() {
     $("#charger-page").load(path.join(__dirname, "Views/accueil.html"), loadDefaultColor);
   });
-  $("#unique-html").click(function() {
+  $("#unique-html").on('click',function() {
     isImportationQRUnique = false;
     $("#charger-page").load(path.join(__dirname, "Views/unique.html"), loadDefaultColor);
   });
-  $("#multiple-html").click(function() {
+  $("#multiple-html").on('click',function() {
     $("#charger-page").load(path.join(__dirname, "Views/multiple.html"), loadDefaultColor);
   });
-  $("#quesRep-html").click(function() {
+  $("#quesRep-html").on('click',function() {
     $("#charger-page").load(path.join(__dirname, "Views/quesRep.html"), loadDefaultColor);
   });
-  $("#rec-vocale-html").click(function() {
+  $("#rec-vocale-html").on('click',function() {
     isImportationExerciceRecoVocaleQCM = false;
     $("#charger-page").load(path.join(__dirname, "Views/recVocal.html"), loadDefaultColor);
   });
-  $("#serious-html").click(function() {
+  $("#serious-html").on('click',function() {
     $("#charger-page").load(path.join(__dirname, "Views/serious-game.html"), loadDefaultColor);
   });
-  $("#parametres").click(function(){
+  $("#parametres").on('click',function(){
     $("#charger-page").load(path.join(__dirname, "Views/parametres.html"));
   });
-  $("#infos").click(function(){
+  $("#infos").on('click',function(){
     $("#charger-page").load(path.join(__dirname, "Views/info.html"));
   });
 
 
 
   //l'element du menu courant -> class="... active"
-  $('#menu li').click(function(e) {
+  $('#menu li').on('click',function(e) {
     e.preventDefault();
     $('li').removeClass('active');
     $(this).addClass('active');
@@ -50,10 +50,10 @@ $().ready(function() {
 });
 
 function loadDefaultColor(){
-  var settings = require("electron-settings");
+  var settings = require('@electron/remote').require("electron-settings");
 
-  if (settings.has("defaultColor")) {
-    $("#qrColor").val(settings.get("defaultColor"));
+  if (settings.hasSync("defaultColor")) {
+    $("#qrColor").val(settings.getSync("defaultColor"));
   }
 }
 

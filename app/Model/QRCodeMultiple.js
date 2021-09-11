@@ -13,7 +13,7 @@
  **/
 
 const path = require('path');
-const root = path.dirname(require.main.filename);
+const root = `${process.cwd()}/app`;
 const {
   QRCode
 } = require(`${root}/Model/QRCode`);

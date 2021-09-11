@@ -19,7 +19,7 @@ $(document).ready(function() {
     document.getElementById("ajoutNewReponse").disabled = false;
 
   //fonction pour ajouter un nouvelle reponse
-  $("#validerDataDialog").click(function(){
+  $("#validerDataDialog").on('click',function(){
 
       let identifiant= $('#newId').val();
       let reponseVocale = $("#newContenuVocal").val();
@@ -101,7 +101,7 @@ $(document).ready(function() {
   });
 
 //fonction pour e
-  $("#preview").click(function() {
+  $("#preview").on('click',function() {
       previewQRCodeQuestion(); 
       $('#qrView').show();
 
@@ -109,7 +109,7 @@ $(document).ready(function() {
 
 
 
-  $("#emptyFields").click(function(){
+  $("#emptyFields").on('click',function(){
     viderZone();
   })
 
@@ -178,7 +178,7 @@ function addReponseLine(reponse){
 }
 
    
-$("#genererQestion").click(function() {
+$("#genererQestion").on('click',function() {
   $("#ajoutNewReponse").attr('disabled', false);
 
   let question= $('#newQuestionText').val();
@@ -265,7 +265,7 @@ function affichageLigneParDefault() {
   /*Permet d'exporter un Projet
   On enregistre toutes les questions et réponses du projet dans le répertoire sélectionné
   par l'utilisateur*/
-  $("#saveQRCode").click(e => {
+  $("#saveQRCode").on('click',e => {
     saveQRCodeImage();
   });
 
@@ -575,7 +575,7 @@ function deleteStore(del){
 }
 
 //pour ouvrir la page info.html quand on clique sur le bouton info du haut
-$("#infos-exercice-qrcode").click(function () {
-  require('electron').remote.getGlobal('sharedObject').someProperty = 'exerciceQrCode'
+$("#infos-exercice-qrcode").on('click',function () {
+  require('@electron/remote').getGlobal('sharedObject').someProperty = 'exerciceQrCode'
   $("#charger-page").load(path.join(__dirname, "Views/info.html"));
 });

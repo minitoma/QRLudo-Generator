@@ -114,7 +114,7 @@ $(document).ready(function() {
   initMessages();
 
   // Ajouter une nouvelle Reponse une fois qu'on va clicker sur la button Ajouterreponse
-  $("#ajouterQuestion").click(function () {
+  $("#ajouterQuestion").on('click',function () {
     ajouterNouvelleReponse();
 
   })
@@ -200,7 +200,7 @@ function supprLigne(idLigne, element) {
 $(document).ready(function() {
   $('div.info-content').css('display', 'none');
 
-  $("a.nav-link").click(e => {
+  $("a.nav-link").on('click',e => {
     e.preventDefault();
     let element = e.target;
     let tab = $(element).attr('href');
@@ -212,7 +212,7 @@ $(document).ready(function() {
     $(tab).addClass('active');
   });
 
-  $('.tab-content').find('a').click(e => {
+  $('.tab-content').find('a').on('click',e => {
     let href = $(e.target).attr('href');
     let display = $(href).css('display');
 
@@ -224,11 +224,11 @@ $(document).ready(function() {
 });
 
 //script 
-$("#emptyFields").click(function(){
+$("#emptyFields").on('click',function(){
     viderChamps();
   });
 
-  $("#saveQRCode").click(e => {
+  $("#saveQRCode").on('click',e => {
     saveQRCodeImage(questionQCM, questionOuverte);
   });
 
@@ -302,8 +302,8 @@ var qrcode
 
 
 //pour ouvrir la page info.html quand on clique sur le bouton info du haut
-$("#infos-exercice-reco-vocale").click(function () {
-  require('electron').remote.getGlobal('sharedObject').someProperty = 'exerciceRecoVocale'
+$("#infos-exercice-reco-vocale").on('click',function () {
+  require('@electron/remote').getGlobal('sharedObject').someProperty = 'exerciceRecoVocale'
   $("#charger-page").load(path.join(__dirname, "Views/info.html"));
 });
 
@@ -378,12 +378,12 @@ function deleteStore(del){
 }
 
 //On stocke dans le store, le sous onglet "question_ouverte"
-$("#questionOuverteOnglet").click(function() {
+$("#questionOuverteOnglet").on('click',function() {
   store.set("sousOnglet", "question_ouverte");
   initMessages();
 });
 //On stocke dans le store, le sous onglet "qcm"
-$("#questionQCMOnglet").click(function() {
+$("#questionQCMOnglet").on('click',function() {
   store.set("sousOnglet", "qcm");
   initMessages();
 });
