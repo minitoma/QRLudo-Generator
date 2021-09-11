@@ -12,7 +12,6 @@ var qrType;
 var {
   ipcRenderer
 } = require('electron');
-const remote = require('@electron/remote');
 var { Menu, MenuItem } = require('@electron/remote');
 
 var menu = new Menu();
@@ -29,9 +28,12 @@ $(document).ready(function () {
 
 
   // desactiver les boutons s'il y a rien à lire ou generer
-  if (document.getElementById('qrName').value.length === 0) {
-    $('#preview').attr('disabled', true);
+  if(document.getElementById('qrName') !== null){
+    if (document.getElementById('qrName').value.length === 0) {
+      $('#preview').attr('disabled', true);
+    }
   }
+  
 
   $("#saveQRCode").on('click',e => {
     saveQRCodeImage();
@@ -56,7 +58,7 @@ $(document).ready(function () {
   }));
 
   $('input#musicUrl').contextmenu(e => {
-    menu.popup(remote.getCurrentWindow())
+    menu.popup(require('@electron/remote').getCurrentWindow())
     if (info_activ == true) {
       document.getElementById('elementsAudio').removeChild(info);
       info_activ = false;
