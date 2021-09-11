@@ -110,11 +110,8 @@ if (!navigator.onLine) {
   window.close();
 }
 
-var {
-  dialog,
-  ipcRenderer
-} = require('electron');
-// Avant : dialog from remote
+var { ipcRenderer } = require('electron');
+const dialog = require('@electron/remote').dialog;
 
 const {
   CompresseurTexte

@@ -193,7 +193,7 @@ function deleteGame() {
 //Import d'un projet existant à partir d'un répertoire
 $('#importProjectBtnId').on('click',function () {
   //Permet de sélectionner le répertoire du projet
-  var dir_path = dialog.showOpenDialog({ title: 'Sélectionnez le projet', properties: ['openDirectory'] })[0];
+  var dir_path = dialog.showOpenDialogSync({ title: 'Sélectionnez le projet', properties: ['openDirectory'] })[0];
   projet = new ProjetQCM();
   var path_split = dir_path.split(path.sep);
   //On récupère le nom du projet
@@ -250,7 +250,7 @@ $("#ajouterEnigme").on('click',function () {
                               <label class="control-label"
                               style="color:#28a745;padding-top:10px;padding-right:54px;">Énigme `+ compteurEnigme + ` : </label>
                               <input type="text" class="form-control" id="enigme`+ compteurEnigme + `" name="nombreReponse"
-                              placeholder="Nom de l'énigme `+ compteurEnigme + `" onkeyup="activerSave('enigme`+ compteurEnigme +`);" />
+                              placeholder="Nom de l'énigme `+ compteurEnigme + `" onkeyup="activerSave('enigme`+ compteurEnigme +`');" />
                               <i class="fas fa-info-circle mt-1 ml-1 mr-3"
                                         title="Nous vous conseillons de choisir un nom d'énigme court et facilement prononçable par l'utilisateur. Ne pas oublier les accents dans votre nom."
                                         data-toggle="tooltip" data-placement="right"></i>
@@ -316,7 +316,7 @@ $("#ajouterEnigme").on('click',function () {
                   </div>
                   <div class="form-group col-md-6">
                     <input type="text" class="form-control col-sm-6" id="projectId` + compteurEnigme + `1" rows="2" name="nomprojet"
-                    placeholder="Réponse" onkeyup="activerSave();" />
+                    placeholder="Réponse" onkeyup="activerSave('enigme`+ compteurEnigme +`');" />
                   </div>
                   <div class="form-group col-md-2">
                       <input class="form-check-input" type="radio" name="gridRadios` + compteurEnigme + `" id="gridCheck` + compteurEnigme + `1" checked style="width:70px;" value="option1">
@@ -376,7 +376,7 @@ $("#ajouterEnigme").on('click',function () {
                 <div class="col-lg-12 form-inline">
                     <label class="control-label" style="color:#28a745;padding-right:32px;">Réponse :</label>
                     <input type="text" class="form-control input-lg" style="width:500px;" id="repRecVocal` + compteurEnigme + `" cols="10"
-                        name="nomprojet" placeholder="Saisissez votre réponse" onkeyup="activerSave();" />
+                        name="nomprojet" placeholder="Saisissez votre réponse" onkeyup="activerSave('enigme`+ compteurEnigme +`');" />
                     <i class="fas fa-info-circle mt-1 ml-2"
                         title="Nous vous conseillons de choisir une réponse courte et facilement prononçable par l'utilisateur. Ne pas oublier les accents dans votre réponse."
                         data-toggle="tooltip" data-placement="right"></i>
@@ -416,7 +416,7 @@ function ajouterQuestions(idEnigme) {
                          </div>
                          <div class="form-group col-md-6">
                             <input type="text" class="form-control col-sm-6" id="projectId` + idEnigme + compteurQuestion + `" rows="2" name="nomprojet"
-                              placeholder="Réponse" onkeyup="activerSave();" />
+                              placeholder="Réponse" onkeyup="activerSave('enigme`+ compteurEnigme +`');" />
                           </div>
                          <div class="form-group col-md-2">
                             <input class="form-check-input" type="radio" name="gridRadios` + idEnigme + `" id="gridCheck` + idEnigme + compteurQuestion + `" style="width:70px;" value="option` + compteurQuestion + `">
@@ -874,8 +874,9 @@ function previewQRCode(qrcode, div) {
  On enregistre la questions et les réponses du projet dans le répertoire sélectionné
  par l'utilisateur*/
 $("#saveQRCode").on('click',function () {
+  console.log(dialog);
   //Permet de sélectinner le répertoire où le projet va être enregistré
-  var dir_path = dialog.showOpenDialog({ title: 'Sélectionnez un dossier', properties: ['openDirectory'] })[0];
+  var dir_path = dialog.showOpenDialogSync({ title: 'Sélectionnez un dossier', properties: ['openDirectory'] })[0];
   if (dir_path !== undefined) {
     var facade = new FacadeController();
     //projet.setName($("#projectId").val());

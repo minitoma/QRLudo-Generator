@@ -505,7 +505,7 @@ function saveQRCodeImages(div, qrcode, directoryName) {
 function saveQRCodeImage() {
 
 
-  var dir_path = dialog.showOpenDialog({title: 'Sélectionnez un dossier', properties: ['openDirectory']})[0];
+  var dir_path = dialog.showOpenDialogSync({title: 'Sélectionnez un dossier', properties: ['openDirectory']})[0];
   if(dir_path !== undefined){
     var facade = new FacadeController();
     projet.setName($("#newQuestionText").val());
@@ -576,6 +576,6 @@ function deleteStore(del){
 
 //pour ouvrir la page info.html quand on clique sur le bouton info du haut
 $("#infos-exercice-qrcode").on('click',function () {
-  require('@electron/remote').getGlobal('sharedObject').someProperty = 'exerciceQrCode'
+  require('@electron/remote').getGlobal('sharedObject').someProperty = 'exerciceQrCode';
   $("#charger-page").load(path.join(__dirname, "Views/info.html"));
 });
