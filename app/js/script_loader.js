@@ -29,7 +29,7 @@ numReponse = 0;
 
 
 const path = require('path');
-const root = `${process.cwd()}/app`;
+const root = __dirname.match(`.*app`);
 const piexif = require('piexifjs');
 const fs = require('fs');
 window.$ = window.jQuery = require(__dirname + "/Views/assets/js/jquery.min.js");

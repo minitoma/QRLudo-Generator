@@ -12,7 +12,7 @@
  * 2017
  **/
 const path = require('path');
-const root = `${process.cwd()}/app`;
+const root = __dirname.match(`.*app`);
 const {
   QRCode
 } = require(`${root}/Model/QRCode`);

@@ -35,13 +35,13 @@
     "electron-builder": "^22.11.7"
   },
   "scripts": {
-    "postinstall": "install-app-deps",
+    "postinstall": "electron-builder install-app-deps",
     "start": "electron ./app",
-    "pack-linux": "build --dir",
-    "dist-linux": "build",
-    "pack-win": "build --dir --win",
-    "dist-win32": "build --win --ia32",
-    "dist-win64": "build --win --x64",
+    "pack-linux": "electron-builder --dir",
+    "dist-linux": "electron-builder",
+    "pack-win": "electron-builder --dir --win",
+    "dist-win32": "electron-builder --win --ia32",
+    "dist-win64": "electron-builder --win --x64",
     "debug": "electron-builder start"
   },
   "build": {

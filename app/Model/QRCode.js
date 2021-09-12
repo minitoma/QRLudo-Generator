@@ -13,8 +13,7 @@
  **/
 
 const path = require('path');
-// const root = path.dirname(require.main.filename);
-const root = `${process.cwd()}/app`;
+const root = __dirname.match(`.*app`);
 const {
   DictionnaireXml
 } = require(`${root}/Model/DictionnaireXml`);
