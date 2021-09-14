@@ -16,5 +16,18 @@
 	],
 	"plugins": [
 		"html"
-	]
+	],
+	"rules": {
+		"default-case": "warn",
+		"comma-dangle": "warn",
+		"comma-spacing": [
+			"warn", { "before": "false", "after": "true" }
+		],
+		"func-call-spacing": "warn",
+		"no-trailing-spaces": "warn",
+		"semi-spacing": [
+			"warn", { "before": "false", "after": "true" }
+		],
+		"space-before-blocks": "warn"
+	}
   }
