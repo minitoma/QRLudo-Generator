@@ -5,26 +5,26 @@
  * @Last modified time: 2019-01-28T01:41:24+01:00
  */
 
-//Déclaration du store permettant la continuité entre les differents onglets
+/** Déclaration du store permettant la continuité entre les differents onglets */
 const Store = require('electron-store');
 const store = new Store();
 
-// Boolean qui permet de detecter si l'onglet unique est load dans le cas de l'importation d'un QR unique
+/** Boolean qui permet de detecter si l'onglet unique est load dans le cas de l'importation d'un QR unique */
 var isImportationQRUnique = false;
 
-// Boolean qui permet de detecter si l'onglet reco vocale est load dans le cas de l'importation d'un QCM
+/** Boolean qui permet de detecter si l'onglet reco vocale est load dans le cas de l'importation d'un QCM */
 var isImportationExerciceRecoVocaleQCM = false;
 
-//Déclaration de l'entier renseignant le nombre de zones de donnee dans l'onglet qr unique (les zones de textes ou les fichier audio)
+/** Déclaration de l'entier renseignant le nombre de zones de donnee dans l'onglet qr unique (les zones de textes ou les fichier audio) */
 var nbZoneDonne = 0;
 
-//Déclaration de l'entier permettant l'implémentation des différentes zones de données dans l'onglet qr unique
+/** Déclaration de l'entier permettant l'implémentation des différentes zones de données dans l'onglet qr unique */
 var numZoneCourante = 0;
 
-//nombre de fichier ajouté dans l'onglet multiple
+/** nombre de fichier ajouté dans l'onglet multiple */
 var numFich = 0;
 
-//numero de la reponse dans QR Exercice
+/** numero de la reponse dans QR Exercice */
 var numReponse = 0;
 
 const path = require('path');
@@ -39,11 +39,14 @@ require(__dirname + "/../rendererProcess/utils/bootstrap.min.js");
 require(__dirname + "/../rendererProcess/utils/fontawesome/solid.js");
 require(__dirname + "/../rendererProcess/utils/fontawesome/fontawesome.js");
 
-// Create QRLudo temp folder if not exist
+/** Create QRLudo temp folder if not exist
+ * C'est ici que sont entreposé les fichier télécharger de dropbox et google drive
+ */
 const { exec } = require('child_process');
 switch (process.platform) {
   case 'linux':
     var temp = path.join(process.env.HOME, 'temp/QRLudo');
+    console.log(`Chemin temp : ${temp}`);
     fs.access(temp, fs.constants.F_OK, (err) => {
       if (err) {
         var { ipcRenderer } = require('electron');
@@ -97,7 +100,7 @@ switch (process.platform) {
     break;
 }
 
-// Check internet connection
+/** Check internet connection */
 if (!navigator.onLine) {
   alert("L'application ne peut pas se lancer sans une liaison à internet. Veuillez vérifier votre connexion internet");
   window.close();

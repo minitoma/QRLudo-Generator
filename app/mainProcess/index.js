@@ -5,11 +5,10 @@
  * @Last modified time: 2020-09-13
  */
 
+/** Modules pour contrôler la vie de l'application et créer une fenêtre de navigation native */
 const electron = require('electron');
-const app = electron.app;
-const { ipcMain } = require('electron');
-const BrowserWindow = electron.BrowserWindow;
-var path = require('path');
+const { app, ipcMain, BrowserWindow } = electron;
+const path = require('path');
 
 /** Initialise le module remote qui fait un pont entre le processus principal et le processus de rendu */
 require('@electron/remote/main').initialize()
@@ -20,13 +19,13 @@ require('electron-debug')({
 }); 
 
 let mainWindow;
-let infoWindow = null;
 
+/** Objet globale gérant l'onglet d'aide à afficher */
 global.sharedObject = {
-  someProperty: 'default value'
+  ongletAideActif: 'default value'
 }
 
-
+/** Créer la fenêtre de navigation */
 function createWindow() {
   let display = electron.screen.getPrimaryDisplay();
   let width = display.bounds.width;
@@ -45,24 +44,43 @@ function createWindow() {
       enableRemoteModule: true,
     }
   });
-  /** Autoriser le redimensionnement de la fenêtre*/ 
+  /** Autoriser le redimensionnement de la fenêtre */ 
   mainWindow.setResizable(true); 
-  /** On doit charger un chemin absolu*/ 
-  mainWindow.loadURL(`file://${__dirname}/index.html`); 
+  /** On charge le fichier html principal de l'application */ 
+  mainWindow.loadFile('index.html');
 
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
 }
 
-app.on('ready', createWindow);
 
+/** Cette méthode sera appelée quand Electron aura fini
+ * de s'initialiser et sera prêt à créer des fenêtres de navigation.
+ */
+app.whenReady().then(() => {
+  createWindow();
+
+  /** Sur macOS il est d'usage de recréer une fenêtre dans l'application quand 
+   * l'icône du dock est cliquée et qu'il n'y a pas d'autre fenêtre ouverte. 
+   */
+  app.on('activate', function() {
+    if(BrowserWindow.getAllWindows.length === 0) createWindow;
+  });
+});
+
+/** 
+ * Quitter quand toutes les fenêtres sont fermées, sauf sur macOS. Sur macOS, il est courant
+ * pour les applications et leur barre de menu de rester actives jusqu’à ce que l’utilisateur quitte
+ * explicitement avec Cmd + Q.
+ */
 app.on('window-all-closed', () => {
-  /** Delete local folder QRLudo */ 
+  
   const fs = require('fs');
   const path = require('path');
   const { exec } = require('child_process');
 
+  /** On supprime le dossier local QRLudo pour windows et linux */ 
   switch (process.platform) {
     case 'win32':
       let temp = path.join(process.env.temp, 'QRLudo');
@@ -84,45 +102,28 @@ app.on('window-all-closed', () => {
         console.log(`stdout: ${stdout}`);
         console.log(`stderr: ${stderr}`);
       });
-      break;
+      break;controllerMultiple
 
     default:
       console.log('Unknown operating system');
       break;
   }
-  /** déclaration du store qui fera le lien avec la continuité des onglets */
-  const Store = require('electron-store');
-  const store = new Store();
-  //Le store est clean ici
-  store.clear();
 
+  /** Quitte l'application si non MacOS */
   if (process.platform !== 'darwin') {
     app.quit();
   }
 });
 
-app.on('activate', () => {
-  if (mainWindow === null) {
-    createWindow();
-  }
-});
 
-ipcMain.on('showInfoWindow', () => {
-  if (infoWindow == null) {
-    createInfoWindow();
-    let display = electron.screen.getPrimaryDisplay();
-    let width = display.bounds.width;
-    let height = display.bounds.height;
-    let w = width - (Math.floor(width / 3) + 10);
-
-    mainWindow.setMaximumSize(w, height);
-  }
-});
-
+/** Quitte l'application si on reçois l'event 'exitApp' venant du processus de rendu
+ * Appeler lorsqu'on ne peut pas créer de répertoire dans script_loader
+  */
 ipcMain.on('exitApp', () => {
   mainWindow.close();
 });
 
+/** @todo trouver ce que c'est, puisque ce n'est pas utilisé  */
 function deleteFolderRecursive(path) {
   const fs = require('fs');
   if (fs.existsSync(path)) {

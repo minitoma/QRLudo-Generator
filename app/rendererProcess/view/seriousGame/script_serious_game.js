@@ -157,7 +157,6 @@ $(document).ready(function () {
       document.getElementById('elementsAudio').removeChild(info);
       info_activ = false;
     }
-    //ipcRenderer.send('showInfoWindow', null);
   });
 
   $('#closeModalListeMusic').on('click', e => {
@@ -973,6 +972,6 @@ function enregistrement() {
 
 /** pour ouvrir la page info.html quand on clique sur le bouton info du haut */
 $("#infos-serious-game").on('click', function () {
-  require('@electron/remote').getGlobal('sharedObject').someProperty = 'seriousGame'
+  require('@electron/remote').getGlobal('sharedObject').ongletAideActif = 'seriousGame'
   $("#charger-page").load(path.join(__dirname.match('.*app')[0], "/rendererProcess/view/aide/info.html"));
 });
