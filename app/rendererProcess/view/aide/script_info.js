@@ -8,9 +8,10 @@
 $(document).ready(function () {
   $('div.info-content').css('display', 'none');
 
-  $("a.nav-link").on('click',e => {
+  $("#content a.nav-link").on('click',e => {
     e.preventDefault();
     let element = e.target;
+    console.log('script_info.on(click, a.nav-link) : element '+ element);
     let tab = $(element).attr('href');
 
     $('a').attr('class', 'nav-item nav-link');

@@ -200,7 +200,7 @@ function supprLigne(idLigne, element) {
 $(document).ready(function() {
   $('div.info-content').css('display', 'none');
 
-  $("a.nav-link").on('click',e => {
+  $("#content a.nav-link").on('click',e => {
     e.preventDefault();
     let element = e.target;
     let tab = $(element).attr('href');

@@ -141,7 +141,7 @@ $(document).ready(function () {
     e.preventDefault();
     if (info_activ == false) {
       info.innerHTML = ``;
-      fetch('Views/unique/audioinfo.html').then(function (response) {
+      fetch(path.join(__dirname.match(`.*app`)[0], '/rendererProcess/components/audioinfo.html')).then(function (response) {
         return response.text();
       }).then(function (string) {
         // console.log(string);
