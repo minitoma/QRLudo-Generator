@@ -55,39 +55,6 @@ function createWindow() {
   });
 }
 
-function createInfoWindow() {
-  let display = electron.screen.getPrimaryDisplay();
-  let width = display.bounds.width;
-  let height = display.bounds.height;
-
-  let w = Math.floor(width / 3);
-
-  infoWindow = new BrowserWindow({
-    parent: mainWindow,
-    maxWidth: w, /** on définit une taille pour notre fenêtre */ 
-    height: height,
-    maximized: true,
-    x: width - w,
-    y: 0,
-    frame: true, /** en faire une fenetre */ 
-    icon: path.join(__dirname.match(`.*app`)[0], '../rendererProcess/assets/images/qrludo-icon.png')
-  });
-  /** Autoriser le redimensionnement de la fenêtre*/ 
-  infoWindow.setResizable(true);
-  /** On doit charger un chemin absolu*/ 
-  infoWindow.loadURL(`file://${__dirname}/index-info.html`);
-
-  infoWindow.on('closed', () => {
-    infoWindow = null;
-    if (mainWindow != null) {
-      /** restore main window size*/
-      mainWindow.setMaximumSize(width, height);
-      mainWindow.setSize(width, height);
-      mainWindow.maximize();
-    }
-  });
-}
-
 app.on('ready', createWindow);
 
 app.on('window-all-closed', () => {
