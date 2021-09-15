@@ -303,7 +303,7 @@ var qrcode
 
 //pour ouvrir la page info.html quand on clique sur le bouton info du haut
 $("#infos-exercice-reco-vocale").on('click',function () {
-  require('@electron/remote').getGlobal('sharedObject').ongletAideActif = 'exerciceRecoVocale'
+  remoteElectron.getGlobal('sharedObject').ongletAideActif = 'exerciceRecoVocale'
   $("#charger-page").load(path.join(__dirname.match('.*app')[0], "/rendererProcess/view/aide/info.html"));
 });
 

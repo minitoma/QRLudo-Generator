@@ -417,6 +417,6 @@ function downItem(e) {
 
 //pour ouvrir la page info.html quand on clique sur le bouton info du haut
 $("#infos-multiple").on('click', function () {
-  require('@electron/remote').getGlobal('sharedObject').ongletAideActif = 'multiple'
-  $("#charger-page").load(path.join(__dirname.match(`.*app`)[0], '/rendererProcess/view/aide/info.html'));
+  remoteElectron.getGlobal('sharedObject').ongletAideActif = 'multiple'
+  $("#charger-page").load(root + '/rendererProcess/view/aide/info.html');
 });

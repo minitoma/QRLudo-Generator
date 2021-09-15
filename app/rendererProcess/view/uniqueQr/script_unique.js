@@ -10,7 +10,7 @@ var qrcode;
 var qrType;
 
 var { ipcRenderer } = require('electron');
-var { Menu, MenuItem } = require('@electron/remote');
+var { Menu, MenuItem } = remoteElectron;
 
 var menu = new Menu();
 
@@ -55,7 +55,7 @@ $(document).ready(function () {
   }));
 
   $('input#musicUrl').contextmenu(e => {
-    menu.popup(require('@electron/remote').getCurrentWindow())
+    menu.popup(require('electron').remote.getCurrentWindow())
     if (info_activ == true) {
       document.getElementById('elementsAudio').removeChild(info);
       info_activ = false;
@@ -130,7 +130,7 @@ $(document).ready(function () {
     $('#saveQRCode').attr('disabled', true);
     $('#preview').attr('disabled', true);
 
-    var settings = require('@electron/remote').require("electron-settings");
+    var settings = require('electron').remote.require("electron-settings");
     if (settings.hasSync("defaultColor")) {
       $("#qrColor").val(settings.getSync("defaultColor"));
     }
@@ -281,6 +281,7 @@ function saveQRCodeImage() {
   var data = img.replace(/^data:image\/[^;]/, 'data:application/octet-stream');
 
   var xhr = new XMLHttpRequest();
+  console.log('test');
   xhr.responseType = 'blob';
   console.log(data);
   xhr.open('GET', data, true);
@@ -608,6 +609,6 @@ function disableButtonAddNewData() {
 
 /** pour ouvrir la page info.html quand on clique sur le bouton info du haut */
 $("#infos-unique").on('click',function () {
-  require('@electron/remote').getGlobal('sharedObject').ongletAideActif = 'unique'
-  $("#charger-page").load(path.join(__dirname.match('.*app')[0], "/rendererProcess/view/aide/info.html"));
+  require('electron').remote.getGlobal('sharedObject').ongletAideActif = 'unique'
+  $("#charger-page").load(root + "/rendererProcess/view/aide/info.html");
 });

@@ -10,9 +10,6 @@ const electron = require('electron');
 const { app, ipcMain, BrowserWindow } = electron;
 const path = require('path');
 
-/** Initialise le module remote qui fait un pont entre le processus principal et le processus de rendu */
-require('@electron/remote/main').initialize()
-
 /** Ouvre la console développeur */
 require('electron-debug')({
   showDevTools: true
@@ -37,18 +34,19 @@ function createWindow() {
     maximized: true,
     center: true,
     frame: true, /** en faire une fenetre */ 
-    icon: path.join(__dirname.match(`.*app`)[0], '../rendererProcess/assets/images/qrludo-icon.png'),
+    icon: path.join(__dirname.match(`.*app`)[0], '/rendererProcess/assets/images/qrludo-icon.png'),
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false,
-      enableRemoteModule: true,
+      enableRemoteModule: true
     }
   });
+  
+  
   /** Autoriser le redimensionnement de la fenêtre */ 
   mainWindow.setResizable(true); 
   /** On charge le fichier html principal de l'application */ 
-  mainWindow.loadFile('index.html');
-
+  mainWindow.loadFile(__dirname + '/index.html');
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
@@ -60,7 +58,6 @@ function createWindow() {
  */
 app.whenReady().then(() => {
   createWindow();
-
   /** Sur macOS il est d'usage de recréer une fenêtre dans l'application quand 
    * l'icône du dock est cliquée et qu'il n'y a pas d'autre fenêtre ouverte. 
    */
@@ -68,7 +65,6 @@ app.whenReady().then(() => {
     if(BrowserWindow.getAllWindows.length === 0) createWindow;
   });
 });
-
 /** 
  * Quitter quand toutes les fenêtres sont fermées, sauf sur macOS. Sur macOS, il est courant
  * pour les applications et leur barre de menu de rester actives jusqu’à ce que l’utilisateur quitte

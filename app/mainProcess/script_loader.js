@@ -27,17 +27,21 @@ var numFich = 0;
 /** numero de la reponse dans QR Exercice */
 var numReponse = 0;
 
+/** Déclaration de variable globales */
 const path = require('path');
 const root = __dirname.match(`.*app`)[0];
 const piexif = require('piexifjs');
 const fs = require('fs');
-window.$ = window.jQuery = require(__dirname + "/../rendererProcess/utils/jquery/jquery.min.js");
-require(__dirname + "/../rendererProcess/utils/jquery/jquery.qrcode.min.js");
-require(__dirname + "/../rendererProcess/utils/jquery/jquery-qrcode-0.14.0.min.js");
-require(__dirname + "/../rendererProcess/utils/jquery/jquery-qrcode-0.14.0.js");
-require(__dirname + "/../rendererProcess/utils/bootstrap.min.js");
-require(__dirname + "/../rendererProcess/utils/fontawesome/solid.js");
-require(__dirname + "/../rendererProcess/utils/fontawesome/fontawesome.js");
+const remoteElectron = require('electron').remote;
+
+/** Import de $ comme appel à jQuery */
+window.$ = window.jQuery = require(root + "/rendererProcess/utils/jquery/jquery.min.js");
+require(root + "/rendererProcess/utils/jquery/jquery.qrcode.min.js");
+require(root + "/rendererProcess/utils/jquery/jquery-qrcode-0.14.0.min.js");
+require(root + "/rendererProcess/utils/jquery/jquery-qrcode-0.14.0.js");
+require(root + "/rendererProcess/utils/bootstrap.min.js");
+require(root + "/rendererProcess/utils/fontawesome/solid.js");
+require(root + "/rendererProcess/utils/fontawesome/fontawesome.js");
 
 /** Create QRLudo temp folder if not exist
  * C'est ici que sont entreposé les fichier télécharger de dropbox et google drive
@@ -107,7 +111,8 @@ if (!navigator.onLine) {
 }
 
 var { ipcRenderer } = require('electron');
-const dialog = require('@electron/remote').dialog;
+const dialog = remoteElectron.dialog;
+console.trace();
 
 const { CompresseurTexte } = require(`${root}/rendererProcess/controller/CompresseurTexte`);
 const { ControllerMultiple } = require(`${root}/rendererProcess/controller/ControllerMultiple`);

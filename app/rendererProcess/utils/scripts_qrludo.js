@@ -4,33 +4,34 @@
  */
 /** ce fichier regroupe toutes les fonctions et scripts en commun avec les autres pages */
 $(function() {
+  $("#charger-page").load(root + "/rendererProcess/view/accueil/accueil.html", loadDefaultColor);
 
   /** Pour chaque item dans le menu on charge une page html */
   $("#accueil-html").on('click',function() {
-    $("#charger-page").load(path.join(__dirname.match('.*app')[0], "/rendererProcess/view/accueil/accueil.html"), loadDefaultColor);
+    $("#charger-page").load(root + "/rendererProcess/view/accueil/accueil.html", loadDefaultColor);
   });
   $("#unique-html").on('click',function() {
     isImportationQRUnique = false;
-    $("#charger-page").load(path.join(__dirname.match('.*app')[0], "/rendererProcess/view/uniqueQr/unique.html"), loadDefaultColor);
+    $("#charger-page").load(root + "/rendererProcess/view/uniqueQr/unique.html", loadDefaultColor);
   });
   $("#multiple-html").on('click',function() {
-    $("#charger-page").load(path.join(__dirname.match('.*app')[0], "/rendererProcess/view/multipleQr/multiple.html"), loadDefaultColor);
+    $("#charger-page").load(root + "/rendererProcess/view/multipleQr/multiple.html", loadDefaultColor);
   });
   $("#quesRep-html").on('click',function() {
-    $("#charger-page").load(path.join(__dirname.match('.*app')[0], "/rendererProcess/view/exerciceQr/exerciceQrCode.html"), loadDefaultColor);
+    $("#charger-page").load(root + "/rendererProcess/view/exerciceQr/exerciceQrCode.html", loadDefaultColor);
   });
   $("#rec-vocale-html").on('click',function() {
     isImportationExerciceRecoVocaleQCM = false;
-    $("#charger-page").load(path.join(__dirname.match('.*app')[0], "/rendererProcess/view/exerciceReconnaissanceVocale/exerciceReconnaissanceVocale.html"), loadDefaultColor);
+    $("#charger-page").load(root + "/rendererProcess/view/exerciceReconnaissanceVocale/exerciceReconnaissanceVocale.html", loadDefaultColor);
   });
   $("#serious-html").on('click',function() {
-    $("#charger-page").load(path.join(__dirname.match('.*app')[0], "/rendererProcess/view/seriousGame/seriousGame.html"), loadDefaultColor);
+    $("#charger-page").load(root + "/rendererProcess/view/seriousGame/seriousGame.html", loadDefaultColor);
   });
   $("#parametres").on('click',function(){
-    $("#charger-page").load(path.join(__dirname.match('.*app')[0], "/rendererProcess/view/parametres/parametres.html"));
+    $("#charger-page").load(root + "/rendererProcess/view/parametres/parametres.html");
   });
   $("#infos").on('click',function(){
-    $("#charger-page").load(path.join(__dirname.match('.*app')[0], "/rendererProcess/view/aide/info.html"));
+    $("#charger-page").load(root + "/rendererProcess/view/aide/info.html");
   });
 
   /** l'element du menu courant -> class="... active" */
@@ -48,7 +49,7 @@ $(function() {
 });
 
 function loadDefaultColor(){
-  var settings = require('@electron/remote').require("electron-settings");
+  var settings = remoteElectron.require("electron-settings");
 
   if (settings.hasSync("defaultColor")) {
     $("#qrColor").val(settings.getSync("defaultColor"));

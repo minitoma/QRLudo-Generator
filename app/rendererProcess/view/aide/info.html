@@ -225,7 +225,7 @@
 
 <script>
   $(document).ready(function () {
-    switch (require('@electron/remote').getGlobal('sharedObject').ongletAideActif) {
+    switch (remoteElectron.getGlobal('sharedObject').ongletAideActif) {
       case 'unique':
         document.getElementById("unique-info").classList.add("active");
         document.getElementById("info-unique").style.display = "block";

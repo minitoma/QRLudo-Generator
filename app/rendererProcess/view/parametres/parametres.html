@@ -38,7 +38,7 @@
 <script>
 
   $().ready(function () {
-    var settings = require('@electron/remote').require("electron-settings");
+    var settings = remoteElectron.require("electron-settings");
 
     if (settings.hasSync('defaultColor')) {
       $("#defaultColor").val(settings.getSync("defaultColor"));

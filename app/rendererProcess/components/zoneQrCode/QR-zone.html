@@ -46,7 +46,7 @@
     <input type="color" id="qrColor" value="#000000">
     <script type="">
       $().ready(function() {
-        var settings = require('@electron/remote').require("electron-settings");
+        var settings = remoteElectron.require("electron-settings");
         if (settings.hasSync('defaultColor')) {
           $("#qrColor").val(settings.getSync("defaultColor"));
         }

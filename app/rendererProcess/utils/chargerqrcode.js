@@ -35,7 +35,7 @@ function importQRCodeImport(filename) {
 /** fonction permettant de recréer visuellement un qr code */
 function drawQRCodeImport(qrcode) {
   if (qrcode.getType() == 'unique' || qrcode.getType() == 'xl') {
-    $("#charger-page").load(path.join(__dirname.match(`.*app`)[0], "/rendererProcess/view/uniqueQr/unique.html"), function() {
+    $("#charger-page").load(root + "/rendererProcess/view/uniqueQr/unique.html", function() {
       /** restaurer la couleur du qrcode */
       $('input#qrColor').val(qrcode.getColor());
       /** restaurer le nom du qrcode */
@@ -49,7 +49,7 @@ function drawQRCodeImport(qrcode) {
     });
     //TODO Changer ici en multiple quand le type sera bien défini
   } else if (qrcode.getType() == 'ensemble') {
-    $("#charger-page").load(path.join(__dirname.match(`.*app`)[0], "/rendererProcess/view/multipleQr/multiple.html"), function() {
+    $("#charger-page").load(root + "/rendererProcess/view/multipleQr/multiple.html", function() {
       /** restaurer la couleur du qrcode */
       $('input#qrColor').val(qrcode.getColor());
       /** restaurer le nom du qrcodemultiple */
@@ -61,14 +61,14 @@ function drawQRCodeImport(qrcode) {
     });
 
   } else if (qrcode.getType() == 'question') {
-    $("#charger-page").load(path.join(__dirname.match(`.*app`)[0], "/rendererProcess/view/exerciceQr/exerciceQrCode.html"), function() {
+    $("#charger-page").load(root + "/rendererProcess/view/exerciceQr/exerciceQrCode.html", function() {
       $("#newQuestionText").val(qrcode.getName());
       $("#newBonneReponseText").val(qrcode.getGoodAnswer());
       $("#newMauvaiseReponseText").val(qrcode.getBadAnswer());
       $("#newNbMinimalBonneReponse").val(qrcode.getMinAnswer());
     });
   } else if (qrcode.getType() == 'ExerciceReconnaissanceVocaleQCM') {
-    $("#charger-page").load(path.join(__dirname.match(`.*app`)[0], "/rendererProcess/view/exerciceReconnaissanceVocale/exerciceReconnaissanceVocale.html"), function() {
+    $("#charger-page").load(root + "/rendererProcess/view/exerciceReconnaissanceVocale/exerciceReconnaissanceVocale.html", function() {
       $("#questionOuverteOnglet").removeClass("active");
       $("#onglet-QuesOuverte").removeClass("active");
       $("#questionQCMOnglet").addClass("active");
@@ -84,7 +84,7 @@ function drawQRCodeImport(qrcode) {
       store.set("sousOnglet", "qcm");
     });
 }else if (qrcode.getType() == 'ExerciceReconnaissanceVocaleQuestionOuverte') {
-  $("#charger-page").load(path.join(__dirname.match(`.*app`)[0], "/rendererProcess/view/exerciceReconnaissanceVocale/exerciceReconnaissanceVocale.html"), function() {
+  $("#charger-page").load(root + "/rendererProcess/view/exerciceReconnaissanceVocale/exerciceReconnaissanceVocale.html", function() {
     $("#Question").val(qrcode.getName());
     $("#Bonnereponse").val(qrcode.getReponse());
     $("#MessageBonnereponse").val(qrcode.getGoodAnswer());
@@ -92,7 +92,7 @@ function drawQRCodeImport(qrcode) {
     store.set("sousOnglet", "question_ouverte");
   });
 }else if (qrcode.getType() == 'SeriousGameScenario') {
-  $("#charger-page").load(path.join(__dirname.match(`.*app`)[0], "/rendererProcess/view/seriousGame/seriousGame.html"), function() {
+  $("#charger-page").load(root + "/rendererProcess/view/seriousGame/seriousGame.html", function() {
     $("#projectId").val(qrcode.getName());
     $("#textAreaIntro").val(qrcode.getIntro());
     $("#textAreaFin").val(qrcode.getEnd());
