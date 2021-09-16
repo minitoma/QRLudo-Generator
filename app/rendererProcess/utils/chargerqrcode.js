@@ -4,7 +4,6 @@
  * @Last modified time: 25/11/2020
  */
 
-
 $().ready(function() {
   //require("./js/script_unique.js");
 
@@ -16,8 +15,9 @@ $().ready(function() {
 
 /** fonction permettant de charger, importer un qr code */
 function importQRCodeImport(filename) {
-  let facade = new FacadeController();
 
+  logger.info(`Import du fichier <${ filename }>`);
+  let facade = new FacadeController();
   let blob = null;
   let xhr = new XMLHttpRequest();
   xhr.open("GET", filename);

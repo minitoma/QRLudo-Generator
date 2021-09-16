@@ -36,6 +36,7 @@ class QRCodeLoader {
         qrcode = QRCodeLoader.__traiterImage(ev.target.result);
 
       if (!Array.isArray(qrcode) && qrcode.getTypeQR() == DictionnaireXml.getValTypeAtomique() && qrcode.appartientFamille()) {
+        logger.info('Les QR Codes appartenant a une famille ne peuvent pas être chargés séparément. Merci de charger l\'image de la famille complète.');
         alert("Les QR Codes appartenant a une famille ne peuvent pas être chargés séparément. Merci de charger l'image de la famille complète.");
         return;
       }
@@ -88,6 +89,7 @@ class QRCodeLoader {
     var dataUtf8 = exifObj["0th"][700];
 
     if (!dataUtf8) {
+      logger.info('L\'image est invalide (ne contient pas de métadonnées)');
       throw "L'image est invalide (ne contient pas de métadonnées)";
     }
 
@@ -100,8 +102,10 @@ class QRCodeLoader {
     var qrxml = new window.DOMParser().parseFromString(donnees, "text/xml")
 
     /** On vérifie qu'on a bien réussi à parser le xml */
-    if (!qrxml)
+    if (!qrxml){
       throw "L'image est invalide (xml incorrect)";
+    }
+      
 
 
     var nomPremierNoeud = qrxml.firstChild.nodeName;

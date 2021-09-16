@@ -33,6 +33,8 @@ const root = __dirname.match(`.*app`)[0];
 const piexif = require('piexifjs');
 const fs = require('fs');
 const remoteElectron = require('electron').remote;
+const logger = remoteElectron.getGlobal('sharedObject').loggerShared.getLogger();
+
 
 /** Import de $ comme appel à jQuery */
 window.$ = window.jQuery = require(root + "/rendererProcess/utils/jquery/jquery.min.js");
@@ -50,12 +52,14 @@ const { exec } = require('child_process');
 switch (process.platform) {
   case 'linux':
     var temp = path.join(process.env.HOME, 'temp/QRLudo');
+    logger.info(`Création d'un dossier temporaire : ${ temp } et ses sous-dossiers Download et tts`);
     fs.access(temp, fs.constants.F_OK, (err) => {
       if (err) {
         var { ipcRenderer } = require('electron');
 
         exec(`mkdir -p ${temp}/Download`, (error, stdout, stderr) => {
           if (error) {
+            logger.error(`Problème de création du dossier : ${ temp }/Download`);
             console.error(`exec error: ${error}`);
             ipcRenderer.send('exitApp', null);
             return;
@@ -64,6 +68,7 @@ switch (process.platform) {
 
         exec(`mkdir -p ${temp}/tts`, (error, stdout, stderr) => {
           if (error) {
+            logger.error(`Problème de création du dossier : ${ temp }/tts`);
             console.error(`exec error: ${error}`);
             ipcRenderer.send('exitApp', null);
             return;
@@ -75,12 +80,14 @@ switch (process.platform) {
 
   case 'win32':
     var temp = path.join(process.env.temp, 'QRLudo');
+    logger.info(`Création d'un dossier temporaire : ${ temp } et ses sous-dossiers Download et tts`);
     fs.access(temp, fs.constants.F_OK, (err) => {
       if (err) {
         var { ipcRenderer } = require('electron');
 
         exec(`mkdir ${temp}\\Download`, (error, stdout, stderr) => {
           if (error) {
+            logger.error(`Problème de création du dossier : ${ temp }\\Download`);
             console.error(`exec error: ${error}`);
             ipcRenderer.send('exitApp', null);
             return;
@@ -89,6 +96,7 @@ switch (process.platform) {
 
         exec(`mkdir ${temp}\\tts`, (error, stdout, stderr) => {
           if (error) {
+            logger.error(`Problème de création du dossier : ${ temp }\\tts`);
             console.error(`exec error: ${error}`);
             ipcRenderer.send('exitApp', null);
             return;
@@ -99,12 +107,14 @@ switch (process.platform) {
     break;
 
   default:
+    logger.error('Le système d\'exploitation est inconnu');
     console.log('Unknown operating system');
     break;
 }
 
 /** Check internet connection */
 if (!navigator.onLine) {
+  logger.error(`L'application ne peut pas se lancer sans une liaison à internet. Veuillez vérifier votre connexion internet`);
   alert("L'application ne peut pas se lancer sans une liaison à internet. Veuillez vérifier votre connexion internet");
   window.close();
 }

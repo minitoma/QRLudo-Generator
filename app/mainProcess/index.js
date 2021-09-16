@@ -17,9 +17,25 @@ require('electron-debug')({
 
 let mainWindow;
 
+const log4js = require('log4js');
+/** Setup de 2 actions lors d'un log 
+ * console : réalise un console.log
+ * toFile : enrengistre le log dans le fichier qrludogenerator.log
+ */
+ log4js.configure({
+  appenders: {
+    console: { type: 'console' },
+    toFile: { type: 'file', filename: 'qrludogenerator.log', flags: 'w' }
+  },
+  categories: {
+    default: { appenders: ['console', 'toFile'], level: 'info' }
+  }
+});
+
 /** Objet globale gérant l'onglet d'aide à afficher */
 global.sharedObject = {
-  ongletAideActif: 'default value'
+  ongletAideActif: 'default value',
+  loggerShared: log4js
 }
 
 /** Créer la fenêtre de navigation */
@@ -41,12 +57,13 @@ function createWindow() {
       enableRemoteModule: true
     }
   });
-  
-  
   /** Autoriser le redimensionnement de la fenêtre */ 
   mainWindow.setResizable(true); 
   /** On charge le fichier html principal de l'application */ 
   mainWindow.loadFile(__dirname + '/index.html');
+
+  log4js.getLogger().info('Démarrage de QRLudo Générator');
+
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
@@ -62,7 +79,7 @@ app.whenReady().then(() => {
    * l'icône du dock est cliquée et qu'il n'y a pas d'autre fenêtre ouverte. 
    */
   app.on('activate', function() {
-    if(BrowserWindow.getAllWindows.length === 0) createWindow;
+    if(BrowserWindow.getAllWindows.length === 0) createWindow();
   });
 });
 /** 
@@ -75,6 +92,7 @@ app.on('window-all-closed', () => {
   const fs = require('fs');
   const path = require('path');
   const { exec } = require('child_process');
+  log4js.shutdown();
 
   /** On supprime le dossier local QRLudo pour windows et linux */ 
   switch (process.platform) {
@@ -136,6 +154,8 @@ function deleteFolderRecursive(path) {
     fs.rmdirSync(path);
   }
 };
+
+
 
 /**
  * Copyright © 12/02/2018, Corentin TALARMAIN, Thomas CALATAYUD, Rahmatou Walet MOHAMEDOUN, Jules LEGUY, David DEMBELE, Alassane DIOP

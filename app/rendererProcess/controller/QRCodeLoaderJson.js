@@ -28,6 +28,7 @@ class QRCodeLoaderJson {
       let dataUtf8 = exifObj["0th"][700];
 
       if (!dataUtf8) {
+        logger.info('L\'image est invalide (ne contient pas de métadonnées)');
         throw "L'image est invalide (ne contient pas de métadonnées)";
       }
 
@@ -77,9 +78,11 @@ class QRCodeLoaderJson {
           break;
 
         default:
+          logger.info(`QR Code importé ${ JSON.parse(qrcodeString).type } invalide`);
           throw "QR Code invalide";
       }
 
+      logger.info(`QR Code chargé avec succès : ${ JSON.stringify(qrcode) }`);
       console.log("restored qr code : ", qrcode);
 
       if (callback)

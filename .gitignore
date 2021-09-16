@@ -7,3 +7,4 @@ qr-codes-linux-x64/
 app/release-builds/*
 package-lock.json
 .vscode
+*.log

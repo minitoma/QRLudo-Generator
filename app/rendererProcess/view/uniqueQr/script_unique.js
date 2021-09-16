@@ -16,7 +16,7 @@ var menu = new Menu();
 
 $(document).ready(function () {
 
-  //appel à la focntion qui permet de lire les enregistrement
+  //appel à la fonction qui permet de lire les enregistrement
   chargement();
   SetProgressBar();
 
@@ -136,6 +136,8 @@ $(document).ready(function () {
     }
 
     $("#ajouterTexte").attr('disabled', false);
+
+    logger.info('Réinitialisation du QRCode Unique');
   });
 });
 
@@ -145,7 +147,6 @@ $('#preview').on('click',e => {
   //re-afficher le qr generer si le bouton est reinitialiser a deja été utilisé
   $("#qrView").show();
 
-  console.log('preview');
   //enlever les messages en haut de page
   initMessages();
   let inputArray = $('input, textarea');
@@ -156,7 +157,6 @@ $('#preview').on('click',e => {
   let qrData = [];
 
   for (let data of document.getElementsByClassName("form-control qrData")) {
-    console.log(data);
     if (data.name == 'AudioName') {
       let dataAudio = {
         type: 'music',
@@ -176,7 +176,9 @@ $('#preview').on('click',e => {
   let div = $('#qrView')[0];
 
   let newQrUnique = new QRCodeUnique(qrName, qrData, qrColor);
-  console.log(newQrUnique);
+
+  logger.info(`Génération du QR Code Unique : ${ JSON.stringify(newQrUnique) }`);
+
   previewQRCode(qrName, qrData, qrColor, div);
   $('#emptyZones').attr('disabled', false);
 });
@@ -276,26 +278,24 @@ function previewQRCode(name, data, color, div) {
 function saveQRCodeImage() {
   const fs = require('fs');
 
+  logger.info('Exportation du QR Code Unique');
+
   let img = $('#qrView img')[0].src;
 
   var data = img.replace(/^data:image\/[^;]/, 'data:application/octet-stream');
 
   var xhr = new XMLHttpRequest();
-  console.log('test');
   xhr.responseType = 'blob';
-  console.log(data);
   xhr.open('GET', data, true);
 
   xhr.onreadystatechange = function () {
+    console.log(xhr.readyState);
     if (xhr.readyState == xhr.DONE) {
       var filesaver = require('file-saver');
-      console.log(xhr.response);
       //Dans les deux cas filsaver.saveAs renvoie rien qui s'apparente à un bolléen
       if (filesaver.saveAs(xhr.response, qrcode.getName() + '.jpeg') == true) {
-        console.log(filesaver.saveAs(xhr.response, qrcode.getName() + '.jpeg').getName);
         messageInfos("Le QR code a bien été enregistré", "success"); //message a afficher en haut de la page
       }
-
     }
   }
   xhr.send();
@@ -311,9 +311,12 @@ function getMusicFromUrl() {
   let url = clipboard.readText();
   let xhr = new XMLHttpRequest();
 
+  logger.info(`Demande de téléchargement d'un fichier audio à l'adresse ${ url }`);
+
   Music.getDownloadLink(url, link => {
     if (link == null) {
       showError(modal, errorMsg);
+      logger.error(`Impossibilité de télécharger le fichier audio à l'adresse ${ url }`);
       return
     }
 
@@ -328,7 +331,6 @@ function getMusicFromUrl() {
       if (this.status == 200) {
         let blob = this.response; // get binary data as a response
         let contentType = xhr.getResponseHeader("content-type");
-        console.log(contentType);
 
         if (contentType == 'audio/mpeg' || contentType == 'audio/mp3') {
           // get filename
@@ -346,18 +348,22 @@ function getMusicFromUrl() {
           };
           fileReader.readAsArrayBuffer(blob);
 
+          logger.info(`Fichier audio <${ filename }> téléchargé avec succès`);
+
           ajouterChampSon(filename, link);
         } else {
+          logger.error('Le fichier n\'est pas un fichier audio');
           showError(modal, errorMsg, "Le fichier n'est pas un fichier audio");
         }
       } else {
         // request failed
+        logger.error('La requête de téléchargement a échouée');
         showError(modal, errorMsg);
       }
     };
 
     xhr.onloadstart = function (e) {
-      console.log('load start');
+      logger.info(`Début téléchargement du fichier audio`);
       $(loader).addClass('loader');
       $(modal).find('.errorLoader').remove();
       $(modal).prepend(loader); // show loader when request progress
