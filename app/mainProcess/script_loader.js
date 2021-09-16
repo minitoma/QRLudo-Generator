@@ -50,7 +50,6 @@ const { exec } = require('child_process');
 switch (process.platform) {
   case 'linux':
     var temp = path.join(process.env.HOME, 'temp/QRLudo');
-    console.log(`Chemin temp : ${temp}`);
     fs.access(temp, fs.constants.F_OK, (err) => {
       if (err) {
         var { ipcRenderer } = require('electron');
@@ -110,9 +109,8 @@ if (!navigator.onLine) {
   window.close();
 }
 
-var { ipcRenderer } = require('electron');
+const { ipcRenderer } = require('electron');
 const dialog = remoteElectron.dialog;
-console.trace();
 
 const { CompresseurTexte } = require(`${root}/rendererProcess/controller/CompresseurTexte`);
 const { ControllerMultiple } = require(`${root}/rendererProcess/controller/ControllerMultiple`);

@@ -9,7 +9,7 @@
 var qrcode;
 var qrType;
 
-var { ipcRenderer } = require('electron');
+// var { ipcRenderer } = require('electron');
 var { Menu, MenuItem } = remoteElectron;
 
 var menu = new Menu();
