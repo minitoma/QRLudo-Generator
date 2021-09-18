@@ -1,7 +1,7 @@
 {
   "name": "qrludo-generator",
   "productName": "QRLudo-Generator",
-  "version": "1.1.0",
+  "version": "1.2.0",
   "description": "Une application pour générer des Qr-Codes applicatifs utilisable sur l'application mobile QRLudo",
   "main": "app/mainProcess/index.js",
   "author": "Corentin TALARMAIN, Thomas CALATAYUD, Rahmatou Walet MOHAMEDOUN, Jules LEGUY, David DEMBELE, Alassane DIOP <vincent.barichard@univ-angers.fr>",
