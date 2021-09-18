@@ -5,10 +5,6 @@
  * @Last modified time: 2019-01-28T01:41:24+01:00
  */
 
-/** Déclaration du store permettant la continuité entre les differents onglets */
-const Store = require('electron-store');
-const store = new Store();
-
 /** Boolean qui permet de detecter si l'onglet unique est load dans le cas de l'importation d'un QR unique */
 var isImportationQRUnique = false;
 
@@ -34,6 +30,9 @@ const piexif = require('piexifjs');
 const fs = require('fs');
 const remoteElectron = require('electron').remote;
 const logger = remoteElectron.getGlobal('sharedObject').loggerShared.getLogger();
+
+/** Déclaration du store permettant la continuité entre les differents onglets */
+const store = remoteElectron.getGlobal('sharedObject').store;
 
 
 /** Import de $ comme appel à jQuery */
@@ -113,10 +112,13 @@ switch (process.platform) {
 }
 
 /** Check internet connection */
+logger.info('Test de la connexion internet');
 if (!navigator.onLine) {
   logger.error(`L'application ne peut pas se lancer sans une liaison à internet. Veuillez vérifier votre connexion internet`);
   alert("L'application ne peut pas se lancer sans une liaison à internet. Veuillez vérifier votre connexion internet");
   window.close();
+} else {
+  logger.info('L\'application est bien connectée à internet');
 }
 
 const { ipcRenderer } = require('electron');

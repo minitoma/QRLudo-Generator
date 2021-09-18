@@ -10,6 +10,9 @@ const electron = require('electron');
 const { app, ipcMain, BrowserWindow } = electron;
 const path = require('path');
 
+const Store = require('electron-store');
+const mainStore = new Store();
+
 /** Ouvre la console développeur */
 require('electron-debug')({
   showDevTools: true
@@ -35,7 +38,8 @@ const log4js = require('log4js');
 /** Objet globale gérant l'onglet d'aide à afficher */
 global.sharedObject = {
   ongletAideActif: 'default value',
-  loggerShared: log4js
+  loggerShared: log4js,
+  store: mainStore
 }
 
 /** Créer la fenêtre de navigation */
@@ -63,10 +67,11 @@ function createWindow() {
   mainWindow.loadFile(__dirname + '/index.html');
 
   log4js.getLogger().info('Démarrage de QRLudo Générator');
-
+  /*
   mainWindow.on('closed', () => {
+    console.log('Fermeture');
     mainWindow = null;
-  });
+  });*/
 }
 
 
@@ -92,7 +97,9 @@ app.on('window-all-closed', () => {
   const fs = require('fs');
   const path = require('path');
   const { exec } = require('child_process');
-  log4js.shutdown();
+
+  mainStore.clear();
+  
 
   /** On supprime le dossier local QRLudo pour windows et linux */ 
   switch (process.platform) {
@@ -125,8 +132,10 @@ app.on('window-all-closed', () => {
 
   /** Quitte l'application si non MacOS */
   if (process.platform !== 'darwin') {
+    log4js.getLogger().info('Fermeture de l\'application');
     app.quit();
   }
+  log4js.shutdown();
 });
 
 
