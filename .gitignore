@@ -6,3 +6,5 @@ qr-codes-linux-x64/
 .Rhistory
 app/release-builds/*
 package-lock.json
+.vscode
+*.log

@@ -1,0 +1,57 @@
+<!-- Div chargé par toutes les pages, permet d'afficher l'image du QRCode, le player et le bouton d'export -->
+
+<script src="../rendererProcess/components/zoneQrCode/play-sound.js"></script>
+
+<div class="card-body" id="affichage_qr">
+  <h6 class="card-title"></h6>
+  <div class="col-md-9 qrludo-QR rounded" id="qrView">
+    <!-- ici le QrCode a afficher -->
+    <div>
+
+    </div>
+  </div>
+</div>
+
+<div class="alert alert-warning" role="alert" id="alertLectureAucunChamp" style="display:none;">
+  Auncun champ à lire.
+</div>
+<div class="alert alert-warning" role="alert" id="alertLectureChampVide" style="display:none;">
+  Champ vide.
+</div>
+<div class="card-footer form-inline" id="affichage_qr_footer">
+  <div id="play-sound-div" class="float-lg-left form-inline">
+    <div class="card ">
+      <button type="button" class="btn btn-outline-success" id="prevLecture">
+        <i class="fa fa-step-backward"></i>
+      </button>
+      <button type="button" class="btn btn-outline-success" id="playLecture">
+        <i class="fa fa-play"></i>&nbsp;&nbsp;Lire
+      </button>
+      <button type="button" class="btn btn-outline-success" id="pauseLecture">
+        <i class="fa fa-pause"></i>&nbsp;&nbsp;Pause
+      </button>
+      <button type="button" class="btn btn-outline-success" id="nextLecture">
+        <i class="fa fa-step-forward"></i>
+      </button>
+    </div>
+    <button type="button" class="btn btn-outline-success" id="stopLecture">
+      <i class="fa fa-stop"></i>&nbsp;&nbsp;Stop
+    </button>
+  </div>
+
+  <div class="input-group  btn-group ">
+    <div class="input-group-prepend bnt-block">
+      <div class="input-group-text bnt-block"><i class="fa fa-palette"></i></div>
+    </div>
+    <input type="color" id="qrColor" value="#000000">
+    <script type="">
+      $().ready(function() {
+        var settings = remoteElectron.require("electron-settings");
+        if (settings.hasSync('defaultColor')) {
+          $("#qrColor").val(settings.getSync("defaultColor"));
+        }
+      });
+  
+    </script>
+  </div>
+</div>
