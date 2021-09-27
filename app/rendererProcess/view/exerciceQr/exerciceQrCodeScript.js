@@ -22,7 +22,7 @@ $(document).ready(function () {
 
   //fonction pour ajouter un nouvelle reponse
   $("#validerDataDialog").on('click', function () {
-    logger.info('ajouter reponse has been clicked');
+    logger.info('Ajout d\'une réponse');
     let identifiant = $('#newId').val();
     let reponseVocale = $("#newContenuVocal").val();
     let qrColor = $('#qrColor').val();
@@ -105,14 +105,14 @@ $(document).ready(function () {
   //fonction pour e
   $("#preview").on('click', function () {
     previewQRCodeQuestion();
-    logger.info('Generer button has been clicked');
+    logger.info('Génération du QR Code Exercice');
     $('#qrView').show();
 
   });
 
   $("#emptyFields").on('click', function () {
     viderZone();
-    logger.info('reinisialize button has been clicked');
+    logger.info('Réinitialisation du QR Code Exercice');
   })
 
   function viderZone() {
@@ -190,7 +190,7 @@ $("#genererQestion").on('click', function () {
   if (question !== "" && bonneReponse !== "" && mauvaiseReponse !== "" && nbMinBoneReponse !== "") {
     let nouvQuestion = new Question(question, bonneReponse, mauvaiseReponse, [], nbMinBoneReponse, qrColor);
     projet.setQuestion(nouvQuestion);
-    logger.info('creer  l\'exo has been clicked');
+    logger.info('Création du QR Code Exercice');
 
     initMessages();
 
@@ -260,7 +260,7 @@ On enregistre toutes les questions et réponses du projet dans le répertoire s�
 par l'utilisateur*/
 $("#saveQRCode").on('click', e => {
   saveQRCodeImage();
-  logger.info('Exporte button has been clicked');
+  logger.info('Exportation du QR Code Exercice');
 
 });
 
@@ -427,6 +427,9 @@ function deleteReponse(button) {
 
 
   }
+  logger.info('Suppression d\'une réponse');
+
+
 }
 
 //Méthode appliqué au chargement pour récupérer les élément enregistrés
@@ -546,7 +549,7 @@ function lireReponse(button) {
   var id_reponse = $(button).attr('id');
   var text_reponse = $("div#" + id_reponse + " label").text();
   var text_retourVocal = $("div#" + id_reponse + " em").text();
-
+  logger.info('Lecture d\'une réponse');
   playTTS(text_reponse + text_retourVocal);
 }
 
