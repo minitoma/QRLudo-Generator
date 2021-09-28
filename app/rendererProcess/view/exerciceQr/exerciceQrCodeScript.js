@@ -105,7 +105,13 @@ $(document).ready(function () {
   //fonction pour e
   $("#preview").on('click', function () {
     previewQRCodeQuestion();
-    logger.info('Génération du QR Code Exercice');
+
+    let qrName  = $('#qrName').val();
+    let qrData  = $('#qrData').val();
+    let qrColor = $('#qrColor').val();
+    let newQRUnique = new QRCodeUnique(qrName,qrData,qrColor);
+
+    logger.info(`Génération du QR Code Unique : ${JSON.stringify(newQRUnique)}`);
     $('#qrView').show();
 
   });
