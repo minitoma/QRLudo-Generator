@@ -30,6 +30,18 @@ $(document).ready(function () {
     else
       $(href).fadeIn();
   });
+
+
+  $('.tab-content').find('a').on('mouseover',e => {
+    $(e.target).css('color', '#7E7E7E');
+  });
+
+  $('.tab-content').find('a').on('mouseout',e => {
+    $(e.target).css('color', 'black');
+  });
+
+
+
 });
 
 $("#unique-info").on('click',function(){
