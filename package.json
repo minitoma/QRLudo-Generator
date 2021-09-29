@@ -7,7 +7,7 @@
   "dependencies": {
     "bootstrap": "^3.3.7",
     "braille": "^1.1.0",
-    "electron": "^1.8.2",
+    "electron": "^9.4.0",
     "electron-debug": "^1.5.0",
     "electron-packager": "^11.0.0",
     "file-saver": "^1.3.3",
