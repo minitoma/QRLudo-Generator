@@ -11,7 +11,7 @@ nombre_reponse = 0;
 $(document).ready(function () {
 
   //méthode gérant la continuité
-  enregistrement();
+  enregistrement()
 
   initMessages();
 
@@ -105,16 +105,11 @@ $(document).ready(function () {
   //fonction pour e
   $("#preview").on('click', function () {
     previewQRCodeQuestion();
-
-    let qrName  = $('#qrName').val();
-    let qrData  = $('#qrData').val();
-    let qrColor = $('#qrColor').val();
-    let newQRUnique = new QRCodeUnique(qrName,qrData,qrColor);
-
-    logger.info(`Génération du QR Code Unique : ${JSON.stringify(newQRUnique)}`);
     $('#qrView').show();
-
   });
+
+
+
 
   $("#emptyFields").on('click', function () {
     viderZone();
@@ -207,7 +202,7 @@ $("#genererQestion").on('click', function () {
     $("#genererQestion").hide();
   } else {
     messageInfos("Veuillez renseigner tous les champs", "danger");
-    logger.error("we still have empty fields on EXRCICE QR CODE ")
+    logger.error("Des champs sont vides! ")
   }
 });
 
@@ -535,6 +530,7 @@ function previewQRCodeQuestion() {
   var question = projet.getQuestion();
   question.qrcode.color = $('#qrColor').val();
   previewQRCode(question, $('#qrView')[0]);
+  logger.info(`Génération du QR Code Unique : ${JSON.stringify(question.qrcode)}`);
 }
 
 // Previsualiser les reponses
