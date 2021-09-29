@@ -2,6 +2,8 @@
 Application permettant de générer des QR-Codes qui seront lus (synthése vocale), à l'aide d'une application android.
 Il faut installer le projet et activer l'api googe drive avant de déployer et d'executer le logiciel créé.
 
+ce projet n'est plus maintenu par mes soins mais vous pouvez suivre la suite ici : https://github.com/univ-angers/QRLudo-Generator
+
 ## Packages
 
 Des packages sont disponibles directement via le lien suivant, il contiennent deux packages, Linux et Windows, contenant les fichiers nécéssaires au fonctionnement de l'application sans avoir à l'installer au préalable.
