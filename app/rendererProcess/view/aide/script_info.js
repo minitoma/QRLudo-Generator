@@ -32,11 +32,13 @@ $(document).ready(function () {
   });
 
 
-  $('.tab-content').find('a').on('mouseover',e => {
+  $('.tab-content').find('a').on('mouseover',e => {                    
+    /* pour changer la couleur du lien quand on mouseover ce lien */  
     $(e.target).css('color', '#7E7E7E');
   });
 
-  $('.tab-content').find('a').on('mouseout',e => {
+  $('.tab-content').find('a').on('mouseout',e => {     
+    /* pour remettre la couleur originale quand on mouseout */            
     $(e.target).css('color', 'black');
   });
 
